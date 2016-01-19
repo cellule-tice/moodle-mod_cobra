@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/cobra/db" VERSION="20150123" COMMENT="XMLDB file for Moodle mod/cobra"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+          <TABLE NAME="cobra" COMMENT="Default comment for cobra, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Course lectopt activity belongs to"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="name field for moodle instances"/>
+        <FIELD NAME="language" TYPE="char" LENGTH="2" NOTNULL="true" COMMENT="language used for this cours" />
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false"/>
+           </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="cobra_registered_collections" COMMENT="Registered collections">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Course cobra activity belongs to"/>
+        <FIELD NAME="id_collection" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Collection id" />
+        <FIELD NAME="language" TYPE="char" LENGTH="2" DEFAULT="EN" />
+        <FIELD NAME="label" TYPE="char" LENGTH="64" NOTNULL="true" />
+        <FIELD NAME="local_label" TYPE="char" LENGTH="64" NOTNULL="true" />
+        <FIELD NAME="position" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"  />
+        <FIELD NAME="visibility" TYPE="INT" LENGTH="1"  DEFAULT="1"/>
+   </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
+        <INDEX NAME="id_collection" UNIQUE="false" FIELDS="id_collection" />
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="cobra_clic" COMMENT="cobra clics details bu user">
+        <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Course cobra activity belongs to"/>
+        <FIELD NAME="id_entite_ling" TYPE="int" LENGTH="11" DEFAULT="0" />
+        <FIELD NAME="id_text" TYPE="int" LENGTH="11" NOTNULL="true" />
+        <FIELD NAME="user_id" TYPE="int" LENGTH="11" DEFAULT="0" />
+        <FIELD NAME="nb_clics" TYPE="int" LENGTH="11" DEFAULT="0" />
+        <FIELD NAME="datecreate" TYPE="DATETIME" DEFAULT="NULL" />
+        <FIELD NAME="datemodif" TYPE="DATETIME" DEFAULT="NULL" />
+        </FIELDS>
+         <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
+        <INDEX NAME="id_entite_ling" UNIQUE="false" FIELDS="id_entite_ling" />
+        <INDEX NAME="id_text" UNIQUE="false" FIELDS="id_text" />
+        <INDEX NAME="user_id" UNIQUE="false" FIELDS="user_id" />
+      </INDEXES>
+    </TABLE>
+    
+  <TABLE NAME="cobra_prefs" COMMENT="cobra preferences">
+      <FIELDS>
+          <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
+          <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Course cobra activity belongs to"/>
+          <FIELD NAME="param" TYPE="char" LENGTH="16" NOTNULL="true" />
+          <FIELD NAME="value" TYPE="char" LENGTH="16" NOTNULL="true" />
+              
+    </FIELDS>
+     <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
+      </INDEXES>
+
+  </TABLE>
+  
+  <TABLE NAME="cobra_texts_config" COMMENT="Configuration for texts">
+      <FIELDS>
+          <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
+          <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Course cobra activity belongs to"/>
+          <FIELD NAME="id_text" TYPE="int" LENGTH="11" NOTNULL="true" />
+          <FIELD NAME="id_collection" TYPE="int" LENGTH="11" NOTNULL="true" />
+          <FIELD NAME="text_type" TYPE="char" LENGTH="8" NOTNULL="true"  DEFAULT="Lesson" />
+          <FIELD NAME="position" TYPE="int" LENGTH="11" NOTNULL="true" />
+          <FIELD NAME="visibility" TYPE="int" LENGTH="1" DEFAULT="0" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
+        <INDEX NAME="id_text" UNIQUE="false" FIELDS="id_text" />
+      </INDEXES> 
+  </TABLE>
+  
+  <TABLE NAME="cobra_glossaire" COMMENT="">
+       <FIELDS>
+          <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
+          <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Course cobra activity belongs to"/>
+          <FIELD NAME="id_text" TYPE="int" LENGTH="11" NOTNULL="true" />
+          <FIELD NAME="id_entite_ling" TYPE="int" LENGTH="11" NOTNULL="true" />
+       </FIELDS>
+        <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
+        <INDEX NAME="id_text" UNIQUE="false" FIELDS="id_text" />
+         <INDEX NAME="id_entite_ling" UNIQUE="false" FIELDS="id_entite_ling" />
+      </INDEXES> 
+  </TABLE>
+      
+      <TABLE NAME="cobra_ordre_concordances" COMMENT="ordre concorncordances">
+          <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
+          <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Course cobra activity belongs to"/>
+          <FIELD NAME="id_type" TYPE="int" LENGTH="11" NOTNULL="false" DEFAULT="0" />
+          </FIELDS>
+           <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>    
+      </INDEXES> 
+      </TABLE>
+  </TABLES>
+</XMLDB>
+
