@@ -1,0 +1,1 @@
+Moodle plugin for the CoBRA project
