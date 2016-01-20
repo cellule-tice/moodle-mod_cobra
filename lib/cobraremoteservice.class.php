@@ -6,12 +6,8 @@ class CobraRemoteService
         try 
         {
             $validReturnTypes = array( 'html', 'object', 'objectList', 'string', 'integer', 'boolean', 'error' );
-           /* serveur tice
-            *  $url = 'http://tice.det.fundp.ac.be/cobra/services/service_handler.php';
-            * $params['caller'] = 'Moodle';
-            */
             $url = 'http://tice.det.fundp.ac.be/cobra/services/service_handler.php';
-             $params['caller'] = '';
+             $params['caller'] = 'Moodle-test';
         if( sizeof( $params ) )
         {
             $queryString = http_build_query( $params,'', '&' );
