@@ -110,7 +110,7 @@ $content = '';
     $text = new CobraTextWrapper();
     $text->setTextId( $textId );
     $text->load();
-    $preferences = getCobraPreferences();
+    $preferences = get_cobra_preferences();
     $ccOrder = getCorpusTypeDisplayOrder();
     $order = implode( ',', $ccOrder );
     $preferences['ccOrder'] = $order;

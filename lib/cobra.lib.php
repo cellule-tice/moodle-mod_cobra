@@ -12,8 +12,8 @@ require_once($CFG->libdir.'/formslib.php');
  * @param $loadMode 'all' for course managers, 'visible' for students
  * @return array containing information on texts to display
  */
-function loadTextList( $collection, $loadMode = 'all' )
-{        
+function load_text_list( $collection, $loadMode = 'all' )
+{          
     global $DB;
     global $course;
     $andClause = 'visible' == $loadMode ? " AND `visibility` = '1' " : "";
@@ -49,7 +49,7 @@ function loadTextList( $collection, $loadMode = 'all' )
  * @param $setVisible boolean 'true' to make the resource visible for students, 'false' to hide it
  * @return boolean true on success, false otherwise
  */
-function setVisibility( $resourceId, $setVisible, $resourceType, $courseId )
+function set_visibility( $resourceId, $setVisible, $resourceType, $courseId )
 {     
     global $DB;
     $visibility = $setVisible ? '1' : '0';
@@ -90,7 +90,7 @@ function setVisibility( $resourceId, $setVisible, $resourceType, $courseId )
  * @param $position the new position to assign to the resource
  * @return boolean true on success, false otherwise
  */
-function setPosition( $resourceId, $position, $resourceType,  $courseId )
+function set_position( $resourceId, $position, $resourceType,  $courseId )
 {
     global $DB;
     $dataObject = new  stdClass();
@@ -129,7 +129,7 @@ function setPosition( $resourceId, $position, $resourceType,  $courseId )
  * Inserts a row in table 'ordre_concordances' representing a corpus type
  * @param int $typeId : identifier of corpus type
  */
-function insertCorpusTypeDisplayOrder( $typeId )
+function insert_corpus_type_display_order( $typeId )
 {    
     global $DB,$course;     
     $dataObject = new  stdClass();
@@ -143,7 +143,7 @@ function insertCorpusTypeDisplayOrder( $typeId )
  * @param array $exclusionList the list of already registered collections
  * @return array containing the list of these collections
  */
-function getFilteredCobraCollections( $language, $exclusionList = array() )
+function get_filtered_cobra_collections( $language, $exclusionList = array() )
 {
     $collections = array();
     $params = array( 'language' => $language);
@@ -163,7 +163,7 @@ function getFilteredCobraCollections( $language, $exclusionList = array() )
  * @param string $loadMode : 'all' or 'visible'
  * @return array the list of registered (visible) collections
  */
-function getRegisteredCollections( $loadMode = 'all' )
+function get_registered_collections( $loadMode = 'all' )
 {
     global $DB;
     global $course;
@@ -182,7 +182,7 @@ function getRegisteredCollections( $loadMode = 'all' )
  * @param $collection identifier of the text collection
  * @return array containing information on texts to display
  */
-function loadRemoteTextList( $collection )
+function load_remote_text_list( $collection )
 {
     $textList = array();
     $params = array( 'collection' => (int)$collection );
@@ -203,7 +203,7 @@ function loadRemoteTextList( $collection )
  * @param int $collection identifier of the collection
  * @return boolean true on success, false otherwise
  */
-function removeTextList( $collection )
+function remote_text_list( $collection )
 {
     global $course,$DB;
     return $DB->delete_records('cobra_texts_config', array('course'=>$course->id, 'id_collection'=>$collection)); 
@@ -215,7 +215,7 @@ function removeTextList( $collection )
  * Returns an array containing module preferences for the current course
  * @return array
  */
-function getCobraPreferences()
+function get_cobra_preferences()
 {
     global $DB,$course;    
     
@@ -246,7 +246,7 @@ function getCobraPreferences()
  * @param array $prefs
  * @return boolean true on success, false otherwise
  */
-function saveElexPreferences( $prefs )
+function save_Cobra_preferences( $prefs )
 {
      global $DB,$course;    
     foreach ($prefs as $key=>$value)
@@ -276,7 +276,7 @@ function saveElexPreferences( $prefs )
  * Deletes current preferences linked to corpus selection and display order
  * @return boolean true on success, false otherwise
  */
-function clearCorpusSelection()
+function clear_corpus_selection()
 {    
     global $DB, $course; 
     return $DB->delete_records('cobra_ordre_concordances', array('course'=>$course->id)); 
@@ -320,12 +320,13 @@ function clic( $textId, $lingEntityId, $DB, $courseId, $userId )
  * @param int $textId the identifier of the text
  * @return an html-free string with the text title
  */
-function getTitleFromId( $textId )
+/*not used
+ * function getTitleFromId( $textId )
 {
     $params = array( 'id_text' => (int)$textId );
     $textTitle = CobraRemoteService::call( 'getTextTitle', $params );
     return strip_tags( utf8_decode ( $textTitle ) );
-}
+}*/
 
 /**
  * Collects the set of synonyms for the concept given in args and produces a string representation of it
@@ -333,10 +334,10 @@ function getTitleFromId( $textId )
  * @param int $conceptId identifier of the concept
  * @param string $entryType the type of lexicon entry ('lemma' or 'expression')
  */
-function getTranslations( $conceptId, $entryType )
+function get_translations( $conceptId, $entryType )
 {
     $params = array( 'id_concept' => (int)$conceptId, 'entry_type' => $entryType );
-    $translations = CobraRemoteService::call( 'getTranslations', $params );
+    $translations = CobraRemoteService::call( 'get_translations', $params );
     return $translations ;
 }
 
@@ -347,10 +348,10 @@ function getTranslations( $conceptId, $entryType )
  * @param int $lingEntityId identifier of the linguistic entity
  * @return array containing information on this linguistic entity
  */
-function getConceptInfoFromLingEntity( $lingEntityId )
+function get_concept_info_from_ling_entity( $lingEntityId )
 {
     $params = array( 'ling_entity_id' => (int)$lingEntityId );
-    $conceptInfo = CobraRemoteService::call( 'getConceptInfoFromLingEntity', $params );
+    $conceptInfo = CobraRemoteService::call( 'get_concept_info_from_ling_entity', $params );
     return array( $conceptInfo->id_concept, $conceptInfo->construction , $conceptInfo->entry_type, $conceptInfo->entry_category, $conceptInfo->entry, $conceptInfo->entry_id );
 }
 
@@ -428,10 +429,10 @@ function findBackGround( $typeId )
  * @param string $language
  * @return boolean true if the given corpus type exists for that language, false otherwise
  */
-function corpusTypeExists( $typeId, $language )
+function corpus_type_exists( $typeId, $language )
 {
     $params = array( 'language' => $language, 'typeId' => $typeId );
-    $ok = CobraRemoteService::call( 'corpusTypeExists', $params );
+    $ok = CobraRemoteService::call( 'corpus_type_exists', $params );
     return $ok;
 }
 
@@ -733,3 +734,5 @@ class mod_cleanStats_form extends moodleform {
         $this->add_action_buttons(true, get_string('OK','cobra'));         
    }
 }
+
+

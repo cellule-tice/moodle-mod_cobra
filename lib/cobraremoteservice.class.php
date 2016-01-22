@@ -1,13 +1,21 @@
 <?php // $Id: elexremoteservice.class.php 249 2011-01-03 11:12:41Z jmeuriss $
+
+
 class CobraRemoteService
 {
     public static function call( $serviceName, $params = array(), $returnType = 'json' )
     {
+        global $CFG;
         try 
         {
             $validReturnTypes = array( 'html', 'object', 'objectList', 'string', 'integer', 'boolean', 'error' );
-            $url = 'http://tice.det.fundp.ac.be/cobra/services/service_handler.php';
-             $params['caller'] = 'Moodle-test';
+             $site = get_site();
+          /*  $url = 'http://tice.det.fundp.ac.be/cobra/services/service_handler.php';
+             $params['caller'] = $site->shortname ;
+           */
+           $url = $_SERVER['SERVER_NAME'] = $CFG->cobra_serverhost;
+        //    $url = 'http://localhost/cobra/services/service_handler.php';
+             $params['caller'] = '';
         if( sizeof( $params ) )
         {
             $queryString = http_build_query( $params,'', '&' );

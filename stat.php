@@ -164,11 +164,11 @@ if( !is_null( $view ) )
         $list = getClickedEntries ($course->id, 20);
         foreach ($list as $id_entite_ling=>$nb)
         {     
-            list( $conceptId, $construction, $entryType, $category ) = getConceptInfoFromLingEntity( $id_entite_ling );           
+            list( $conceptId, $construction, $entryType, $category ) = get_concept_info_from_ling_entity( $id_entite_ling );           
             $out .= '<tr>'
                  .  '<td>' . $nb . '</td>'
                  .  '<td>' . $construction . '</td>'
-                 .  '<td>' . getTranslations( $conceptId, $entryType ) . '</td>'
+                 .  '<td>' . get_translations( $conceptId, $entryType ) . '</td>'
                  .  '<td>' . $category . '</td>'
                  .  '</tr>';
         }
@@ -177,10 +177,10 @@ if( !is_null( $view ) )
 
     case '2' :
         $out .= '<h3><small>' . get_string( 'Display_the_10_most_frequently_clicked_entries_per_text', 'cobra' ) . '</small></h3>';
-        $collectionList = getRegisteredCollections( 'all' );
+        $collectionList = get_registered_collections( 'all' );
         foreach( $collectionList as $collection )
         {
-            $textList = loadTextList( $collection['id_collection'], 'all' );
+            $textList = load_text_list( $collection['id_collection'], 'all' );
             //var_dump($textList);
 
             $out .= '<table class="claroTable">'
@@ -215,11 +215,11 @@ if( !is_null( $view ) )
                     }
                     $out .= '&nbsp; </td>';
      
-                    list( $conceptId, $construction, $entryType, $category ) = getConceptInfoFromLingEntity( $id_entite_ling );
+                    list( $conceptId, $construction, $entryType, $category ) = get_concept_info_from_ling_entity( $id_entite_ling );
                     
                     $out .= '<td>' . $nb_clics . '</td>'
                          .  '<td>' . $construction . '</td>'
-                         .  '<td>' . getTranslations( $conceptId, $entryType ) . '</td>'
+                         .  '<td>' . get_translations( $conceptId, $entryType ) . '</td>'
                          .  '<td>' . $category . '</td>'
                          .  '</tr>';
                 }
@@ -230,10 +230,10 @@ if( !is_null( $view ) )
 
     case '3' :
         $out .= '<h3><small>' . get_string( 'Display_the_most_frequently_analysed_texts', 'cobra' ) . '</small></h3>';
-        $collectionList = getRegisteredCollections( 'all' );
+        $collectionList = get_registered_collections( 'all' );
         foreach( $collectionList as $collection )
         {
-            $textList = loadTextList( $collection['id_collection'], 'all' );
+            $textList = load_text_list( $collection['id_collection'], 'all' );
             $textInfo = array();
             foreach( $textList as $text )
             {
@@ -263,7 +263,7 @@ if( !is_null( $view ) )
         }
         break;
        case '4' :
-        $collectionList = getRegisteredCollections( 'all' );
+        $collectionList = get_registered_collections( 'all' );
         foreach( $collectionList as $collection )
         {
              $out .= '<table class="claroTable emphaseLine textList" width="100%" border="0" cellspacing="2" style="margin-bottom:20px;">' . "\n"
@@ -274,7 +274,7 @@ if( !is_null( $view ) )
              .  '<th>' . get_string( 'Nb_of_clickable_words','cobra' ) . '</th>' . "\n"
              .  '<th>' . get_string( 'Different_users','cobra' ) . '</th>' . "\n"
              .  '<th>' . get_string( 'Total_clic', 'cobra' ) . '</th>' . "\n";
-            $textList = loadTextList( $collection['id_collection'], 'all' );
+            $textList = load_text_list( $collection['id_collection'], 'all' );
             foreach( $textList as $text )
             {              
                 $out .= '<tr> <td>' . $text->title. '</td>' . "\n"

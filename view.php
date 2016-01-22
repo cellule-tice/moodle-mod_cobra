@@ -50,6 +50,7 @@ if ($id) {
 $context = context_module::instance($cm->id);
 
 require_login($course, true, $cm);
+require_capability('mod/cobra:view', $context);
 
 $event = \mod_cobra\event\course_module_viewed::create(array(
     'objectid' => $PAGE->cm->instance,
@@ -93,14 +94,14 @@ $content = '';
 if (has_capability('mod/cobra:edit', $context))
 {
     $isAllowedToEdit = true;
-    $content .= '<a href="cobra_settings.php?id='.$id. '">Parametres</a> &nbsp; ' . "\n"
-        . '<a href="glossary.php?id='.$id. '">Glossaire</a> &nbsp; ' . "\n"
-        . '<a href="stat.php?id='.$id.'">Statistiques</a>';
+    $content .= '<a href="cobra_settings.php?id='.$id. '">'. get_string('parameters','cobra'). '</a> &nbsp; ' . "\n"
+        . '<a href="glossary.php?id='.$id. '">'.get_string('glossary','cobra') . '</a> &nbsp; ' . "\n"
+        . '<a href="stat.php?id='.$id.'">'.get_string('statistics','cobra') . '</a>';
 }
 
 // pour toutes les collections  choisies pour ce cours, afficher els textes dans l'ordre
     
- $collectionList = $isAllowedToEdit ? getRegisteredCollections( 'all' ) : getRegisteredCollections( 'visible' );
+ $collectionList = $isAllowedToEdit ? get_registered_collections( 'all' ) : get_registered_collections( 'visible' );
         foreach( $collectionList as $collection )
         {
             $content .= '<table class="claroTable emphaseLine textList" width="100%" border="0" cellspacing="2" style="margin-bottom:20px;">' . "\n"
@@ -122,12 +123,12 @@ if (has_capability('mod/cobra:edit', $context))
             if( $isAllowedToEdit )
             {
                 //load all texts to display for course admin
-                $textList = loadTextList( $collection['id_collection'], 'all' );
+                $textList = load_text_list( $collection['id_collection'], 'all' );
             }
             else
             {
                 //load only visible texts to display for students
-                $textList = loadTextList( $collection['id_collection'], 'visible' );
+                $textList = load_text_list( $collection['id_collection'], 'visible' );
             }
             if( !empty( $textList ) && is_array( $textList ) )
             {

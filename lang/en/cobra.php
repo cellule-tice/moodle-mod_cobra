@@ -28,9 +28,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['modulename'] = 'cobra';
-$string['modulenameplural'] = 'cobras';
-$string['modulename_help'] = 'Use the cobra module for... | The cobra module allows...';
+$string['modulename'] = 'Cobra';
+$string['modulenameplural'] = 'Cobra';
+$string['modulename_help'] = 'Use the CoBRA module for... | The cobra module allows...';
 $string['cobrafieldset'] = 'Custom example fieldset';
 $string['cobra:addinstance'] = 'Add instance of cobra plugin';
 $string['cobra:edit']= 'manage cobra plugin';
@@ -112,6 +112,18 @@ $string['OK'] = 'OK';
 $string['Lemma'] = 'Lemme';
 $string['Translation'] = 'Traduction';
 $string['Category'] = 'Categorie';
-$string['ExportFullGlossary'] = 'Export full Glossary';
-$string['PartialGlossary'] = 'Export partial glossary';
+$string['Lemma_form'] = 'Lemma';
+$string['info'] = 'Info';
+$string['ExportGlossary'] = 'Export Glossary';
 $string['Compare_text_with_glossary'] = 'Compare text and glossary';
+$string['generalconfig'] = 'General Configuration';
+$string['mail_receiver']= 'Identifier of the recipient for email notification errors';
+$string['moodle_plateform_name'] = 'Plateform name'; 
+$string['cobraserverhost'] = 'Url for webservices';
+$string['explaingeneralconfig'] = 'general configuration';
+$string['checkall_uncheckall'] = 'Sélectionner/Déselectionner tout';
+$string['glossary'] = 'Glossary';
+$string['parameters'] = 'Parameters';
+$string['statistics'] = 'Statistics';
+$string['possible_translation'] = 'Possible translations';
+$string['new_word'] = 'New words';

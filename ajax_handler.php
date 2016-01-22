@@ -53,7 +53,7 @@ header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 
 if( 'getDisplayParams' == $call )
 {
-    $displayPrefs = getCobraPreferences();
+    $displayPrefs = get_cobra_preferences();
     $ccOrder = getCorpusTypeDisplayOrder();
     $order = implode( ',', $ccOrder );
     $displayPrefs['ccOrder'] = $order;
@@ -62,7 +62,7 @@ if( 'getDisplayParams' == $call )
 
 if( 'setVisible' == $call )
 {
-    if( setVisibility( $resource, true, $resourceType, $course->id ) )
+    if( set_visibility( $resource, true, $resourceType, $course->id ) )
     {
         echo 'true';
         return true;
@@ -72,7 +72,7 @@ if( 'setVisible' == $call )
 
 if( 'setInvisible' == $call )
 {
-    if( setVisibility( $resource, false, $resourceType, $course->id ) )
+    if( set_visibility( $resource, false, $resourceType, $course->id ) )
     {
         echo 'true';
         return true;
@@ -84,8 +84,8 @@ if( 'moveDown' == $call )
 {
     $position = isset( $_REQUEST['position'] ) && is_numeric( $_REQUEST['position'] ) ? (int)$_REQUEST['position'] : 0;
     if( $position 
-        && setPosition( $sibling, $position++, $resourceType, $course->id  )
-        && setPosition( $resource, $position, $resourceType, $course->id  ) )
+        && set_position( $sibling, $position++, $resourceType, $course->id  )
+        && set_position( $resource, $position, $resourceType, $course->id  ) )
     {
         echo 'true';
         return true;
@@ -97,8 +97,8 @@ if( 'moveUp' == $call )
 {
     $position = isset( $_REQUEST['position'] ) && is_numeric( $_REQUEST['position'] ) ? (int)$_REQUEST['position'] : 0;
     if( $position 
-        && setPosition( $sibling, $position--, $resourceType, $course->id  )
-        && setPosition( $resource, $position, $resourceType, $course->id  ) )
+        && set_position( $sibling, $position--, $resourceType, $course->id  )
+        && set_position( $resource, $position, $resourceType, $course->id  ) )
     {
         echo 'true';
         return true;

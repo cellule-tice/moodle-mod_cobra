@@ -50,7 +50,7 @@ class COBRATextWrapper
         return (int)$this->collectionId;
     }
 
-    public function setPosition( $index )
+    public function set_position( $index )
     {
         $this->position = (int)$index;
     }
@@ -60,7 +60,7 @@ class COBRATextWrapper
         return $this->position;
     }
 
-    public function setVisibility( $value )
+    public function set_visibility( $value )
     {
         $this->visibility = $value;
     }
@@ -114,22 +114,21 @@ class COBRATextWrapper
     {
         global $DB,$course;
         if( !$this->getTextId() ) return false;
-        
         $text = $DB->get_record_select('cobra_texts_config', "course='$course->id' AND id_text= ".$this->getTextId() );
             
         $this->setId( $text->id );
         $this->setTextId( $text->id_text );
         $this->setCollectionId( $text->id_collection );
         $this->setType( $text->text_type );
-        $this->setPosition( $text->position );
-        $this->setVisibility( $text->visibility ? true : false );
+        $this->set_position( $text->position );
+        $this->set_visibility( $text->visibility ? true : false );
         return true;
     }
 
     public function loadRemoteData()
     {
         $params = array( 'id_text' => (int)$this->getTextId() );
-        $jsonObj = ElexRemoteService::call( 'loadTextData', $params );
+        $jsonObj = CobraRemoteService::call( 'loadTextData', $params );
 
         $this->setSource( utf8_decode( $jsonObj->source ) );
         $this->setTitle( utf8_decode( $jsonObj->title ) );

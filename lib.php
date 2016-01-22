@@ -49,11 +49,7 @@ define('NEWMODULE_ULTIMATE_ANSWER', 42);
 function cobra_supports($feature) {
 
     switch($feature) {
-
-        case FEATURE_SHOW_DESCRIPTION:
-            return true;
-        case FEATURE_BACKUP_MOODLE2:
-            return true;
+        case FEATURE_MOD_ARCHETYPE:           return MOD_ARCHETYPE_RESOURCE;
         default:
             return null;
     }
@@ -167,64 +163,7 @@ function cobra_user_outline($course, $user, $mod, $cobra) {
 function cobra_user_complete($course, $user, $mod, $cobra) {
 }
 
-/**
- * Given a course and a time, this module should find recent activity
- * that has occurred in cobra activities and print it out.
- *
- * @param stdClass $course The course record
- * @param bool $viewfullnames Should we display full names
- * @param int $timestart Print activity since this timestamp
- * @return boolean True if anything was printed, otherwise false
- */
-function cobra_print_recent_activity($course, $viewfullnames, $timestart) {
-    return false;
-}
 
-/**
- * Prepares the recent activity data
- *
- * This callback function is supposed to populate the passed array with
- * custom activity records. These records are then rendered into HTML via
- * {@link cobra_print_recent_mod_activity()}.
- *
- * Returns void, it adds items into $activities and increases $index.
- *
- * @param array $activities sequentially indexed array of objects with added 'cmid' property
- * @param int $index the index in the $activities to use for the next record
- * @param int $timestart append activity since this time
- * @param int $courseid the id of the course we produce the report for
- * @param int $cmid course module id
- * @param int $userid check for a particular user's activity only, defaults to 0 (all users)
- * @param int $groupid check for a particular group's activity only, defaults to 0 (all groups)
- */
-function cobra_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $cmid, $userid=0, $groupid=0) {
-}
-
-/**
- * Prints single activity item prepared by {@link cobra_get_recent_mod_activity()}
- *
- * @param stdClass $activity activity record with added 'cmid' property
- * @param int $courseid the id of the course we produce the report for
- * @param bool $detail print detailed report
- * @param array $modnames as returned by {@link get_module_types_names()}
- * @param bool $viewfullnames display users' full names
- */
-function cobra_print_recent_mod_activity($activity, $courseid, $detail, $modnames, $viewfullnames) {
-}
-
-/**
- * Function to be run periodically according to the moodle cron
- *
- * This function searches for things that need to be done, such
- * as sending out mail, toggling flags etc ...
- *
- * Note that this has been deprecated in favour of scheduled task API.
- *
- * @return boolean
- */
-function cobra_cron () {
-    return true;
-}
 
 /**
  * Returns all other caps used in the module
@@ -238,46 +177,6 @@ function cobra_get_extra_capabilities() {
     return array();
 }
 
-
-
-
-/* File API */
-
-/**
- * Returns the lists of all browsable file areas within the given module context
- *
- * The file area 'intro' for the activity introduction field is added automatically
- * by {@link file_browser::get_file_info_context_module()}
- *
- * @param stdClass $course
- * @param stdClass $cm
- * @param stdClass $context
- * @return array of [(string)filearea] => (string)description
- */
-function cobra_get_file_areas($course, $cm, $context) {
-    return array();
-}
-
-/**
- * File browsing support for cobra file areas
- *
- * @package mod_cobra
- * @category files
- *
- * @param file_browser $browser
- * @param array $areas
- * @param stdClass $course
- * @param stdClass $cm
- * @param stdClass $context
- * @param string $filearea
- * @param int $itemid
- * @param string $filepath
- * @param string $filename
- * @return file_info instance or null if not found
- */
-function cobra_get_file_info($browser, $areas, $course, $cm, $context, $filearea, $itemid, $filepath, $filename) {
-    return null;
-}
 
 /**
  * Serves the files from the cobra file areas

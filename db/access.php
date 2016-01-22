@@ -55,11 +55,7 @@ $capabilities = array(
         'archetypes' => array(
             'manager' => CAP_ALLOW        
         ),
-     /*   'archetypes' => array(
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ),
-       'clonepermissionsfrom' => 'moodle/course:manageactivities' */
+       'clonepermissionsfrom' => 'moodle/course:manageactivities' 
     ),
 
     'mod/cobra:view' => array(
@@ -71,15 +67,6 @@ $capabilities = array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        )
-    ),
-
-    'mod/cobra:submit' => array(
-        'riskbitmask' => RISK_SPAM,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
-            'student' => CAP_ALLOW
         )
     ),
     'mod/cobra:edit'=> array(

@@ -53,7 +53,7 @@ class CobraCollectionWrapper
         return $this->localName;
     }
     
-    public function setPosition( $index )
+    public function set_position( $index )
     {
         $this->position = (int)$index;
     }
@@ -63,7 +63,7 @@ class CobraCollectionWrapper
         return $this->position;
     }
     
-    public function setVisibility( $value )
+    public function set_visibility( $value )
     {
         $this->visibility = $value;   
     }
@@ -87,8 +87,8 @@ class CobraCollectionWrapper
 
             $this->setRemoteName( $collection->label );
             $this->setLocalName( $collection->local_label );
-            $this->setPosition( $collection->position );
-            $this->setVisibility( $collection->visibility ? true : false );
+            $this->set_position( $collection->position );
+            $this->set_visibility( $collection->visibility ? true : false );
             return true;      
         }
     }
@@ -160,7 +160,7 @@ class CobraCollectionWrapper
         $this->setLanguage( $remoteCollection->language );
         $this->setRemoteName( $remoteCollection->label ) ;
         $this->setLocalName(  $remoteCollection->label ) ;
-        $this->setPosition( self::getMaxPosition() +1 );
+        $this->set_position( self::getMaxPosition() +1 );
         return true;
     }
     

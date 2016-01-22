@@ -159,7 +159,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
       {
             $collection = new CobraCollectionWrapper();
             $collection->wrapRemote( $remoteCollection );
-            $textList = loadRemoteTextList( $collection->getId() );
+            $textList = load_remote_text_list( $collection->getId() );
             $position = 1;
             $saveMode = $collection->save();
             if( 'error' == $saveMode )
@@ -173,7 +173,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
                     $text = new CobraTextWrapper();
                     $text->setTextId( $remoteText['id'] );
                     $text->setCollectionId( $collection->getId() );
-                    $text->setPosition( $position++ );
+                    $text->set_position( $position++ );
                     $text->save();
                 }
                 echo $OUTPUT->box(get_string('text_collection_added','cobra'));
@@ -182,7 +182,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
         elseif( 'exRemove' == $cmd )
         {
             $collection = new CobraCollectionWrapper( $collectionId );
-            if( removeTextList( $collectionId ) )
+            if( remote_text_list( $collectionId ) )
             {
                 if( !$collection->remove() )
                 {
@@ -207,8 +207,8 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
             }
             $localCollection->setRemoteName( $remoteCollection->getRemoteName() );
             $localCollection->save();
-            $remoteTextList = loadRemoteTextList( $collectionId );
-            $localTextList = loadTextList( $collectionId );
+            $remoteTextList = load_remote_text_list( $collectionId );
+            $localTextList = load_text_list( $collectionId );
             $localTextIdList = array();
             //remove legacy texts
             $legacyTextCount = $removedTextCount = 0;
@@ -247,7 +247,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
                 $text->setTextId( $remoteText['id'] );
                 $text->setCollectionId( $collectionId );
                 $text->setType( 'Lesson' );
-                $text->setPosition( ElexTextWrapper::getMaxPosition() +1 );
+                $text->set_position( ElexTextWrapper::getMaxPosition() +1 );
                 if( $text->save() ) $addedTextCount++;
             }
             if( $newTextCount != 0 )
@@ -266,11 +266,11 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
  }
     elseif( 'corpus' == $currentSection )
     {
-        $prefs = getCobraPreferences();
+        $prefs = get_cobra_preferences();
         $tabCorpusType = returnValidListTypeCorpus( $prefs['language'] );
         if( 'saveOrder' == $cmd )
         {
-            if( !clearCorpusSelection() ) 
+            if( !clear_corpus_selection() ) 
             {
                 echo 'error while saving preferences' . '<br>' ;
             }
@@ -288,7 +288,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
                 ksort( $tab_new_ordre );
                 foreach( $tab_new_ordre as $typeId )
                 {
-                    insertCorpusTypeDisplayOrder( $typeId );
+                    insert_corpus_type_display_order( $typeId );
                 }
                  echo 'Concordances Order Saved' . '<br>';
             }
@@ -298,7 +298,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
     {
         if( 'savePrefs' == $cmd )
         {        
-            $prefs = getCobraPreferences();
+            $prefs = get_cobra_preferences();
             $prefs['gender'] = isset( $_REQUEST['gender'] ) && is_string( $_REQUEST['gender'] ) ? $_REQUEST['gender'] : $prefs['gender'];
             $prefs['ff'] = isset( $_REQUEST['ff'] ) && is_string( $_REQUEST['ff'] ) ? $_REQUEST['ff'] : $prefs['ff'];
             $prefs['translations'] = isset( $_REQUEST['translations'] ) && is_string( $_REQUEST['translations'] ) ? $_REQUEST['translations'] : $prefs['translations'];
@@ -309,7 +309,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
             $prefs['player'] = isset( $_REQUEST['player'] ) && is_string( $_REQUEST['player'] ) ? $_REQUEST['player'] : $prefs['player'];
             $prefs['nextprevbuttons'] = isset( $_REQUEST['nextprevbuttons'] ) && is_string( $_REQUEST['nextprevbuttons'] ) ? $_REQUEST['nextprevbuttons'] : $prefs['nextprevbuttons'];
             
-            if( !saveElexPreferences( $prefs ) )
+            if( !save_Cobra_preferences( $prefs ) )
             {
                 echo ' probleme <br >' ;
             }
@@ -341,7 +341,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
             . '<tbody>' . "\n";
             
         $idList = array();     
-        $registeredCollectionsList = getRegisteredCollections( 'all' );
+        $registeredCollectionsList = get_registered_collections( 'all' );
         $idList = array();     
         //echo $OUTPUT->pix_icon('t/down', get_string('down')), array('title' => get_string('down'));
        
@@ -394,7 +394,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
             . '</tr>' . "\n"
             . '</thead>' . "\n"
             . '<tbody>' . "\n";
-        $availableCollectionsList = getFilteredCobraCollections( $cobra->language, $idList );
+        $availableCollectionsList = get_filtered_cobra_collections( $cobra->language, $idList );
         foreach( $availableCollectionsList as $collection )
         {
             $content .= '<tr>' . "\n"
@@ -419,7 +419,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
             $couleur = findBackGround( $typeId );
             $corpusTypeName = $corpusTypeInfo['name'];
                    
-            if( corpusTypeExists( $typeId, $prefs['language'] ) )
+            if( corpus_type_exists( $typeId, $prefs['language'] ) )
             {
                 $type_selected = '';
                 if( in_array( $typeId, $ordreTypeList ) )
@@ -463,7 +463,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
     }
     elseif( 'display' == $currentSection )
     {
-        if( !isset( $prefs ) ) $prefs = getCobraPreferences();
+        if( !isset( $prefs ) ) $prefs = get_cobra_preferences();
 
         $checkedString = ' checked="checked"';
         $content .= '<form method="post" action="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&section=display">' . "\n"
