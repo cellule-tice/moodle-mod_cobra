@@ -16,6 +16,7 @@ class CobraRemoteService
            $url = $_SERVER['SERVER_NAME'] = $CFG->cobra_serverhost;
         //    $url = 'http://localhost/cobra/services/service_handler.php';
              $params['caller'] = '';
+             $params['caller'] = $site->shortname ;
         if( sizeof( $params ) )
         {
             $queryString = http_build_query( $params,'', '&' );
