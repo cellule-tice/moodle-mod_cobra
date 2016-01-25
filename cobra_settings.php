@@ -118,21 +118,21 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
                
             if( !empty( $label ) )
             {
-                $collection = new ElexCollectionWrapper( $collectionId );
+                $collection = new CobraCollectionWrapper( $collectionId );
                 $collection->load();
                 $collection->setLocalName( $label );
                 if ( $collection->update() )
                 {
-                    $dialogBox->success( get_string( 'Collection name changed' ) );
+                    echo $OUTPUT->box( get_string( 'Collection_name_changed' ,'cobra'));
                 }
                 else
                 {
-                    $dialogBox->error( get_string( 'Unable to change collection name' ) );
+                  echo $OUTPUT->box(  get_string( 'Unable_to_change_collection_name', 'cobra' ) ) ;
                 }
             }
             else
             {
-                $dialogBox->error( get_string( 'Collection name cannot be empty' ) );
+                echo $OUTPUT->box(  get_string( 'Collection_name_cannot_be_empty', 'cobra' ) );
                 $cmd = 'rqEditLabel';
             }
         }
@@ -141,7 +141,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
             $collection = new CobraCollectionWrapper( $collectionId );
             $collection->load();
             $editForm = '<strong>' . get_string('edit_collection','cobra') . '</strong>' . "\n"
-                     .  '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">' . "\n"
+                     .  '<form action="' . $_SERVER['PHP_SELF'] . '?id='.$id .'" method="post">' . "\n"
                      .  '<input type="hidden" name="claroFormId" value="' . uniqid( '' ) . '" />' . "\n"
                      .  '<input type="hidden" name="collection" value="' . $collectionId . '" />'."\n"
                      .  '<input type="hidden" name="cmd" value="exEditLabel" />'."\n"
@@ -158,9 +158,9 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
        elseif( 'exAdd' == $cmd && !empty( $remoteCollection ) )
       {
             $collection = new CobraCollectionWrapper();
-            $collection->wrapRemote( $remoteCollection );
+          
+            $collection->wrapRemote( $remoteCollection );                       
             $textList = load_remote_text_list( $collection->getId() );
-            $position = 1;
             $saveMode = $collection->save();
             if( 'error' == $saveMode )
             {
@@ -170,6 +170,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
             {
                 foreach( $textList as $remoteText )
                 {
+                    $position = 1;
                     $text = new CobraTextWrapper();
                     $text->setTextId( $remoteText['id'] );
                     $text->setCollectionId( $collection->getId() );

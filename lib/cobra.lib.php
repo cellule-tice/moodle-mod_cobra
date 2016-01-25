@@ -663,31 +663,24 @@ function cleanStatsBeforeDate ($courseId, $myDate)
 
 function getNextTextId($text)
 {
-    // @todo
      global $DB, $course;
-    $list = $DB->get_records_select('cobra_texts_config', "course='$course->id' AND id_collection='$text->getCollectionId()' AND position > '$text->getPosition()'");
-    
-    $moduleTbl = get_module_course_tbl( array( 'cobra_texts_config' ) );
-    $query = "SELECT `id_text`
-                FROM `" . $moduleTbl['cobra_texts_config'] . "`
-               WHERE `id_collection` = " . (int)$text->getCollectionId() . "
-                 AND `position` > " . (int)$text->getPosition() . "
-            ORDER BY `position` LIMIT 1";
-    $result = Claroline::getDatabase()->query($query)->fetch();
-    return $result ? $result['id_text'] : false;
+     $textCollectionId = $text->getCollectionId();
+     $textPosition = $text->getPosition();
+    $list = $DB->get_records_select('cobra_texts_config', "course='$course->id' AND id_collection='$textCollectionId' AND position > '$textPosition'", array(), 'position ASC', 'id_text', 0,1);
+    if (empty($list)) return false;
+    $keys = array_keys($list);
+    return $list[$keys[0]]->id_text;
 }
 
 function getPreviousTextId($text)
 {
-    // @todo
-    $moduleTbl = get_module_course_tbl( array( 'cobra_texts_config' ) );
-    $query = "SELECT `id_text`
-                FROM `" . $moduleTbl['cobra_texts_config'] . "`
-               WHERE `id_collection` = " . (int)$text->getCollectionId() . "
-                 AND `position` < " . (int)$text->getPosition() . "
-            ORDER BY `position` DESC LIMIT 1";
-    $result = Claroline::getDatabase()->query($query)->fetch();
-    return $result ? $result['id_text'] : false;
+     global $DB, $course;
+     $textCollectionId = $text->getCollectionId();
+     $textPosition = $text->getPosition();
+    $list = $DB->get_records_select('cobra_texts_config', "course='$course->id' AND id_collection='$textCollectionId' AND position < '$textPosition'", array(), 'position ASC', 'id_text', 0,1);
+    if (empty($list)) return false;
+    $keys = array_keys($list);
+    return $list[$keys[0]]->id_text;
 }
 
 function get_clicked_texts_frequency ( $courseId )

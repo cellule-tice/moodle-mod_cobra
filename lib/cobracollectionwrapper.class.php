@@ -173,7 +173,7 @@ class CobraCollectionWrapper
     public static function getMaxPosition()
     {
         global $DB,$course;
-        $list = $DB->get_records_select('cobra_registered_collections', "course='$course->id'",null,'position DESC', 'POSITION');
+        $list = $DB->get_records_select('cobra_registered_collections', "course='$course->id'",null,'position DESC', 'position');
         if (!empty($list))
         {
             foreach ($list as $elt)

@@ -143,22 +143,29 @@ $content = '';
         $content .=  claro_html_media_player( '/.mp3', $audioFileUrl ) ;
     }*/
     
+    if( 'SHOW' == $preferences['nextprevbuttons'] )
+    {
+        $nextId = getNextTextId($text);
+        $previousId = getPreviousTextId($text);
+        $content .= '<ul class="commandList">';
+        if($previousId) $content.= '<li style="padding-right:5px;"><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $previousId . '&amp;id_collection=' . $collectionId . '#/' . $previousId . '">' . get_string('previous_text', 'cobra') . '</a></li>';
+        if($nextId) $content .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $nextId . '&amp;id_collection=' . $collectionId . '#/' . $nextId . '">' . get_string('next_text','cobra') . '</a></li>';
+        $content .= '</ul>';
+    }
     //echo htmlentities($text->formatHtml(), ENT_COMPAT, 'ISO-8859-1');
     
     $content .=  $text->formatHtml()
          . '<div id="card" class="card left">'
          . '</div></div>'
-        // . '<div class="spacer">&nbsp;</div>'
          . '<div class="bottom">'
          . '<div id="details" class="left">' 
          . '</div>'          
          . '<div id="full_concordance" class="right">'
          . '</div>'
          . '</div>'
-        // . '<div class="spacer">&nbsp;</div>'
          ;
 
-echo $content;
+echo utf8_encode($content);
 
 
 echo $OUTPUT->box_end();
