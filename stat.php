@@ -124,7 +124,7 @@ if (!is_null($cmd))
         elseif ('ALL' == $scope)
         {
             // delete all stats
-            if (cleanAllStats($course->id))
+            if (clean_all_stats($course->id))
             {
                  $out .= '<span class="pre"> All click stats deleted</span>';
             }

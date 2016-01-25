@@ -109,7 +109,7 @@ if( 'moveUp' == $call )
 if( 'changeType' == $call )
 {
     $textId = isset( $_REQUEST['resource_id'] ) && is_numeric( $_REQUEST['resource_id'] ) ? (int)$_REQUEST['resource_id'] : 0;
-    if( changeTextType( $textId, $course->id ) )
+    if( change_text_type( $textId, $course->id ) )
     {
         $newType = getTextType( $textId, $course->id );
         echo get_string($newType,'cobra');

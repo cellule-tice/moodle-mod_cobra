@@ -59,14 +59,13 @@ $cmd = isset( $_REQUEST['cmd'] ) && in_array( $_REQUEST['cmd'], $acceptedCmdList
                 $glossary2 = get_glossary_for_text ( $textId );
                 if (array_key_exists( $text->id_text, $glossary2 ))
                 {
-                    $glossary2 = getGlossaryEntryOfText( $glossary2[$text->id_text], $text, $num );
+                    $glossary2 = get_glossary_entry_of_text( $glossary2[$text->id_text], $text, $num );
                     $glossary = array_merge( $glossary, $glossary2 );
                 }
             }
         }
     }   
     export_glossary ($glossary);
-   //$display = exportCsvGlossaryEntries( $glossary );
 
 }
 /*
@@ -190,7 +189,7 @@ else if ( $cmd == 'exCompare')
                 $glossary2 = get_glossary_for_text ( $textId );
                 if (array_key_exists( $textId, $glossary2 ))
                 {
-                    $glossary2 = getGlossaryEntryOfText( $glossary2[$text->id], $text, $num );
+                    $glossary2 = get_glossary_entry_of_text( $glossary2[$text->id], $text, $num );
                     $glossary = array_merge( $glossary, $glossary2 );
                 }
             }
@@ -198,7 +197,7 @@ else if ( $cmd == 'exCompare')
     }
 
     list( $lemmaGlossary, $expGlossary ) = explode_glossary_into_lemmas_and_expression( $glossary );
-    $glossaryLemmaId = explodeArrayOnKey ( $lemmaGlossary, 'id' );
+    $glossaryLemmaId = explode_array_on_key ( $lemmaGlossary, 'id' );
     $myText = $_REQUEST['myText'];
     $newWords = '';
     $otherWords = '';
@@ -206,7 +205,7 @@ else if ( $cmd == 'exCompare')
 
     foreach ( $words as $word )
     {
-        $listFlexions = wordExistsAsFlexion ( $word, $language );
+        $listFlexions = word_exists_as_flexion ( $word, $language );
         if (sizeof( $listFlexions ) != 0)
         {
             $trouve = false;

@@ -171,7 +171,7 @@ function  get_concept_list_from_para( $para, $entryType, $tab_id_concept = array
  * @param text : class Text
  * @return @glossary : array
  */
-function getGlossaryEntryOfText( $glossary, $text, $num )
+function get_glossary_entry_of_text( $glossary, $text, $num )
 {
     $textId= $text->id_text;
     $tab_glossary = array();
@@ -196,104 +196,6 @@ function getGlossaryEntryOfText( $glossary, $text, $num )
 }
 
 
-/**
- * @param $textId integer
- * @return $glossary array
- */
-function getGlossaryTableEntries( $textId='0' )
-{
-    $moduleTbl = get_module_course_tbl( array( 'elex_glossaire' ), claro_get_current_course_id() );
-
-    $glossary = array();
-    if ( $textId== 0 )
-    {
-        $sql = "SELECT id_text, id_entite_ling FROM `".$moduleTbl['elex_glossaire']."` " .
-                "ORDER BY id_text";
-    }
-    else
-    {
-        $sql = "SELECT id_text, id_entite_ling FROM `".$moduleTbl['elex_glossaire']."` " .
-                "WHERE id_text='".(int)$textId."'";
-    }
-    $res = Claroline::getDatabase()->query( $sql );
-    while ( $row = $res->fetch() )
-    {
-        $glossary[$row['id_text']][] = $row['id_entite_ling'];
-    }
-    return $glossary;
-}
-
-
-
-/**
- * @param $textId int
- * @param $entiteLingId int
- * @return boolean
- */
-function insertGlossaryEntry ( $textId, $entiteLingId )
-{
-    $moduleTbl = get_module_course_tbl( array( 'elex_glossaire' ), claro_get_current_course_id() );
-    $sql = "SELECT id_text FROM `".$moduleTbl['elex_glossaire']."` " .
-            "WHERE id_entite_ling='".(int)$entiteLingId."'";
-    $res = Claroline::getDatabase()->query( $sql );
-    if ( !$res->count() )
-    {
-        $sql = "INSERT INTO `".$moduleTbl['elex_glossaire']."` SET id_text='".(int)$textId."', id_entite_ling='".(int)$entiteLingId."'";
-        if( ! Claroline::getDatabase()->exec( $sql ) )
-        {
-            $console->pushMessage( mysql_error(), 'error' );
-            return false;
-        }
-    }
-    return true;
-}
-
-
-function buildGlossary ()
-{
-    set_time_limit(0);
-    $moduleTbl = get_module_course_tbl( array( 'elex_glossaire' ), claro_get_current_course_id() );
-    $query = "TRUNCATE TABLE `" . $moduleTbl['elex_glossaire'] . "`";
-    Claroline::getDatabase()->exec( $query );
-    $collectionList = get_registered_collections('visible');
-    foreach( $collectionList as $collection )
-    {
-        $textList = load_text_list( $collection['id_collection'], 'visible' );
-        foreach ($textList as $text)
-        {
-            // expressions
-            if (!buildGlossaryText( $text['id_text'], 'expression' ))
-            {
-                return false;
-
-            }
-            // lemmas
-            if ( !buildGlossaryText( $text['id_text'], 'lemma' ) )
-            {
-                return false;
-
-            }
-        }
-    }
-    return true;
-}
-
-function buildGlossaryText( $textId, $entryType )
-{
-    $moduleTbl = get_module_course_tbl( array( 'elex_glossaire' ), claro_get_current_course_id() );
-    $conceptIdList = elex_list_concepts_in_text($textId, $entryType);
-    foreach ($conceptIdList as $conceptId)
-    {
-        $params = array('conceptId'=>$conceptId, 'entryType'=>$entryType);
-        $entityLingId = CobraRemoteService::call( 'getEntityLingIdFromConcept', $params );
-        if (!insertGlossaryEntry($textId,$entityLingId))
-        {
-            $console->pushMessage('Problem in glossary construction');
-            return false;
-        }
-    }
-    return true;
-}
 
     function array_sort_func( $a, $b=NULL )
     {
@@ -326,32 +228,13 @@ function buildGlossaryText( $textId, $entryType )
        return $array;
     }
 
-function exportCsvGlossaryEntries( $glossary )
-{
-     // contruction of XML flow
-    $csv = export_glossary( $glossary );
-    if( !empty($csv) )
-    {
-        header("Content-type: application/csv");
-        header('Content-Disposition: attachment; filename="'.claro_get_current_course_id().'_glossary.csv"');
-        echo $csv;
-    }
-    exit;
-}
 
 
-
-function wordExistsAsFlexion( $word, $language )
+function word_exists_as_flexion( $word, $language )
 {
     $params = array( ' word'=> $word, 'language'=>$language);
     $list =  CobraRemoteService::call( 'wordExistsAsFlexion', $params );
     return $list;
-    /*$flexionList = array();
-    foreach( $list as $listObject  )
-    {
-        $flexionList[] = $listObject->value ;
-    }
-    return $flexionList; */
 }
 
 function get_lemmaCatList_from_ff( $word, $language )
@@ -395,7 +278,7 @@ function return_list_of_words_in_text($myText, $language)
     return $words;*/
 }
 
-function explodeArrayOnKey ($array, $key)
+function explode_array_on_key ($array, $key)
 {
     $tab = array();
     foreach ($array as $key2=>$arrayValue)

@@ -510,7 +510,7 @@ function cobra_curl_request( $url )
  * @param int $textId
  * @return boolean true on success, false otherwise
  */
-function changeTextType( $textId, $courseId )
+function change_text_type( $textId, $courseId )
 {
     global $DB;
     $list = $DB->get_record_select('cobra_texts_config', "course='$courseId' AND id_text='$textId'");
@@ -648,7 +648,7 @@ function increaseScriptTime( $time = 0)
     set_time_limit( $time );
 }
 
-function cleanAllStats( $courseId)
+function clean_all_stats( $courseId)
 {
     global $DB;
     return $DB->delete_records('cobra_clic', array('course'=>$courseId)); 
