@@ -29,7 +29,6 @@
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/locallib.php');
-require_once(dirname(__FILE__).'/lib/cobra.lib.php');
 require_once(dirname(__FILE__).'/lib/cobraremoteservice.class.php');
 require_once(dirname(__FILE__).'/lib/cobracollectionwrapper.class.php');
 
@@ -248,7 +247,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
                 $text->setTextId( $remoteText['id'] );
                 $text->setCollectionId( $collectionId );
                 $text->setType( 'Lesson' );
-                $text->set_position( ElexTextWrapper::getMaxPosition() +1 );
+                $text->set_position( CobraTextWrapper::getMaxPosition() +1 );
                 if( $text->save() ) $addedTextCount++;
             }
             if( $newTextCount != 0 )

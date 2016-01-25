@@ -3,7 +3,6 @@
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/locallib.php');
-require_once(dirname(__FILE__).'/lib/cobra.lib.php');
 require_once(dirname(__FILE__).'/lib/glossary.lib.php');
 require_once(dirname(__FILE__).'/lib/cobraremoteservice.class.php');
 require_once(dirname(__FILE__).'/lib/cobracollectionwrapper.class.php');
@@ -89,7 +88,7 @@ echo $OUTPUT->heading('Lecture de textes');
 
 echo $OUTPUT->box_start('Glossaire' );
 
-require_once dirname( __FILE__ ) . '/lib/cobra.lib.php';
+//require_once dirname( __FILE__ ) . '/locallib.php';
 
 $prefs = get_cobra_preferences();
 $language = $prefs['language'];
@@ -235,7 +234,7 @@ else if ( $cmd == 'exCompare')
     $out .= '</ul>';
 }
 
-echo $out;
+echo utf8_encode($out);
 
 
 echo $OUTPUT->box_end();

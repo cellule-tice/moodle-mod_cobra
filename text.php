@@ -28,9 +28,9 @@
 // Replace cobra with the name of your module and remove this line.
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
+require_once($CFG->libdir . '/medialib.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/locallib.php');
-require_once(dirname(__FILE__).'/lib/cobra.lib.php');
 require_once(dirname(__FILE__).'/lib/cobraremoteservice.class.php');
 require_once(dirname(__FILE__).'/lib/cobracollectionwrapper.class.php');
 
@@ -137,22 +137,28 @@ $content = '';
     $content .= '<div id="preferencesNb" class="hidden" name="'.sizeof($preferences).'">'.sizeof($preferences).'</div>';
     $content .= '<div class="top">';
     
-   // $audioFileUrl = $text->getAudioFileUrl();
-  /*  if( !empty( $audioFileUrl ) && 'SHOW' == $preferences['player'] )
-    {
-        $content .=  claro_html_media_player( '/.mp3', $audioFileUrl ) ;
-    }*/
-    
-    if( 'SHOW' == $preferences['nextprevbuttons'] )
+     if( 'SHOW' == $preferences['nextprevbuttons'] )
     {
         $nextId = getNextTextId($text);
         $previousId = getPreviousTextId($text);
         $content .= '<ul class="commandList">';
-        if($previousId) $content.= '<li style="padding-right:5px;"><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $previousId . '&amp;id_collection=' . $collectionId . '#/' . $previousId . '">' . get_string('previous_text', 'cobra') . '</a></li>';
+        if($previousId) $content.= '<li style="padding-right:5px;"><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $previousId . '&amp;id_collection=' . $collectionId . '#/' . $previousId . '">' . utf8_encode(get_string('previous_text', 'cobra')) . '</a></li>';
         if($nextId) $content .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $nextId . '&amp;id_collection=' . $collectionId . '#/' . $nextId . '">' . get_string('next_text','cobra') . '</a></li>';
         $content .= '</ul>';
     }
-    //echo htmlentities($text->formatHtml(), ENT_COMPAT, 'ISO-8859-1');
+    
+    $audioFileUrl = $text->getAudioFileUrl();
+    if( !empty( $audioFileUrl ) && 'SHOW' == $preferences['player'] )
+    {
+        $content .= '<object width="300" height="15">
+       <param name="src" value="'.$audioFileUrl.'">
+       <param name="autoplay" value="false">
+       <param name="controller" value="true">
+       <embed src="'.$audioFileUrl.'" autostart="false" loop="false" width="300" height="15"
+       controller="true"></embed>
+       </object>';
+    }
+       
     
     $content .=  $text->formatHtml()
          . '<div id="card" class="card left">'
@@ -165,7 +171,7 @@ $content = '';
          . '</div>'
          ;
 
-echo utf8_encode($content);
+echo $content;
 
 
 echo $OUTPUT->box_end();

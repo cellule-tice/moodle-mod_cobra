@@ -168,24 +168,5 @@ class CobraCollectionWrapper
     {        
        global $DB,$course;
        return $DB->delete_records('cobra_registered_collections',array('course'=>$course->id, 'id_collection'=>$this->getId()));        
-    }
-    
-    public static function getMaxPosition()
-    {
-        global $DB,$course;
-        $list = $DB->get_records_select('cobra_registered_collections', "course='$course->id'",null,'position DESC', 'position');
-        if (!empty($list))
-        {
-            foreach ($list as $elt)
-            {
-                $value = $elt->position;   
-                return $value;
-            }
-        }
-        else 
-        {
-            return '0';
-        }
-    }            
-
+    }             
 }

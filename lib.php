@@ -25,16 +25,11 @@
  * Moodle is performing actions across all modules.
  *
  * @package    mod_cobra
- * @copyright  2015 Your Name
+ * @copyright  2015 Laurence Dumortier UNamur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
-
-/**
- * Example constant, you probably want to remove this :-)
- */
-define('NEWMODULE_ULTIMATE_ANSWER', 42);
 
 /* Moodle core API */
 
@@ -50,6 +45,9 @@ function cobra_supports($feature) {
 
     switch($feature) {
         case FEATURE_MOD_ARCHETYPE:           return MOD_ARCHETYPE_RESOURCE;
+        case    FEATURE_MOD_INTRO : return false;
+        case FEATURE_GROUPS:                  return false;
+        case FEATURE_GROUPINGS:               return false;
         default:
             return null;
     }

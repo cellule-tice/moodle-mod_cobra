@@ -4,7 +4,6 @@ require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/locallib.php');
-require_once(dirname(__FILE__).'/lib/cobra.lib.php');
 require_once(dirname(__FILE__).'/lib/cobraremoteservice.class.php');
 require_once(dirname(__FILE__).'/lib/cobracollectionwrapper.class.php');
 

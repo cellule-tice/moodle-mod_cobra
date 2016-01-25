@@ -151,7 +151,7 @@ class COBRATextWrapper
     public function getAudioFileUrl()
     {
         $params = array( 'id_text' => (int)$this->getTextId() );
-        $url = ElexRemoteService::call( 'getAudioFileUrl', $params );
+        $url = CobraRemoteService::call( 'getAudioFileUrl', $params );
         return utf8_decode( $url );
     }
 
@@ -196,16 +196,19 @@ class COBRATextWrapper
 
     public static function getMaxPosition()
     {
-        $moduleTbl = get_module_course_tbl( array( 'elex_texts_config' ), claro_get_current_course_id() );
-        $query = "SELECT MAX(`position`) AS `pos` FROM `" . $moduleTbl['elex_texts_config'] . "`";
-        $result = Claroline::getDatabase()->query( $query );
-        if( $item = $result->fetch() )
+        global $DB,$course;
+        $list = $DB->get_records_select('cobra_texts_config', "course='$course->id'",null,'position DESC', 'position');
+        if (!empty($list))
         {
-            return $item['pos'];
+            foreach ($list as $elt)
+            {
+                $value = $elt->position;   
+                return $value;
+            }
         }
-        else
+        else 
         {
-            return 0;
+            return '0';
         }
     }
 }
