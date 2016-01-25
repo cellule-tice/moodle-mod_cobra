@@ -22,7 +22,7 @@ class CobraRemoteService
             $queryString = http_build_query( $params,'', '&' );
         }
         //echo '<br> requete = ' . $url . '?verb=' . $serviceName . '&' . htmlentities($queryString, ENT_COMPAT, 'ISO-8859-1') ;
-        echo '<br> requete : '.  $url . '?verb=' . $serviceName . '&' . $queryString ;
+        //echo '<br> requete : '.  $url . '?verb=' . $serviceName . '&' . $queryString ;
         if( !$response = cobra_http_request( $url . '?verb=' . $serviceName . '&' . $queryString ) )
         {
             throw new Exception( 'Unable to access required URL' . $url );            
