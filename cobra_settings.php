@@ -412,11 +412,11 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
      elseif( 'corpus' == $currentSection )
     {
         $ordreTypeList = getCorpusTypeDisplayOrder();
-        $list = '';          
+        $list = ''; 
         foreach( $tabCorpusType as $corpusTypeInfo ) 
         {
             $typeId = (int)$corpusTypeInfo['id'];
-            $couleur = findBackGround( $typeId );
+            $couleur = find_background( $typeId );
             $corpusTypeName = $corpusTypeInfo['name'];
                    
             if( corpus_type_exists( $typeId, $prefs['language'] ) )
@@ -448,7 +448,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
             
         }
     
-        $form = '<div class="claroDialogBox">' . "\n"
+        $form = '<div class="">' . "\n"
               . '<form action="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&section=corpus&amp;cmd=saveOrder" method="post"> ' . "\n" 
               . '<table> <thead> <tr> <th> &nbsp; </th><th> Type de corpus </th> <th> Ordre </th> </tr> </thead>'
               . $list

@@ -161,7 +161,7 @@ if( !is_null( $view ) )
              .  '</tr>'
              .  '</thead>';
 
-        $list = getClickedEntries ($course->id, 20);
+        $list = get_clicked_entries ($course->id, 20);
         foreach ($list as $id_entite_ling=>$nb)
         {     
             list( $conceptId, $construction, $entryType, $category ) = get_concept_info_from_ling_entity( $id_entite_ling );           
@@ -248,7 +248,7 @@ if( !is_null( $view ) )
                  .  '<th> Texte </th>'
                  .  '</tr>'
                  .  '</thead>';
-            $tab_nb_clics = getClickedTextsFrequency($course->id);            
+            $tab_nb_clics = get_clicked_texts_frequency($course->id);            
             foreach( $tab_nb_clics as $textId => $nb_total_clics )
             {
                 if( isset( $textInfo[$textId] ) )

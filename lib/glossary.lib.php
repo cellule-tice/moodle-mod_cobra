@@ -105,7 +105,7 @@ function get_glossary_for_text ( $textId )
 function cobra_list_concepts_in_text( $textId, $entryType )
 {
     $conceptIdList = array();
-    if (!in_array( $entryType, getValidEntryTypes() ) )
+    if (!in_array( $entryType, get_valid_entry_types() ) )
     {
         return false;
     }

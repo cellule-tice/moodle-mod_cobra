@@ -399,7 +399,7 @@ function getCorpusTypeDisplayOrder()
  * @param int $lingEntityId identifier of the corpus
  * @return array containing information about the corpus
  */
-function getCorpusInfo( $corpusId )
+/*function get_corpus_iInfo( $corpusId )
 {
     $params = array( 'id_corpus' => $corpusId );
     $corpusInfo = CobraRemoteService::call( 'getCorpusInfo', $params );
@@ -408,7 +408,7 @@ function getCorpusInfo( $corpusId )
         return array( $corpusInfo->id_groupe, $corpusInfo->nom_corpus, utf8_decode( $corpusInfo->reference ), $corpusInfo->langue, $corpusInfo->id_type );
     }
     return array();
-}
+}*/
 
 /**
  * Gets the css class associated to the corpus type given in args
@@ -416,7 +416,7 @@ function getCorpusInfo( $corpusId )
  * @param int $typeId
  * @return string css class
  */
-function findBackGround( $typeId )
+function find_background( $typeId )
 {
     $params = array( 'typeId' => $typeId );
     $backGroundClass = CobraRemoteService::call( 'findBackGround', $params );
@@ -432,7 +432,7 @@ function findBackGround( $typeId )
 function corpus_type_exists( $typeId, $language )
 {
     $params = array( 'language' => $language, 'typeId' => $typeId );
-    $ok = CobraRemoteService::call( 'corpus_type_exists', $params );
+    $ok = CobraRemoteService::call( 'corpusTypeExists', $params );
     return $ok;
 }
 
@@ -440,7 +440,7 @@ function corpus_type_exists( $typeId, $language )
  * Gives the list of valid entry types in the lexicon (currently 'lemma' and 'expression')
  * @return array containing the list
  */
-function getValidEntryTypes()
+function get_valid_entry_types()
 {
     return array( 'lemma', 'expression' );
 }
@@ -690,7 +690,7 @@ function getPreviousTextId($text)
     return $result ? $result['id_text'] : false;
 }
 
-function getClickedTextsFrequency ( $courseId )
+function get_clicked_texts_frequency ( $courseId )
 {
     global $DB;
     $tab_nb_clics = array();
@@ -707,7 +707,7 @@ function getClickedTextsFrequency ( $courseId )
      
 }
 
-function getClickedEntries ($courseId, $nb = 20)
+function get_clicked_entries ($courseId, $nb = 20)
 {
     $tab_nb_clics = array();
     global $DB;

@@ -113,7 +113,7 @@ if (( $cmd != 'rqExport' ) && ( $cmd != 'rqCompare' ))
     // afficher une checkbox pour chacun des textes de ce cours
      $display = '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">' . "\n";
     $display .= '<table>';
-    $display .= '<tr> <td colspan="2"><input type="checkbox" class="selectall" id="selectall"  >'.get_string('checkall_uncheckall', 'cobra') .'</td></tr>';
+    $display .= '<tr> <td><input type="checkbox" class="selectall" id="selectall"  >'.get_string('checkall_uncheckall', 'cobra') .'</td></tr>';
     foreach( $collectionList as $collection )
     {
         $textList = load_text_list( $collection['id_collection'], 'visible' );
@@ -121,14 +121,14 @@ if (( $cmd != 'rqExport' ) && ( $cmd != 'rqCompare' ))
         foreach( $textList as $text )
         {
             // title
-            $display  .= '<tr class="row" ><td style="min-width:33%;">' . "\n"
+            $display  .= '<tr><td style="min-width:33%;">' . "\n"
             .    '<input class="checkbox" type="checkbox" value="true" id="textId' . $text->id . '" name="' . $text->id . '" />'
             .    htmlspecialchars( strip_tags( $text->title) )
             .    '</td>' . "\n"
             .    '</tr>';
         }
     }
-    $display .= '<tr><td colspan="2" align="center"><input type="submit" value="' . get_string( 'ok' ) . '" />&nbsp; </td></tr>';    
+    $display .= '<tr><td align="center"><input type="submit" value="' . get_string( 'ok' ) . '" />&nbsp; </td></tr>';    
     $display  .= '</table>';
     $display .= '<input type="hidden" name="cmd" value="exExport" >';
      $display .= '<input type="hidden" name="id" value="'.$id. '" >';
