@@ -188,7 +188,7 @@ if (has_capability('mod/cobra:edit', $context))
         }
     
 
-echo utf8_encode($content);
+echo $content;
 //echo format_text($content);
 
 
