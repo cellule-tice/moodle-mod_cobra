@@ -103,17 +103,17 @@ function set_visibility( $resourceId, $setVisible, $resourceType, $courseId )
 {     
     global $DB;
     $visibility = $setVisible ? '1' : '0';
-    $dataObject = new  stdClass();
-    $dataObject->course = $courseId;
+    $dataobject = new  stdClass();
+    $dataobject->course = $courseId;
     if( 'text' == $resourceType )
     {
         $list = $DB->get_record_select('cobra_texts_config', "course='$courseId' AND id_text='$resourceId'");
         if (!empty($list))
         {
             // update
-            $dataObject->id= $list->id; 
-            $dataObject->visibility = $visibility;
-            if (!$DB->update_record('cobra_texts_config', $dataObject) ) return false;
+            $dataobject->id= $list->id; 
+            $dataobject->visibility = $visibility;
+            if (!$DB->update_record('cobra_texts_config', $dataobject) ) return false;
             return true;
         }
         return false;
@@ -124,9 +124,9 @@ function set_visibility( $resourceId, $setVisible, $resourceType, $courseId )
          if (!empty($list))
         {
             // update
-            $dataObject->id= $list->id; 
-            $dataObject->visibility = $visibility;
-            if (!$DB->update_record('cobra_registered_collections', $dataObject) ) return false;
+            $dataobject->id= $list->id; 
+            $dataobject->visibility = $visibility;
+            if (!$DB->update_record('cobra_registered_collections', $dataobject) ) return false;
             return true;
         }
         return false;       
@@ -143,17 +143,17 @@ function set_visibility( $resourceId, $setVisible, $resourceType, $courseId )
 function set_position( $resourceId, $position, $resourceType,  $courseId )
 {
     global $DB;
-    $dataObject = new  stdClass();
-    $dataObject->course = $courseId;
+    $dataobject = new  stdClass();
+    $dataobject->course = $courseId;
     if( 'text' == $resourceType )
     {
         $list = $DB->get_record_select('cobra_texts_config', "course='$courseId' AND id_text='$resourceId'");
         if (!empty($list))
         {
             // update
-            $dataObject->id= $list->id; 
-            $dataObject->position = $position;
-            if (!$DB->update_record('cobra_texts_config', $dataObject) ) return false;
+            $dataobject->id= $list->id; 
+            $dataobject->position = $position;
+            if (!$DB->update_record('cobra_texts_config', $dataobject) ) return false;
             return true;
         }
         return false;
@@ -164,9 +164,9 @@ function set_position( $resourceId, $position, $resourceType,  $courseId )
           if (!empty($list))
         {
             // update
-            $dataObject->id= $list->id; 
-            $dataObject->position = $position;
-            if (!$DB->update_record('cobra_registered_collections', $dataObject) ) return false;
+            $dataobject->id= $list->id; 
+            $dataobject->position = $position;
+            if (!$DB->update_record('cobra_registered_collections', $dataobject) ) return false;
             return true;
         }
         return false;  
@@ -182,10 +182,10 @@ function set_position( $resourceId, $position, $resourceType,  $courseId )
 function insert_corpus_type_display_order( $typeId )
 {    
     global $DB,$course;     
-    $dataObject = new  stdClass();
-    $dataObject->course=$course->id;
-    $dataObject->id_type=$typeId;
-    return  $DB->insert_record('cobra_ordre_concordances', $dataObject) ;
+    $dataobject = new  stdClass();
+    $dataobject->course=$course->id;
+    $dataobject->id_type=$typeId;
+    return  $DB->insert_record('cobra_ordre_concordances', $dataobject) ;
 }
 
 /**
@@ -301,22 +301,22 @@ function save_Cobra_preferences( $prefs )
      global $DB,$course;    
     foreach ($prefs as $key=>$value)
     {
-        $dataObject = new stdClass();
-        $dataObject->course = $course->id;
-        $dataObject->param = $key;
-        $dataObject->value= $value;
+        $dataobject = new stdClass();
+        $dataobject->course = $course->id;
+        $dataobject->param = $key;
+        $dataobject->value= $value;
         $list = $DB->get_record_select('cobra_prefs', "course='$course->id' AND param='$key'");
         if (!empty($list))
         {
             // update
-            $dataObject->id= $list->id;
-            if (!$DB->update_record('cobra_prefs', $dataObject) ) return false;
+            $dataobject->id= $list->id;
+            if (!$DB->update_record('cobra_prefs', $dataobject) ) return false;
           
         }
         else
         {
             // insert
-            if (!$DB->insert_record('cobra_prefs', $dataObject) ) return false;
+            if (!$DB->insert_record('cobra_prefs', $dataobject) ) return false;
         }
     }
     return true;
@@ -344,22 +344,22 @@ function clic( $textId, $lingEntityId, $DB, $courseId, $userId )
     $info = $DB->get_record_select('cobra_clic',"course='$courseId' AND user_id='$userId' AND id_text='$textId' AND id_entite_ling='$lingEntityId'");  
     if (!$info)
     {
-       $dataObject = new  stdClass();
-          $dataObject->course=$courseId;
-          $dataObject->user_id=$userId;
-          $dataObject->id_text=$textId;
-          $dataObject->id_entite_ling=$lingEntityId;
-          $dataObject->nb_clics=1;
-          $dataObject->datecreate=date("Y-m-d H:i:s");
-          $dataObject->datemodif=date("Y-m-d H:i:s");
-          return  $DB->insert_record('cobra_clic', $dataObject) ;
+       $dataobject = new  stdClass();
+          $dataobject->course=$courseId;
+          $dataobject->user_id=$userId;
+          $dataobject->id_text=$textId;
+          $dataobject->id_entite_ling=$lingEntityId;
+          $dataobject->nb_clics=1;
+          $dataobject->datecreate=date("Y-m-d H:i:s");
+          $dataobject->datemodif=date("Y-m-d H:i:s");
+          return  $DB->insert_record('cobra_clic', $dataobject) ;
     }
     else
     {
-        $dataObject = new  stdClass();
-        $dataObject->id=$info->id;
-        $dataObject->nb_clics = ($info->nb_clics + 1);
-        return  $DB->update_record('cobra_clic', $dataObject) ;
+        $dataobject = new  stdClass();
+        $dataobject->id=$info->id;
+        $dataobject->nb_clics = ($info->nb_clics + 1);
+        return  $DB->update_record('cobra_clic', $dataobject) ;
     }
 }
 
@@ -569,10 +569,10 @@ function change_text_type( $textId, $courseId )
       
         $textType = $list->text_type;
         $newType = getNextType( $textType );
-         $dataObject = new stdClass();
-        $dataObject->id= $list->id; 
-        $dataObject->text_type=$newType;
-        if (!$DB->update_record('cobra_texts_config', $dataObject) ) return false;
+         $dataobject = new stdClass();
+        $dataobject->id= $list->id; 
+        $dataobject->text_type=$newType;
+        if (!$DB->update_record('cobra_texts_config', $dataobject) ) return false;
         return true;
     }
     return false;            

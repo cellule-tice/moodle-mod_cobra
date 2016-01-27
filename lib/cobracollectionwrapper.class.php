@@ -103,15 +103,15 @@ class CobraCollectionWrapper
         }
         
         $visibility =  ( true === $this->isVisible() ? '1' : '0' ) ;
-        $dataObject = new stdClass();
-        $dataObject->course = $course->id;
-        $dataObject->id_collection= $this->getId();
-        $dataObject->label = $this->getRemoteName();
-        $dataObject->local_label = $this->getLocalName();
-        $dataObject->position = $this->getPosition();
-        $dataObject->visibility = $visibility;
+        $$dataobject = new stdClass();
+        $$dataobject->course = $course->id;
+        $$dataobject->id_collection= $this->getId();
+        $$dataobject->label = $this->getRemoteName();
+        $$dataobject->local_label = $this->getLocalName();
+        $$dataobject->position = $this->getPosition();
+        $$dataobject->visibility = $visibility;
       
-        if ($DB->insert_record('cobra_registered_collections', $dataObject) )
+        if ($DB->insert_record('cobra_registered_collections', $$dataobject) )
         {
             return 'saved';
         }
@@ -127,16 +127,16 @@ class CobraCollectionWrapper
         if( $this->getId() )
         {
             $visibility =  ( true === $this->isVisible() ? '1' : '0' ) ;
-            $dataObject = new stdClass();
-            $dataObject->id = $this->getId();
-            $dataObject->course = $course->id;
-            $dataObject->id_collection= $this->getId();
-            $dataObject->label = $this->getRemoteName();
-            $dataObject->local_label = $this->getLocalName();
-            $dataObject->position = $this->getPosition();
-            $dataObject->visibility = $visibility;
+            $$dataobject = new stdClass();
+            $$dataobject->id = $this->getId();
+            $$dataobject->course = $course->id;
+            $$dataobject->id_collection= $this->getId();
+            $$dataobject->label = $this->getRemoteName();
+            $$dataobject->local_label = $this->getLocalName();
+            $$dataobject->position = $this->getPosition();
+            $$dataobject->visibility = $visibility;
 
-            if ($DB->update_record('cobra_registered_collections', $dataObject) )
+            if ($DB->update_record('cobra_registered_collections', $$dataobject) )
             {
                 return 'updated';
             }

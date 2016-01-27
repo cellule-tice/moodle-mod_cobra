@@ -142,7 +142,7 @@ $content = '';
         $nextId = getNextTextId($text);
         $previousId = getPreviousTextId($text);
         $content .= '<ul class="commandList">';
-        if($previousId) $content.= '<li style="padding-right:5px;"><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $previousId . '&amp;id_collection=' . $collectionId . '#/' . $previousId . '">' . utf8_encode(get_string('previous_text', 'cobra')) . '</a></li>';
+        if($previousId) $content.= '<li style="padding-right:5px;"><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $previousId . '&amp;id_collection=' . $collectionId . '#/' . $previousId . '">' . get_string('previous_text', 'cobra') . '</a></li>';
         if($nextId) $content .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $nextId . '&amp;id_collection=' . $collectionId . '#/' . $nextId . '">' . get_string('next_text','cobra') . '</a></li>';
         $content .= '</ul>';
     }
@@ -150,12 +150,12 @@ $content = '';
     $audioFileUrl = $text->getAudioFileUrl();
     if( !empty( $audioFileUrl ) && 'SHOW' == $preferences['player'] )
     {
-        $content .= '<object width="300" height="15">
-       <param name="src" value="'.$audioFileUrl.'">
+        $content .= '<object width="300" height="15"> ' .
+  /* '  <param name="src" value="'.$audioFileUrl.'">
        <param name="autoplay" value="false">
-       <param name="controller" value="true">
-       <embed src="'.$audioFileUrl.'" autostart="false" loop="false" width="300" height="15"
-       controller="true"></embed>
+       <param name="controller" value="true">' .*/
+       '<embed src="'.$audioFileUrl.'" autostart="false" loop="false" width="300" height="15"
+       controller="true"></embed> 
        </object>';
     }
        
