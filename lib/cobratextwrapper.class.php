@@ -161,29 +161,29 @@ class COBRATextWrapper
         if( $this->getId() )
         {
             $visibility =  ( true === $this->isVisible() ? '1' : '0' ) ;
-            $$dataobject = new  stdClass();
-            $$dataobject->id=$this->getiId();
-            $$dataobject->course=$course->id;
-            $$dataobject->id_text=$this->getTextId();
-            $$dataobject->id_collection=$this->getCollectionId();
-            $$dataobject->text_type=$this->getType();
-            $$dataobject->position=$this->getPosition();
-            $$dataobject->visibility= $visibility;
-            return  $DB->update_record('cobra_texts_config', $$dataobject) ;
+            $dataobject = new  stdClass();
+            $dataobject->id=$this->getiId();
+            $dataobject->course=$course->id;
+            $dataobject->id_text=$this->getTextId();
+            $dataobject->id_collection=$this->getCollectionId();
+            $dataobject->text_type=$this->getType();
+            $dataobject->position=$this->getPosition();
+            $dataobject->visibility= $visibility;
+            return  $DB->update_record('cobra_texts_config', $dataobject) ;
            
         }
         else
         {
             
             $visibility =  ( true === $this->isVisible() ? '1' : '0' ) ;
-            $$dataobject = new  stdClass();
-            $$dataobject->course=$course->id;
-            $$dataobject->id_text=$this->getTextId();
-            $$dataobject->id_collection=$this->getCollectionId();
-            $$dataobject->text_type=$this->getType();
-            $$dataobject->position=$this->getPosition();
-            $$dataobject->visibility= $visibility;
-            return  $DB->insert_record('cobra_texts_config', $$dataobject) ;
+            $dataobject = new  stdClass();
+            $dataobject->course=$course->id;
+            $dataobject->id_text=$this->getTextId();
+            $dataobject->id_collection=$this->getCollectionId();
+            $dataobject->text_type=$this->getType();
+            $dataobject->position=$this->getPosition();
+            $dataobject->visibility= $visibility;
+            return  $DB->insert_record('cobra_texts_config', $dataobject) ;
 
         }
     }

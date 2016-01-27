@@ -188,7 +188,7 @@ function get_glossary_entry_of_text( $glossary, $text, $num )
         $glossary[$key]['entry'] = utf8_decode( $glossaryEntry->entry );
         $glossary[$key]['category'] = $glossaryEntry->category;
         $glossary[$key]['ss_cat'] = utf8_decode( $glossaryEntry->ss_cat );
-        $glossary[$key]['traduction'] = utf8_decode( $glossaryEntry->traduction );
+        $glossary[$key]['traduction'] =  utf8_decode($glossaryEntry->traduction) ;
         $glossary[$key]['num']= $num;
         $glossary[$key]['title'] = strip_tags( $text->title );
     }
