@@ -205,7 +205,7 @@ else if ( $cmd == 'exCompare')
                 {
                     $trouve = true;
                     $info = $glossarylemmaid[$lemmaid]['entry'] . ' ('.$glossarylemmaid[$lemmaid]['category'].') - ' . $glossarylemmaid[$lemmaid]['traduction'];
-                    $otherwords .= '<li> ' . get_string('possible_translation','cobra') . ' : '. $word . ' : '. $info . '</li>';
+                    $otherwords .= '<li> ' . get_string('possible_translation','cobra') . ' : '. $word . ' : '. utf8_encode($info) . '</li>';
                 }
             }
             if (!$trouve)
