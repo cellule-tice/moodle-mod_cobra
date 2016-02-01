@@ -137,16 +137,23 @@ $content = '';
     }
     $content .= '<div id="preferencesNb" class="hidden" name="'.sizeof($preferences).'">'.sizeof($preferences).'</div>';
     $content .= '<div class="top">';
-    $content .=  $preferences['nextprevbuttons'];
     
      if( 'SHOW' == strtoupper($preferences['nextprevbuttons']) )
     {
         $content .= 'OK ! ';
         $nextId = getNextTextId($text);
         $previousId = getPreviousTextId($text);
-        $content .= '<ul class="commandList">';
-        if($previousId) $content.= '<li style="padding-right:5px;"><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $previousId . '&amp;id_collection=' . $collectionId . '#/' . $previousId . '">' . get_string('previous_text', 'cobra') . '</a></li>';
-        if($nextId) $content .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $nextId . '&amp;id_collection=' . $collectionId . '#/' . $nextId . '">' . get_string('next_text','cobra') . '</a></li>';
+        $content .= '<ul>';
+        if($previousId) 
+        {
+            echo '1 ->';
+            $content.= '<li style="padding-right:5px;"><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $previousId . '&amp;id_collection=' . $collectionId . '#/' . $previousId . '">' . get_string('previous_text', 'cobra') . '</a></li>';
+        }
+        if($nextId) 
+        {
+            echo ' 2 ->'; 
+            $content .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $nextId . '&amp;id_collection=' . $collectionId . '#/' . $nextId . '">' . get_string('next_text','cobra') . '</a></li>';
+        }
         $content .= '</ul>';
     }
     
