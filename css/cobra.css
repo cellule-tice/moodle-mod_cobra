@@ -156,10 +156,9 @@
 .entryTable
 {
     width: 100%;
-}
-.entryTable table tr td
-{
-    border-spacing:10px;
+    border-color:white;    
+    border-spacing:3px;
+    border-collapse : separate;
 }
 
 .lexTable
