@@ -137,9 +137,11 @@ $content = '';
     }
     $content .= '<div id="preferencesNb" class="hidden" name="'.sizeof($preferences).'">'.sizeof($preferences).'</div>';
     $content .= '<div class="top">';
+    $content .=  $preferences['nextprevbuttons'];
     
      if( 'SHOW' == strtoupper($preferences['nextprevbuttons']) )
     {
+        $content .= 'OK ! ';
         $nextId = getNextTextId($text);
         $previousId = getPreviousTextId($text);
         $content .= '<ul class="commandList">';
