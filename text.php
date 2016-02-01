@@ -128,6 +128,7 @@ $content = '';
     $content .= '<div id="courseLabel" class="hidden" name="' . $course->id . '">&nbsp;</div>';
     $content .= '<div id="userId" class="hidden" name="' . $USER->id . '">&nbsp;</div>';
     $i=0;
+    var_dump($preferences);
     foreach ($preferences as $key=>$info)
     {
          $content .= '<div id="preferences_'.$i. '_key" class="hidden" name="'.$key.'">'.$key.'</div>';
@@ -137,7 +138,7 @@ $content = '';
     $content .= '<div id="preferencesNb" class="hidden" name="'.sizeof($preferences).'">'.sizeof($preferences).'</div>';
     $content .= '<div class="top">';
     
-     if( 'SHOW' == $preferences['nextprevbuttons'] )
+     if( 'SHOW' == strtoupper($preferences['nextprevbuttons']) )
     {
         $nextId = getNextTextId($text);
         $previousId = getPreviousTextId($text);
