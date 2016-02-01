@@ -711,7 +711,7 @@ function cleanStatsBeforeDate ($courseId, $myDate)
     return $DB->delete_records('cobra_clic', array('course'=>$courseId, 'datemodif' => $dateModif));	
 }
 
-function getNextTextId($text)
+function get_next_textid($text)
 {
      global $DB, $course;
      $textCollectionId = $text->getCollectionId();
@@ -722,7 +722,7 @@ function getNextTextId($text)
     return $list[$keys[0]]->id_text;
 }
 
-function getPreviousTextId($text)
+function get_previous_textid($text)
 {
      global $DB, $course;
      $textCollectionId = $text->getCollectionId();

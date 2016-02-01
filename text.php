@@ -34,9 +34,9 @@ require_once(dirname(__FILE__).'/locallib.php');
 require_once(dirname(__FILE__).'/lib/cobraremoteservice.class.php');
 require_once(dirname(__FILE__).'/lib/cobracollectionwrapper.class.php');
 
-  $textId = isset( $_REQUEST['id_text'] ) && is_numeric( $_REQUEST['id_text'] ) ? $_REQUEST['id_text'] : null;
-    $collectionId = isset( $_REQUEST['id_collection'] ) && is_numeric( $_REQUEST['id_collection'] ) ? $_REQUEST['id_collection'] : null;
-    if( is_null( $textId ) )
+  $textid = isset( $_REQUEST['id_text'] ) && is_numeric( $_REQUEST['id_text'] ) ? $_REQUEST['id_text'] : null;
+    $collectionid = isset( $_REQUEST['id_collection'] ) && is_numeric( $_REQUEST['id_collection'] ) ? $_REQUEST['id_collection'] : null;
+    if( is_null( $textid ) )
     {
         header( 'Location: ./index.php' );
         exit();
@@ -105,10 +105,10 @@ echo $OUTPUT->box_start('generalbox collection_content' );
 $content = '';
 
    //load content to display
-    $collection = new CobraCollectionWrapper( $collectionId );
+    $collection = new CobraCollectionWrapper( $collectionid );
     $collection->load();
     $text = new CobraTextWrapper();
-    $text->setTextId( $textId );
+    $text->setTextId( $textid );
     $text->load();
     $preferences = get_cobra_preferences();
     $ccOrder = getCorpusTypeDisplayOrder();
@@ -124,11 +124,10 @@ $content = '';
     $content .= '<div id="encode_clic"  name="'.$encodeClic.'" class="hidden"></div>';
     $content .= '<div id="language" class="hidden" name="' . $collection->getLanguage() . '">&nbsp;</div>';
    
-    $content .= '<div id="id_text" class="hidden">' . $textId . '</div>';
+    $content .= '<div id="id_text" class="hidden">' . $textid . '</div>';
     $content .= '<div id="courseLabel" class="hidden" name="' . $course->id . '">&nbsp;</div>';
     $content .= '<div id="userId" class="hidden" name="' . $USER->id . '">&nbsp;</div>';
-    $i=0;
-    var_dump($preferences);
+   $i=0;
     foreach ($preferences as $key=>$info)
     {
          $content .= '<div id="preferences_'.$i. '_key" class="hidden" name="'.$key.'">'.$key.'</div>';
@@ -141,18 +140,20 @@ $content = '';
      if( 'SHOW' == strtoupper($preferences['nextprevbuttons']) )
     {
         $content .= 'OK ! ';
-        $nextId = getNextTextId($text);
-        $previousId = getPreviousTextId($text);
+        $nextid = get_next_textid($text);
+        $content .= ' next : '.$nextid;
+        $previousid = get_previous_textid($text);
+        $content .= ' previous : '.$previousid;
         $content .= '<ul>';
-        if($previousId) 
+        if( $previousid ) 
         {
             echo '1 ->';
-            $content.= '<li style="padding-right:5px;"><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $previousId . '&amp;id_collection=' . $collectionId . '#/' . $previousId . '">' . get_string('previous_text', 'cobra') . '</a></li>';
+            $content.= '<li style="padding-right:5px;"><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $previousid . '&amp;id_collection=' . $collectionid . '#/' . $previousid . '">' . get_string('previous_text', 'cobra') . '</a></li>';
         }
-        if($nextId) 
+        if( $nextid  )
         {
             echo ' 2 ->'; 
-            $content .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $nextId . '&amp;id_collection=' . $collectionId . '#/' . $nextId . '">' . get_string('next_text','cobra') . '</a></li>';
+            $content .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $nextid . '&amp;id_collection=' . $collectionid . '#/' . $nextid . '">' . get_string('next_text','cobra') . '</a></li>';
         }
         $content .= '</ul>';
     }
