@@ -8,6 +8,7 @@
     color : #000000;
     padding : 5px;
     margin: 0px;
+    font-size: 24px;
 }
 
 .sous-titre {
@@ -34,6 +35,7 @@
     padding: 5px;    
     vertical-align: text-top;
     width: 50%;
+    Line-Height: 15pt;
 }
 
 .reference{
@@ -57,10 +59,13 @@
     max-height: 350px;
     float:left; 
     text-align:justify;
+    color:#616365;
     background-color: #FFFFFF;
     padding:0px 20px 0px 5px;
     overflow:auto;
     border-right: 1px solid #C4C4C4;
+    Line-Height: 15pt;
+    
 }
 
 #card {
@@ -77,6 +82,7 @@
     width:35%;
     min-width:290px;
     margin-left:10px;
+    Line-Height: 15pt;
 }
 
 #details{
@@ -86,6 +92,7 @@
     float:left; 
     overflow:auto;
     padding:0px 20px 0px 5px;
+    Line-Height: 15pt;
 }
 
 #full_concordance {
@@ -100,6 +107,7 @@
     min-width:290px;
     margin-top: 10px;
     margin-left: 10px;
+    Line-Height: 15pt;
 }
 
 .cardImage {
@@ -123,7 +131,7 @@
     font-weight: normal;    
 }
 
-.label
+.label2
 {
     font-style: italic;
 }
@@ -148,6 +156,10 @@
 .entryTable
 {
     width: 100%;
+}
+.entryTable table tr td
+{
+    border-spacing:10px;
 }
 
 .lexTable
@@ -313,10 +325,10 @@ a img
     text-decoration: none;
 }
 
-table 
+/*table 
 {
-    border-spacing : 3px; 
-}
+    border-spacing : 10px; 
+}*/
 /*h1
 {
     border-width: 0;

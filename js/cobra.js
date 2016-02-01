@@ -109,7 +109,8 @@ M.mod_cobra.lemma_on_click = function(){
       $.post( 'relay.php', { verb: 'displayEntry', concept_id: conceptId, resource_id: textId, is_expr: isExpr , encodeClic : encodeClic, courseId : courseId, userId : userId, 
             params : json  },
             function(data){
-                detailsDiv.html(data);
+                var str = data.replace('class="label"','class="label2"');
+                detailsDiv.html(str);
         });                 
    });   
 };
