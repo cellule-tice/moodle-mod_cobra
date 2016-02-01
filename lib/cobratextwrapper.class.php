@@ -45,7 +45,7 @@ class COBRATextWrapper
         $this->collectionId = $id;
     }
 
-    public function getCollectionId()
+    public function get_collectionid()
     {
         return (int)$this->collectionId;
     }
@@ -55,7 +55,7 @@ class COBRATextWrapper
         $this->position = (int)$index;
     }
 
-    public function getPosition()
+    public function get_position()
     {
         return $this->position;
     }
@@ -165,9 +165,9 @@ class COBRATextWrapper
             $dataobject->id=$this->getiId();
             $dataobject->course=$course->id;
             $dataobject->id_text=$this->getTextId();
-            $dataobject->id_collection=$this->getCollectionId();
+            $dataobject->id_collection=$this->get_collectionid();
             $dataobject->text_type=$this->getType();
-            $dataobject->position=$this->getPosition();
+            $dataobject->position=$this->get_position();
             $dataobject->visibility= $visibility;
             return  $DB->update_record('cobra_texts_config', $dataobject) ;
            
@@ -179,9 +179,9 @@ class COBRATextWrapper
             $dataobject = new  stdClass();
             $dataobject->course=$course->id;
             $dataobject->id_text=$this->getTextId();
-            $dataobject->id_collection=$this->getCollectionId();
+            $dataobject->id_collection=$this->get_collectionid();
             $dataobject->text_type=$this->getType();
-            $dataobject->position=$this->getPosition();
+            $dataobject->position=$this->get_position();
             $dataobject->visibility= $visibility;
             return  $DB->insert_record('cobra_texts_config', $dataobject) ;
 

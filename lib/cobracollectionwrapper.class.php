@@ -108,7 +108,7 @@ class CobraCollectionWrapper
         $dataobject->id_collection= $this->getId();
         $dataobject->label = $this->getRemoteName();
         $dataobject->local_label = $this->getLocalName();
-        $dataobject->position = $this->getPosition();
+        $dataobject->position = $this->get_position();
         $dataobject->visibility = $visibility;
       
         if ($DB->insert_record('cobra_registered_collections', $dataobject) )
@@ -133,7 +133,7 @@ class CobraCollectionWrapper
             $dataobject->id_collection= $this->getId();
             $dataobject->label = $this->getRemoteName();
             $dataobject->local_label = $this->getLocalName();
-            $dataobject->position = $this->getPosition();
+            $dataobject->position = $this->get_position();
             $dataobject->visibility = $visibility;
 
             if ($DB->update_record('cobra_registered_collections', $dataobject) )

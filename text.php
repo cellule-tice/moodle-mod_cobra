@@ -139,20 +139,15 @@ $content = '';
     
      if( 'SHOW' == strtoupper($preferences['nextprevbuttons']) )
     {
-        $content .= 'OK ! ';
         $nextid = get_next_textid($text);
-        $content .= ' next : '.$nextid;
         $previousid = get_previous_textid($text);
-        $content .= ' previous : '.$previousid;
         $content .= '<ul>';
         if( $previousid ) 
-        {
-            echo '1 ->';
+        {           
             $content.= '<li style="padding-right:5px;"><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $previousid . '&amp;id_collection=' . $collectionid . '#/' . $previousid . '">' . get_string('previous_text', 'cobra') . '</a></li>';
         }
         if( $nextid  )
         {
-            echo ' 2 ->'; 
             $content .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $nextid . '&amp;id_collection=' . $collectionid . '#/' . $nextid . '">' . get_string('next_text','cobra') . '</a></li>';
         }
         $content .= '</ul>';

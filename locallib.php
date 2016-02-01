@@ -713,9 +713,9 @@ function cleanStatsBeforeDate ($courseId, $myDate)
 
 function get_next_textid($text)
 {
-     global $DB, $course;
-     $textCollectionId = $text->getCollectionId();
-     $textPosition = $text->getPosition();
+    global $DB, $course;
+    $textCollectionId = $text->get_collectionid();
+    $textPosition = $text->get_position();
     $list = $DB->get_records_select('cobra_texts_config', "course='$course->id' AND id_collection='$textCollectionId' AND position > '$textPosition'", array(), 'position ASC', 'id_text', 0,1);
     if (empty($list)) return false;
     $keys = array_keys($list);
@@ -724,9 +724,9 @@ function get_next_textid($text)
 
 function get_previous_textid($text)
 {
-     global $DB, $course;
-     $textCollectionId = $text->getCollectionId();
-     $textPosition = $text->getPosition();
+    global $DB, $course;
+    $textCollectionId = $text->get_collectionid();
+    $textPosition = $text->get_position();
     $list = $DB->get_records_select('cobra_texts_config', "course='$course->id' AND id_collection='$textCollectionId' AND position < '$textPosition'", array(), 'position ASC', 'id_text', 0,1);
     if (empty($list)) return false;
     $keys = array_keys($list);
