@@ -154,16 +154,17 @@ $content = '';
     }
     
     $audioFileUrl = $text->getAudioFileUrl();
-  /*  if( !empty( $audioFileUrl ) && 'SHOW' == $preferences['player'] )
+    if( !empty( $audioFileUrl ) && 'SHOW' == $preferences['player'] )
     {
-        $content .= '<object width="300" height="15"> ' .
-  // '  <param name="src" value="'.$audioFileUrl.'">
-   //    <param name="autoplay" value="false">
-   //    <param name="controller" value="true">' .
-       '<embed src="'.$audioFileUrl.'" autostart="false" loop="false" width="300" height="15"
-       controller="true"></embed> 
-       </object>';
-    }*/
+       $content .= ' <audio controls="controls">
+ <source src="'.$audioFileUrl.'" />
+ <!-- fallback -->
+  <embed type="application/x-shockwave-flash"                                                         
+    flashvars="audioUrl='.$audioFileUrl.'"    
+     src="http://www.google.com/reader/ui/3523697345-audio-player.swf"   
+     width="650? height="0? quality="best"></embed>
+</audio>`';
+    }
        
     
     $content .=  $text->formatHtml()

@@ -58,7 +58,7 @@ class CobraCollectionWrapper
         $this->position = (int)$index;
     }
     
-    public function getPosition()
+    public function get_position()
     {
         return $this->position;
     }
