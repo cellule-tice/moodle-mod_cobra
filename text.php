@@ -131,7 +131,7 @@ $content = '';
     foreach ($preferences as $key=>$info)
     {
          $content .= '<div id="preferences_'.$i. '_key" class="hidden" name="'.$key.'">'.$key.'</div>';
-         $content .= '<div id="preferences_'.$i. '_value" class="hidden" name="'.$info.'">'.$info.'</div>';
+         $content .= '<div id="preferences_'.$i. '_value" class="hidden" name="'.strtolower($info).'">'.$info.'</div>';
          $i++;
     }
     $content .= '<div id="preferencesNb" class="hidden" name="'.sizeof($preferences).'">'.sizeof($preferences).'</div>';
@@ -148,16 +148,16 @@ $content = '';
     }
     
     $audioFileUrl = $text->getAudioFileUrl();
-    if( !empty( $audioFileUrl ) && 'SHOW' == $preferences['player'] )
+  /*  if( !empty( $audioFileUrl ) && 'SHOW' == $preferences['player'] )
     {
         $content .= '<object width="300" height="15"> ' .
-  /* '  <param name="src" value="'.$audioFileUrl.'">
-       <param name="autoplay" value="false">
-       <param name="controller" value="true">' .*/
+  // '  <param name="src" value="'.$audioFileUrl.'">
+   //    <param name="autoplay" value="false">
+   //    <param name="controller" value="true">' .
        '<embed src="'.$audioFileUrl.'" autostart="false" loop="false" width="300" height="15"
        controller="true"></embed> 
        </object>';
-    }
+    }*/
        
     
     $content .=  $text->formatHtml()

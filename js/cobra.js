@@ -103,10 +103,10 @@ M.mod_cobra.lemma_on_click = function(){
             pref[key] = value;
         }
 
-        var json = JSON.stringify(pref);       
+        var json = JSON.stringify(pref);      
         var isExpr =  0;
       //  var t = this;
-        $.post( 'relay.php', { verb: 'displayEntry', concept_id: conceptId, resource_id: textId, is_expr: isExpr , encodeClic : encodeClic, courseId : courseId, userId : userId, 
+      $.post( 'relay.php', { verb: 'displayEntry', concept_id: conceptId, resource_id: textId, is_expr: isExpr , encodeClic : encodeClic, courseId : courseId, userId : userId, 
             params : json  },
             function(data){
                 detailsDiv.html(data);
@@ -155,7 +155,7 @@ M.mod_cobra.expression_on_click = function(){
         var encodeClic = $('#encode_clic').attr('name');
         var courseId = $('#courseLabel').attr('name');
         var userId = $('#userId').attr('name');
-        var sizePref = $("#preferencesNb").attr('name');
+        var sizePref = $("#preferencesNb").attr('name');      
         var nb = parseInt(sizePref);
         var pref = new Array(); 
         for (var i=0; i< nb; i++)
@@ -163,7 +163,7 @@ M.mod_cobra.expression_on_click = function(){
             var key = $("#preferences_"+i+"_key").attr('name');           
             var value = $("#preferences_"+i+"_value").attr('name');
             pref[key] = value;
-        }   
+        }  
         var json = JSON.stringify(pref);
       //  var t = this;
         $.post( 'relay.php', { verb: 'displayEntry', concept_id: conceptId, resource_id: textId, is_expr: isExpr, encodeClic : encodeClic, courseId : courseId, userId : userId, params : json  },
