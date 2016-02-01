@@ -167,9 +167,10 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
             }
             elseif( 'saved' == $saveMode )
             {
+                $position = 1;
                 foreach( $textList as $remoteText )
                 {
-                    $position = 1;
+
                     $text = new CobraTextWrapper();
                     $text->setTextId( $remoteText['id'] );
                     $text->setCollectionId( $collection->getId() );
