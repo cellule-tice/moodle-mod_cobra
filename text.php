@@ -139,12 +139,12 @@ $content = '';
     
      if( 'SHOW' == strtoupper($preferences['nextprevbuttons']) )
     {
+         $content .= '<ul class="commands"> ';
         $nextid = get_next_textid($text);
         $previousid = get_previous_textid($text);
-        $content .= '<ul>';
-        if( $previousid ) 
+        if( $previousid) 
         {           
-            $content.= '<li style="padding-right:5px;"><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $previousid . '&amp;id_collection=' . $collectionid . '#/' . $previousid . '">' . get_string('previous_text', 'cobra') . '</a></li>';
+            $content.= '<li style="padding-right:5px;"><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $previousid . '&amp;id_collection=' . $collectionid . '#/' . $previousid . '">' . get_string('previous_text', 'cobra') . '</a></li> &nbsp;';
         }
         if( $nextid  )
         {
@@ -156,14 +156,14 @@ $content = '';
     $audioFileUrl = $text->getAudioFileUrl();
     if( !empty( $audioFileUrl ) && 'SHOW' == $preferences['player'] )
     {
-       $content .= ' <audio controls="controls">
+       $content .= '<div> <audio controls="controls">
  <source src="'.$audioFileUrl.'" />
  <!-- fallback -->
   <embed type="application/x-shockwave-flash"                                                         
     flashvars="audioUrl='.$audioFileUrl.'"    
      src="http://www.google.com/reader/ui/3523697345-audio-player.swf"   
      width="650? height="0? quality="best"></embed>
-</audio>`';
+</audio>`</div>';
     }
        
     

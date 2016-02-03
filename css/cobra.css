@@ -191,7 +191,6 @@
     color: white;
 }
 
-
 .lexTable th.headerY, .lexTable .headerY th, 
 .lexTable th.headerX, .lexTable .headerX th 
 {
@@ -323,6 +322,22 @@ a img
     border:none;
     text-decoration: none;
 }
+
+p{
+    line-height: 120%;
+}
+.commands > li 
+{
+    color:#ffffff;
+    background-color: LightGrey;    
+    display:inline;
+    list-style-image:none;
+    list-style-position:outside;
+    list-style-type:none;
+    margin:0pt;
+    padding:0pt;
+}
+
 
 /*table 
 {
@@ -812,15 +827,7 @@ ol
     font-size:0.9em;
 }
 
-#commands li, a
-{
-    display:inline;
-    list-style-image:none;
-    list-style-position:outside;
-    list-style-type:none;
-    margin:0pt;
-    padding:0pt;
-}
+
 
 #commands li a
 {
