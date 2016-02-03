@@ -307,7 +307,8 @@
 a
 {
     text-decoration: none;
-    color: #000000;
+    /*color: #616365;*/
+    color:#333333;
 }
 
 a:link, a:active , a:hover
