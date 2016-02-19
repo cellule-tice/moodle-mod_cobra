@@ -1,5 +1,29 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * French strings for cobra
+ *
+ * You can have a rather longer description of the file as well,
+ * if you like, and it can span multiple lines.
+ *
+ * @package    mod_cobra
+ * @copyright  2015 Laurence Dumortier
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 $string['modulename'] = 'Cobra';
@@ -7,7 +31,7 @@ $string['modulenameplural'] = 'Cobra';
 $string['modulename_help'] = 'Utiliser le module CoBRA pour la lecture de texte';
 $string['cobrafieldset'] = 'Exemple de champ';
 $string['cobra:addinstance'] = 'Ajouter une instance du plugin cobra';
-$string['cobra:edit']= 'Gérer le plugin cobra';
+$string['cobra:edit'] = 'Gérer le plugin cobra';
 $string['cobra:glossaryedit'] = 'Gérer le glossaire';
 $string['cobra:settings'] = 'Gérer les parametres';
 $string['cobra:stat'] = 'Statistique';
@@ -18,17 +42,17 @@ $string['cobra'] = 'cobra';
 $string['pluginadministration'] = 'Administration CoBRA';
 $string['pluginname'] = 'CoBRA';
 $string['language'] = 'Langue';
-$string['Collections _currently_linked_to_your_course']= 'Collections actuellement liées au cours';
+$string['Collections _currently_linked_to_your_course'] = 'Collections actuellement liées au cours';
 $string['collection_name'] = 'Nom de la collection';
-$string['visibility'] ='Visibilité';
+$string['visibility'] = 'Visibilité';
 $string['collections_available'] = 'Collections disponibles';
 $string['manage_text_collections'] = 'Gérer les collections';
 $string['corpus_selection'] = "Sélection  des corpus";
 $string['display_preferences'] = 'Paramètres d\'affichage';
 $string['add_collection'] = 'Ajouter cette collection';
-$string['unable_register_collection']= 'Impossible d\'ajouter cette collection';
+$string['unable_register_collection'] = 'Impossible d\'ajouter cette collection';
 $string['text_collection_added'] = 'Collection de texte ajoutée au cours';
-$string['edit_collection']= 'Modifier cette collection';
+$string['edit_collection'] = 'Modifier cette collection';
 $string['text'] = 'Texte';
 $string['source'] = 'Source';
 $string['type'] = 'Type';
@@ -52,7 +76,7 @@ $string['Display_preference_for_translations'] = 'Montrer les préférences pour
 $string['Show_annotations'] = 'Montrer les annotations';
 $string['Display_preference_for_definitions-annotations'] = 'Montrer les préférences pour les définitions/annotations';
 $string['Show_illustrations'] = 'Montrer les illustrations';
-$string['Choose_yes_to_display_possible_illustrations_associated_to_the_entry']= 'Choisir oui pour montrer des illustrations en lien avec l\'entrée (i;e. image)';
+$string['Choose_yes_to_display_possible_illustrations_associated_to_the_entry'] = 'Choisir oui pour montrer des illustrations en lien avec l\'entrée (i;e. image)';
 $string['Display_mode_for_examples'] = 'Mode d\'affichage pour les exemples';
 $string['Bilingual'] = 'Bilingues';
 $string['Monolingual'] = 'Monolingues';
@@ -65,7 +89,7 @@ $string['No_text_to_add'] = 'Aucun texte à ajouter';
 $string['cobra:submit'] = 'Gérer';
 $string['cobra:view'] = 'Voir';
 $string['Display_entries_clicked_at_least_20_times'] = 'Montrer les entrées cliquées au moins 20 fois';
-$string['Display_the_10_most_frequently_clicked_entries_per_text']= 'Montrer les entrées cliquéau moins 10 fois par texte';
+$string['Display_the_10_most_frequently_clicked_entries_per_text'] = 'Montrer les entrées cliquéau moins 10 fois par texte';
 $string['Display_the_most_frequently_analysed_texts'] = 'Montrer les textes les plus cliqués';
 $string['Display_statistics_by_text'] = 'Montrer les statistiques par texte';
 $string['Display_statistics_by_user'] = 'Montrer les statistiques par utilisateur';
@@ -91,8 +115,8 @@ $string['Compare_text_with_glossary'] = 'Comparer un texte et le glossaire';
 $string['Lemma_form'] = 'Lemme';
 $string['info'] = 'Info';
 $string['generalconfig'] = 'Configuration générale';
-$string['mail_receiver']= 'Identifiant pour la notification d\'erreur';
-$string['moodle_plateform_name'] = 'Nom de la plateforme'; 
+$string['mail_receiver'] = 'Identifiant pour la notification d\'erreur';
+$string['moodle_plateform_name'] = 'Nom de la plateforme';
 $string['cobraserverhost'] = 'Url des webservices';
 $string['explaingeneralconfig'] = 'Configuration générale';
 $string['checkall_uncheckall'] = 'Sélectionner/Déselectionner tout';

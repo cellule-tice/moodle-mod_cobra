@@ -59,17 +59,9 @@ class mod_cobra_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('name', 'cobraname', 'cobra');
-        
+
         $options = get_foreign_languages();
-        $mform->addElement('select', 'language', get_string('language','cobra'), $options);
-
-        // Adding the rest of cobra settings, spreading all them into this fieldset
-        // ... or adding more fieldsets ('header' elements) if needed for better logic.
-       // $mform->addElement('select', 'language', get_string('cobralanguaguges', '') , get_foreign_languages());
-       // $mform->setDefault('language', '0');
-
-      /* $mform->addElement('header', 'cobrafieldset', get_string('cobrafieldset', 'cobra'));
-        $mform->addElement('static', 'label2', 'cobrasetting2', 'Your cobra fields go here. Replace me!');*/
+        $mform->addElement('select', 'language', get_string('language', 'cobra'), $options);
 
         // Add standard elements, common to all modules.
         $this->standard_coursemodule_elements();

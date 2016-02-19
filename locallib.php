@@ -27,182 +27,152 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-/*
- * Does something really useful with the passed things
- *
- * @param array $things
- * @return object
- *function cobra_do_something_useful(array $things) {
- *    return new stdClass();
- *}
- */
-
- function view_page($content, $action='') 
- { 
-     if ($action !='')
-     {
-         
-     }
-     else 
-     {
-         return $content;
-     }
- }
- 
-//require_once dirname( __FILE__ ) . '/glossary.lib.php';
-//require_once claro_get_conf_repository() . 'ELEX.conf.php';
-require_once dirname( __FILE__ ) . '/lib/cobratextwrapper.class.php';
-require_once dirname( __FILE__ ) . '/lib/cobraremoteservice.class.php';
+require_once(dirname( __FILE__ ) . '/lib/cobratextwrapper.class.php');
+require_once(dirname( __FILE__ ) . '/lib/cobraremoteservice.class.php');
 require_once($CFG->libdir.'/formslib.php');
-//require_once get_path( 'coursesRepositorySys' ) . claro_get_current_course_id() . '/elex/' . 'ELEX_COURSE.conf.php';
 
 /**
  * Loads the local list of E-Lex texts associated to a text collection (with filter on user profile)
  * @param $collection identifier of the text collection
- * @param $loadMode 'all' for course managers, 'visible' for students
+ * @param $loadmode 'all' for course managers, 'visible' for students
  * @return array containing information on texts to display
  */
-function load_text_list( $collection, $loadMode = 'all' )
-{          
-    global $DB;
-    global $course;
-    $andClause = 'visible' == $loadMode ? " AND `visibility` = '1' " : "";
-    $list = $DB->get_records_select('cobra_texts_config', "course='$course->id' AND id_collection=$collection " . $andClause, null, 'position');
-   
-    if (empty($list)) return false;
+function load_text_list( $collection, $loadmode = 'all' ) {
+    global $DB, $course;
+    $andclause = '';
+    if ('visible' == $loadmode) {
+        $andclause = " AND visibility = '1' ";
+    }
+    $list = $DB->get_records_select('cobra_texts_config', "course='$course->id' AND id_collection=$collection "
+            . $andclause, null, 'position');
 
-    $textList = array();  
+    if (empty($list)) {
+        return false;
+    }
+
+    $textlist = array();
 
     $params = array( 'collection' => (int)$collection );
-    $remoteTextObjectList = CobraRemoteService::call( 'loadTexts', $params );
-      
-    foreach ($list as $text )
-    {
+    $remotetextobjectlist = CobraRemoteService::call( 'loadTexts', $params );
+
+    foreach ($list as $text) {
         $text->title = '';
         $text->source = '';
-        foreach( $remoteTextObjectList as $textOjbect )
-        {
-            if( $text->id_text == $textOjbect->id )
-            {
-                $text->title =  $textOjbect->title ;
-                $text->source =   $textOjbect->source ;
+        foreach ($remotetextobjectlist as $textojbect) {
+            if ($text->id_text == $textojbect->id) {
+                $text->title = $textojbect->title;
+                $text->source = $textojbect->source;
             }
         }
-        $textList[] = $text;
+        $textlist[] = $text;
     }
-    return $textList;
+    return $textlist;
 }
 
 /**
  * Changes the visibility status of the given resource (collection or text)
- * @param $resourceId identifier of the resource
- * @param $setVisible boolean 'true' to make the resource visible for students, 'false' to hide it
+ * @param $resourceid identifier of the resource
+ * @param $setvisible boolean 'true' to make the resource visible for students, 'false' to hide it
  * @return boolean true on success, false otherwise
  */
-function set_visibility( $resourceId, $setVisible, $resourceType, $courseId )
-{     
+function set_visibility($resourceid, $setvisible, $resourcetype, $courseid) {
     global $DB;
-    $visibility = $setVisible ? '1' : '0';
+    $visibility = $setvisible ? '1' : '0';
     $dataobject = new  stdClass();
-    $dataobject->course = $courseId;
-    if( 'text' == $resourceType )
-    {
-        $list = $DB->get_record_select('cobra_texts_config', "course='$courseId' AND id_text='$resourceId'");
-        if (!empty($list))
-        {
-            // update
-            $dataobject->id= $list->id; 
+    $dataobject->course = $courseid;
+    if ('text' == $resourcetype) {
+        $list = $DB->get_record_select('cobra_texts_config', "course='$courseid' AND id_text='$resourceid'");
+        if (!empty($list)) {
+            // Update record.
+            $dataobject->id = $list->id;
             $dataobject->visibility = $visibility;
-            if (!$DB->update_record('cobra_texts_config', $dataobject) ) return false;
+            if (!$DB->update_record('cobra_texts_config', $dataobject) ) {
+                return false;
+            }
             return true;
         }
         return false;
-    }
-    elseif( 'collection' == $resourceType )
-    {
-        $list = $DB->get_record_select('cobra_registered_collections', "course='$courseId' AND id_collection='$resourceId'");
-         if (!empty($list))
-        {
-            // update
-            $dataobject->id= $list->id; 
+    } else if ('collection' == $resourcetype) {
+        $list = $DB->get_record_select('cobra_registered_collections', "course='$courseid' AND id_collection='$resourceid'");
+        if (!empty($list)) {
+            // Update record.
+            $dataobject->id = $list->id;
             $dataobject->visibility = $visibility;
-            if (!$DB->update_record('cobra_registered_collections', $dataobject) ) return false;
+            if (!$DB->update_record('cobra_registered_collections', $dataobject) ) {
+                return false;
+            }
             return true;
         }
-        return false;       
+        return false;
     }
     return true;
 }
 
 /**
  * Changes the position of the given resource (collection or text) in the list
- * @param $resourceId identifier of the resource
+ * @param $resourceid identifier of the resource
  * @param $position the new position to assign to the resource
  * @return boolean true on success, false otherwise
  */
-function set_position( $resourceId, $position, $resourceType,  $courseId )
-{
+function set_position( $resourceid, $position, $resourcetype,  $courseid ) {
     global $DB;
     $dataobject = new  stdClass();
-    $dataobject->course = $courseId;
-    if( 'text' == $resourceType )
-    {
-        $list = $DB->get_record_select('cobra_texts_config', "course='$courseId' AND id_text='$resourceId'");
-        if (!empty($list))
-        {
-            // update
-            $dataobject->id= $list->id; 
+    $dataobject->course = $courseid;
+    if ('text' == $resourcetype) {
+        $list = $DB->get_record_select('cobra_texts_config', "course='$courseid' AND id_text='$resourceid'");
+        if (!empty($list)) {
+            // Update record.
+            $dataobject->id = $list->id;
             $dataobject->position = $position;
-            if (!$DB->update_record('cobra_texts_config', $dataobject) ) return false;
+            if (!$DB->update_record('cobra_texts_config', $dataobject) ) {
+                return false;
+            }
             return true;
         }
         return false;
-    }
-    elseif( 'collection' == $resourceType )
-    {
-         $list = $DB->get_record_select('cobra_registered_collections', "course='$courseId' AND id_collection='$resourceId'");
-          if (!empty($list))
-        {
-            // update
-            $dataobject->id= $list->id; 
+    } else if ('collection' == $resourcetype) {
+        $list = $DB->get_record_select('cobra_registered_collections', "course='$courseid' AND id_collection='$resourceid'");
+        if (!empty($list)) {
+            // Update record.
+            $dataobject->id = $list->id;
             $dataobject->position = $position;
-            if (!$DB->update_record('cobra_registered_collections', $dataobject) ) return false;
+            if (!$DB->update_record('cobra_registered_collections', $dataobject) ) {
+                return false;
+            }
             return true;
         }
-        return false;  
-    
+        return false;
     }
     return true;;
 }
 
 /**
  * Inserts a row in table 'ordre_concordances' representing a corpus type
- * @param int $typeId : identifier of corpus type
+ * @param int $typeid : identifier of corpus type
  */
-function insert_corpus_type_display_order( $typeId )
-{    
-    global $DB,$course;     
+function insert_corpus_type_display_order($typeid) {
+    global $DB, $course;
     $dataobject = new  stdClass();
-    $dataobject->course=$course->id;
-    $dataobject->id_type=$typeId;
-    return  $DB->insert_record('cobra_ordre_concordances', $dataobject) ;
+    $dataobject->course = $course->id;
+    $dataobject->id_type = $typeid;
+    return  $DB->insert_record('cobra_ordre_concordances', $dataobject);
 }
 
 /**
  * Gets the list of unregistered collections available for the language of current course
- * @param array $exclusionList the list of already registered collections
+ * @param array $exclusionlist the list of already registered collections
  * @return array containing the list of these collections
  */
-function get_filtered_cobra_collections( $language, $exclusionList = array() )
-{
+function get_filtered_cobra_collections( $language, $exclusionlist = array() ) {
     $collections = array();
     $params = array( 'language' => $language);
-    $collectionsObjectList = CobraRemoteService::call( 'loadFilteredCollections', $params );
-    foreach( $collectionsObjectList as $remoteCollection  )
-    {
-        if( in_array( $remoteCollection->id, $exclusionList ) ) continue;
-        $collections[] = array( 'id' => utf8_decode( $remoteCollection->id ),
-                                'label' =>  $remoteCollection->label  );
+    $collectionsobjectlist = CobraRemoteService::call( 'loadFilteredCollections', $params );
+    foreach ($collectionsobjectlist as $remotecollection) {
+        if (in_array( $remotecollection->id, $exclusionlist)) {
+            continue;
+        }
+        $collections[] = array( 'id' => utf8_decode( $remotecollection->id ),
+                                'label' => $remotecollection->label );
     }
     return $collections;
 }
@@ -210,21 +180,20 @@ function get_filtered_cobra_collections( $language, $exclusionList = array() )
 /**
  * Gives the list of registered collections for current course according to user status
  * --> all registered collections for course manager, visible ones for students
- * @param string $loadMode : 'all' or 'visible'
+ * @param string $loadmode : 'all' or 'visible'
  * @return array the list of registered (visible) collections
  */
-function get_registered_collections( $loadMode = 'all' )
-{
-    global $DB;
-    global $course;
-    $collectionsList = array();
+function get_registered_collections( $loadmode = 'all' ) {
+    global $DB,  $course;
+    $collectionslist = array();
     $params = null;
     $list = $DB->get_records_select('cobra_registered_collections', "course='$course->id'");
-    foreach ($list as $collectionInfo) 
-    {
-       $collectionsList[$collectionInfo->id_collection]= array('id_collection'=>$collectionInfo->id_collection, 'label'=>$collectionInfo->label,'local_label'=>$collectionInfo->local_label,'visibility'=>$collectionInfo->visibility);
-    }            
-    return $collectionsList;
+    foreach ($list as $collectioninfo) {
+        $collectionslist[$collectioninfo->id_collection] = array('id_collection' => $collectioninfo->id_collection,
+           'label' => $collectioninfo->label,
+           'local_label' => $collectioninfo->local_label, 'visibility' => $collectioninfo->visibility);
+    }
+    return $collectionslist;
 }
 
 /**
@@ -232,20 +201,18 @@ function get_registered_collections( $loadMode = 'all' )
  * @param $collection identifier of the text collection
  * @return array containing information on texts to display
  */
-function load_remote_text_list( $collection )
-{
-    $textList = array();
+function load_remote_text_list( $collection ) {
+    $textlist = array();
     $params = array( 'collection' => (int)$collection );
-    $remoteTextObjectList = CobraRemoteService::call( 'loadTexts', $params );
+    $remotetextobjectlist = CobraRemoteService::call( 'loadTexts', $params );
 
-    foreach( $remoteTextObjectList as $textObject  )
-    {
-        $text['id'] = utf8_decode( $textObject->id );
-        $text['title'] = utf8_decode( $textObject->title );
-        $text['source'] = utf8_decode( $textObject->source );
-        $textList[] = $text;
+    foreach ($remotetextobjectlist as $textobject) {
+        $text['id'] = utf8_decode( $textobject->id );
+        $text['title'] = utf8_decode( $textobject->title );
+        $text['source'] = utf8_decode( $textobject->source );
+        $textlist[] = $text;
     }
-    return $textList;
+    return $textlist;
 }
 
 /**
@@ -253,10 +220,10 @@ function load_remote_text_list( $collection )
  * @param int $collection identifier of the collection
  * @return boolean true on success, false otherwise
  */
-function remote_text_list( $collection )
-{
-    global $course,$DB;
-    return $DB->delete_records('cobra_texts_config', array('course'=>$course->id, 'id_collection'=>$collection)); 
+function remote_text_list( $collection ) {
+    global $course, $DB;
+    return $DB->delete_records('cobra_texts_config',
+            array('course' => $course->id, 'id_collection' => $collection));
 
 }
 
@@ -265,14 +232,12 @@ function remote_text_list( $collection )
  * Returns an array containing module preferences for the current course
  * @return array
  */
-function get_cobra_preferences()
-{
-    global $DB,$course;    
-    
-    $params = array();    
-    $info = $DB->get_record_select('cobra',"course='$course->id'",null,'language');  
+function get_cobra_preferences() {
+    global $DB, $course;
+    $params = array();
+    $info = $DB->get_record_select('cobra', "course='$course->id'", null, 'language');
     $params['language']  = $info->language;
-    // init : 
+    // Init.
     $params['nextprevbuttons']  = 'HIDE';
     $params['gender'] = 'HIDE';
     $params['ff'] = 'HIDE';
@@ -282,10 +247,9 @@ function get_cobra_preferences()
     $params['illustrations'] = 'HIDE';
     $params['examples'] = 'bi-text';
     $params['occurrences'] = 'HIDE';
-    
+
     $list = $DB->get_records_select('cobra_prefs', "course='$course->id'");
-    foreach ($list as $elt)
-    {
+    foreach ($list as $elt) {
         $params[$elt->param] = $elt->value;
     }
     return $params;
@@ -296,27 +260,25 @@ function get_cobra_preferences()
  * @param array $prefs
  * @return boolean true on success, false otherwise
  */
-function save_Cobra_preferences( $prefs )
-{
-     global $DB,$course;    
-    foreach ($prefs as $key=>$value)
-    {
+function save_cobra_preferences( $prefs ) {
+    global $DB, $course;
+    foreach ($prefs as $key => $value) {
         $dataobject = new stdClass();
         $dataobject->course = $course->id;
         $dataobject->param = $key;
-        $dataobject->value= $value;
+        $dataobject->value = $value;
         $list = $DB->get_record_select('cobra_prefs', "course='$course->id' AND param='$key'");
-        if (!empty($list))
-        {
-            // update
-            $dataobject->id= $list->id;
-            if (!$DB->update_record('cobra_prefs', $dataobject) ) return false;
-          
-        }
-        else
-        {
-            // insert
-            if (!$DB->insert_record('cobra_prefs', $dataobject) ) return false;
+        if (!empty($list)) {
+            // Update record.
+            $dataobject->id = $list->id;
+            if (!$DB->update_record('cobra_prefs', $dataobject) ) {
+                return false;
+            }
+        } else {
+            // Insert record.
+            if (!$DB->insert_record('cobra_prefs', $dataobject) ) {
+                return false;
+            }
         }
     }
     return true;
@@ -326,162 +288,134 @@ function save_Cobra_preferences( $prefs )
  * Deletes current preferences linked to corpus selection and display order
  * @return boolean true on success, false otherwise
  */
-function clear_corpus_selection()
-{    
-    global $DB, $course; 
-    return $DB->delete_records('cobra_ordre_concordances', array('course'=>$course->id)); 
+function clear_corpus_selection() {
+    global $DB, $course;
+    return $DB->delete_records('cobra_ordre_concordances', array('course' => $course->id));
 }
-
-
 
 /**
  * Updates click count table
- * @param int $textId the text within which a word was clicked
- * @param int $lingEntityId identifier of the linguistic entity that was clicked
+ * @param int $textid the text within which a word was clicked
+ * @param int $lingentityid identifier of the linguistic entity that was clicked
  */
-function clic( $textId, $lingEntityId, $DB, $courseId, $userId )
-{ 
-    $info = $DB->get_record_select('cobra_clic',"course='$courseId' AND user_id='$userId' AND id_text='$textId' AND id_entite_ling='$lingEntityId'");  
-    if (!$info)
-    {
-       $dataobject = new  stdClass();
-          $dataobject->course=$courseId;
-          $dataobject->user_id=$userId;
-          $dataobject->id_text=$textId;
-          $dataobject->id_entite_ling=$lingEntityId;
-          $dataobject->nb_clics=1;
-          $dataobject->datecreate=date("Y-m-d H:i:s");
-          $dataobject->datemodif=date("Y-m-d H:i:s");
-          return  $DB->insert_record('cobra_clic', $dataobject) ;
-    }
-    else
-    {
+function clic( $textid, $lingentityid, $DB, $courseid, $userid ) {
+    $info = $DB->get_record_select('cobra_clic',
+            "course='$courseid' AND user_id='$userid' AND id_text='$textid' AND id_entite_ling='$lingentityid'");
+    if (!$info) {
+        // Insert record.
         $dataobject = new  stdClass();
-        $dataobject->id=$info->id;
+        $dataobject->course = $courseid;
+        $dataobject->user_id = $userid;
+        $dataobject->id_text = $textid;
+        $dataobject->id_entite_ling = $lingentityid;
+        $dataobject->nb_clics = 1;
+        $dataobject->datecreate = date("Y-m-d H:i:s");
+        $dataobject->datemodif = date("Y-m-d H:i:s");
+        return  $DB->insert_record('cobra_clic', $dataobject);
+    } else {
+        // Update record.
+        $dataobject = new  stdClass();
+        $dataobject->id = $info->id;
         $dataobject->nb_clics = ($info->nb_clics + 1);
-        return  $DB->update_record('cobra_clic', $dataobject) ;
+        return  $DB->update_record('cobra_clic', $dataobject);
     }
 }
-
-
-/**
- * Collects the title of the text given in args and produces an html-free string
- * Handled with remote call
- * @param int $textId the identifier of the text
- * @return an html-free string with the text title
- */
-/*not used
- * function getTitleFromId( $textId )
-{
-    $params = array( 'id_text' => (int)$textId );
-    $textTitle = CobraRemoteService::call( 'getTextTitle', $params );
-    return strip_tags( utf8_decode ( $textTitle ) );
-}*/
 
 /**
  * Collects the set of synonyms for the concept given in args and produces a string representation of it
  * Handled with remote call
- * @param int $conceptId identifier of the concept
+ * @param int $conceptid identifier of the concept
  * @param string $entryType the type of lexicon entry ('lemma' or 'expression')
  */
-function get_translations( $conceptId, $entryType )
-{
-    $params = array( 'id_concept' => (int)$conceptId, 'entry_type' => $entryType );
+function get_translations( $conceptid, $entrytype ) {
+    $params = array( 'id_concept' => (int)$conceptid, 'entry_type' => $entrytype );
     $translations = CobraRemoteService::call( 'get_translations', $params );
-    return $translations ;
+    return $translations;
 }
-
 
 /**
  * Collects information associated to the given linguistic entity
  * Handled with remote call
- * @param int $lingEntityId identifier of the linguistic entity
+ * @param int $lingentityid identifier of the linguistic entity
  * @return array containing information on this linguistic entity
  */
-function get_concept_info_from_ling_entity( $lingEntityId )
-{
-    $params = array( 'ling_entity_id' => (int)$lingEntityId );
-    $conceptInfo = CobraRemoteService::call( 'get_concept_info_from_ling_entity', $params );
-    return array( $conceptInfo->id_concept, $conceptInfo->construction , $conceptInfo->entry_type, $conceptInfo->entry_category, $conceptInfo->entry, $conceptInfo->entry_id );
+function get_concept_info_from_ling_entity( $lingentityid ) {
+    $params = array( 'ling_entity_id' => (int)$lingentityid );
+    $conceptinfo = CobraRemoteService::call( 'get_concept_info_from_ling_entity', $params );
+    return array( $conceptinfo->id_concept, $conceptinfo->construction , $conceptinfo->entry_type,
+        $conceptinfo->entry_category, $conceptinfo->entry, $conceptinfo->entry_id );
 }
 
 /**
  * Gives the list of corpus types for the language given in args
  * Handled with remote call
  * @param string $langue
- * @return array $listOfCorpusType
+ * @return array $listofcorpustype
  */
-function returnValidListTypeCorpus ( $language )
-{
+function return_valid_list_type_corpus ( $language ) {
     $params = array( 'language' => $language );
-    $remotelistOfCorpusType = CobraRemoteService::call( 'returnValidListTypeCorpus', $params );
-    $listOfCorpusType = array();
-    foreach( $remotelistOfCorpusType as $corpusObject  )
-    {
-        $corpus['id'] = $corpusObject->id ;
-        $corpus['name'] =  $corpusObject->name ;
-        $listOfCorpusType[] = $corpus;
+    $remotelistofcorpustype = CobraRemoteService::call( 'return_valid_list_type_corpus', $params );
+    $listofcorpustype = array();
+    foreach ($remotelistofcorpustype as $corpusobject) {
+        $corpus['id'] = $corpusobject->id;
+        $corpus['name'] = $corpusobject->name;
+        $listofcorpustype[] = $corpus;
     }
-    return $listOfCorpusType;
+    return $listofcorpustype;
 }
 
 /**
  * Gets the list and order of corpus types that must be taken into account when displaying concordances
  * @return array of corpus types sorted according to the recorded order of display
  */
-function getCorpusTypeDisplayOrder()
-{
+function get_corpus_type_display_order() {
     global $DB, $course;
-    $list = $DB->get_records_select('cobra_ordre_concordances', "course='$course->id'",null,'id');
-    $typeList = array();
-    $i=0;
-    foreach ($list as $info)
-    {
+    $list = $DB->get_records_select('cobra_ordre_concordances', "course='$course->id'", null, 'id');
+    $typelist = array();
+    $i = 0;
+    foreach ($list as $info) {
         $i++;
-        $typeList[$i] = $info->id_type;
+        $typelist[$i] = $info->id_type;
     }
-      return $typeList;
+    return $typelist;
 }
 
 /**
  * Collects information associated to the given corpus
  * Handled with remote call
- * @param int $lingEntityId identifier of the corpus
+ * @param int $lingentityid identifier of the corpus
  * @return array containing information about the corpus
  */
-/*function get_corpus_iInfo( $corpusId )
-{
-    $params = array( 'id_corpus' => $corpusId );
-    $corpusInfo = CobraRemoteService::call( 'getCorpusInfo', $params );
-    if (is_array($corpusInfo))
-    {
-        return array( $corpusInfo->id_groupe, $corpusInfo->nom_corpus, utf8_decode( $corpusInfo->reference ), $corpusInfo->langue, $corpusInfo->id_type );
+function get_corpus_info( $corpusid ) {
+    $params = array( 'id_corpus' => $corpusid );
+    $corpusinfo = CobraRemoteService::call( 'getCorpusInfo', $params );
+    if (is_array($corpusinfo)) {
+        return array( $corpusinfo->id_groupe, $corpusinfo->nom_corpus,
+            utf8_decode( $corpusinfo->reference ), $corpusinfo->langue, $corpusinfo->id_type);
     }
     return array();
-}*/
+}
 
 /**
  * Gets the css class associated to the corpus type given in args
  * Handled with remote call
- * @param int $typeId
+ * @param int $typeid
  * @return string css class
  */
-function find_background( $typeId )
-{
-    $params = array( 'typeId' => $typeId );
-    $backGroundClass = CobraRemoteService::call( 'findBackGround', $params );
-    return $backGroundClass;
+function find_background( $typeid ) {
+    $params = array( 'typeId' => $typeid );
+    $backgroundclass = CobraRemoteService::call( 'findBackGround', $params );
+    return $backgroundclass;
 }
 
 /**
  * Checks existence of a given corpus type for a given language
- * @param int $typeId
+ * @param int $typeid
  * @param string $language
  * @return boolean true if the given corpus type exists for that language, false otherwise
  */
-function corpus_type_exists( $typeId, $language )
-{
-    $params = array( 'language' => $language, 'typeId' => $typeId );
+function corpus_type_exists( $typeid, $language ) {
+    $params = array( 'language' => $language, 'typeId' => $typeid );
     $ok = CobraRemoteService::call( 'corpusTypeExists', $params );
     return $ok;
 }
@@ -490,9 +424,8 @@ function corpus_type_exists( $typeId, $language )
  * Gives the list of valid entry types in the lexicon (currently 'lemma' and 'expression')
  * @return array containing the list
  */
-function get_valid_entry_types()
-{
-    return array( 'lemma', 'expression' );
+function get_valid_entry_types() {
+    return array( 'lemma', 'expression');
 }
 
 /**
@@ -501,32 +434,20 @@ function get_valid_entry_types()
  * @throws Exception
  * @return the response obtained on success, false otherwise
  */
-function cobra_http_request( $url )
-{
-    if( ini_get( 'allow_url_fopen' ) )
-    {
-        if( false === $response = @file_get_contents( $url ) )
-        {
+function cobra_http_request( $url ) {
+    if ( ini_get( 'allow_url_fopen' ) ) {
+        if ( false === $response = @file_get_contents( $url ) ) {
             return false;
-        }
-        else
-        {
+        } else {
             return $response;
         }
-    }
-    elseif( function_exists('curl_init') )
-    {
-        if( !$response = cobra_curl_request( $url ) )
-        {
+    } else if ( function_exists('curl_init') ) {
+        if ( !$response = cobra_curl_request( $url ) ) {
             return false;
-        }
-        else
-        {
+        } else {
             return $response;
         }
-    }
-    else
-    {
+    } else {
         throw new Exception( "Your PHP install does not support url access." );
     }
 }
@@ -536,8 +457,7 @@ function cobra_http_request( $url )
  * @param string $url url address of the request
  * @return the response obtained on success, false otherwise
  */
-function cobra_curl_request( $url )
-{
+function cobra_curl_request( $url ) {
     $handle = curl_init();
 
     $options = array( CURLOPT_URL => $url,
@@ -546,8 +466,7 @@ function cobra_curl_request( $url )
                     );
     curl_setopt_array( $handle, $options );
 
-    if( !$content = curl_exec( $handle ) )
-    {
+    if ( !$content = curl_exec( $handle ) ) {
         return false;
     }
     curl_close( $handle );
@@ -557,41 +476,38 @@ function cobra_curl_request( $url )
 /**
  * Changes the type of the text with id given in args
  * Possible modes are 'Lesson', 'Reading' and 'Exercise'
- * @param int $textId
+ * @param int $textid
  * @return boolean true on success, false otherwise
  */
-function change_text_type( $textId, $courseId )
-{
+function change_text_type( $textid, $courseid ) {
     global $DB;
-    $list = $DB->get_record_select('cobra_texts_config', "course='$courseId' AND id_text='$textId'");
-    if (!empty($list))
-    {
-      
-        $textType = $list->text_type;
-        $newType = getNextType( $textType );
-         $dataobject = new stdClass();
-        $dataobject->id= $list->id; 
-        $dataobject->text_type=$newType;
-        if (!$DB->update_record('cobra_texts_config', $dataobject) ) return false;
+    $list = $DB->get_record_select('cobra_texts_config', "course='$courseid' AND id_text='$textid'");
+    if (!empty($list)) {
+        $texttype = $list->text_type;
+        $newtype = get_next_type( $texttype );
+        $dataobject = new stdClass();
+        $dataobject->id = $list->id;
+        $dataobject->text_type = $newtype;
+        if (!$DB->update_record('cobra_texts_config', $dataobject) ) {
+            return false;
+        }
         return true;
     }
-    return false;            
+    return false;
 }
 
 /**
  * Gives the type of the text with id given in args
- * @param int $textId
+ * @param int $textid
  * @return string the type of the text
  */
-function getTextType( $textId, $courseId )
-{
+function get_text_type( $textid, $courseid ) {
     global $DB;
-     $list = $DB->get_record_select('cobra_texts_config', "course='$courseId' AND id_text='$textId'");
-    if (!empty($list))
-    {
+    $list = $DB->get_record_select('cobra_texts_config', "course='$courseid' AND id_text='$textid'");
+    if (!empty($list)) {
         return $list->text_type;
     }
-    return false; 
+    return false;
 }
 
 /**
@@ -599,188 +515,174 @@ function getTextType( $textId, $courseId )
  * @param string $textType the current text type
  * @return string the "next" text type according to the current one
  */
-function getNextType( $textType )
-{
-    switch( $textType )
+function get_next_type( $texttype ) {
+    switch( $texttype )
     {
-        case 'Lesson' : $newType = 'Reading'; break;
-        case 'Reading' : $newType = 'Exercise'; break;
-        case 'Exercise' : $newType = 'Lesson'; break;
-        default : $newType = 'Lesson';
+        case 'Lesson' : $newtype = 'Reading';
+            break;
+        case 'Reading' : $newtype = 'Exercise';
+            break;
+        case 'Exercise' : $newtype = 'Lesson';
+            break;
+        default : $newtype = 'Lesson';
     }
-    return $newType;
+    return $newtype;
 }
 
-function getDistinctAccessForText($textId)
-{
-     global $DB, $course;
-    $userList = array();
-    $list = $DB->get_records_select('cobra_clic', "course='$course->id' AND id_text='$textId' GROUP BY user_id");
-    foreach ($list as $info)
-    {
-        $userList[] = $info->user_id;
+function get_distinct_access_for_text($textid) {
+    global $DB, $course;
+    $userlist = array();
+    $list = $DB->get_records_select('cobra_clic',
+            "course='$course->id' AND id_text='$textid' GROUP BY user_id");
+    foreach ($list as $info) {
+        $userlist[] = $info->user_id;
     }
-
-    if (hasAnonymousClic())
-    {
-        $userList[] = 0;
+    if (has_anonymous_clic()) {
+        $userlist[] = 0;
     }
-    return $userList;
+    return $userlist;
 }
 
-function hasAnonymousClic ()
-{
+function has_anonymous_clic () {
     global $DB, $course;
     $list = $DB->get_records_select('cobra_clic', "course='$course->id' AND user_id='0'");
-    if (!empty($list)) return true;
-    return false;     
+    if (!empty($list)) {
+        return true;
+    }
+    return false;
 }
 
-
-function getNbClicsForText ($textId)
-{
+function get_nb_clics_for_text ($textid) {
     global $DB, $course;
-    $list = $DB->get_records_select('cobra_clic', "course='$course->id' AND id_text='$textId'");
+    $list = $DB->get_records_select('cobra_clic', "course='$course->id' AND id_text='$textid'");
     $nb = 0;
-    foreach ($list as $info)
-    {
+    foreach ($list as $info) {
         $nb += $info->nb_clics;
     }
     return $nb;
 }
 
-function getNbTextsForUser ($userId)
-{
+function get_nb_texts_for_user ($userid) {
     global $DB, $course;
-    $list = $DB->get_recordset_select('cobra_clic', "course='$course->id' AND user_id='$userId'", null,'','DISTINCT id_text');
-    return sizeof($list);
+    $list = $DB->get_recordset_select('cobra_clic',
+            "course='$course->id' AND user_id='$userid'", null, '', 'DISTINCT id_text');
+    return count($list);
 }
 
-
-function getNbClicForUser ($userId)
-{
+function get_nb_clic_for_user ($userid) {
     global $DB, $course;
-    $list = $DB->get_records_select('cobra_clic', "course='$course->id' AND user_id='$userId'");
+    $list = $DB->get_records_select('cobra_clic', "course='$course->id' AND user_id='$userid'");
     $nb = 0;
-    foreach ($list as $info)
-    {
+    foreach ($list as $info) {
         $nb += $info->nb_clics;
     }
     return $nb;
 }
 
-function getUserListForClic ()
-{
-     global $DB, $course;
+function get_user_list_for_clic () {
+    global $DB, $course;
     $list = $DB->get_records_select('cobra_clic', "course='$course->id'", null, '', 'DISTINCT user_id');
-    $userList = array();
-    
-    foreach ($list as $info)
-    {
-        $user = $DB->get_record_select('user',"id='$info->user_id'");
-        $userList[] = array('userId'=>$info->user_id, 'lastName'=>$user->lastname, 'firstName'=>$user->firstname);
+    $userlist = array();
+    foreach ($list as $info) {
+        $user = $DB->get_record_select('user', "id='$info->user_id'");
+        $userlist[] = array('userId' => $info->user_id, 'lastName' => $user->lastname,
+            'firstName' => $user->firstname);
     }
-    return $userList;
+    return $userlist;
 }
 
-function getNbTagsInText ($textId)
-{
+function get_nb_tags_in_text ($textid) {
     $text = new CobraTextWrapper();
-    $text->setTextId( $textId );
+    $text->set_text_id( $textid );
     $text->load();
-    $html = $text->formatHtml();
-    $nb = substr_count($html,'</span>');
+    $html = $text->format_html();
+    $nb = substr_count($html, '</span>');
     return $nb;
 }
 
-function increaseScriptTime( $time = 0)
-{
+function increase_script_time( $time = 0) {
     set_time_limit( $time );
 }
 
-function clean_all_stats( $courseId)
-{
+function clean_all_stats( $courseid) {
     global $DB;
-    return $DB->delete_records('cobra_clic', array('course'=>$courseId)); 
+    return $DB->delete_records('cobra_clic', array('course' => $courseid));
 }
 
-function cleanStatsBeforeDate ($courseId, $myDate)
-{
+function clean_stats_before_date ($courseid, $mydate) {
     global $DB;
-    $dateModif = ' < FROM_UNIXTIME('. $myDate.')';
-    return $DB->delete_records('cobra_clic', array('course'=>$courseId, 'datemodif' => $dateModif));	
+    $datemodif = ' < FROM_UNIXTIME('. $mydate.')';
+    return $DB->delete_records('cobra_clic', array('course' => $courseid, 'datemodif' => $datemodif));
 }
 
-function get_next_textid($text)
-{
+function get_next_textid($text) {
     global $DB, $course;
-    $textCollectionId = $text->get_collectionid();
-    $textPosition = $text->get_position();
-    $list = $DB->get_records_select('cobra_texts_config', "course='$course->id' AND id_collection='$textCollectionId' AND position > '$textPosition'", array(), 'position ASC', 'id_text', 0,1);
-    if (empty($list)) return false;
+    $textcollectionid = $text->get_collection_id();
+    $textposition = $text->get_position();
+    $list = $DB->get_records_select('cobra_texts_config',
+            "course='$course->id' AND id_collection='$textcollectionid' AND position > '$textposition'",
+            array(), 'position ASC', 'id_text', 0, 1);
+    if (empty($list)) {
+        return false;
+    }
     $keys = array_keys($list);
     return $list[$keys[0]]->id_text;
 }
 
-function get_previous_textid($text)
-{
+function get_previous_textid($text) {
     global $DB, $course;
-    $textCollectionId = $text->get_collectionid();
-    $textPosition = $text->get_position();
-    $list = $DB->get_records_select('cobra_texts_config', "course='$course->id' AND id_collection='$textCollectionId' AND position < '$textPosition'", array(), 'position ASC', 'id_text', 0,1);
-    if (empty($list)) return false;
+    $textcollectionid = $text->get_collection_id();
+    $textposition = $text->get_position();
+    $list = $DB->get_records_select('cobra_texts_config',
+            "course='$course->id' AND id_collection='$textcollectionid' AND position < '$textposition'", array(), 'position ASC',
+            'id_text', 0, 1);
+    if (empty($list)) {
+        return false;
+    }
     $keys = array_keys($list);
     return $list[$keys[0]]->id_text;
 }
 
-function get_clicked_texts_frequency ( $courseId )
-{
+function get_clicked_texts_frequency ( $courseid ) {
     global $DB;
-    $tab_nb_clics = array();
+    $nbcliclist = array();
     $params = array('GROUP BY id_text', 'HAVING nb >=5');
-    $list = $DB->get_records_select('cobra_clic', "course='$courseId'", $params, 'nb DESC, id_text', 'id_text, SUM(nb_clics) AS nb');
-    foreach ($list as $info)
-    {
-        $id_text = $info->id_text;
-        $nb_total_clics = $info->nb;
-        $tab_nb_clics[$id_text] = $nb_total_clics;
-     }    
-     arsort( $tab_nb_clics );
-     return $tab_nb_clics;
-     
+    $list = $DB->get_records_select('cobra_clic',
+            "course='$courseid'", $params, 'nb DESC, id_text', 'id_text, SUM(nb_clics) AS nb');
+    foreach ($list as $info) {
+        $textid = $info->id_text;
+        $nbcliclist[$textid] = $info->nb;
+    }
+    arsort( $nbcliclist );
+    return $nbcliclist;
 }
 
-function get_clicked_entries ($courseId, $nb = 20)
-{
-    $tab_nb_clics = array();
+function get_clicked_entries ($courseid, $nb = 20) {
     global $DB;
-     $params = array( );
-    $list = $DB->get_records_select('cobra_clic', "course='$courseId' GROUP BY id_entite_ling HAVING nb >=' $nb' ", $params, 'id_entite_ling ASC LIMIT 100', 'id_entite_ling, SUM(nb_clics) AS nb');
-     foreach ($list as $info)
-    {
-        $nb_total_clics = $info->nb;
-        $tab_nb_clics[$info->id_entite_ling] = $nb_total_clics;
-     }  
-    return $tab_nb_clics;
+    $params = array( );
+    $nbcliclist = array();
+    $list = $DB->get_records_select('cobra_clic', "course='$courseid' GROUP BY id_entite_ling HAVING nb >=' $nb' ",
+            $params, 'id_entite_ling ASC LIMIT 100', 'id_entite_ling, SUM(nb_clics) AS nb');
+    foreach ($list as $info) {
+        $nbtotalclics = $info->nb;
+        $nbcliclist[$info->id_entite_ling] = $nbtotalclics;
+    }
+    return $nbcliclist;
 }
 
 class mod_cleanStats_form extends moodleform {
     /**
      * Define this form - called by the parent constructor
      */
-    public function definition() 
-   {
-        $mform = $this->_form;        
-        $options = array('' => '', 'ALL'=>get_string('All','cobra'), 'BEFORE'=>get_string('Before','cobra'));
-        $mform->addElement('select','scope', get_string('Delete', 'cobra'), $options);      
-        $mform->addElement('date_selector', 'before_date', get_string('Before', 'cobra'));                  
-        $this->add_action_buttons(true, get_string('OK','cobra'));         
-   }
+    public function definition() {
+        $mform = $this->_form;
+        $options = array('' => '', 'ALL' => get_string('All', 'cobra'), 'BEFORE' => get_string('Before', 'cobra'));
+        $mform->addElement('select', 'scope', get_string('Delete', 'cobra'), $options);
+        $mform->addElement('date_selector', 'before_date', get_string('Before', 'cobra'));
+        $this->add_action_buttons(true, get_string('OK', 'cobra'));
+    }
 }
 
-
- function get_foreign_languages()
- {
-     return array('EN'=>'EN', 'NL'=>'NL');
- }
- 
+function get_foreign_languages() {
+     return array('EN' => 'EN', 'NL' => 'NL');
+}

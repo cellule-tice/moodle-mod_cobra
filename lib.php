@@ -44,10 +44,14 @@ defined('MOODLE_INTERNAL') || die();
 function cobra_supports($feature) {
 
     switch($feature) {
-        case FEATURE_MOD_ARCHETYPE:           return MOD_ARCHETYPE_RESOURCE;
-        case    FEATURE_MOD_INTRO : return false;
-        case FEATURE_GROUPS:                  return false;
-        case FEATURE_GROUPINGS:               return false;
+        case FEATURE_MOD_ARCHETYPE :
+            return MOD_ARCHETYPE_RESOURCE;
+        case    FEATURE_MOD_INTRO :
+            return false;
+        case FEATURE_GROUPS:
+            return false;
+        case FEATURE_GROUPINGS:
+            return false;
         default:
             return null;
     }
@@ -72,7 +76,7 @@ function cobra_add_instance(stdClass $cobra, mod_cobra_mod_form $mform = null) {
 
     // You may have to add extra stuff in here.
 
-    $cobra->id = $DB->insert_record('cobra', $cobra);  
+    $cobra->id = $DB->insert_record('cobra', $cobra);
 
     return $cobra->id;
 }
@@ -93,11 +97,7 @@ function cobra_update_instance(stdClass $cobra, mod_cobra_mod_form $mform = null
 
     $cobra->timemodified = time();
     $cobra->id = $cobra->instance;
-
-    // You may have to add extra stuff in here.
-
     $result = $DB->update_record('cobra', $cobra);
-   
     return $result;
 }
 
@@ -202,28 +202,6 @@ function cobra_pluginfile($course, $cm, $context, $filearea, array $args, $force
     send_file_not_found();
 }
 
-/* Navigation API */
+function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
 
-/**
- * Extends the global navigation tree by adding cobra nodes if there is a relevant content
- *
- * This can be called by an AJAX request so do not rely on $PAGE as it might not be set up properly.
- *
- * @param navigation_node $navref An object representing the navigation tree node of the cobra module instance
- * @param stdClass $course current course record
- * @param stdClass $module current cobra instance record
- * @param cm_info $cm course module information
- */
-/*function cobra_extend_navigation(navigation_node $navref, stdClass $course, stdClass $module, cm_info $cm) {
-    // TODO Delete this function and its docblock, or implement it.
-//    $navref->add('CoBRA', './mod/cobra/view.php', navigation_node::TYPE_SETTING, null , null, new pix_icon('icon' , ''));
-}
-
-function cobra_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $cobranode=null) {
-    // TODO Delete this function and its docblock, or implement it.
-}
-*/
-
-function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context)
-{
 }

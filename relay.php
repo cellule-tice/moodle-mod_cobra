@@ -1,96 +1,85 @@
 <?php
-/**
- * CoBRA module for Moodle
- *
- * @copyright (c) 2015 Universite dce Namur
- *
- * @package CoBRA
- *
- * @author Cellule TICE <tice@fundp.ac.be>
- *
- */
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-try
-{
-    //loading Claroline kernel
-    /*
-     * Load elex main lib
-     */
-    
+try {
     require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
     require_once(dirname(__FILE__).'/locallib.php');
-    
-    //init request vars
-    $acceptedCmdList = array(
+
+    // Init request vars.
+    $acceptedcmdlist = array(
         'displayEntry',
         'displayCC',
         'displayCard'
     );
-    //security checks
-    if( !isset( $_SERVER['HTTP_REFERER'] ) )
-    {
+    // Security checks.
+    if ( !isset( $_SERVER['HTTP_REFERER'] ) ) {
         throw new Exception( 'Unauthorized access' );
     }
-    if( isset( $_REQUEST['verb'] ) && in_array( $_REQUEST['verb'], $acceptedCmdList ) )
-    {
+    if ( isset( $_REQUEST['verb'] ) && in_array( $_REQUEST['verb'], $acceptedcmdlist ) ) {
         $call = $_REQUEST['verb'];
-    }
-    else
-    {
+    } else {
         throw new Exception( 'Missing or invalid command' );
     }
 
-    // force headers
-    header('Content-Type: text/html; charset=iso-8859-1'); // Charset
-    header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+    // Force headers.
+    header('Content-Type: text/html; charset=iso-8859-1'); // Charset.
+    header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1.
+    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past.
 
-    if( 'displayEntry' == $call )
-    {
-        $conceptId = isset( $_REQUEST['concept_id'] ) && is_numeric( $_REQUEST['concept_id'] ) ? $_REQUEST['concept_id'] : null ;
-        $resourceId = isset( $_REQUEST['resource_id'] ) && is_numeric( $_REQUEST['resource_id'] ) ? $_REQUEST['resource_id'] : null ;
-        $isExpr = isset( $_REQUEST['is_expr'] ) && is_numeric( $_REQUEST['is_expr'] ) ? $_REQUEST['is_expr'] : null ;       
-        $encodeClic = (isset($_REQUEST['encodeClic']))?$_REQUEST['encodeClic'] : 1;
-        $courseId = (isset($_REQUEST['courseId']))?$_REQUEST['courseId'] : 0;
-        $userId = (isset($_REQUEST['userId']))?$_REQUEST['userId'] : 0;
-        $pref = isset($_REQUEST['params']) ? $_REQUEST['params'] : null; 
-        $params = array( 'concept_id' => $conceptId, 'resource_id' => $resourceId, 'is_expr' => $isExpr, 'params' => $pref );
-        
+    if ( 'displayEntry' == $call ) {
+        $conceptid = optional_param('concept_id', null, PARAM_INT);
+        $resourceid = optional_param('resource_id', null, PARAM_INT);
+        $isexpr = optional_param('is_expr'  , null, PARAM_INT);
+        $encodeclic = optional_param('encodeClic', 1, PARAM_ALPHANUM);
+        $courseid = optional_param('courseId', 0, PARAM_INT);
+        $userid = optional_param('userId', 0, PARAM_INT);
+        $pref = isset($_REQUEST['params']) ? $_REQUEST['params'] : null;
+        $params = array( 'concept_id' => $conceptid, 'resource_id' => $resourceid, 'is_expr' => $isexpr, 'params' => $pref );
+
         $html = CobraRemoteService::call( 'displayEntry', $params, 'json' );
-        $entryType = $isExpr ? 'expression' : 'lemma';
-        $params = array('conceptId' => $conceptId,'entryType' => $entryType);
-        $lingEntity = CobraRemoteService::call( 'getEntityLingIdFromConcept', $params, 'html' );
-        $lingEntity = str_replace("\"","", $lingEntity);
-        if ($encodeClic)
-        {
-            clic( $resourceId, $lingEntity, $DB, $courseId, $userId );
+        $entrytype = $isexpr ? 'expression' : 'lemma';
+        $params = array('conceptId' => $conceptid, 'entryType' => $entrytype);
+        $lingentity = CobraRemoteService::call( 'getEntityLingIdFromConcept', $params, 'html' );
+        $lingentity = str_replace("\"", "", $lingentity);
+        if ($encodeclic) {
+            clic( $resourceid, $lingentity, $DB, $courseid, $userid );
         }
         echo $html;
     }
 
-    if( 'displayCC' == $call )
-    {
-        $id = isset( $_REQUEST['id_cc'] ) && is_numeric( $_REQUEST['id_cc'] ) ? $_REQUEST['id_cc'] : null ;
-        $occId = isset( $_REQUEST['id_occ'] ) && is_numeric( $_REQUEST['id_occ'] ) ? $_REQUEST['id_occ'] : null ;
-        $color = isset( $_REQUEST['bg_color'] ) && is_string( $_REQUEST['bg_color'] ) ? $_REQUEST['bg_color'] : null ;  
-        $pref = isset($_REQUEST['params']) ? $_REQUEST['params'] : null; 
-        $params = array( 'id_cc' => $id, 'id_occ' => $occId, 'params' => $pref);
+    if ( 'displayCC' == $call ) {
+        $id = optional_param('id_cc', null, PARAM_INT);
+        $occid = optional_param('id_occ', null, PARAM_INT);
+        $color = optional_param('bg_color', null, PARAM_ALPHANUMEXT);
+        $pref = isset($_REQUEST['params']) ? $_REQUEST['params'] : null;
+        $params = array( 'id_cc' => $id, 'id_occ' => $occid, 'params' => $pref);
         $html = CobraRemoteService::call( 'displayCC', $params, 'html' );
         echo $html;
     }
 
-    if( 'displayCard' == $call )
-    {
-        $entryId = isset( $_REQUEST['entry_id'] ) && is_numeric( $_REQUEST['entry_id'] ) ? $_REQUEST['entry_id'] : null;
-        $isExpr = isset( $_REQUEST['is_expr'] ) && is_numeric( $_REQUEST['is_expr'] ) ? (bool)$_REQUEST['is_expr'] : false;
-        $construction = isset( $_REQUEST['currentConstruction'] ) && is_string( $_REQUEST['currentConstruction'] ) ? $_REQUEST['currentConstruction'] : null;
-        $preferences = isset( $_REQUEST['params'] ) ? $_REQUEST['params'] : null;
-        $params = array( 'entry_id' => $entryId, 'is_expr' => $isExpr, 'currentConstruction' => $construction, 'params' => $preferences );
+    if ( 'displayCard' == $call ) {
+        $entryid = optional_param('entry_id', null, PARAM_INT);
+        $isexpr = optional_param( 'is_expr'  , false, PARAM_BOOL);
+        $construction = optional_param('currentConstruction', null, PARAM_ALPHANUM );
+        $prefs = isset($_REQUEST['params']) ? $_REQUEST['params'] : null;
+        $params = array( 'entry_id' => $entryid, 'is_expr' => $isexpr, 'currentConstruction' => $construction,
+            'params' => $prefs );
         $html = CobraRemoteService::call( 'displayCard', $params, 'html' );
         echo $html;
     }
-}
-catch( Exception $e )
-{
+} catch ( Exception $e ) {
     die( $e->getMessage() );
 }

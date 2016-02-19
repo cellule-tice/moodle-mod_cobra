@@ -1,4 +1,29 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Prints a particular instance of cobra
+ *
+ * You can have a rather longer description of the file as well,
+ * if you like, and it can span multiple lines.
+ *
+ * @package    mod_cobra
+ * @copyright  2015 Laurence Dumortier
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
@@ -23,53 +48,42 @@ if ($id) {
     error('You must specify a course_module ID or an instance ID');
 }
 
-// Security check
+// Security check.
 require_login($course, true, $cm);
 
 $context = context_module::instance($cm->id);
 
-if (!has_capability('mod/cobra:edit', $context))
-{
-      redirect('view.php?id='.$cm->id); ;   
+if (!has_capability('mod/cobra:edit', $context)) {
+      redirect('view.php?id='.$cm->id);
 }
 
 /*
- * init request vars
+ * Init request vars.
  */
 
 $acceptedcmdlist = array(  'rqExport', 'exExport', 'rqCompare', 'exCompare' );
 
 $cmd = isset( $_REQUEST['cmd'] ) && in_array( $_REQUEST['cmd'], $acceptedcmdlist ) ? $_REQUEST['cmd'] : null;
 
- $collectionlist = get_registered_collections('visible');
+$collectionlist = get_registered_collections('visible');
 
- if ( $cmd == 'exExport' )
-{
-    $glossary = array();  
-    foreach( $collectionlist as $collection )
-    {
+if ($cmd == 'exExport') {
+    $glossary = array();
+    foreach ($collectionlist as $collection) {
         $textlist = load_text_list( $collection['id_collection'], 'visible' );
-    
-        foreach ( $textlist as $num=>$text )
-        {         
-            if (array_key_exists($text->id,$_REQUEST))
-            {
+        foreach ($textlist as $num => $text) {
+            if (array_key_exists($text->id, $_REQUEST)) {
                 $textid = $text->id_text;
                 $glossary2 = get_glossary_for_text ( $textid );
-                if (array_key_exists( $text->id_text, $glossary2 ))
-                {
+                if (array_key_exists( $text->id_text, $glossary2 )) {
                     $glossary2 = get_glossary_entry_of_text( $glossary2[$text->id_text], $text, $num );
                     $glossary = array_merge( $glossary, $glossary2 );
                 }
             }
         }
-    }   
+    }
     export_glossary ($glossary);
-
 }
-/*
- * Ouput
- */
 
 // Print the page header.
 
@@ -88,35 +102,25 @@ echo $OUTPUT->heading('Lecture de textes');
 
 echo $OUTPUT->box_start('Glossaire' );
 
-//require_once dirname( __FILE__ ) . '/locallib.php';
-
 $prefs = get_cobra_preferences();
 $language = $prefs['language'];
 
 $display = '';
 $out = '';
- 
 
-/*if (( $cmd != 'rqExport' ) && ( $cmd != 'rqCompare' ))
-{*/
-               
-       $out .= '<a href="?cmd=rqExport&id='.$id. '">'. get_string('ExportGlossary', 'cobra') . '</a> &nbsp; '. "\n"
+$out .= '<a href="?cmd=rqExport&id='.$id. '">'. get_string('ExportGlossary', 'cobra') . '</a> &nbsp; '. "\n"
                .'<a href="?cmd=rqCompare&id='.$id. '">'. get_string('Compare_text_with_glossary', 'cobra') . '</a> &nbsp; '. "\n";
-/*}*/
 
- if ( $cmd  == 'rqExport' )
-{
-    // afficher une checkbox pour chacun des textes de ce cours
-     $display = '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">' . "\n";
+if ($cmd == 'rqExport') {
+    // Show checkbox foreach text of this course.
+    $display = '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">' . "\n";
     $display .= '<table>';
-    $display .= '<tr> <td><input type="checkbox" class="selectall" id="selectall"  >'.get_string('checkall_uncheckall', 'cobra') .'</td></tr>';
-    foreach( $collectionlist as $collection )
-    {
+    $display .= '<tr> <td><input type="checkbox" class="selectall" id="selectall"  >'
+            .get_string('checkall_uncheckall', 'cobra') .'</td></tr>';
+    foreach ($collectionlist as $collection) {
         $textlist = load_text_list( $collection['id_collection'], 'visible' );
-
-        foreach( $textlist as $text )
-        {
-            // title
+        foreach ($textlist as $text) {
+            // Display Title.
             $display  .= '<tr><td style="min-width:33%;">' . "\n"
             .    '<input class="checkbox" type="checkbox" value="true" id="textId' . $text->id . '" name="' . $text->id . '" />'
             .    htmlspecialchars( strip_tags( $text->title) )
@@ -124,30 +128,24 @@ $out = '';
             .    '</tr>';
         }
     }
-    $display .= '<tr><td align="center"><input type="submit" value="' . get_string( 'ok' ) . '" />&nbsp; </td></tr>';    
+    $display .= '<tr><td align="center"><input type="submit" value="' . get_string( 'ok' ) . '" />&nbsp; </td></tr>';
     $display  .= '</table>';
     $display .= '<input type="hidden" name="cmd" value="exExport" >';
     $display .= '<input type="hidden" name="id" value="'.$id. '" >';
     $display .= '</form>';
     $out .= $display;
-
-}
-else if ( $cmd == 'rqCompare')
-{
+} else if ($cmd == 'rqCompare') {
     $display = '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">' . "\n";
     $display .= '<input type="hidden" name="cmd" value="exCompare" >';
     $display .= '<input type="hidden" name="id" value="'.$id. '" >';
     $display .= '<table>';
-    $display .= '<tr> <td colspan="2"><input type="checkbox" class="selectall" id="selectall"  >'.get_string('checkall_uncheckall', 'cobra') .'</td></tr>';
-   
-    foreach( $collectionlist as $collection )
-    {
+    $display .= '<tr> <td colspan="2"><input type="checkbox" class="selectall" id="selectall"  >'
+        . get_string('checkall_uncheckall', 'cobra') .'</td></tr>';
+
+    foreach ($collectionlist as $collection) {
         $textlist = load_text_list( $collection['id_collection'], 'visible' );
-     
-        foreach( $textlist as $text )
-        {
-            // title
-                // afficher une checkbox pour chacun des textes de ce cours
+        foreach ($textlist as $text) {
+            // Display checkbox foreach text.
             $display  .= '<tr><td style="min-width:33%;">' . "\n"
             .    '<input type="checkbox" value="true" name="' . $text->id . '" id="textId' . $text->id . '"/>'
             .    htmlspecialchars( strip_tags( $text->title ) )
@@ -155,29 +153,23 @@ else if ( $cmd == 'rqCompare')
             .    '</tr>';
         }
     }
- 
-    
-   $display .= get_string('Text','cobra');
-   $display .= '<tr><td><textarea name="myText" id="myText" cols="80" rows="20" style="border-width:1px;vertical-align:middle;"></textarea></td></tr>'
-        . '<tr><td align="center"><input value="' . get_string ( 'ok' ) . '" type="submit" name="submit" />&nbsp;</td></tr>' . "\n" . '</table>         
-                </form>' . "\n";
+
+    $display .= get_string('Text', 'cobra');
+    $display .= '<tr><td><textarea name="myText" id="myText" cols="80" rows="20" style="border-width:1px;vertical-align:middle;">'
+            . '</textarea></td></tr>'
+            . '<tr><td align="center"><input value="' . get_string ( 'ok' )
+            . '" type="submit" name="submit" />&nbsp;</td></tr>' . "\n" . '</table> </form>' . "\n";
     $out .= $display;
-}
-else if ( $cmd == 'exCompare')
-{
-    increaseScriptTime();
+} else if ( $cmd == 'exCompare') {
+    increase_script_time();
     $glossary = array();
-    foreach( $collectionlist as $collection )
-    {
+    foreach ($collectionlist as $collection) {
         $textlist = load_text_list( $collection['id_collection'], 'visible' );
-        foreach ( $textlist as $num=>$text )
-        {
-            if (array_key_exists($text->id,$_REQUEST))
-            {
+        foreach ($textlist as $num => $text) {
+            if (array_key_exists($text->id, $_REQUEST)) {
                 $textid = $text->id;
                 $glossary2 = get_glossary_for_text ( $textid );
-                if (array_key_exists( $textid, $glossary2 ))
-                {
+                if (array_key_exists( $textid, $glossary2 )) {
                     $glossary2 = get_glossary_entry_of_text( $glossary2[$text->id], $text, $num );
                     $glossary = array_merge( $glossary, $glossary2 );
                 }
@@ -185,37 +177,32 @@ else if ( $cmd == 'exCompare')
         }
     }
 
-    list( $lemmaglossary, $expGlossary ) = explode_glossary_into_lemmas_and_expression( $glossary );
+    list( $lemmaglossary, $expglossary ) = explode_glossary_into_lemmas_and_expression( $glossary );
     $glossarylemmaid = explode_array_on_key ( $lemmaglossary, 'id' );
     $mytext = $_REQUEST['myText'];
     $newwords = '';
     $otherwords = '';
-    $words =  return_list_of_words_in_text ( $mytext, $language );
+    $words = return_list_of_words_in_text ( $mytext, $language );
 
-    foreach ( $words as $word )
-    {
+    foreach ($words as $word) {
         $listflexions = word_exists_as_flexion ( $word, $language );
-        if (sizeof( $listflexions ) != 0)
-        {
+        if (count( $listflexions) != 0) {
             $trouve = false;
-            $listpossiblelemmas = get_lemmaCatList_from_ff( $word, $language );
-            foreach ( $listpossiblelemmas as $lemmaid )
-            {
-                if (array_key_exists( $lemmaid, $glossarylemmaid ))
-                {
+            $listpossiblelemmas = get_lemmacat_list_from_ff( $word, $language );
+            foreach ($listpossiblelemmas as $lemmaid) {
+                if (array_key_exists($lemmaid, $glossarylemmaid)) {
                     $trouve = true;
-                    $info = $glossarylemmaid[$lemmaid]['entry'] . ' ('.$glossarylemmaid[$lemmaid]['category'].') - ' . $glossarylemmaid[$lemmaid]['traduction'];
-                    $otherwords .= '<li> ' . get_string('possible_translation','cobra') . ' : '. $word . ' : '. utf8_encode($info) . '</li>';
+                    $info = $glossarylemmaid[$lemmaid]['entry'] . ' ('.$glossarylemmaid[$lemmaid]['category'].') - '
+                            . $glossarylemmaid[$lemmaid]['traduction'];
+                    $otherwords .= '<li> ' . get_string('possible_translation', 'cobra') . ' : '. $word . ' : '
+                            . utf8_encode($info) . '</li>';
                 }
             }
-            if (!$trouve)
-            {
-                $newwords .= '<li> ' . get_string('new_word','cobra') . ' : '. $word . '</li>';
+            if (!$trouve) {
+                $newwords .= '<li> ' . get_string('new_word', 'cobra') . ' : '. $word . '</li>';
             }
-        }
-        else
-        {
-            $newwords .= '<li> ' . get_string('new_word','cobra')  . ' : '. $word . '</li>';
+        } else {
+            $newwords .= '<li> ' . get_string('new_word', 'cobra')  . ' : '. $word . '</li>';
         }
     }
     $out .= '<ul>';
@@ -225,7 +212,6 @@ else if ( $cmd == 'exCompare')
 }
 
 echo $out;
-
 
 echo $OUTPUT->box_end();
 

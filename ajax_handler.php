@@ -1,37 +1,49 @@
-<?php 
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
-/*
- * Load elex main lib
+/**
+ * Prints a particular instance of cobra
+ *
+ * You can have a rather longer description of the file as well,
+ * if you like, and it can span multiple lines.
+ *
+ * @package    mod_cobra
+ * @copyright  2015 Your Name
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+// Load elex main lib and config.
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
     require_once(dirname(__FILE__).'/locallib.php');
     global $DB;
 
-//init request vars
-$acceptedCmdList = array(   
-    'getDisplayParams',    
-    'setVisible', 
-    'setInvisible',
-    'moveUp', 
-    'moveDown',    
-    'changeType'
-);
+// Define accepted commands.
+$acceptedcmdlist = array('getDisplayParams', 'setVisible', 'setInvisible', 'moveUp', 'moveDown', 'changeType');
 
-if( isset( $_REQUEST['ajaxcall'] ) && in_array( $_REQUEST['ajaxcall'], $acceptedCmdList ) ) 
-{
+if (isset($_REQUEST['ajaxcall']) && in_array($_REQUEST['ajaxcall'], $acceptedcmdlist)) {
     $call = $_REQUEST['ajaxcall'];
 }
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // ... cobra instance ID - it should be named as the first character of the module.
 
-if (isset($_REQUEST['courseId']))
-{
+if (isset($_REQUEST['courseId'])) {
     $id = $_REQUEST['courseId'];
 }
 
-//echo '<br> id = '. $id . ' et n = '.$n;
 if ($id) {
     $cm         = get_coursemodule_from_id('cobra', $id, 0, false, MUST_EXIST);
     $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
@@ -40,79 +52,66 @@ if ($id) {
     $cobra  = $DB->get_record('cobra', array('id' => $n), '*', MUST_EXIST);
     $course     = $DB->get_record('course', array('id' => $cobra->course), '*', MUST_EXIST);
     $cm         = get_coursemodule_from_instance('cobra', $cobra->id, $course->id, false, MUST_EXIST);
-} 
+}
 
-$resource = isset( $_REQUEST['resource_id'] ) && is_string( $_REQUEST['resource_id'] ) ? $_REQUEST['resource_id'] : null;
-$resourceType = isset( $_REQUEST['resource_type'] ) && is_string( $_REQUEST['resource_type'] ) ? $_REQUEST['resource_type'] : null;
-$sibling = isset( $_REQUEST['sibling_id'] ) && is_string( $_REQUEST['sibling_id'] ) ? $_REQUEST['sibling_id'] : null;
+$resource = optional_param('resource_id', null, PARAM_ALPHANUM);
+$resourcetype = optional_param('resource_type', null, PARAM_ALPHANUM);
+$sibling = optional_param('sibling_id', null, PARAM_ALPHANUM);
 
-// force headers
+// Force headers for export.
 header('Content-Type: text/html; charset=iso-8859-1'); // Charset
 header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past.
 
-if( 'getDisplayParams' == $call )
-{
-    $displayPrefs = get_cobra_preferences();
-    $ccOrder = getCorpusTypeDisplayOrder();
-    $order = implode( ',', $ccOrder );
-    $displayPrefs['ccOrder'] = $order;
-    echo json_encode( $displayPrefs );
+if ('getDisplayParams' == $call) {
+    $displayprefs = get_cobra_preferences();
+    $ccorder = get_corpus_type_display_order();
+    $order = implode( ',', $ccorder );
+    $displayprefs['ccOrder'] = $order;
+    echo json_encode( $displayprefs );
 }
 
-if( 'setVisible' == $call )
-{
-    if( set_visibility( $resource, true, $resourceType, $course->id ) )
-    {
+if ('setVisible' == $call) {
+    if (set_visibility($resource, true, $resourcetype, $course->id)) {
         echo 'true';
         return true;
     }
     return false;
 }
 
-if( 'setInvisible' == $call )
-{
-    if( set_visibility( $resource, false, $resourceType, $course->id ) )
-    {
+if ('setInvisible' == $call) {
+    if (set_visibility($resource, false, $resourcetype, $course->id)) {
         echo 'true';
         return true;
     }
     return false;
 }
 
-if( 'moveDown' == $call )
-{
-    $position = isset( $_REQUEST['position'] ) && is_numeric( $_REQUEST['position'] ) ? (int)$_REQUEST['position'] : 0;
-    if( $position 
-        && set_position( $sibling, $position++, $resourceType, $course->id  )
-        && set_position( $resource, $position, $resourceType, $course->id  ) )
-    {
+if ('moveDown' == $call) {
+    $position = optional_param('position', 0, PARAM_INT);
+    if ($position && set_position($sibling, $position++, $resourcetype, $course->id)
+        && set_position($resource, $position, $resourcetype, $course->id)) {
         echo 'true';
         return true;
     }
     return false;
 }
 
-if( 'moveUp' == $call )
-{
-    $position = isset( $_REQUEST['position'] ) && is_numeric( $_REQUEST['position'] ) ? (int)$_REQUEST['position'] : 0;
-    if( $position 
-        && set_position( $sibling, $position--, $resourceType, $course->id  )
-        && set_position( $resource, $position, $resourceType, $course->id  ) )
-    {
+if ('moveUp' == $call) {
+    $position = optional_param('position', 0, PARAM_INT);
+    if ($position && set_position($sibling, $position--, $resourcetype, $course->id)
+        && set_position($resource, $position, $resourcetype, $course->id)) {
         echo 'true';
         return true;
     }
     return false;
 }
 
-if( 'changeType' == $call )
-{
-    $textId = isset( $_REQUEST['resource_id'] ) && is_numeric( $_REQUEST['resource_id'] ) ? (int)$_REQUEST['resource_id'] : 0;
-    if( change_text_type( $textId, $course->id ) )
-    {
-        $newType = getTextType( $textId, $course->id );
-        echo get_string($newType,'cobra');
+if ('changeType' == $call) {
+    $textid = optional_param('resource_id', 0, PARAM_INT);
+    if (change_text_type($textid, $course->id)) {
+        $newtype = get_text_type($textid, $course->id);
+        echo get_string($newtype, 'cobra');
         return true;
     }
     return false;

@@ -53,9 +53,9 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
-            'manager' => CAP_ALLOW        
+            'manager' => CAP_ALLOW
         ),
-       'clonepermissionsfrom' => 'moodle/course:manageactivities' 
+        'clonepermissionsfrom' => 'moodle/course:manageactivities'
     ),
 
     'mod/cobra:view' => array(
@@ -69,41 +69,41 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     ),
-    'mod/cobra:edit'=> array(
+    'mod/cobra:edit' => array(
         'riskbitmask' => RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-     )
+        )
     ),
-    'mod/cobra:stat'=> array(
+    'mod/cobra:stat' => array(
         'riskbitmask' => RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-     )
+        )
     ),
-    'mod/cobra:settings'=> array(
+    'mod/cobra:settings' => array(
         'riskbitmask' => RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-     )
+        )
     ),
-    'mod/cobra:glossaryedit'=> array(
+    'mod/cobra:glossaryedit' => array(
         'riskbitmask' => RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-     )
+        )
     ),
     'mod/cobra:myglossary' => array(
         'captype' => 'read',

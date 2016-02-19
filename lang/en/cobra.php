@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * English strings for cobra
  *
@@ -22,7 +21,7 @@
  * if you like, and it can span multiple lines.
  *
  * @package    mod_cobra
- * @copyright  2015 Your Name
+ * @copyright  2015 Laurence Dumortier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -33,7 +32,7 @@ $string['modulenameplural'] = 'Cobra';
 $string['modulename_help'] = 'Use the CoBRA module for... | The cobra module allows...';
 $string['cobrafieldset'] = 'Custom example fieldset';
 $string['cobra:addinstance'] = 'Add instance of cobra plugin';
-$string['cobra:edit']= 'manage cobra plugin';
+$string['cobra:edit'] = 'manage cobra plugin';
 $string['cobra:glossaryedit'] = 'manage glossary';
 $string['cobra:settings'] = 'manage settings';
 $string['cobra:stat'] = 'Statistics';
@@ -44,17 +43,17 @@ $string['cobra'] = 'cobra';
 $string['pluginadministration'] = 'cobra administration';
 $string['pluginname'] = 'cobra';
 $string['language'] = 'langue';
-$string['Collections _currently_linked_to_your_course']='Collections currently linked to your course';
+$string['Collections _currently_linked_to_your_course'] = 'Collections currently linked to your course';
 $string['collection_name'] = 'Nom de la collection';
-$string['visibility'] ='Visibilite';
+$string['visibility'] = 'Visibilite';
 $string['collections_available'] = 'Collections disponibles';
 $string['manage_text_collections'] = 'Gerer les collections';
 $string['corpus_selection'] = "Selection  des corpus";
 $string['display_preferences'] = 'Parametres d\'affichage';
 $string['add_collection'] = 'Ajouter cette collection';
-$string['unable_register_collection']= 'Impossible d\'ajouter cette collection';
+$string['unable_register_collection'] = 'Impossible d\'ajouter cette collection';
 $string['text_collection_added'] = 'Collection de texte ajoutee au cours';
-$string['edit_collection']= 'Modifier cette collection';
+$string['edit_collection'] = 'Modifier cette collection';
 $string['text'] = 'Texte';
 $string['source'] = 'Source';
 $string['type'] = 'Type';
@@ -78,7 +77,7 @@ $string['Display_preference_for_translations'] = 'Montrer les preferences pour l
 $string['Show_annotations'] = 'Montrer les annotations';
 $string['Display_preference_for_definitions-annotations'] = 'Montrer les preferences pour les definitions/annotations';
 $string['Show_illustrations'] = 'Montrer les illustrations';
-$string['Choose_yes_to_display_possible_illustrations_associated_to_the_entry']= 'Choisir oui pour montrer des illustrations en lien avec l\'entree (i;e. image)';
+$string['Choose_yes_to_display_possible_illustrations_associated_to_the_entry'] = 'Choisir oui pour montrer des illustrations en lien avec l\'entree (i;e. image)';
 $string['Display_mode_for_examples'] = 'Mode d\'affichage pour les exemples';
 $string['Bilingual'] = 'Bilingues';
 $string['Monolingual'] = 'Monolingues';
@@ -91,7 +90,7 @@ $string['No_text_to_add'] = 'Aucun texte a ajouter';
 $string['cobra:submit'] = 'Gerer';
 $string['cobra:view'] = 'Voir';
 $string['Display_entries_clicked_at_least_20_times'] = 'Montrer les entrees cliquees au moins 20 fois';
-$string['Display_the_10_most_frequently_clicked_entries_per_text']= 'Montrer les entrees cliquees au moins 10 fois par texte';
+$string['Display_the_10_most_frequently_clicked_entries_per_text'] = 'Montrer les entrees cliquees au moins 10 fois par texte';
 $string['Display_the_most_frequently_analysed_texts'] = 'Montrer les textes les plus cliques';
 $string['Display_statistics_by_text'] = 'Montrer les statistiques par texte';
 $string['Display_statistics_by_user'] = 'Montrer les statistiques par utilisateur';
@@ -117,8 +116,8 @@ $string['info'] = 'Info';
 $string['ExportGlossary'] = 'Export Glossary';
 $string['Compare_text_with_glossary'] = 'Compare text and glossary';
 $string['generalconfig'] = 'General Configuration';
-$string['mail_receiver']= 'Identifier of the recipient for email notification errors';
-$string['moodle_plateform_name'] = 'Plateform name'; 
+$string['mail_receiver'] = 'Identifier of the recipient for email notification errors';
+$string['moodle_plateform_name'] = 'Plateform name';
 $string['cobraserverhost'] = 'Url for webservices';
 $string['explaingeneralconfig'] = 'general configuration';
 $string['checkall_uncheckall'] = 'Sélectionner/Déselectionner tout';

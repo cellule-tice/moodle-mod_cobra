@@ -34,13 +34,13 @@ require_once(dirname(__FILE__).'/locallib.php');
 require_once(dirname(__FILE__).'/lib/cobraremoteservice.class.php');
 require_once(dirname(__FILE__).'/lib/cobracollectionwrapper.class.php');
 
-  $textid = isset( $_REQUEST['id_text'] ) && is_numeric( $_REQUEST['id_text'] ) ? $_REQUEST['id_text'] : null;
-    $collectionid = isset( $_REQUEST['id_collection'] ) && is_numeric( $_REQUEST['id_collection'] ) ? $_REQUEST['id_collection'] : null;
-    if( is_null( $textid ) )
-    {
-        header( 'Location: ./index.php' );
-        exit();
-    }
+$textid = optional_param('id_text', null, PARAM_INT);
+$collectionid = optional_param('id_collection', null , PARAM_INT);
+
+if ( is_null( $textid ) ) {
+    header( 'Location: ./index.php' );
+    exit();
+}
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // ... cobra instance ID - it should be named as the first character of the module.
@@ -85,7 +85,7 @@ $PAGE->set_heading(format_string($course->fullname));
 
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
-// on va ajouter le lien pour pouvoir utiliser les commandes ajax utiles au remplissage d'un questionnaire
+// Add instructions for thje ajax commands.
  $PAGE->requires->jquery();
  $PAGE->requires->js('/mod/cobra/js/cobra.js');
  $PAGE->requires->js_init_call('M.mod_cobra.init');
@@ -104,82 +104,78 @@ echo $OUTPUT->box_start('generalbox collection_content' );
 
 $content = '';
 
-   //load content to display
-    $collection = new CobraCollectionWrapper( $collectionid );
-    $collection->load();
-    $text = new CobraTextWrapper();
-    $text->setTextId( $textid );
-    $text->load();
-    $preferences = get_cobra_preferences();
-    $ccOrder = getCorpusTypeDisplayOrder();
-    $order = implode( ',', $ccOrder );
-    $preferences['ccOrder'] = $order;
-    
-    $encodeClic = 1;
-    if (has_capability('mod/cobra:edit', $context))
-    {
-         $encodeClic = 0;   
+// Load content to display.
+$collection = new Cobracollectionwrapper( $collectionid );
+$collection->load();
+$text = new CobraTextWrapper();
+$text->set_text_id( $textid );
+$text->load();
+$preferences = get_cobra_preferences();
+$ccorder = get_corpus_type_display_order();
+$order = implode( ',', $ccorder );
+$preferences['ccOrder'] = $order;
+
+$encodeclic = 1;
+if (has_capability('mod/cobra:edit', $context)) {
+    $encodeclic = 0;
+}
+
+$content .= '<div id="encode_clic"  name="'.$encodeclic.'" class="hidden"></div>';
+$content .= '<div id="language" class="hidden" name="' . $collection->get_language() . '">&nbsp;</div>';
+
+$content .= '<div id="id_text" class="hidden">' . $textid . '</div>';
+$content .= '<div id="courseLabel" class="hidden" name="' . $course->id . '">&nbsp;</div>';
+$content .= '<div id="userId" class="hidden" name="' . $USER->id . '">&nbsp;</div>';
+
+$i = 0;
+foreach ($preferences as $key => $info) {
+     $content .= '<div id="preferences_'.$i. '_key" class="hidden" name="'.$key.'">'.$key.'</div>';
+     $content .= '<div id="preferences_'.$i. '_value" class="hidden" name="'.strtolower($info).'">'.$info.'</div>';
+     $i++;
+}
+
+$content .= '<div id="preferencesNb" class="hidden" name="'.count($preferences).'">'. count($preferences).'</div>';
+$content .= '<div class="top">';
+
+if ( 'SHOW' == strtoupper($preferences['nextprevbuttons']) ) {
+    $content .= '<ul class="commands"> ';
+    $nextid = get_next_textid($text);
+    $previousid = get_previous_textid($text);
+    if ( $previousid) {
+        $content .= '<li style="padding-right:5px;"><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text='
+                . $previousid . '&amp;id_collection=' . $collectionid . '#/' . $previousid . '">'
+                . get_string('previous_text', 'cobra') . '</a></li> &nbsp;';
     }
-   
-    $content .= '<div id="encode_clic"  name="'.$encodeClic.'" class="hidden"></div>';
-    $content .= '<div id="language" class="hidden" name="' . $collection->getLanguage() . '">&nbsp;</div>';
-   
-    $content .= '<div id="id_text" class="hidden">' . $textid . '</div>';
-    $content .= '<div id="courseLabel" class="hidden" name="' . $course->id . '">&nbsp;</div>';
-    $content .= '<div id="userId" class="hidden" name="' . $USER->id . '">&nbsp;</div>';
-   $i=0;
-    foreach ($preferences as $key=>$info)
-    {
-         $content .= '<div id="preferences_'.$i. '_key" class="hidden" name="'.$key.'">'.$key.'</div>';
-         $content .= '<div id="preferences_'.$i. '_value" class="hidden" name="'.strtolower($info).'">'.$info.'</div>';
-         $i++;
+    if ( $nextid  ) {
+            $content .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $nextid . '&amp;id_collection='
+                    . $collectionid . '#/' . $nextid . '">' . get_string('next_text', 'cobra') . '</a></li>';
     }
-    $content .= '<div id="preferencesNb" class="hidden" name="'.sizeof($preferences).'">'.sizeof($preferences).'</div>';
-    $content .= '<div class="top">';
-    
-     if( 'SHOW' == strtoupper($preferences['nextprevbuttons']) )
-    {
-         $content .= '<ul class="commands"> ';
-        $nextid = get_next_textid($text);
-        $previousid = get_previous_textid($text);
-        if( $previousid) 
-        {           
-            $content.= '<li style="padding-right:5px;"><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $previousid . '&amp;id_collection=' . $collectionid . '#/' . $previousid . '">' . get_string('previous_text', 'cobra') . '</a></li> &nbsp;';
-        }
-        if( $nextid  )
-        {
-            $content .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id. '&id_text=' . $nextid . '&amp;id_collection=' . $collectionid . '#/' . $nextid . '">' . get_string('next_text','cobra') . '</a></li>';
-        }
-        $content .= '</ul>';
-    }
-    
-    $audioFileUrl = $text->getAudioFileUrl();
-    if( !empty( $audioFileUrl ) && 'SHOW' == $preferences['player'] )
-    {
-       $content .= '<div> <audio controls="controls">
- <source src="'.$audioFileUrl.'" />
+    $content .= '</ul>';
+}
+
+$audiofileurl = $text->get_audio_file_url();
+if ( !empty( $audiofileurl ) && 'SHOW' == $preferences['player'] ) {
+    $content .= '<div> <audio controls="controls">
+ <source src="'.$audiofileurl.'" />
  <!-- fallback -->
-  <embed type="application/x-shockwave-flash"                                                         
-    flashvars="audioUrl='.$audioFileUrl.'"    
-     src="http://www.google.com/reader/ui/3523697345-audio-player.swf"   
+  <embed type="application/x-shockwave-flash"
+    flashvars="audioUrl='.$audiofileurl.'"
+     src="http://www.google.com/reader/ui/3523697345-audio-player.swf"
      width="650? height="0? quality="best"></embed>
-</audio>`</div>';
-    }
-       
-    
-    $content .=  $text->formatHtml()
+</audio></div>';
+}
+
+$content .= $text->format_html()
          . '<div id="card" class="card left">'
          . '</div></div>'
          . '<div class="bottom">'
-         . '<div id="details" class="left">' 
-         . '</div>'          
+         . '<div id="details" class="left">'
+         . '</div>'
          . '<div id="full_concordance" class="right">'
          . '</div>'
-         . '</div>'
-         ;
+         . '</div>';
 
 echo $content;
-
 
 echo $OUTPUT->box_end();
 

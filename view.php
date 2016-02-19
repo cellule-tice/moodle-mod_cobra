@@ -72,8 +72,7 @@ $PAGE->set_heading(format_string($course->fullname));
  * $PAGE->add_body_class('cobra-'.$somevar);
  */
 
-
-// on va ajouter le lien pour pouvoir utiliser les commandes ajax utiles au remplissage d'un questionnaire
+// Add the ajaxcommand for the form.
  $PAGE->requires->jquery();
  $PAGE->requires->js('/mod/cobra/js/cobra.js');
  $PAGE->requires->js_init_call('M.mod_cobra.TextVisibility');
@@ -89,107 +88,96 @@ echo $OUTPUT->box_start('generalbox collection_content' );
 
 
 $content = '';
- $isAllowedToEdit = false;
-if (has_capability('mod/cobra:edit', $context))
-{
-    $isAllowedToEdit = true;
-    $content .= '<a href="cobra_settings.php?id='.$id. '">'. get_string('parameters','cobra'). '</a> &nbsp; ' . "\n"
-        . '<a href="glossary.php?id='.$id. '">'.get_string('glossary','cobra') . '</a> &nbsp; ' . "\n"
-        . '<a href="stat.php?id='.$id.'">'.get_string('statistics','cobra') . '</a>';
+$isallowedtoedit = false;
+if (has_capability('mod/cobra:edit', $context)) {
+    $isallowedtoedit = true;
+    $content .= '<a href="cobra_settings.php?id='.$id. '">'. get_string('parameters', 'cobra'). '</a> &nbsp; ' . "\n"
+        . '<a href="glossary.php?id='.$id. '">'.get_string('glossary', 'cobra') . '</a> &nbsp; ' . "\n"
+        . '<a href="stat.php?id='.$id.'">'.get_string('statistics', 'cobra') . '</a>';
 }
 
-// pour toutes les collections  choisies pour ce cours, afficher els textes dans l'ordre
-    
- $collectionList = $isAllowedToEdit ? get_registered_collections( 'all' ) : get_registered_collections( 'visible' );
-        foreach( $collectionList as $collection )
-        {
-            $content .= '<table class="claroTable emphaseLine textList" width="100%" border="0" cellspacing="2" style="margin-bottom:20px;">' . "\n"
-                 .  '<thead>' . "\n"
-                 .  '<tr class="superHeader" align="center" valign="top"> <th colspan="6">' . $collection['local_label'] . '</th></tr>' . "\n"
-                 .  '<tr class="headerX" align="center" valign="top">' . "\n"
-                 .  '<th> &nbsp; </th>'
-                 .  '<th>' . get_string( 'text','cobra' ) . '</th>' . "\n"
-                 .  '<th>' . get_string( 'source', 'cobra' ) . '</th>' . "\n";
+// For all chosen collections display text in selected order.
 
-            if( $isAllowedToEdit )
-            {
-                $content .= '<th>' . get_string ( 'type', 'cobra' ) . '</th>' . "\n" .
-                        '<th>' . get_string ( 'move' ) . '</th>' . "\n"
-                     .  '<th>' . get_string( 'visibility' , 'cobra') . '</th>' . "\n";
-            }
-            $content .= '</tr>' . "\n"
+$collectionlist = $isallowedtoedit ? get_registered_collections( 'all' ) : get_registered_collections( 'visible' );
+foreach ($collectionlist as $collection) {
+    $content .= '<table class="claroTable emphaseLine textList" width="100%" border="0"'
+            . 'cellspacing="2" style="margin-bottom:20px;">' . "\n"
+         .  '<thead>' . "\n"
+         .  '<tr class="superHeader" align="center" valign="top"> <th colspan="6">'
+         . $collection['local_label'] . '</th></tr>' . "\n"
+         .  '<tr class="headerX" align="center" valign="top">' . "\n"
+         .  '<th> &nbsp; </th>'
+         .  '<th>' . get_string( 'text', 'cobra' ) . '</th>' . "\n"
+         .  '<th>' . get_string( 'source', 'cobra' ) . '</th>' . "\n";
+
+    if ($isallowedtoedit ) {
+        $content .= '<th>' . get_string ( 'type', 'cobra' ) . '</th>' . "\n"
+                . '<th>' . get_string ( 'move' ) . '</th>' . "\n"
+                . '<th>' . get_string( 'visibility' , 'cobra') . '</th>' . "\n";
+    }
+    $content .= '</tr>' . "\n"
                  .  '</thead>' . "\n";
-            if( $isAllowedToEdit )
-            {
-                //load all texts to display for course admin
-                $textList = load_text_list( $collection['id_collection'], 'all' );
+
+    if ( $isallowedtoedit ) {
+        // Load all texts to display for course admin.
+        $textlist = load_text_list( $collection['id_collection'], 'all' );
+    } else {
+        // Load only visible texts to display for students.
+        $textlist = load_text_list( $collection['id_collection'], 'visible' );
+    }
+    if ( !empty( $textlist ) && is_array( $textlist ) ) {
+        $content .= '<tbody>' . "\n";
+        $position = 1;
+        foreach ($textlist as $text) {
+            // Display title.
+            $content .= '<tr id="' . $text->id_text . '#textId" class="row" name="' . $position++
+                 . '#pos"><td style="min-width:60%;">' . "\n"
+                 .  '<a href="text.php?id='.$id.'&id_text=' . $text->id_text . '&amp;id_collection='
+                 . $collection['id_collection'] . '">'
+                 .   $OUTPUT->pix_icon('f/text-24', ''). '&nbsp;'
+                 .  trim( strip_tags( $text->title  ) )
+                 .  '</a>' . "\n"
+                 .  '</td>' . "\n"
+            // Display source.
+                 .  '<td title="' . $text->source . '">' . "\n"
+                 .  substr( $text->source, 0, 40 ) . '...'
+                 .  '</td>' . "\n";
+
+            if ($isallowedtoedit) {
+                // Display text type.
+                $content .= '<td align="center">' . "\n" . '<a href="#" class="changeType">'
+                     . ( !empty( $text->text_type ) ? get_string( $text->text_type, 'cobra' ) : '&nbsp;' )
+                    . '</a></td>';
+                // Change position commands.
+                $content .= '<td align="center">' . "\n";
+                $content .= '<a href="#" class="moveUp">' . $OUTPUT->pix_icon('t/up', get_string('moveup')) . '</a>'. '&nbsp;';
+                $content .= '<a href="#" class="moveDown">' .  $OUTPUT->pix_icon('t/down', get_string('movedown')) . '</a>';
+                $content .= '</td>' . "\n";
+
+                // Change visibility commands.
+                $content .= '<td align="center">' . "\n";
+                $content .= '<a href="#" class="setVisible" '.( $text->visibility ? 'style="display:none"' : '').'>'
+                        . $OUTPUT->pix_icon('t/show', get_string('show')) . '</a>';
+
+                $content .= '<a href="#" class="setInvisible" '.( !$text->visibility ? 'style="display:none"' : '').'>'
+                        . $OUTPUT->pix_icon('t/hide', get_string('hide')) . '</a>';
+
+                $content .= '</td>' . "\n";
             }
-            else
-            {
-                //load only visible texts to display for students
-                $textList = load_text_list( $collection['id_collection'], 'visible' );
-            }
-            if( !empty( $textList ) && is_array( $textList ) )
-            {
-                $content .= '<tbody>' . "\n";
-                $position = 1;
-                foreach( $textList as $text )
-                {
-                    // title
-                    $content .= '<tr id="' . $text->id_text . '#textId" class="row" name="' . $position++ . '#pos"><td style="min-width:60%;">' . "\n"
-                         .  '<a href="text.php?id='.$id.'&id_text=' . $text->id_text . '&amp;id_collection=' . $collection['id_collection'] . '">'
-                         .   $OUTPUT->pix_icon('f/text-24',''). '&nbsp;'
-                         .  trim( strip_tags( $text->title  ) )
-                         .  '</a>' . "\n"
-                         .  '</td>' . "\n"
-                    //source
-                         .  '<td title="' . $text->source . '">' . "\n"
-                         .  substr( $text->source, 0, 40 ) . '...'
-                         .  '</td>' . "\n";
-
-                    if( $isAllowedToEdit )
-                    {
-                        // text type
-                        $content .= '<td align="center">' . "\n" . '<a href="#" class="changeType">'
-                              .    ( !empty( $text->text_type ) ? get_string( $text->text_type, 'cobra' ) : '&nbsp;' ) . '</a></td>';                    
-                        //change position commands
-                        $content .= '<td align="center">' . "\n";
-                        $content .=  '<a href="#" class="moveUp">' . $OUTPUT->pix_icon('t/up',get_string('moveup')) . '</a>'.  '&nbsp;';
-                        
-                        $content .=  '<a href="#" class="moveDown">' .  $OUTPUT->pix_icon('t/down',get_string('movedown')) . '</a>';
-                        
-                        
-                        $content .=  '</td>' . "\n";
-
-                        //change visibility commands
-                        $content .= '<td align="center">' . "\n";
-                        $content .=  '<a href="#" class="setVisible" '.( $text->visibility ? 'style="display:none"':'').'>' .  $OUTPUT->pix_icon('t/show',get_string('show')) . '</a>';
-
-                        $content .= '<a href="#" class="setInvisible" '.( !$text->visibility ? 'style="display:none"':'').'>' .  $OUTPUT->pix_icon('t/hide',get_string('hide')) . '</a>';
-                            
-                        $content .=  '</td>' . "\n";
-                    }
-
-                    $content .=  '</tr>' . "\n\n";
-                }
-
-                $content .= '</tbody>' . "\n";
-            }
-            else
-            {
-                $content .= '<tfoot>' . "\n"
-                     .  '<tr>' . "\n"
-                     .  '<td align="center" colspan="' . ( $isAllowedToEdit ? '4' : '2' ) . '">' . get_lang( 'No text' ) . '</td>' . "\n"
-                     .  '</tr>' . "\n"
-                     .  '</tfoot>' . "\n";
-            }
-
-            $content .= '</table>' . "\n";
+            $content .= '</tr>' . "\n\n";
         }
-    
+        $content .= '</tbody>' . "\n";
+    } else {
+        $content .= '<tfoot>' . "\n"
+             .  '<tr>' . "\n"
+             .  '<td align="center" colspan="' . ( $isallowedtoedit ? '4' : '2' ) . '">' . get_lang( 'No text' ) . '</td>' . "\n"
+             .  '</tr>' . "\n"
+             .  '</tfoot>' . "\n";
+    }
+    $content .= '</table>' . "\n";
+}
 
 echo $content;
-//echo format_text($content);
 
 
 echo $OUTPUT->box_end();
