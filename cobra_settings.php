@@ -99,7 +99,7 @@ $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'
         get_string('display_preferences', 'cobra') .'</a>';
 if ('collections' == $currentsection) {
     if ( 'exEditLabel' == $cmd ) {
-        $label = optiponal_param('label', null, PARAM_ALPHANUM);
+        $label = optional_param('label', null, PARAM_ALPHANUM);
         if (!empty($label)) {
             $collection = new Cobracollectionwrapper($collectionid);
             $collection->load();

@@ -21,7 +21,7 @@
  * visit: http://docs.moodle.org/en/Development:lib/formslib.php
  *
  * @package    mod_cobra
- * @copyright  2015 Your Name
+ * @copyright  20156 Laurence Dumortier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
