@@ -105,12 +105,12 @@ if ('collections' == $currentsection) {
             $collection->load();
             $collection->set_local_name($label);
             if ($collection->update()) {
-                echo $OUTPUT->box(get_string('Collection_name_changed', 'cobra'));
+                echo $OUTPUT->notification(get_string('Collection_name_changed', 'cobra'));
             } else {
-                echo $OUTPUT->box(get_string('Unable_to_change_collection_name', 'cobra'));
+                echo $OUTPUT->notification(get_string('Unable_to_change_collection_name', 'cobra'));
             }
         } else {
-            echo $OUTPUT->box(get_string('Collection_name_cannot_be_empty', 'cobra'));
+            echo $OUTPUT->notification(get_string('Collection_name_cannot_be_empty', 'cobra'));
             $cmd = 'rqEditLabel';
         }
     }
@@ -136,7 +136,7 @@ if ('collections' == $currentsection) {
         $textlist = load_remote_text_list($collection->get_id());
         $savemode = $collection->save();
         if ('error' == $savemode) {
-            echo $OUTPUT->box(get_string('unable_register_collection', 'cobra'));
+            echo $OUTPUT->notification(get_string('unable_register_collection', 'cobra'));
         } else if ('saved' == $savemode) {
             $position = 1;
             foreach ($textlist as $remotetext) {
@@ -152,10 +152,10 @@ if ('collections' == $currentsection) {
         $collection = new Cobracollectionwrapper($collectionid);
         if (remote_text_list($collectionid)) {
             if (!$collection->remove()) {
-                echo $OUTPUT->box(get_string('unable_unregister_collection', 'cobra'));
+                echo $OUTPUT->notification(get_string('unable_unregister_collection', 'cobra'));
             }
         } else {
-            echo $OUTPUT->box(get_string('unable_remove_texts_collection', 'cobra'));
+            echo $OUTPUT->notification(get_string('unable_remove_texts_collection', 'cobra'));
         }
     } else if ('exRefresh' == $cmd) {
         $localcollection = new Cobracollectionwrapper($collectionid);
