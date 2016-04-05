@@ -53,18 +53,26 @@
     max-height:350px;
 }
 
+.top, .bottom {
+    padding-left: 0;
+}
+
+.cobra-content {
+    float: left;
+    padding-left: 0;
+    padding-right: 0;
+    width: 65%;
+}
+
 #text {
-    width:60%;
-    min-width: 560px;
     max-height: 350px;
     float:left;
     text-align:justify;
-    color:#616365;
+    color:#333;
     background-color: #FFFFFF;
-    padding:0px 20px 0px 5px;
+    padding: 15px;
     overflow:auto;
-    border-right: 1px solid #C4C4C4;
-    Line-Height: 15pt;
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
 }
 
 #card {
@@ -73,23 +81,17 @@
     color: #666;
     padding:5px;
     display: none;
-    margin-bottom:10px;
-    margin-top: 15px;
     float:left;
-    width:35%;
-    min-width:290px;
-    margin-left:10px;
-    Line-Height: 15pt;
+    width:33%;
+    margin: 0 0 10px 20px;
 }
 
 #details{
     margin-top: 10px;
-    width:60%;
-    min-width: 560px;
+    width:65%;
     float:left;
     overflow:auto;
-    padding:0px 20px 0px 5px;
-    Line-Height: 15pt;
+    padding:0;
 }
 
 #full_concordance {
@@ -98,9 +100,9 @@
     padding:5px;
     display: none;
     float:left;
-    width:35%;
+    width:33%;
     min-width:290px;
-    margin-top: 10px;
+    margin-top: 13px;
     margin-left: 10px;
     Line-Height: 15pt;
 }
@@ -177,6 +179,17 @@
 {
     font-weight: bold;
     cursor: help;
+    color: #333;
+}
+
+.box-content {
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
+    padding: 15px;
+    background-color: #fff;
+}
+
+.box-content table {
+    background-color: #fff;
 }
 
 .lexTable .superHeader a
@@ -292,19 +305,10 @@
     background-color: LightGrey;
 }
 
-a
-{
-    text-decoration: none;
-    color:#333333;
+.lemma:hover {
+    color: #55ab26;
 }
 
-a:link, a:active , a:hover
-{
-    color: #000000;
-    text-decoration: none;
-}
-
-a:visited { color: #000000; }
 a img
 {
     border:none;
@@ -325,3 +329,8 @@ p{
     margin:0pt;
     padding:0pt;
 }
+
+#textlist th {
+    text-align: center;
+}
+

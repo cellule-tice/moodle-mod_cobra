@@ -354,7 +354,7 @@ function get_concept_info_from_ling_entity( $lingentityid ) {
  */
 function return_valid_list_type_corpus ( $language ) {
     $params = array( 'language' => $language );
-    $remotelistofcorpustype = CobraRemoteService::call( 'return_valid_list_type_corpus', $params );
+    $remotelistofcorpustype = CobraRemoteService::call( 'returnValidListTypeCorpus'/*'return_valid_list_type_corpus'*/, $params );
     $listofcorpustype = array();
     foreach ($remotelistofcorpustype as $corpusobject) {
         $corpus['id'] = $corpusobject->id;

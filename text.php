@@ -82,25 +82,25 @@ $PAGE->set_heading(format_string($course->fullname));
  * $PAGE->set_focuscontrol('some-html-id');
  * $PAGE->add_body_class('cobra-'.$somevar);
  */
-
+$PAGE->add_body_class('noblocks');
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
 // Add instructions for thje ajax commands.
- $PAGE->requires->jquery();
- $PAGE->requires->js('/mod/cobra/js/cobra.js');
- $PAGE->requires->js_init_call('M.mod_cobra.init');
- $PAGE->requires->js_init_call('M.mod_cobra.expression_on_click');
- $PAGE->requires->js_init_call('M.mod_cobra.lemma_on_click');
- $PAGE->requires->js_init_call('M.mod_cobra.showFullConcordance');
- $PAGE->requires->js_init_call('M.mod_cobra.showCard');
+$PAGE->requires->jquery();
+$PAGE->requires->js('/mod/cobra/js/cobra.js');
+$PAGE->requires->js_init_call('M.mod_cobra.init');
+$PAGE->requires->js_init_call('M.mod_cobra.expression_on_click');
+$PAGE->requires->js_init_call('M.mod_cobra.lemma_on_click');
+$PAGE->requires->js_init_call('M.mod_cobra.showFullConcordance');
+$PAGE->requires->js_init_call('M.mod_cobra.showCard');
 
 // Output starts here.
 echo $OUTPUT->header();
 
 // Replace the following lines with you own code.
-echo $OUTPUT->heading('Lecture de textes');
+//echo $OUTPUT->heading('Lecture de textes');
 
-echo $OUTPUT->box_start('generalbox collection_content' );
+echo $OUTPUT->box_start('generalbox box-content' );
 
 $content = '';
 
@@ -135,7 +135,7 @@ foreach ($preferences as $key => $info) {
 }
 
 $content .= '<div id="preferencesNb" class="hidden" name="'.count($preferences).'">'. count($preferences).'</div>';
-$content .= '<div class="top">';
+$content .= '<div class="top"><div class="cobra-content">';
 
 if ( 'SHOW' == strtoupper($preferences['nextprevbuttons']) ) {
     $content .= '<ul class="commands"> ';
@@ -166,10 +166,11 @@ if ( !empty( $audiofileurl ) && 'SHOW' == $preferences['player'] ) {
 }
 
 $content .= $text->format_html()
-         . '<div id="card" class="card left">'
+         . '</div>'
+         . '<div id="card" class="card">'
          . '</div></div>'
          . '<div class="bottom">'
-         . '<div id="details" class="left">'
+         . '<div id="details" class="">'
          . '</div>'
          . '<div id="full_concordance" class="right">'
          . '</div>'

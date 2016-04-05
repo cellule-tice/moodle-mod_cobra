@@ -48,9 +48,9 @@ $sectionlist = array('collections' => get_string( 'manage_text_collections', 'co
     'corpus' => get_string( 'corpus_selection', 'cobra' ),
     'display' => get_string( 'display_preferences', 'cobra'));
 $currentsection = optional_param('section', 'collections', PARAM_ALPHANUM);
-if (array_key_exists($currentsection, $sectionlist)) {
+/*if (array_key_exists($currentsection, $sectionlist)) {
     $currentsection = 'collections';
-}
+}*/
 
 // Define acceprted command list.
 $acceptedcmdlist = array( 'rqEditLabel', 'exEditLabel', 'exRemove', 'exAdd',
@@ -79,6 +79,9 @@ $PAGE->set_url('/mod/cobra/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
 
+//$PAGE->add_body_class('noblocks');
+$PAGE->requires->css('/mod/cobra/css/cobra.css');
+
 // Add link for Ajax commands.
  $PAGE->requires->jquery();
  $PAGE->requires->js('/mod/cobra/js/cobra.js');
@@ -88,7 +91,7 @@ $PAGE->set_heading(format_string($course->fullname));
 // Output starts here.
 echo $OUTPUT->header();
 echo $OUTPUT->heading('Lecture de textes');
-echo $OUTPUT->box_start('generalbox collection_content' );
+echo $OUTPUT->box_start('generalbox box-content' );
 
 $content = '';
 $content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">'.
@@ -275,7 +278,7 @@ if ('collections' == $currentsection) {
 if ('collections' == $currentsection) {
     $content .= '<h3 style="margin-left:24px;">' . 'Collections currently linked to your course' . '</h3>';
     $content .= '<blockquote>' . "\n"
-        . '<table id="collectionList" class="claroTable emphaseLine" style="width:60%">' . "\n"
+        . '<table id="collectionList" class="table table-condensed table-hover table-striped">' . "\n"
         . '<thead>' . "\n"
         . '<tr class="headerX">' . "\n"
         .'<th> &nbsp; </th>' . "\n"
@@ -333,7 +336,7 @@ if ('collections' == $currentsection) {
 
     $content .= '<h3 style="margin-left:24px;">' . get_string( 'collections_available', 'cobra' ) . '</h3>';
     $content .= '<blockquote>' . "\n"
-        . '<table class="claroTable emphaseLine" style="width:60%">' . "\n"
+        . '<table class="table table-condensed table-hover table-striped">' . "\n"
         . '<thead>' . "\n"
         . '<tr class="headerX">' . "\n"
         . '<th>' . get_string('collection_name', 'cobra') . '</th>' . "\n"
@@ -386,7 +389,7 @@ if ('collections' == $currentsection) {
     }
     $form = '<div class="">' . "\n"
           . '<form action="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&section=corpus&amp;cmd=saveOrder" method="post"> ' . "\n"
-          . '<table> <thead> <tr> <th> &nbsp; </th><th> Type de corpus </th> <th> Ordre </th> </tr> </thead>'
+          . '<table class="table table-condensed table-hover table-striped"> <thead> <tr> <th> &nbsp; </th><th> Type de corpus </th> <th> Ordre </th> </tr> </thead>'
           . $list
           . '<tr><td colspan="3" style="text-align:center;">' . "\n"
           . '<input value="' . get_string ('Ok', 'cobra') . '" type="submit" name="submit"/>&nbsp;' . "\n"
