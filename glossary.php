@@ -90,6 +90,7 @@ if ($cmd == 'exExport') {
 $PAGE->set_url('/mod/cobra/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
+$PAGE->requires->css('/mod/cobra/css/cobra.css');
 
  $PAGE->requires->jquery();
  $PAGE->requires->js('/mod/cobra/js/cobra.js');

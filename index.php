@@ -52,6 +52,7 @@ $PAGE->set_pagelayout('incourse');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading($strname);
+$PAGE->requires->css('/mod/cobra/css/cobra.css');
 
 if (! $cobras = get_all_instances_in_course('cobra', $course)) {
     notice(get_string('nocobras', 'cobra'), new moodle_url('/course/view.php', array('id' => $course->id)));

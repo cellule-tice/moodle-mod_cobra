@@ -61,13 +61,14 @@ $event->trigger();
 $PAGE->set_url('/mod/cobra/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
+$PAGE->requires->css('/mod/cobra/css/cobra.css');
 
 echo $OUTPUT->header();
 
 // Replace the following lines with you own code.
 echo $OUTPUT->heading('Lecture de textes');
 
-echo $OUTPUT->box_start('Statistics' );
+echo $OUTPUT->box_start('Statistics generalbox box-content' );
 
 $out = '';
 
@@ -146,7 +147,7 @@ if ( !is_null( $view ) ) {
     switch ($view) {
         case '1' :
             $out .= '<h3><small>' . get_string( 'Display_entries_clicked_at_least_20_times', 'cobra' ) . '</small></h3>';
-            $out .= '<table class="claroTable emphaseLine">'
+            $out .= '<table class="table table-condensed table-hover table-striped">'
                  .  '<thead>'
                  .  '<tr class="headerX">'
                  .  '<th> Nombre total de clics </th>'
