@@ -132,7 +132,7 @@ function cobra_list_concepts_in_text( $textid, $entrytype ) {
         foreach ($collectionlist as $collection) {
             $textlist = load_text_list( $collection['id_collection'], 'visible' );
             foreach ($textlist as $text) {
-                $tabidconcept2 = elex_list_concepts_in_text( $text['id_text'], $entrytype );
+                $tabidconcept2 = cobra_list_concepts_in_text( $text['id_text'], $entrytype );
                 foreach ($tabidconcept2 as $conceptid) {
                     if (!in_array($conceptid, $conceptidlist)) {
                         $conceptidlist[] = $conceptid;

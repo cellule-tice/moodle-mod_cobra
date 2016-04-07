@@ -84,7 +84,7 @@ foreach ($preferences as $key => $info) {
 $content .= '<div id="preferencesNb" class="hidden" name="'.count($preferences).'">'.count($preferences).'</div>';
 
 
-$content .= '<div ng-app="elex" id="angContainer" >';
+$content .= '<div ng-app="cobra" id="angContainer" >';
 
 //test jrm
 //$data = getRemoteGlossaryInfoForStudent($text->getId());

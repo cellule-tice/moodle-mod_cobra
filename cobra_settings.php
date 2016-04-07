@@ -180,7 +180,7 @@ if ('collections' == $currentsection) {
             $localtextidlist[] = $localtext->id_text;
             if (empty( $localtext->title)) {
                 $legacytextcount++;
-                $text = new ElexTextWrapper();
+                $text = new CobraTextWrapper();
                 $text->set_text_id( $localtext->id_text );
                 $text->load();
                 if ($text->remove()) {
@@ -204,7 +204,7 @@ if ('collections' == $currentsection) {
                 continue;
             }
             $newtextcount++;
-            $text = new ElexTextWrapper();
+            $text = new CobraTextWrapper();
             $text->set_text_id( $remotetext['id'] );
             $text->set_collection_id( $collectionid );
             $text->set_type( 'Lesson' );

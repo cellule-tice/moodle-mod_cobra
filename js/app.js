@@ -1,13 +1,13 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-angular.module('elex',
+angular.module('cobra',
     [
         'ngRoute',
         'ui.router',
-        'elex.controllers',
-        'elex.services',
-        'elex.filters'
+        'cobra.controllers',
+        'cobra.services',
+        'cobra.filters'
     ]
 )
 

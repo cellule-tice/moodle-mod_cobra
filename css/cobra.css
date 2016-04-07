@@ -86,7 +86,7 @@
     overflow: auto;
 }
 
-.glossaryAdd {
+.glossaryAdd, .glossaryRemove {
     cursor: help;
 }
 

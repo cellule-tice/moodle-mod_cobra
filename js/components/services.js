@@ -1,4 +1,4 @@
-angular.module('elex.services', [])
+angular.module('cobra.services', [])
 
 .factory('dataService', ['$http', '$rootScope', function($http, $rootScope) {
 

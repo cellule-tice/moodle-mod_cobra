@@ -3,7 +3,7 @@
  */
 //'use strict';
 
-angular.module('elex.controllers', ['ngRoute'])
+angular.module('cobra.controllers', ['ngRoute'])
 
 .controller('TextController',  function($scope, $rootScope, $stateParams, $compile, dataService) {
     $scope.dataLoaded = false;
@@ -14,9 +14,9 @@ angular.module('elex.controllers', ['ngRoute'])
     $rootScope.textId = $stateParams.textId;
     dataService.getText($stateParams.textId).then(function(data) {
         $scope.text = data;
-        //uncomment and remove $scope.text binding to handle text loading through angular and not elex.js
-        /*var tmp = $compile(data.content)($scope);
-        $("#elexText").append(tmp);*/
+        //uncomment and remove $scope.text binding to handle text loading through angular and not cobra.js
+        /*var tmp = $compile(data)($scope);
+        $("#cobraText").append(tmp);*/
 
     }).then(function() {
         if('SHOW' == $scope.showGlossary) {
