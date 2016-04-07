@@ -1,0 +1,69 @@
+<div class="top">
+    <div id="cobracontent" class="cobra-content" ng-bind-html="text | unsafe"></div>
+    <!--
+    Uncomment to manage text loading through angular and not jquery
+    <div id="elexText">
+
+    </div>-->
+<!--<div id="card"></div>-->
+    <div id="glossary" >
+        <p>{{counter}}</p>
+        <p>* Les entrées grisées ont été rajoutées via un autre texte</p>
+      <table class="table table-condensed" width="100%">
+        <thead>
+
+          <tr class="headerX">
+            <th>&nbsp;</th>
+            <th>Entrée</th>
+
+            <th>Cat.</th>
+
+            <th>Traduction</th>
+
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr ng-repeat="entry in glossaryEntries" ng-class="{true:'', false:'discreet'}[entry.fromThisText]">
+            <td ng-class="{true:'hot', false:''}[entry.new]">
+            &nbsp;</td>
+
+            <td>{{entry.entry}}</td>
+
+            <td>{{entry.category}}</td>
+
+            <td>{{entry.translations}}</td>
+
+            <td style="vertical-align: top;" class=
+            "glossaryIcon inTextGlossary"><span id=
+            "currentLingEntity" class=
+            "hidden">{{entry.ling_entity}}</span><img ng-click=
+            "removeEntry(entry)" height="20px" class=
+            "glossaryRemove" src="img/glossary_remove.png" title=
+            "Supprimer de mon glossaire"></td>
+          </tr>
+          <tr ng-show="!glossaryEntries.length">
+            <td colspan="5" style="text-align:center;">Glossaire
+            vide pour ce texte</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="spacer">
+    &nbsp;
+  </div>
+
+  <div id="bottom" class="bottom">
+    <div id="details" class="box box-content"></div>
+
+    <div id="full_concordance"></div>
+  </div>
+
+  <div class="spacer">
+    &nbsp;
+  </div>
+

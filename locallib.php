@@ -309,8 +309,8 @@ function clic( $textid, $lingentityid, $DB, $courseid, $userid ) {
         $dataobject->id_text = $textid;
         $dataobject->id_entite_ling = $lingentityid;
         $dataobject->nb_clics = 1;
-        $dataobject->datecreate = date("Y-m-d H:i:s");
-        $dataobject->datemodif = date("Y-m-d H:i:s");
+        $dataobject->datecreate = time();//date("Y-m-d H:i:s");
+        $dataobject->datemodif = time();//date("Y-m-d H:i:s");
         return  $DB->insert_record('cobra_clic', $dataobject);
     } else {
         // Update record.

@@ -100,7 +100,7 @@ echo $OUTPUT->header();
 // Replace the following lines with you own code.
 //echo $OUTPUT->heading('Lecture de textes');
 
-echo $OUTPUT->box_start('generalbox box-content' );
+//echo $OUTPUT->box_start('generalbox box-content' );
 
 $content = '';
 
@@ -178,7 +178,7 @@ $content .= $text->format_html()
 
 echo $content;
 
-echo $OUTPUT->box_end();
+//echo $OUTPUT->box_end();
 
 // Finish the page.
 echo $OUTPUT->footer();
