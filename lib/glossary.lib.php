@@ -274,3 +274,133 @@ function explode_glossary_into_lemmas_and_expression ($glossary) {
     }
     return array( $lemmalist, $explist);
 }
+
+function list_concepts_in_text($textid, $entrytype)
+{
+    $conceptidlist = array();
+    if (!in_array( $entrytype, get_valid_entry_types())) {
+        return false;
+    }
+    if ($textid != 0) {
+        $text = new COBRATextWrapper();
+        $text->set_text_id($textid);
+        $text->load();
+        $text->load_remote_data();
+        $titre = $text->getTitle();
+        $content = $text->getContent();
+        $conceptidlist = get_concept_list_from_para($titre, $entrytype);
+        foreach ($content as $i => $element) {
+            $conceptidlist = get_concept_list_from_para($element['content'], $entrytype, $conceptidlist);
+        }
+    } else {
+        $collectionlist = get_registered_collections();
+        foreach ($collectionlist as $collection) {
+            $textlist = load_text_list($collection['id_collection'], 'visible');
+            foreach ($textlist as $text) {
+                $conceptids = list_concepts_in_text($text['id_text'], $entrytype);
+                foreach ($conceptids as $conceptid) {
+                    if (!in_array($conceptid, $conceptidlist)) {
+                        $conceptidlist[] = $conceptid;
+                    }
+                }
+            }
+        }
+    }
+    return $conceptidlist;
+}
+
+// function dedicated to student personal glossary
+function is_in_glossary($lingentity, $courseid, $userid)
+{
+    global $DB, $COURSE, $USER;
+    return (int)$DB->record_exists('cobra_clic',
+            array(
+                'course' => $courseid,
+                'id_entite_ling' => (int)$lingentity,
+                'user_id' => $userid,
+                'in_glossary' => 1)
+            );
+}
+
+function add_to_glossary($lingentity, $textid, $courseid)
+{
+    global $DB, $USER;
+    return (int)$DB->set_field('cobra_clic',
+            'in_glossary',
+            '1',
+            array(
+                'course' => $courseid,
+                'user_id' => $USER->id,
+                'id_text' => $textid,
+                'id_entite_ling' => $lingentity
+            )
+        );
+    //return $
+}
+
+function remove_from_glossary($lingentity, $courseid)
+{
+    global $DB, $COURSE, $USER;
+    return (int)$DB->set_field('cobra_clic',
+        'in_glossary',
+        '0',
+        array(
+            'course' => $courseid,
+            'user_id' => $USER->id,
+            'id_entite_ling' => $lingentity
+        )
+    );
+}
+
+function get_remote_glossary_info_for_student($textid = 0, $courseid)
+{
+    global $DB, $COURSE, $USER;
+    $fullquery = "SELECT DISTINCT(id_entite_ling) AS id_entite_ling
+                    FROM {cobra_clic}
+                   WHERE course = :courseid
+                         AND user_id = :userid
+                         AND in_glossary = 1";
+    $fullglossaryresult = $DB->get_records_sql($fullquery, array('courseid' => $courseid, 'userid' => $USER->id));
+
+    $fullglossarylist = array_keys($fullglossaryresult);
+
+    $entitiesintext = array();
+    $listtoload = array();
+    if ($textid) {
+        $entitiesintext = CobraRemoteService::call('getEntitiesListForText', array('textId' => $textid));
+        $textquery = "SELECT DISTINCT(id_entite_ling) AS id_entite_ling
+                        FROM {cobra_clic}
+                       WHERE course = :courseid
+                             AND user_id = :userid
+                             AND in_glossary = 1
+                             AND id_text = :textid";
+
+        $textresult = $DB->get_records_sql($textquery, array('courseid' => $courseid, 'userid' => $USER->id, 'textid' => $textid));
+        $textglossarylist = array_keys($textresult);
+        $listtoload = array_intersect($fullglossarylist, $entitiesintext);
+    } else {
+        $listtoload = $fullglossarylist;
+    }
+
+    if (!count($listtoload)) {
+        return array();
+    }
+    $chunks = array_chunk($listtoload, 200, true);
+    $flatlisttoload = '';
+    $glossaryentries = array();
+    foreach ($chunks as $chunk) {
+        $flatlisttoload = implode(',', $chunk);
+        $params = array('entity_list' => $flatlisttoload);
+        $glossaryentries = array_merge($glossaryentries, CobraRemoteService::call( 'getGlossaryInfoForStudent', $params ));
+    }
+
+    if ($textid) {
+        foreach ($glossaryentries as &$entry) {
+            if (in_array($entry->ling_entity, $textglossarylist)) {
+                $entry->fromThisText = true;
+            }
+        }
+    }
+    return $glossaryentries;
+}
+

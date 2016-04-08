@@ -17,6 +17,7 @@
 try {
     require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
     require_once(dirname(__FILE__).'/locallib.php');
+    require_once(dirname(__FILE__).'/lib/glossary.lib.php');
 
     // Init request vars.
     $acceptedcmdlist = array(
@@ -42,7 +43,7 @@ try {
     if ( 'displayEntry' == $call ) {
         $conceptid = optional_param('concept_id', null, PARAM_INT);
         $resourceid = optional_param('resource_id', null, PARAM_INT);
-        $isexpr = optional_param('is_expr'  , null, PARAM_INT);
+        $isexpr = optional_param('is_expr'  , null, PARAM_BOOL);
         $encodeclic = optional_param('encodeClic', 1, PARAM_ALPHANUM);
         $courseid = optional_param('courseId', 0, PARAM_INT);
         $userid = optional_param('userId', 0, PARAM_INT);
@@ -57,7 +58,16 @@ try {
         if ($encodeclic) {
             clic( $resourceid, $lingentity, $DB, $courseid, $userid );
         }
-        echo $html;
+        $glossarystatus = is_in_glossary($lingentity, $courseid, $userid);
+        $response = array( 'html' => $html, 'inglossary' => $glossarystatus, 'lingentity' => $lingentity, 'userId' => $userid);
+        array_walk(
+            $response,
+            function (&$entry) {
+                $entry = utf8_encode($entry);
+            }
+        );
+        echo json_encode($response);
+        //echo $html;
     }
 
     if ( 'displayCC' == $call ) {

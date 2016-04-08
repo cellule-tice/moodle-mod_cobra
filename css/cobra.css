@@ -11,6 +11,10 @@
     font-size: 24px;
 }
 
+h2.titre_lecon {
+    box-shadow: none;
+}
+
 .sous-titre {
     font-size: 1.1em;
     font-weight: bold;
@@ -62,7 +66,31 @@
     padding-left: 0;
     padding-right: 0;
     width: 65%;
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
 }
+
+#audioplayer {
+    padding-top: 1px;
+    margin-right: 15px;
+    float: left;
+}
+
+.textnavbuttons {
+    margin-bottom: 5px;
+    float: left;
+}
+
+.textnavbuttons .btn {
+    height: 32px;
+    margin-right: 5px;
+    border-radius: 0;
+}
+
+.textnavbuttons .btn-default:hover {
+    background-color: #494949;
+    color: #fff;
+}
+
 
 #text {
     max-height: 350px;
@@ -72,19 +100,26 @@
     background-color: #FFFFFF;
     padding: 15px;
     overflow:auto;
-    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
+    /*box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);*/
 }
 
-#card {
-    background-color : #FFFFCC;
+#card, #glossary {
+    background-color : #fff;
     font-size: 0.9em;
-    color: #666;
+    color: #333;
     padding:5px;
-    display: none;
     float:left;
     width:33%;
     margin: 0 0 10px 20px;
+    overflow: auto;
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
 }
+
+.glossaryAdd, .glossaryRemove {
+    cursor: help;
+}
+
+
 
 #details{
     margin-top: 10px;
@@ -96,7 +131,7 @@
 
 #full_concordance {
     font-size: 0.9em;
-    color: #3B3B3B;
+    color: #333;
     padding:5px;
     display: none;
     float:left;
@@ -128,7 +163,7 @@
     font-weight: normal;
 }
 
-.label2
+.cobralabel
 {
     font-style: italic;
 }
@@ -138,6 +173,20 @@
     cursor:help;
 }
 
+#showCard {
+    display: none;
+}
+
+.digestRow
+{
+    background-color: #FFF;
+
+}
+
+.glossaryIcon {
+    padding: 4px 1px 1px 4px;
+}
+
 .hidden
 {
     display:none;
@@ -145,8 +194,8 @@
 
 .entryTable .superHeader th, .entryTable th.superHeader, .entryTable td.superHeader
 {
-    color: #3B3B3B;
-    background-color: #FFFFCC;
+    color: #333;
+    background-color: #FFF;
     font-weight: normal;
     text-align: center;
 }
@@ -260,13 +309,13 @@
 .floatContainer
 {
     float:left;
-    background-color:#FFFFCC;
+    background-color:#FFF;
     width:95%;
 }
 
 .iconDiv
 {
-    background-color:#FFFFCC;
+    background-color:#FFF;
     float:left;
     width:3%;
     height:100%;
@@ -276,8 +325,8 @@
 
 .description
 {
-    color: #3B3B3B;
-    background-color: #FFFFCC;
+    color: #333;
+    background-color: #FFF;
     font-weight: normal;
     text-align: left;
 }
@@ -316,7 +365,7 @@ a img
 }
 
 p{
-    line-height: 120%;
+    line-height: 1.4em;
 }
 .commands > li
 {
@@ -334,3 +383,13 @@ p{
     text-align: center;
 }
 
+.discreet {
+    color: #a9a9a9;
+}
+
+.hot {
+    padding-left: 15px;
+    background-image: url(../img/hot.png);
+    background-repeat: no-repeat;
+    background-position: center left;
+}
