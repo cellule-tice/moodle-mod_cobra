@@ -93,7 +93,13 @@ if (has_capability('mod/cobra:edit', $context)) {
     $isallowedtoedit = true;
     $content .= '<a href="cobra_settings.php?id='.$id. '">'. get_string('parameters', 'cobra'). '</a> &nbsp; ' . "\n"
         . '<a href="glossary.php?id='.$id. '">'.get_string('glossary', 'cobra') . '</a> &nbsp; ' . "\n"
-        . '<a href="stat.php?id='.$id.'">'.get_string('statistics', 'cobra') . '</a>';
+        . '<a href="stat.php?id='.$id.'">'.get_string('statistics', 'cobra') . '</a>&nbsp;&nbsp;&nbsp;';
+}
+
+$preferences = get_cobra_preferences();
+if ('SHOW' == $preferences['show_glossary']) {
+    //$content .= '<a href="myglossary.php">' . get_string('myglossary', 'cobra') . '</a>';
+    $content .= '<a href="myglossary.php?id=' . $id . '">Mon glossaire</a>';
 }
 
 // For all chosen collections display text in selected order.

@@ -352,9 +352,12 @@ function remove_from_glossary($lingentity, $courseid)
     );
 }
 
-function get_remote_glossary_info_for_student($textid = 0, $courseid)
+function get_remote_glossary_info_for_student($textid = 0, $courseid = 0)
 {
     global $DB, $COURSE, $USER;
+    if (!$courseid) {
+        $courseid = $COURSE->id;
+    }
     $fullquery = "SELECT DISTINCT(id_entite_ling) AS id_entite_ling
                     FROM {cobra_clic}
                    WHERE course = :courseid

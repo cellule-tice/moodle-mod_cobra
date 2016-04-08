@@ -670,6 +670,11 @@ function get_clicked_entries ($courseid, $nb = 20) {
     return $nbcliclist;
 }
 
+function cobra_get_text_title_from_id($textid) {
+    $texttitle = CobraRemoteService::call('getTextTitle', array('id_text' => $textid));
+    return strip_tags($texttitle);
+}
+
 class mod_cleanStats_form extends moodleform {
     /**
      * Define this form - called by the parent constructor

@@ -91,6 +91,12 @@ h2.titre_lecon {
     color: #fff;
 }
 
+.glossaryExport:before {
+    font-family: FontAwesome;
+    content: " \f019";
+    color: #333;
+}
+
 
 #text {
     max-height: 350px;
