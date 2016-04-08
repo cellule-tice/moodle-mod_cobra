@@ -130,8 +130,8 @@ foreach ($collectionlist as $collection) {
             // Display title.
             $content .= '<tr id="' . $text->id_text . '#textId" class="row" name="' . $position++
                  . '#pos"><td style="min-width:60%;">' . "\n"
-                 .  '<a href="ang.php?id='.$id.'&id_text=' . $text->id_text . '&amp;id_collection='
-                 . $collection['id_collection'] . '#/' . $text->id_text . '">'
+                 .  '<a href="text.php?id='.$id.'&id_text=' . $text->id_text /*. '&amp;id_collection='
+                 . $collection['id_collection'] */. '#/' . $text->id_text . '">'
                  . '<i class="fa fa-file-text"></i> '
                  .  trim( strip_tags( $text->title  ) )
                  .  '</a>' . "\n"

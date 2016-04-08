@@ -17,6 +17,17 @@ M.mod_cobra.init = function() {
     }
 }
 
+M.mod_cobra.init_no_blocks = function() {
+    initnoblocks();
+    function initnoblocks() {
+        $('small').hide();
+        $('.hbl').hide();
+        $('.sbl').hide();
+        /*$(document).on('click','a.changeType', changeType);
+        updateMoveIcons();*/
+    }
+}
+
 M.mod_cobra.TextChangeType = function(){
     $(document).on('click','a.changeType', changeType);
 }

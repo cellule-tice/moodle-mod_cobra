@@ -7,7 +7,7 @@ angular.module('cobra.services', [])
         getEntries : function(textid, courseid) {
             var request = $http({
                 method: 'POST',
-                url: 'angtest.php',
+                url: 'angularrelay.php',
                 headers: {
                     'Content-Type': undefined
                 },
@@ -30,7 +30,7 @@ angular.module('cobra.services', [])
         getText : function(textId) {
             var request = $http({
                 method: 'POST',
-                url: 'angtest.php',
+                url: 'angularrelay.php',
                 headers: {
                     'Content-Type': undefined
                 },
@@ -47,7 +47,7 @@ angular.module('cobra.services', [])
             console.log(lingEntity, textId);
             var addRequest = $http({
                 method: 'POST',
-                url: 'angtest.php',
+                url: 'angularrelay.php',
                 headers: {
                     'Content-Type': undefined
                 },
@@ -62,7 +62,7 @@ angular.module('cobra.services', [])
         addEntry : function(lingEntity, textId) {
             var addRequest = $http({
                 method: 'POST',
-                url: 'angtest.php',
+                url: 'angularrelay.php',
                 headers: {
                     'Content-Type': undefined
                 },
@@ -78,7 +78,7 @@ angular.module('cobra.services', [])
             console.log('in data service')
             var removeRequest = $http({
                 method: 'POST',
-                url: 'angtest.php',
+                url: 'angularrelay.php',
                 headers: {
                     'Content-Type': undefined
                 },

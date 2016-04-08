@@ -104,10 +104,11 @@ class Cobracollectionwrapper
         }
 
         foreach ($list as $collection) {
-            $this->set_remote_name( $collection->label );
-            $this->set_local_name( $collection->local_label );
-            $this->set_position( $collection->position );
-            $this->set_visibility( $collection->visibility ? true : false );
+            $this->set_language($collection->language);
+            $this->set_remote_name($collection->label);
+            $this->set_local_name($collection->local_label);
+            $this->set_position($collection->position);
+            $this->set_visibility($collection->visibility ? true : false);
             return true;
         }
     }
