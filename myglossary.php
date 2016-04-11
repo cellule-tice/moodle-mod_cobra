@@ -51,8 +51,10 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
 // Add the ajaxcommand for the form.
 $PAGE->requires->jquery();
+$PAGE->requires->js('/mod/cobra/js/jquery.qtip.js');
 $PAGE->requires->js('/mod/cobra/js/cobra.js');
 $PAGE->requires->js_init_call('M.mod_cobra.remove_from_global_glossary');
+//$PAGE->requires->js_init_call('M.mod_cobra.add_qtip_text_list');
 
 // Output starts here.
 echo $OUTPUT->header();
@@ -101,15 +103,17 @@ $data = get_remote_glossary_info_for_student();
 $entries = array();
 if (!empty($data)) {
     foreach ($data as $entry) {
-        $sourcetextid = $DB->get_field('cobra_clic', 'id_text', array('id_entite_ling' => $entry->ling_entity, 'in_glossary' => 1));
+        $sourcetextid = $DB->get_field('cobra_clic', 'id_text', array('course' => $course->id, 'id_entite_ling' => $entry->ling_entity, 'user_id' => $USER->id, 'in_glossary' => 1));
         $sourcetexttitle = cobra_get_text_title_from_id($sourcetextid);
         $entry->sourcetexttitle = $sourcetexttitle;
+
         $query = "SELECT GROUP_CONCAT(CAST(id_text AS CHAR)) AS texts
-                    FROM {cobra_clic}
-                   WHERE user_id = " . (int)$USER->id . "
-                         AND id_entite_ling = " . (int)$entry->ling_entity . "
-                GROUP BY id_entite_ling";
-        $result = $DB->get_field_sql($query);
+                            FROM {cobra_clic}
+                           WHERE user_id = :userid
+        AND id_entite_ling = :lingentity
+        AND course = :course
+                        GROUP BY id_entite_ling";
+        $result = $DB->get_field_sql($query, array('userid' => $USER->id, 'lingentity' => $entry->ling_entity, 'course' => $course->id));
         $textidlist = explode(',', $result);
         asort($textidlist);
 
@@ -124,7 +128,7 @@ if (!empty($data)) {
             . '<td style="vertical-align: top;">' . $entry->category . '</td>'
             . '<td style="vertical-align: top;">' . $entry->extra_info . '</td>'
             . '<td style="vertical-align: top;">' . $sourcetexttitle . '</td>'
-            . '<td><span class="showTextListForGlossaryEntry">' . sizeof($texttitles) . ' texte(s)' . '<span class="' . $entry->ling_entity . '"></span></span></td>'
+            . '<td style="vertical-align:top;"><span title="' . implode("\n", $texttitles) . '">' . count($texttitles) . ' texte(s)' . '</span></td>'
             . '<td style="vertical-align: top;" class="glossaryIcon"><span id="currentLingEntity" class="hidden">' . $entry->ling_entity . '</span><img height="20px" class="gGlossaryRemove inDisplay" src="img/glossary_remove.png" title="Supprimer de mon glossaire"/></td>'
             //   .  '<td style="vertical-align: top;" title="' . implode("\n", $textTitles) . '">' . sizeof($textTitles) . ' texte(s)' . '</td>'
             . '</tr>';

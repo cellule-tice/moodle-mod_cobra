@@ -215,16 +215,11 @@ M.mod_cobra.remove_from_global_glossary = function() {
             function(response) {
                 if(response == "true")
                 {
-                    //alert("Entr\351e supprim\351e du glossaire !");
                     if($(currentElement).hasClass('inDisplay'))
                     {
                         $(currentElement).parent().parent().remove();
                     }
-                    //$(currentElement).removeClass('glossaryRemove').addClass('glossaryAdd').attr('src', 'img/glossary_add.png').attr('title', 'Ajouter &agrave; mon glossaire');
-                    /*if($(currentElement).parent().hasClass('inTextGlossary'))
-                     {
-                     $('th.glossaryIcon > img').removeClass('glossaryRemove').addClass('glossaryAdd').attr('src', 'img/glossary_add.png').attr('title', 'Ajouter &agrave; mon glossaire');
-                     }*/
+
                 }
             });
     });
