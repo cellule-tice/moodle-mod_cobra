@@ -206,6 +206,30 @@ M.mod_cobra.remove_from_glossary = function() {
     });
 }
 
+M.mod_cobra.remove_from_global_glossary = function() {
+    $(document).on('click', '.gGlossaryRemove', function() {
+        var courseid = $('#courseid').attr('name');
+        var lingentity = $(this).prev().text();
+        var currentElement = $(this);
+        $.post( 'ajax_handler.php', { ajaxcall: 'removeFromGlossary', lingentity: lingentity, courseid: courseid },
+            function(response) {
+                if(response == "true")
+                {
+                    //alert("Entr\351e supprim\351e du glossaire !");
+                    if($(currentElement).hasClass('inDisplay'))
+                    {
+                        $(currentElement).parent().parent().remove();
+                    }
+                    //$(currentElement).removeClass('glossaryRemove').addClass('glossaryAdd').attr('src', 'img/glossary_add.png').attr('title', 'Ajouter &agrave; mon glossaire');
+                    /*if($(currentElement).parent().hasClass('inTextGlossary'))
+                     {
+                     $('th.glossaryIcon > img').removeClass('glossaryRemove').addClass('glossaryAdd').attr('src', 'img/glossary_add.png').attr('title', 'Ajouter &agrave; mon glossaire');
+                     }*/
+                }
+            });
+    });
+}
+
 function displayDetails(conceptid, isexpr) {
     $('#card').hide();
     $('#full_concordance').hide();

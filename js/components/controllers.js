@@ -35,17 +35,19 @@ angular.module('cobra.controllers', ['ngRoute'])
         dataService.getEntries($stateParams.textId, $rootScope.courseid).then(function (data) {
             $scope.glossaryEntries = data;
             angular.forEach($scope.glossaryEntries, function(value, key) {
-                if($scope.newEntry == value.ling_entity)
+                //if($scope.newEntry == value.ling_entity)
+                if($scope.newEntries.indexOf(value.ling_entity) > -1)
                 {
                      value.new = true;
                 }
 
             });
         });
+        console.log($scope.newEntries);
     });
 
     $scope.$on('entryDeleted', function(event, args) {
-        var indexToRemove = -1;
+        var indexToRemove = false;
         dataService.getEntries($stateParams.textId, $rootScope.courseid).then(function (data) {
 
             $scope.glossaryEntries = data;
@@ -55,7 +57,9 @@ angular.module('cobra.controllers', ['ngRoute'])
                     indexToRemove = key;
                 }
             });
-            $scope.newEntries.splice(indexToRemove);
+            if(indexToRemove !== false){
+                $scope.newEntries.splice(indexToRemove, 1);
+            }
 
             angular.forEach($scope.glossaryEntries, function(value, key) {
                 if($scope.newEntries.indexOf(value.ling_entity) > -1)

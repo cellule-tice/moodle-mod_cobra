@@ -52,9 +52,8 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 // Add the ajaxcommand for the form.
 $PAGE->requires->jquery();
 $PAGE->requires->js('/mod/cobra/js/cobra.js');
-$PAGE->requires->js_init_call('M.mod_cobra.TextVisibility');
-$PAGE->requires->js_init_call('M.mod_cobra.TextMove');
-$PAGE->requires->js_init_call('M.mod_cobra.TextChangeType');
+$PAGE->requires->js_init_call('M.mod_cobra.remove_from_global_glossary');
+
 // Output starts here.
 echo $OUTPUT->header();
 
@@ -72,6 +71,7 @@ echo $OUTPUT->heading('Mon glossaire' . '&nbsp;&nbsp;&nbsp;' . $exportbutton);
 echo $OUTPUT->box_start('generalbox box-content' );
 
 $content = '';
+$content .= '<div id="courseid" class="hidden" name="' . $course->id .'">' . $course->id . '</div>';
 
 $preferences = get_cobra_preferences();
 if ('HIDE' == $preferences['show_glossary']) {
