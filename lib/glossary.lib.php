@@ -310,14 +310,14 @@ function list_concepts_in_text($textid, $entrytype)
 }
 
 // function dedicated to student personal glossary
-function is_in_glossary($lingentity, $courseid, $userid)
+function is_in_glossary($lingentity, $courseid)
 {
     global $DB, $COURSE, $USER;
     return (int)$DB->record_exists('cobra_clic',
             array(
                 'course' => $courseid,
                 'id_entite_ling' => (int)$lingentity,
-                'user_id' => $userid,
+                'user_id' => $USER->id,
                 'in_glossary' => 1)
             );
 }
