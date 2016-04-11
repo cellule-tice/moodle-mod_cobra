@@ -99,9 +99,9 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 echo $OUTPUT->header();
 
 // Replace the following lines with you own code.
-echo $OUTPUT->heading('Lecture de textes');
+echo $OUTPUT->heading(get_string('textreading'));
 
-echo $OUTPUT->box_start('Glossaire' );
+echo $OUTPUT->box_start('Glossaire');
 
 $prefs = get_cobra_preferences();
 $language = $prefs['language'];

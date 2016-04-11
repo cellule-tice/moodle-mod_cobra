@@ -90,7 +90,7 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
 // Output starts here.
 echo $OUTPUT->header();
-echo $OUTPUT->heading('Lecture de textes');
+echo $OUTPUT->heading(get_string('textreading'));
 echo $OUTPUT->box_start('generalbox box-content' );
 
 $content = '';

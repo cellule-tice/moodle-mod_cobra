@@ -54,7 +54,6 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 $PAGE->requires->jquery();
 $PAGE->requires->js('/mod/cobra/js/cobra.js');
 $PAGE->requires->js_init_call('M.mod_cobra.remove_from_global_glossary');
-//$PAGE->requires->js_init_call('M.mod_cobra.add_qtip_text_list');
 
 // Output starts here.
 $content = $OUTPUT->header();
@@ -65,10 +64,10 @@ $exportbutton = '<a href="' . $_SERVER['PHP_SELF'] .
                 '&cmd=export" ' .
                 //'class="btn btn-default" ' .
                 'class="glossaryExport" ' .
-                'title="Exporter mon glossaire">   ' .
-                //'<i class="fa fa-download"></i>' .
+                'title="' .
+                get_string('exportmyglossary', 'cobra') . '">   ' .
                 '</a>';
-$content .= $OUTPUT->heading('Mon glossaire' . '&nbsp;&nbsp;&nbsp;' . $exportbutton);
+$content .= $OUTPUT->heading(get_string('myglossary', 'cobra') . '&nbsp;&nbsp;&nbsp;' . $exportbutton);
 
 $content .= $OUTPUT->box_start('generalbox box-content' );
 
@@ -89,12 +88,12 @@ if ('HIDE' == $preferences['show_glossary']) {
 $content .= '<table class="table table-condensed table-hover table-striped" id="myglossary">' .
             '<thead>' .
             '<tr>' .
-            '<th>Entrée</th>' .
-            '<th>Traduction</th>' .
-            '<th>Catégorie</th>' .
-            '<th>Autres formes</th>' .
-            '<th>Texte source</th>' .
-            '<th>Cliqué dans ...</th>' .
+            '<th>' . get_string('entry', 'cobra') . '</th>' .
+            '<th>' . get_string('Translation', 'cobra') . '</th>' .
+            '<th>' . get_string('Category', 'cobra') . '</th>' .
+            '<th>' . get_string('other forms', 'Other forms') . '</th>' .
+            '<th>' . get_string('sourcetext', 'cobra') . '</th>' .
+            '<th>' . get_string('clickedin', 'cobra') . '</th>' .
             '<th>&nbsp;</th>' .
             '</tr>' .
             '</thead>';
@@ -103,16 +102,22 @@ $data = get_remote_glossary_info_for_student();
 $entries = array();
 if (!empty($data)) {
     foreach ($data as $entry) {
-        $sourcetextid = $DB->get_field('cobra_clic', 'id_text', array('course' => $course->id, 'id_entite_ling' => $entry->ling_entity, 'user_id' => $USER->id, 'in_glossary' => 1));
+        $sourcetextid = $DB->get_field('cobra_clic',
+                'id_text',
+                array(
+                    'course' => $course->id,
+                    'id_entite_ling' => $entry->ling_entity,
+                    'user_id' => $USER->id,
+                    'in_glossary' => 1));
         $sourcetexttitle = cobra_get_text_title_from_id($sourcetextid);
         $entry->sourcetexttitle = $sourcetexttitle;
 
         $query = "SELECT GROUP_CONCAT(CAST(id_text AS CHAR)) AS texts
-                            FROM {cobra_clic}
-                           WHERE user_id = :userid
-        AND id_entite_ling = :lingentity
-        AND course = :course
-                        GROUP BY id_entite_ling";
+                    FROM {cobra_clic}
+                   WHERE user_id = :userid
+                         AND id_entite_ling = :lingentity
+                         AND course = :course
+                   GROUP BY id_entite_ling";
         $result = $DB->get_field_sql($query, array('userid' => $USER->id, 'lingentity' => $entry->ling_entity, 'course' => $course->id));
         $textidlist = explode(',', $result);
         asort($textidlist);
@@ -123,23 +128,25 @@ if (!empty($data)) {
         }
         $entry->texttitles = $texttitles;
         $content .= '<tr>'
-            . '<td style="vertical-align: top;">' . $entry->entry . '</td>'
-            . '<td style="vertical-align: top;">' . $entry->translations . '</td>'
-            . '<td style="vertical-align: top;">' . $entry->category . '</td>'
-            . '<td style="vertical-align: top;">' . $entry->extra_info . '</td>'
-            . '<td style="vertical-align: top;">' . $sourcetexttitle . '</td>'
-            . '<td style="vertical-align:top;"><span title="' . implode("\n", $texttitles) . '">' . count($texttitles) . ' texte(s)' . '</span></td>'
-            . '<td style="vertical-align: top;" class="glossaryIcon"><span id="currentLingEntity" class="hidden">' . $entry->ling_entity . '</span><img height="20px" class="gGlossaryRemove inDisplay" src="img/glossary_remove.png" title="Supprimer de mon glossaire"/></td>'
-            //   .  '<td style="vertical-align: top;" title="' . implode("\n", $textTitles) . '">' . sizeof($textTitles) . ' texte(s)' . '</td>'
+            . '<td>' . $entry->entry . '</td>'
+            . '<td>' . $entry->translations . '</td>'
+            . '<td>' . $entry->category . '</td>'
+            . '<td>' . $entry->extra_info . '</td>'
+            . '<td>' . $sourcetexttitle . '</td>'
+            . '<td><span title="' . implode("\n", $texttitles) . '">' . count($texttitles) . '&nbsp;' . get_string('text(s)') . '</span></td>'
+            . '<td class="glossaryIcon">'
+            . '<span id="currentLingEntity" class="hidden">'
+            . $entry->ling_entity
+            . '</span><img height="20px" class="gGlossaryRemove inDisplay" src="img/glossary_remove.png" title="Supprimer de mon glossaire"/></td>'
             . '</tr>';
         $entries[] = $entry;
     }
-    if('export' == $cmd) {
+    if ('export' == $cmd) {
         cobra_export_myglossary($entries);
     }
 } else {
     $content .= '<tr>'
-        . '<td colspan="7" style="text-align:center;">Glossaire vide</td>'
+        . '<td colspan="7" style="text-align:center;">' . get_string('emptyglossary') . '</td>'
         . '</tr>';
 }
 

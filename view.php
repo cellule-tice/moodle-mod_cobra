@@ -27,7 +27,7 @@
 
 // Replace cobra with the name of your module and remove this line.
 
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
+require_once(__DIR__ . '/../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/locallib.php');
 
@@ -82,101 +82,100 @@ $PAGE->requires->js_init_call('M.mod_cobra.TextChangeType');
 echo $OUTPUT->header();
 
 // Replace the following lines with you own code.
-echo $OUTPUT->heading('Lecture de textes');
+echo $OUTPUT->heading(get_string('textreading', 'cobra'));
 
-echo $OUTPUT->box_start('generalbox box-content' );
+echo $OUTPUT->box_start('generalbox box-content');
 
 
 $content = '';
 $isallowedtoedit = false;
 if (has_capability('mod/cobra:edit', $context)) {
     $isallowedtoedit = true;
-    $content .= '<a href="cobra_settings.php?id='.$id. '">'. get_string('parameters', 'cobra'). '</a> &nbsp; ' . "\n"
-        . '<a href="glossary.php?id='.$id. '">'.get_string('glossary', 'cobra') . '</a> &nbsp; ' . "\n"
-        . '<a href="stat.php?id='.$id.'">'.get_string('statistics', 'cobra') . '</a>&nbsp;&nbsp;&nbsp;';
+    $content .= '<a href="cobra_settings.php?id=' . $id . '">'. get_string('parameters', 'cobra') . '</a> &nbsp; ' .
+                '<a href="glossary.php?id=' . $id . '">' . get_string('glossary', 'cobra') . '</a> &nbsp; ' .
+                '<a href="stat.php?id=' . $id . '">' . get_string('statistics', 'cobra') . '</a>&nbsp;&nbsp;&nbsp;';
 }
 
 $preferences = get_cobra_preferences();
 if ('SHOW' == $preferences['show_glossary']) {
     //$content .= '<a href="myglossary.php">' . get_string('myglossary', 'cobra') . '</a>';
-    $content .= '<a href="myglossary.php?id=' . $id . '">Mon glossaire</a>';
+    $content .= '<a href="myglossary.php?id=' . $id . '">' . get_string('myglossary', 'cobra') . '</a>';
 }
 
 // For all chosen collections display text in selected order.
 
-$collectionlist = $isallowedtoedit ? get_registered_collections( 'all' ) : get_registered_collections( 'visible' );
+$collectionlist = $isallowedtoedit ? get_registered_collections('all') : get_registered_collections('visible');
 foreach ($collectionlist as $collection) {
     $content .= '<h3>' . $collection['local_label'] . '</h3>';
-    $content .= '<table class="table table-condensed table-hover table-striped" id="textlist">' . "\n"
-         .  '<thead>' . "\n"
-         .  '<tr class="headerX" align="center" valign="top">' . "\n"
-         .  '<th> &nbsp; </th>'
-         .  '<th>' . get_string( 'text', 'cobra' ) . '</th>' . "\n"
-         .  '<th>' . get_string( 'source', 'cobra' ) . '</th>' . "\n";
+    $content .= '<table class="table table-condensed table-hover table-striped" id="textlist">' .
+                '<thead>' .
+                '<tr class="headerX" align="center" valign="top">' .
+                '<th> &nbsp; </th>' .
+                '<th>' . get_string('text', 'cobra') . '</th>' .
+                '<th>' . get_string('source', 'cobra') . '</th>';
 
     if ($isallowedtoedit ) {
-        $content .= '<th>' . get_string ( 'type', 'cobra' ) . '</th>' . "\n"
-                . '<th>' . get_string ( 'move' ) . '</th>' . "\n"
-                . '<th>' . get_string( 'visibility' , 'cobra') . '</th>' . "\n";
+        $content .= '<th>' . get_string ('type', 'cobra') . '</th>' .
+                    '<th>' . get_string ('move') . '</th>' .
+                    '<th>' . get_string('visibility' , 'cobra') . '</th>';
     }
-    $content .= '</tr>' . "\n"
-                 .  '</thead>' . "\n";
+    $content .= '</tr>' .
+                '</thead>';
 
-    if ( $isallowedtoedit ) {
+    if ($isallowedtoedit) {
         // Load all texts to display for course admin.
-        $textlist = load_text_list( $collection['id_collection'], 'all' );
+        $textlist = load_text_list($collection['id_collection'], 'all');
     } else {
         // Load only visible texts to display for students.
         $textlist = load_text_list( $collection['id_collection'], 'visible' );
     }
-    if ( !empty( $textlist ) && is_array( $textlist ) ) {
-        $content .= '<tbody>' . "\n";
+    if (!empty($textlist) && is_array($textlist)) {
+        $content .= '<tbody>';
         $position = 1;
         foreach ($textlist as $text) {
             // Display title.
-            $content .= '<tr id="' . $text->id_text . '#textId" class="row" name="' . $position++
-                 . '#pos"><td style="min-width:60%;">' . "\n"
-                 .  '<a href="text.php?id='.$id.'&id_text=' . $text->id_text /*. '&amp;id_collection='
-                 . $collection['id_collection'] */. '#/' . $text->id_text . '">'
-                 . '<i class="fa fa-file-text"></i> '
-                 .  trim( strip_tags( $text->title  ) )
-                 .  '</a>' . "\n"
-                 .  '</td>' . "\n"
+            $content .= '<tr id="' . $text->id_text . '#textId" class="row" name="' . $position++ .
+                        '#pos"><td style="min-width:60%;">' .
+                        '<a href="text.php?id='.$id.'&id_text=' . $text->id_text . '#/' . $text->id_text . '">' .
+                        '<i class="fa fa-file-text"></i> ' .
+                        trim(strip_tags($text->title)) .
+                        '</a>' .
+                        '</td>' .
             // Display source.
-                 .  '<td style="width: 300px;" title="' . $text->source . '">' . "\n"
-                 .  substr( $text->source, 0, 40 ) . '...'
-                 .  '</td>' . "\n";
+                        '<td style="width: 300px;" title="' . $text->source . '">' .
+                        substr($text->source, 0, 40) . '...' .
+                        '</td>';
 
             if ($isallowedtoedit) {
                 // Display text type.
-                $content .= '<td align="center">' . "\n" . '<a href="#" class="changeType">'
-                     . ( !empty( $text->text_type ) ? get_string( $text->text_type, 'cobra' ) : '&nbsp;' )
-                    . '</a></td>';
+                $content .= '<td align="center">' . "\n" . '<a href="#" class="changeType">' .
+                            (!empty($text->text_type) ? get_string($text->text_type, 'cobra') : '&nbsp;') .
+                            '</a></td>';
                 // Change position commands.
-                $content .= '<td align="center">' . "\n";
+                $content .= '<td align="center">';
                 $content .= '<a href="#" class="moveUp"><i class="fa fa-arrow-up"></i></a>&nbsp;';
                 $content .= '<a href="#" class="moveDown"><i class="fa fa-arrow-down"></i></a>&nbsp;';
-                $content .= '</td>' . "\n";
+                $content .= '</td>';
 
                 // Change visibility commands.
-                $content .= '<td align="center">' . "\n";
-                $content .= '<a href="#" class="setVisible" '.( $text->visibility ? 'style="display:none"' : '').'><i class="fa fa-eye-slash"></i></a>';
+                $content .= '<td align="center">';
+                $content .= '<a href="#" class="setVisible" ' . ($text->visibility ? 'style="display:none"' : '').'><i class="fa fa-eye-slash"></i></a>';
 
-                $content .= '<a href="#" class="setInvisible" '.( !$text->visibility ? 'style="display:none"' : '').'><i class="fa fa-eye"></i></a>';
+                $content .= '<a href="#" class="setInvisible" ' . (!$text->visibility ? 'style="display:none"' : '').'><i class="fa fa-eye"></i></a>';
 
-                $content .= '</td>' . "\n";
+                $content .= '</td>';
             }
-            $content .= '</tr>' . "\n\n";
+            $content .= '</tr>';
         }
-        $content .= '</tbody>' . "\n";
+        $content .= '</tbody>';
     } else {
-        $content .= '<tfoot>' . "\n"
-             .  '<tr>' . "\n"
-             .  '<td align="center" colspan="' . ( $isallowedtoedit ? '4' : '2' ) . '">' . get_lang( 'No text' ) . '</td>' . "\n"
-             .  '</tr>' . "\n"
-             .  '</tfoot>' . "\n";
+        $content .= '<tfoot>' .
+                    '<tr>' .
+                    '<td align="center" colspan="' . ($isallowedtoedit ? '4' : '2') . '">' . get_lang('No text') . '</td>' .
+                    '</tr>' .
+                    '</tfoot>';
     }
-    $content .= '</table>' . "\n";
+    $content .= '</table>';
 }
 
 echo $content;
