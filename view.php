@@ -71,20 +71,20 @@ $PAGE->set_heading(format_string($course->fullname));
  * $PAGE->set_focuscontrol('some-html-id');
  * $PAGE->add_body_class('cobra-'.$somevar);
  */
-
+$PAGE->requires->css('/mod/cobra/css/cobra.css');
 // Add the ajaxcommand for the form.
- $PAGE->requires->jquery();
- $PAGE->requires->js('/mod/cobra/js/cobra.js');
- $PAGE->requires->js_init_call('M.mod_cobra.TextVisibility');
- $PAGE->requires->js_init_call('M.mod_cobra.TextMove');
- $PAGE->requires->js_init_call('M.mod_cobra.TextChangeType');
+$PAGE->requires->jquery();
+$PAGE->requires->js('/mod/cobra/js/cobra.js');
+$PAGE->requires->js_init_call('M.mod_cobra.TextVisibility');
+$PAGE->requires->js_init_call('M.mod_cobra.TextMove');
+$PAGE->requires->js_init_call('M.mod_cobra.TextChangeType');
 // Output starts here.
 echo $OUTPUT->header();
 
 // Replace the following lines with you own code.
 echo $OUTPUT->heading('Lecture de textes');
 
-echo $OUTPUT->box_start('generalbox collection_content' );
+echo $OUTPUT->box_start('generalbox box-content' );
 
 
 $content = '';
@@ -100,11 +100,9 @@ if (has_capability('mod/cobra:edit', $context)) {
 
 $collectionlist = $isallowedtoedit ? get_registered_collections( 'all' ) : get_registered_collections( 'visible' );
 foreach ($collectionlist as $collection) {
-    $content .= '<table class="claroTable emphaseLine textList" width="100%" border="0"'
-            . 'cellspacing="2" style="margin-bottom:20px;">' . "\n"
+    $content .= '<h3>' . $collection['local_label'] . '</h3>';
+    $content .= '<table class="table table-condensed table-hover table-striped" id="textlist">' . "\n"
          .  '<thead>' . "\n"
-         .  '<tr class="superHeader" align="center" valign="top"> <th colspan="6">'
-         . $collection['local_label'] . '</th></tr>' . "\n"
          .  '<tr class="headerX" align="center" valign="top">' . "\n"
          .  '<th> &nbsp; </th>'
          .  '<th>' . get_string( 'text', 'cobra' ) . '</th>' . "\n"
@@ -132,14 +130,14 @@ foreach ($collectionlist as $collection) {
             // Display title.
             $content .= '<tr id="' . $text->id_text . '#textId" class="row" name="' . $position++
                  . '#pos"><td style="min-width:60%;">' . "\n"
-                 .  '<a href="text.php?id='.$id.'&id_text=' . $text->id_text . '&amp;id_collection='
-                 . $collection['id_collection'] . '">'
-                 .   $OUTPUT->pix_icon('f/text-24', ''). '&nbsp;'
+                 .  '<a href="text.php?id='.$id.'&id_text=' . $text->id_text /*. '&amp;id_collection='
+                 . $collection['id_collection'] */. '#/' . $text->id_text . '">'
+                 . '<i class="fa fa-file-text"></i> '
                  .  trim( strip_tags( $text->title  ) )
                  .  '</a>' . "\n"
                  .  '</td>' . "\n"
             // Display source.
-                 .  '<td title="' . $text->source . '">' . "\n"
+                 .  '<td style="width: 300px;" title="' . $text->source . '">' . "\n"
                  .  substr( $text->source, 0, 40 ) . '...'
                  .  '</td>' . "\n";
 
@@ -150,17 +148,15 @@ foreach ($collectionlist as $collection) {
                     . '</a></td>';
                 // Change position commands.
                 $content .= '<td align="center">' . "\n";
-                $content .= '<a href="#" class="moveUp">' . $OUTPUT->pix_icon('t/up', get_string('moveup')) . '</a>'. '&nbsp;';
-                $content .= '<a href="#" class="moveDown">' .  $OUTPUT->pix_icon('t/down', get_string('movedown')) . '</a>';
+                $content .= '<a href="#" class="moveUp"><i class="fa fa-arrow-up"></i></a>&nbsp;';
+                $content .= '<a href="#" class="moveDown"><i class="fa fa-arrow-down"></i></a>&nbsp;';
                 $content .= '</td>' . "\n";
 
                 // Change visibility commands.
                 $content .= '<td align="center">' . "\n";
-                $content .= '<a href="#" class="setVisible" '.( $text->visibility ? 'style="display:none"' : '').'>'
-                        . $OUTPUT->pix_icon('t/show', get_string('show')) . '</a>';
+                $content .= '<a href="#" class="setVisible" '.( $text->visibility ? 'style="display:none"' : '').'><i class="fa fa-eye-slash"></i></a>';
 
-                $content .= '<a href="#" class="setInvisible" '.( !$text->visibility ? 'style="display:none"' : '').'>'
-                        . $OUTPUT->pix_icon('t/hide', get_string('hide')) . '</a>';
+                $content .= '<a href="#" class="setInvisible" '.( !$text->visibility ? 'style="display:none"' : '').'><i class="fa fa-eye"></i></a>';
 
                 $content .= '</td>' . "\n";
             }

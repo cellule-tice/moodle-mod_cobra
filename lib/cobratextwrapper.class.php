@@ -29,7 +29,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class COBRATextWrapper
+class CobraTextWrapper
 {
     // Locally stored data plugin.
     private $id = 0;

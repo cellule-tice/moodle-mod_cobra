@@ -17,6 +17,17 @@ M.mod_cobra.init = function() {
     }
 }
 
+M.mod_cobra.init_no_blocks = function() {
+    initnoblocks();
+    function initnoblocks() {
+        $('small').hide();
+        $('.hbl').hide();
+        $('.sbl').hide();
+        /*$(document).on('click','a.changeType', changeType);
+        updateMoveIcons();*/
+    }
+}
+
 M.mod_cobra.TextChangeType = function(){
     $(document).on('click','a.changeType', changeType);
 }
@@ -62,7 +73,19 @@ M.mod_cobra.showFullConcordance = function(){
 };
 
 M.mod_cobra.lemma_on_click = function(){
-    $('.lemma').on('click', function(){
+    $(document).on('click', '.lemma', function() {
+        $('.clicked').removeClass('clicked');
+        $('.emphasize').removeClass('emphasize');
+        var conceptId = $(this).attr("name");
+        $('.lemma[name=' + conceptId + ']').addClass('emphasize');
+        $(this).removeClass('emphasize');
+        $(this).addClass('clicked');
+        displayDetails(conceptId, false);
+    });
+};
+
+M.mod_cobra.lemma_on_click_old = function(){
+    $(document).on('click', '.lemma', function() {
         $('.clicked').removeClass('clicked');
         $('.emphasize').removeClass('emphasize');
         var conceptId = $(this).attr("name");
@@ -90,39 +113,57 @@ M.mod_cobra.lemma_on_click = function(){
         $.post( 'relay.php', { verb: 'displayEntry', concept_id: conceptId, resource_id: textId, is_expr: isExpr , encodeClic : encodeClic, courseId : courseId, userId : userId,
             params : json  },
             function(data){
-                var str = data.replace(/class="label"/g,'class="label2"');
-                detailsDiv.html(str);
+                /*var str = data.replace(/class="label"/g,'class="label2"');
+                detailsDiv.html(str);*/
+                var response = JSON.parse(data);
+                detailsDiv.html(response.html);
+                if('SHOW' == $('#showglossary').text()) {
+                    var lingentityspan = '<span id="currentlingentity" class="hidden">' + response.lingentity + '</span>';
+                    var glossaryicon = '';
+                    var angularclick = '';
+                    if('1' == response.inglossary) {
+                        glossaryicon = '<img height="20px" class="inGlossary" src="img/in_glossary.png" title="Pr&eacute;sent dans mon glossaire"/>';
+                        angularclick = 'ng-click="addEntry(' + response.lingentity + ')"';
+                    } else {
+                        glossaryicon = '<img height="20px" class="glossaryAdd" src="img/glossary_add.png" title="Ajouter &agrave; mon glossaire"/>';
+                    }
+                    var tr = $('#displayOnClic').find('tr:first').prepend('<th ' + angularclick + ' class="glossaryIcon">' + lingentityspan + glossaryicon + '</th>').addClass('digestRow');
+                } else {
+                    $('#glossary').remove();
+                }
             });
     });
 };
 
 M.mod_cobra.expression_on_click = function(){
-    $('.expression').on('click', function(){
-            $('.clicked').removeClass('clicked');
-            $('.emphasize').removeClass('emphasize');
-            var conceptId = $(this).attr('name');
+    $(document).on('click', '.expression', function() {
+        $('.clicked').removeClass('clicked');
+        $('.emphasize').removeClass('emphasize');
+        var conceptid = $(this).attr('name');
 
-            $('.expression[name=' + conceptId + ']').addClass('emphasize');
-            $(this).prevAll('span.expression').each(function() {
-                if ($(this).attr('name') == conceptId) {
-                    $(this).removeClass('emphasize');
-                    $(this).addClass('clicked');
-                } else {
-                    return false;
-                }
-            });
-            $(this).nextAll('span.expression').each(function() {
-                if( $(this).attr('name') == conceptId ) {
-                    $(this).removeClass('emphasize');
-                    $(this).addClass('clicked');
-                } else {
-                    return false;
-                }
-            });
-            $(this).removeClass('emphasize');
-            $(this).addClass('clicked');
+        $('.expression[name=' + conceptid + ']').addClass('emphasize');
+        $(this).prevAll('span.expression').each(function() {
+            if ($(this).attr('name') == conceptid) {
+                $(this).removeClass('emphasize');
+                $(this).addClass('clicked');
+            } else {
+                return false;
+            }
+        });
+        $(this).nextAll('span.expression').each(function() {
+            if( $(this).attr('name') == conceptid ) {
+                $(this).removeClass('emphasize');
+                $(this).addClass('clicked');
+            } else {
+                return false;
+            }
+        });
+        $(this).removeClass('emphasize');
+        $(this).addClass('clicked');
+        displayDetails(conceptid, true);
 
-            $('#card').hide();
+
+            /*$('#card').hide();
             $('#full_concordance').hide();
             var detailsDiv = $('#details');
             var textId = getUrlParam('id_text', document.location.href);
@@ -142,9 +183,70 @@ M.mod_cobra.expression_on_click = function(){
             $.post( 'relay.php', { verb: 'displayEntry', concept_id: conceptId, resource_id: textId, is_expr: isExpr, encodeClic : encodeClic, courseId : courseId, userId : userId, params : json  },
                 function(data){
                     detailsDiv.html(data);
-                });
+                });*/
     });
 };
+
+M.mod_cobra.add_to_glossary = function() {
+    $(document).on('click', '.glossaryAdd', function() {
+        console.log('add to glossary');
+        var lingentity = $(this).prev().text();
+        $('.glossaryAdd').removeClass('glossaryAdd').addClass('inGlossary').attr('src', 'img/in_glossary.png').attr('title', 'Pr&eacute;sent dans mon glossaire');
+        angular.element('#bottom').scope().addEntry(lingentity);
+    });
+}
+
+M.mod_cobra.remove_from_glossary = function() {
+
+    $(document).on('click', '.glossaryRemove', function() {
+        console.log('remove from glossary');
+        var lingEntity = $(this).prev().text();
+        $('.inGlossary').removeClass('inGlossary').addClass('glossaryAdd').attr('src', 'img/glossary_add.png').attr('title', 'Ajouter &agrave; mon glossaire');
+        angular.element('#bottom').scope().removeEntry(lingEntity);
+    });
+}
+
+function displayDetails(conceptid, isexpr) {
+    $('#card').hide();
+    $('#full_concordance').hide();
+    var detailsDiv = $('#details');
+    var textId = getUrlParam('id_text', document.location.href);
+    var encodeClic = $('#encode_clic').attr('name');
+    var courseId = $('#courseLabel').attr('name');
+    var userId = $('#userId').attr('name');
+    var sizePref = $("#preferencesNb").attr('name');
+    var nb = parseInt(sizePref);
+    var pref = new Array();
+    for (var i = 0; i < nb; i++) {
+        var key = $("#preferences_" + i + "_key").attr('name');
+        var value = $("#preferences_" + i + "_value").attr('name');
+        pref[key] = value;
+    }
+
+    var json = JSON.stringify(pref);
+    $.post( 'relay.php', { verb: 'displayEntry', concept_id: conceptid, resource_id: textId, is_expr: isexpr, encodeClic : encodeClic, courseId : courseId, userId : userId,
+            params : json  },
+        function(data){
+            var response = JSON.parse(data);
+            var str = response.html.replace(/class="label"/g,'class="cobralabel"');
+            detailsDiv.html(str);
+            //detailsDiv.html(response.html);
+            if('SHOW' == $('#showglossary').text()) {
+                var lingentityspan = '<span id="currentlingentity" class="hidden">' + response.lingentity + '</span>';
+                var glossaryicon = '';
+                var angularclick = '';
+                if('1' == response.inglossary) {
+                    glossaryicon = '<img height="20px" class="inGlossary" src="img/in_glossary.png" title="Pr&eacute;sent dans mon glossaire"/>';
+                    angularclick = 'ng-click="addEntry(' + response.lingentity + ')"';
+                } else {
+                    glossaryicon = '<img height="20px" class="glossaryAdd" src="img/glossary_add.png" title="Ajouter &agrave; mon glossaire"/>';
+                }
+                var tr = $('#displayOnClic').find('tr:first').prepend('<th ' + angularclick + ' class="glossaryIcon">' + lingentityspan + glossaryicon + '</th>').addClass('digestRow');
+            } else {
+                $('#glossary').remove();
+            }
+        });
+}
 
 
 // Display full text of clicked concordance.
