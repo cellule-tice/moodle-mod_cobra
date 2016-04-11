@@ -33,6 +33,7 @@ require_once($CFG->dirroot . '/mod/cobra/locallib.php');
 require_once($CFG->dirroot . '/mod/cobra/lib/glossary.lib.php');
 
 $id = required_param('id', PARAM_INT);
+$cmd = optional_param('cmd', null, PARAM_ALPHA);
 
 list($course, $cm) = get_course_and_cm_from_cmid($id, 'cobra');
 $cobra = $DB->get_record('cobra', array('id' => $cm->instance), '*', MUST_EXIST);
@@ -56,7 +57,7 @@ $PAGE->requires->js_init_call('M.mod_cobra.remove_from_global_glossary');
 //$PAGE->requires->js_init_call('M.mod_cobra.add_qtip_text_list');
 
 // Output starts here.
-echo $OUTPUT->header();
+$content = $OUTPUT->header();
 
 // Replace the following lines with you own code.
 $exportbutton = '<a href="' . $_SERVER['PHP_SELF'] .
@@ -67,11 +68,11 @@ $exportbutton = '<a href="' . $_SERVER['PHP_SELF'] .
                 'title="Exporter mon glossaire">   ' .
                 //'<i class="fa fa-download"></i>' .
                 '</a>';
-echo $OUTPUT->heading('Mon glossaire' . '&nbsp;&nbsp;&nbsp;' . $exportbutton);
+$content .= $OUTPUT->heading('Mon glossaire' . '&nbsp;&nbsp;&nbsp;' . $exportbutton);
 
-echo $OUTPUT->box_start('generalbox box-content' );
+$content .= $OUTPUT->box_start('generalbox box-content' );
 
-$content = '';
+//$content = '';
 $content .= '<div id="courseid" class="hidden" name="' . $course->id .'">' . $course->id . '</div>';
 
 $preferences = get_cobra_preferences();
@@ -132,6 +133,9 @@ if (!empty($data)) {
             //   .  '<td style="vertical-align: top;" title="' . implode("\n", $textTitles) . '">' . sizeof($textTitles) . ' texte(s)' . '</td>'
             . '</tr>';
         $entries[] = $entry;
+    }
+    if('export' == $cmd) {
+        cobra_export_myglossary($entries);
     }
 } else {
     $content .= '<tr>'
