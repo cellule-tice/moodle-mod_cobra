@@ -1,8 +1,8 @@
 M.mod_cobra = M.mod_cobra || {};
 
 /**
- * Init ajax based Chat UI.
- * @namespace M.mod_chat_ajax
+ * Init ajax based Cobra UI.
+ * @namespace M.mod_cobra_ajax
  * @function
  * @param {YUI} Y
  * @param {Object} cfg configuration data
