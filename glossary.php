@@ -99,7 +99,7 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 echo $OUTPUT->header();
 
 // Replace the following lines with you own code.
-echo $OUTPUT->heading(get_string('textreading'));
+echo $OUTPUT->heading(get_string('textreading', 'cobra'));
 
 echo $OUTPUT->box_start('Glossaire');
 
