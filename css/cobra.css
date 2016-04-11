@@ -91,6 +91,12 @@ h2.titre_lecon {
     color: #fff;
 }
 
+.glossaryExport:before {
+    font-family: FontAwesome;
+    content: " \f019";
+    color: #333;
+}
+
 
 #text {
     max-height: 350px;
@@ -115,7 +121,7 @@ h2.titre_lecon {
     box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
 }
 
-.glossaryAdd, .glossaryRemove {
+.glossaryAdd, .glossaryRemove, .gGlossaryRemove {
     cursor: help;
 }
 
@@ -393,3 +399,6 @@ p{
     background-repeat: no-repeat;
     background-position: center left;
 }
+
+
+

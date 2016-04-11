@@ -341,7 +341,10 @@ function add_to_glossary($lingentity, $textid, $courseid)
 function remove_from_glossary($lingentity, $courseid)
 {
     global $DB, $COURSE, $USER;
-    return (int)$DB->set_field('cobra_clic',
+    if (empty($courseid)) {
+        $courseid = $COURSE->id;
+    }
+    $DB->set_field('cobra_clic',
         'in_glossary',
         '0',
         array(
@@ -350,11 +353,15 @@ function remove_from_glossary($lingentity, $courseid)
             'id_entite_ling' => $lingentity
         )
     );
+    return $courseid;
 }
 
-function get_remote_glossary_info_for_student($textid = 0, $courseid)
+function get_remote_glossary_info_for_student($textid = 0, $courseid = 0)
 {
     global $DB, $COURSE, $USER;
+    if (!$courseid) {
+        $courseid = $COURSE->id;
+    }
     $fullquery = "SELECT DISTINCT(id_entite_ling) AS id_entite_ling
                     FROM {cobra_clic}
                    WHERE course = :courseid
