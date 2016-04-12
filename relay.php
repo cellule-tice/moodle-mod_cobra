@@ -58,7 +58,7 @@ try {
         if ($encodeclic) {
             clic( $resourceid, $lingentity, $DB, $courseid, $userid );
         }
-        $glossarystatus = is_in_glossary($lingentity, $courseid, $userid);
+        $glossarystatus = is_in_glossary($lingentity, $courseid);
         $response = array( 'html' => $html, 'inglossary' => $glossarystatus, 'lingentity' => $lingentity, 'userId' => $userid);
         array_walk(
             $response,

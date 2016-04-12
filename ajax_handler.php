@@ -28,10 +28,11 @@
 // Load CoBRA main lib and config.
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
     require_once(dirname(__FILE__).'/locallib.php');
-    global $DB;
+require_once($CFG->dirroot . '/mod/cobra/lib/glossary.lib.php');
+    global $DB, $USER;
 
 // Define accepted commands.
-$acceptedcmdlist = array('getDisplayParams', 'setVisible', 'setInvisible', 'moveUp', 'moveDown', 'changeType');
+$acceptedcmdlist = array('getDisplayParams', 'setVisible', 'setInvisible', 'moveUp', 'moveDown', 'changeType', 'removeFromGlossary', 'getTextListForGlossaryEntry');
 
 if (isset($_REQUEST['ajaxcall']) && in_array($_REQUEST['ajaxcall'], $acceptedcmdlist)) {
     $call = $_REQUEST['ajaxcall'];
@@ -115,4 +116,13 @@ if ('changeType' == $call) {
         return true;
     }
     return false;
+}
+
+if ('removeFromGlossary' == $call) {
+    $lingentity = optional_param('lingentity', 0, PARAM_INT);
+    $courseid = optional_param('courseid', 0, PARAM_INT);
+
+    if ($lingentity && $courseid) {
+        echo true == remove_from_glossary($lingentity, $courseid) ? 'true' : 'false';
+    }
 }

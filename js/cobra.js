@@ -206,6 +206,25 @@ M.mod_cobra.remove_from_glossary = function() {
     });
 }
 
+M.mod_cobra.remove_from_global_glossary = function() {
+    $(document).on('click', '.gGlossaryRemove', function() {
+        var courseid = $('#courseid').attr('name');
+        var lingentity = $(this).prev().text();
+        var currentElement = $(this);
+        $.post( 'ajax_handler.php', { ajaxcall: 'removeFromGlossary', lingentity: lingentity, courseid: courseid },
+            function(response) {
+                if(response == "true")
+                {
+                    if($(currentElement).hasClass('inDisplay'))
+                    {
+                        $(currentElement).parent().parent().remove();
+                    }
+
+                }
+            });
+    });
+}
+
 function displayDetails(conceptid, isexpr) {
     $('#card').hide();
     $('#full_concordance').hide();
