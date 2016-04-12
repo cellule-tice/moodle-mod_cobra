@@ -109,8 +109,8 @@ foreach ($collectionlist as $collection) {
     $content .= '<h3>' . $collection['local_label'] . '</h3>';
     $content .= '<table class="table table-condensed table-hover table-striped" id="textlist">' .
                 '<thead>' .
-                '<tr class="headerX" align="center" valign="top">' .
-                '<th> &nbsp; </th>' .
+                '<tr align="center">' .
+                '<th width="1px"> &nbsp; </th>' .
                 '<th>' . get_string('text', 'cobra') . '</th>' .
                 '<th>' . get_string('source', 'cobra') . '</th>';
 
@@ -135,15 +135,15 @@ foreach ($collectionlist as $collection) {
         foreach ($textlist as $text) {
             // Display title.
             $content .= '<tr id="' . $text->id_text . '#textId" class="row" name="' . $position++ .
-                        '#pos"><td style="min-width:60%;">' .
+                        '#pos"><td style="min-width:50%;">' .
                         '<a href="text.php?id='.$id.'&id_text=' . $text->id_text . '#/' . $text->id_text . '">' .
                         '<i class="fa fa-file-text"></i> ' .
                         trim(strip_tags($text->title)) .
                         '</a>' .
                         '</td>' .
             // Display source.
-                        '<td style="width: 300px;" title="' . $text->source . '">' .
-                        substr($text->source, 0, 40) . '...' .
+                        '<td style="width: 350px;" title="' . $text->source . '">' .
+                        substr($text->source, 0, 30) . '...' .
                         '</td>';
 
             if ($isallowedtoedit) {
