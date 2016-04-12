@@ -24,6 +24,7 @@
  * @copyright  2015 Laurence Dumortier
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 defined('MOODLE_INTERNAL') || die();
 
 $string['modulename'] = 'Cobra';
@@ -130,3 +131,13 @@ $string['Unable_to_change_collection_name'] = 'Impossible de renommer la collect
 $string['Collection_name_cannot_be_empty'] = 'Le nom de la collection ne peut être vide';
 $string['previous_text'] = 'Texte précédent';
 $string['next_text'] = 'Texte suivant';
+$string['myglossary'] = 'Mon glossaire';
+$string['entry'] = 'Entrée';
+$string['sourcetext'] = 'Texte source';
+$string['clickedin'] = 'Cliqué dans ...';
+$string['otherforms'] = 'Autres formes';
+$string['texts'] = 'texte(s)';
+$string['emptyglossary'] = 'Glossaire vide !';
+$string['textreading'] = 'Lecture de textes';
+$string['myglossaryremove'] = 'Supprimer de mon glossaire';
+$string['exportmyglossary'] = 'Exporter mon glossaire';

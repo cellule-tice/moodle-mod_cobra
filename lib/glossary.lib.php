@@ -310,14 +310,14 @@ function list_concepts_in_text($textid, $entrytype)
 }
 
 // function dedicated to student personal glossary
-function is_in_glossary($lingentity, $courseid, $userid)
+function is_in_glossary($lingentity, $courseid)
 {
     global $DB, $COURSE, $USER;
     return (int)$DB->record_exists('cobra_clic',
             array(
                 'course' => $courseid,
                 'id_entite_ling' => (int)$lingentity,
-                'user_id' => $userid,
+                'user_id' => $USER->id,
                 'in_glossary' => 1)
             );
 }
@@ -341,7 +341,10 @@ function add_to_glossary($lingentity, $textid, $courseid)
 function remove_from_glossary($lingentity, $courseid)
 {
     global $DB, $COURSE, $USER;
-    return (int)$DB->set_field('cobra_clic',
+    if (empty($courseid)) {
+        $courseid = $COURSE->id;
+    }
+    $DB->set_field('cobra_clic',
         'in_glossary',
         '0',
         array(
@@ -350,11 +353,15 @@ function remove_from_glossary($lingentity, $courseid)
             'id_entite_ling' => $lingentity
         )
     );
+    return $courseid;
 }
 
-function get_remote_glossary_info_for_student($textid = 0, $courseid)
+function get_remote_glossary_info_for_student($textid = 0, $courseid = 0)
 {
     global $DB, $COURSE, $USER;
+    if (!$courseid) {
+        $courseid = $COURSE->id;
+    }
     $fullquery = "SELECT DISTINCT(id_entite_ling) AS id_entite_ling
                     FROM {cobra_clic}
                    WHERE course = :courseid
@@ -404,3 +411,29 @@ function get_remote_glossary_info_for_student($textid = 0, $courseid)
     return $glossaryentries;
 }
 
+function cobra_export_myglossary($data) {
+    global $CFG;
+    require_once($CFG->libdir . '/csvlib.class.php');
+
+    $filename = clean_filename(get_string('glossary', 'cobra'));
+
+    $csvexport = new csv_export_writer('semicolon');
+    $csvexport->set_filename($filename);
+    $records = array();
+    $records[0] = array(get_string('Lemma_form', 'cobra'), get_string('Category', 'cobra'),
+        'Autres formes', get_string('Translation', 'cobra'), 'Texte source', utf8_encode('Cliqué dans ...'));
+    $csvexport->add_data($records[0]);
+    foreach ($data as $entry)
+    {
+        // $this->recordList is defined in parent class csv
+        $record = array($entry->entry, $entry->category , $entry->extra_info, utf8_decode($entry->translations), $entry->sourcetexttitle, '' . sizeof($entry->texttitles) . ' texte(s)');
+
+        $csvexport->add_data($record);
+
+        // Export in csv format.
+
+
+    }
+    $csvexport->download_file();
+    die;
+}

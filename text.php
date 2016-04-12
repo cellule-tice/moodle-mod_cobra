@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
+require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once($CFG->libdir . '/medialib.php');
 require_once($CFG->dirroot . '/mod/cobra/lib.php');
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
@@ -61,7 +61,7 @@ if (has_capability('mod/cobra:edit', $context)) {
    // $encodeclic = 0;
 }
 
-$content .= '<div id="encode_clic"  name="' . $encodeclic . '" class="hidden"></div>';
+$content .= '<div id="encode_clic" name="' . $encodeclic . '" class="hidden"></div>';
 $content .= '<div id="id_text" class="hidden" name="' . $textid . '">' . $textid . '</div>';
 $content .= '<div id="courseLabel" class="hidden" name="' . $course->id . '">&nbsp;</div>';
 $content .= '<div id="showglossary" class="hidden" name="SHOW">SHOW</div>';
@@ -98,8 +98,6 @@ if ('SHOW' == strtoupper($preferences['nextprevbuttons'])) {
             . '" class="btn btn-default" role="button">' . get_string('previous_text', 'cobra') . '</a>';
     }
     if ($nextid) {
-        $targetid = $nextid;
-        $string = get_string('next_text', 'cobra');
         $content .= '<a href="'
             . $_SERVER['PHP_SELF']
             . '?id=' . $id
