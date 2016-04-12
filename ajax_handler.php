@@ -32,7 +32,15 @@ require_once($CFG->dirroot . '/mod/cobra/lib/glossary.lib.php');
     global $DB, $USER;
 
 // Define accepted commands.
-$acceptedcmdlist = array('getDisplayParams', 'setVisible', 'setInvisible', 'moveUp', 'moveDown', 'changeType', 'removeFromGlossary', 'getTextListForGlossaryEntry');
+$acceptedcmdlist = array(
+    'getDisplayParams',
+    'setVisible',
+    'setInvisible',
+    'moveUp',
+    'moveDown',
+    'changeType',
+    'removeFromGlossary',
+    'getTextListForGlossaryEntry');
 
 if (isset($_REQUEST['ajaxcall']) && in_array($_REQUEST['ajaxcall'], $acceptedcmdlist)) {
     $call = $_REQUEST['ajaxcall'];
