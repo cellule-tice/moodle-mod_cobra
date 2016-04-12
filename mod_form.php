@@ -44,29 +44,33 @@ class mod_cobra_mod_form extends moodleform_mod {
      */
     public function definition() {
 
-        $mform = $this->_form;
+        global $DB, $CFG;
 
-        // Adding the "general" fieldset, where all the common settings are showed.
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $courseid = required_param('course', PARAM_INT);
 
-        // Adding the standard "name" field.
-        $mform->addElement('text', 'name', get_string('cobraname', 'cobra'), array('size' => '64'));
-        if (!empty($CFG->formatstringstriptags)) {
-            $mform->setType('name', PARAM_TEXT);
+        if ($DB->record_exists('cobra', array('course' => $courseid))) {
+            $url = new moodle_url('/course/view.php', array('id' => $courseid));
+            redirect($url, 'Une seule instance de CoBRA est autorisée pour un cours', 3);
         } else {
-            $mform->setType('name', PARAM_CLEAN);
+            $mform = $this->_form;
+            // Adding the "general" fieldset, where all the common settings are showed.
+            $mform->addElement('header', 'general', get_string('general', 'form'));
+            // Adding the standard "name" field.
+            $mform->addElement('text', 'name', get_string('cobraname', 'cobra'), array('size' => '64'));
+            if (!empty($CFG->formatstringstriptags)) {
+                $mform->setType('name', PARAM_TEXT);
+            } else {
+                $mform->setType('name', PARAM_CLEAN);
+            }
+            $mform->addRule('name', null, 'required', null, 'client');
+            $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+            $mform->addHelpButton('name', 'cobraname', 'cobra');
+            $options = get_foreign_languages();
+            $mform->addElement('select', 'language', get_string('language', 'cobra'), $options);
+            // Add standard elements, common to all modules.
+            $this->standard_coursemodule_elements();
+            // Add standard buttons, common to all modules.
+            $this->add_action_buttons();
         }
-        $mform->addRule('name', null, 'required', null, 'client');
-        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-        $mform->addHelpButton('name', 'cobraname', 'cobra');
-
-        $options = get_foreign_languages();
-        $mform->addElement('select', 'language', get_string('language', 'cobra'), $options);
-
-        // Add standard elements, common to all modules.
-        $this->standard_coursemodule_elements();
-
-        // Add standard buttons, common to all modules.
-        $this->add_action_buttons();
     }
 }
