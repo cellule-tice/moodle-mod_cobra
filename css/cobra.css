@@ -123,6 +123,7 @@ h2.titre_lecon {
 
 .glossaryAdd, .glossaryRemove, .gGlossaryRemove {
     cursor: help;
+    height: 20px;
 }
 
 
@@ -395,7 +396,7 @@ p{
 
 .hot {
     padding-left: 15px;
-    background-image: url(../img/hot.png);
+    background-image: url(../pix/hot.png);
     background-repeat: no-repeat;
     background-position: center left;
 }

@@ -90,7 +90,7 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
 // Output starts here.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('textreading'));
+echo $OUTPUT->heading(get_string('textreading', 'cobra'));
 echo $OUTPUT->box_start('generalbox box-content' );
 
 $content = '';
@@ -301,28 +301,31 @@ if ('collections' == $currentsection) {
             . '<td>' . $collection['local_label'] . '</td>' . "\n"
             . '<td align="center">' . "\n"
             . '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&cmd=rqEditLabel&amp;collection='.$collection['id_collection'].'">'. "\n"
-            . $OUTPUT->pix_icon('t/editstring', get_string('edit')) . "\n"
+            //. $OUTPUT->pix_icon('t/editstring', get_string('edit')) . "\n"
+            . '<i class="fa fa-edit"></i>'
             . '</a></td>' . "\n"
             . '<td align="center">' . "\n"
             . '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&cmd=exRefresh&amp;collection='.$collection['id_collection'].'">'."\n"
-            .  $OUTPUT->pix_icon('t/reload', get_string('reload')). "\n"
+            //.  $OUTPUT->pix_icon('t/reload', get_string('reload')). "\n"
+            . '<i class="fa fa-refresh"></i>'
             . '</a></td>' . "\n"
             . '<td align="center">' . "\n"
             . '<a href="'.$_SERVER['PHP_SELF'] . '?id='.$id.'&cmd=exRemove&amp;collection='.$collection['id_collection'].'">'."\n"
-            .   $OUTPUT->pix_icon('t/delete', get_string('delete')). "\n"
+           // .   $OUTPUT->pix_icon('t/delete', get_string('delete')). "\n"
+            . '<i class="fa fa-remove"></i>'
             . '</a></td>' . "\n"
             // Change position commands.
             . '<td align="center">' . "\n"
-            . '<a href="#" class="moveUp">' .   $OUTPUT->pix_icon('t/up', get_string('moveup')). '</a>'
+            . '<a href="#" class="moveUp">' .  '<i class="fa fa-arrow-up"></i>' /*$OUTPUT->pix_icon('t/up', get_string('moveup'))*/. '</a>'
             . '&nbsp;'
-            . '<a href="#" class="moveDown">' .   $OUTPUT->pix_icon('t/down', get_string('movedown')) . '</a>'
+            . '<a href="#" class="moveDown">' .  '<i class="fa fa-arrow-down"></i>' /*$OUTPUT->pix_icon('t/down', get_string('movedown'))*/ . '</a>'
             . '</td>' . "\n"
             // Visibility commands.
             . '<td align="center">' . "\n"
             . '<a href="#" class="setInvisible" '. (!$collection['visibility'] ? 'style="display:none"' : '').'>'
-            . $OUTPUT->pix_icon('t/hide', get_string('hide')) . '</a>'
+            . '<i class="fa fa-eye"></i>' /*$OUTPUT->pix_icon('t/hide', get_string('hide'))*/ . '</a>'
             . '<a href="#" class="setVisible" '.( $collection['visibility'] ? 'style="display:none"' : '').'>'
-            . $OUTPUT->pix_icon('t/show', get_string('show')) . '</a>'
+            . '<i class="fa fa-eye-slash"></i>' /*$OUTPUT->pix_icon('t/show', get_string('show'))*/ . '</a>'
             . '</td>' . "\n"
             . '</tr>' . "\n";
         $idlist[] = $collection['id_collection'];
@@ -350,7 +353,7 @@ if ('collections' == $currentsection) {
             . '<td>' . $collection['label'] . '</td>' . "\n"
             . '<td align="center">' . "\n"
             . '<a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&cmd=exAdd&amp;remote_collection=' . $collection['id'] . '">' . "\n"
-            . $OUTPUT->pix_icon('t/check', get_string('add_collection', 'cobra')) . "\n"
+            . '<i class="fa fa-plus"></i>'/*$OUTPUT->pix_icon('t/check', get_string('add_collection', 'cobra'))*/
             . '</a></td>' . "\n"
             . '</tr>' . "\n";
     }

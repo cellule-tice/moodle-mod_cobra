@@ -122,10 +122,10 @@ M.mod_cobra.lemma_on_click_old = function(){
                     var glossaryicon = '';
                     var angularclick = '';
                     if('1' == response.inglossary) {
-                        glossaryicon = '<img height="20px" class="inGlossary" src="img/in_glossary.png" title="Pr&eacute;sent dans mon glossaire"/>';
+                        glossaryicon = '<img height="20px" class="inGlossary" src="pix/inglossary.png" title="Pr&eacute;sent dans mon glossaire"/>';
                         angularclick = 'ng-click="addEntry(' + response.lingentity + ')"';
                     } else {
-                        glossaryicon = '<img height="20px" class="glossaryAdd" src="img/glossary_add.png" title="Ajouter &agrave; mon glossaire"/>';
+                        glossaryicon = '<img height="20px" class="glossaryAdd" src="pix/glossaryadd.png" title="Ajouter &agrave; mon glossaire"/>';
                     }
                     var tr = $('#displayOnClic').find('tr:first').prepend('<th ' + angularclick + ' class="glossaryIcon">' + lingentityspan + glossaryicon + '</th>').addClass('digestRow');
                 } else {
@@ -191,7 +191,7 @@ M.mod_cobra.add_to_glossary = function() {
     $(document).on('click', '.glossaryAdd', function() {
         console.log('add to glossary');
         var lingentity = $(this).prev().text();
-        $('.glossaryAdd').removeClass('glossaryAdd').addClass('inGlossary').attr('src', 'img/in_glossary.png').attr('title', 'Pr&eacute;sent dans mon glossaire');
+        $('.glossaryAdd').removeClass('glossaryAdd').addClass('inGlossary').attr('src', 'pix/inglossary.png').attr('title', 'Pr&eacute;sent dans mon glossaire');
         angular.element('#bottom').scope().addEntry(lingentity);
     });
 }
@@ -201,7 +201,7 @@ M.mod_cobra.remove_from_glossary = function() {
     $(document).on('click', '.glossaryRemove', function() {
         console.log('remove from glossary');
         var lingEntity = $(this).prev().text();
-        $('.inGlossary').removeClass('inGlossary').addClass('glossaryAdd').attr('src', 'img/glossary_add.png').attr('title', 'Ajouter &agrave; mon glossaire');
+        $('.inGlossary').removeClass('inGlossary').addClass('glossaryAdd').attr('src', 'pix/glossaryadd.png').attr('title', 'Ajouter &agrave; mon glossaire');
         angular.element('#bottom').scope().removeEntry(lingEntity);
     });
 }
@@ -247,7 +247,7 @@ function displayDetails(conceptid, isexpr) {
             params : json  },
         function(data){
             var response = JSON.parse(data);
-            var str = response.html.replace(/class="label"/g,'class="cobralabel"');
+            var str = response.html.replace(/class="label"/g,'class="cobralabel"').replace(/img\//g,'pix\/');
             detailsDiv.html(str);
             //detailsDiv.html(response.html);
             if('SHOW' == $('#showglossary').text()) {
@@ -255,10 +255,10 @@ function displayDetails(conceptid, isexpr) {
                 var glossaryicon = '';
                 var angularclick = '';
                 if('1' == response.inglossary) {
-                    glossaryicon = '<img height="20px" class="inGlossary" src="img/in_glossary.png" title="Pr&eacute;sent dans mon glossaire"/>';
+                    glossaryicon = '<img height="20px" class="inGlossary" src="pix/inglossary.png" title="Pr&eacute;sent dans mon glossaire"/>';
                     angularclick = 'ng-click="addEntry(' + response.lingentity + ')"';
                 } else {
-                    glossaryicon = '<img height="20px" class="glossaryAdd" src="img/glossary_add.png" title="Ajouter &agrave; mon glossaire"/>';
+                    glossaryicon = '<img height="20px" class="glossaryAdd" src="pix/glossaryadd.png" title="Ajouter &agrave; mon glossaire"/>';
                 }
                 var tr = $('#displayOnClic').find('tr:first').prepend('<th ' + angularclick + ' class="glossaryIcon">' + lingentityspan + glossaryicon + '</th>').addClass('digestRow');
             } else {
