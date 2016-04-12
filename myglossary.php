@@ -91,7 +91,7 @@ $content .= '<table class="table table-condensed table-hover table-striped" id="
             '<th>' . get_string('entry', 'cobra') . '</th>' .
             '<th>' . get_string('Translation', 'cobra') . '</th>' .
             '<th>' . get_string('Category', 'cobra') . '</th>' .
-            '<th>' . get_string('other forms', 'Other forms') . '</th>' .
+            '<th>' . get_string('otherforms', 'cobra') . '</th>' .
             '<th>' . get_string('sourcetext', 'cobra') . '</th>' .
             '<th>' . get_string('clickedin', 'cobra') . '</th>' .
             '<th>&nbsp;</th>' .
@@ -127,17 +127,17 @@ if (!empty($data)) {
             $texttitles[] = cobra_get_text_title_from_id($textid);
         }
         $entry->texttitles = $texttitles;
+        $removeiconurl = $OUTPUT->pix_url('glossaryremove', 'cobra');
         $content .= '<tr>'
             . '<td>' . $entry->entry . '</td>'
             . '<td>' . $entry->translations . '</td>'
             . '<td>' . $entry->category . '</td>'
             . '<td>' . $entry->extra_info . '</td>'
             . '<td>' . $sourcetexttitle . '</td>'
-            . '<td><span title="' . implode("\n", $texttitles) . '">' . count($texttitles) . '&nbsp;' . get_string('text(s)') . '</span></td>'
+            . '<td><span title="' . implode("\n", $texttitles) . '">' . count($texttitles) . '&nbsp;' . get_string('texts', 'cobra') . '</span></td>'
             . '<td class="glossaryIcon">'
-            . '<span id="currentLingEntity" class="hidden">'
-            . $entry->ling_entity
-            . '</span><img height="20px" class="gGlossaryRemove inDisplay" src="img/glossary_remove.png" title="Supprimer de mon glossaire"/></td>'
+            . '<span id="currentLingEntity" class="hidden">' . $entry->ling_entity . '</span>'
+                . '<img alt="' . get_string('myglossaryremove', 'cobra') . '" title="' . get_string('myglossaryremove', 'cobra') . '" class="gGlossaryRemove inDisplay" src="' . $removeiconurl . '"></td>'
             . '</tr>';
         $entries[] = $entry;
     }
