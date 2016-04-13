@@ -27,7 +27,7 @@
 
 // Replace cobra with the name of your module and remove this line.
 
-require_once(__DIR__ . '/../../config.php');
+require(__DIR__ . '/../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/locallib.php');
 
@@ -98,7 +98,6 @@ if (has_capability('mod/cobra:edit', $context)) {
 
 $preferences = get_cobra_preferences();
 if ('SHOW' == $preferences['show_glossary']) {
-    //$content .= '<a href="myglossary.php">' . get_string('myglossary', 'cobra') . '</a>';
     $content .= '<a href="myglossary.php?id=' . $id . '">' . get_string('myglossary', 'cobra') . '</a>';
 }
 
@@ -114,7 +113,7 @@ foreach ($collectionlist as $collection) {
                 '<th>' . get_string('text', 'cobra') . '</th>' .
                 '<th>' . get_string('source', 'cobra') . '</th>';
 
-    if ($isallowedtoedit ) {
+    if ($isallowedtoedit) {
         $content .= '<th>' . get_string ('type', 'cobra') . '</th>' .
                     '<th>' . get_string ('move') . '</th>' .
                     '<th>' . get_string('visibility' , 'cobra') . '</th>';
@@ -127,7 +126,7 @@ foreach ($collectionlist as $collection) {
         $textlist = load_text_list($collection['id_collection'], 'all');
     } else {
         // Load only visible texts to display for students.
-        $textlist = load_text_list( $collection['id_collection'], 'visible' );
+        $textlist = load_text_list($collection['id_collection'], 'visible');
     }
     if (!empty($textlist) && is_array($textlist)) {
         $content .= '<tbody>';
@@ -159,9 +158,13 @@ foreach ($collectionlist as $collection) {
 
                 // Change visibility commands.
                 $content .= '<td align="center">';
-                $content .= '<a href="#" class="setVisible" ' . ($text->visibility ? 'style="display:none"' : '').'><i class="fa fa-eye-slash"></i></a>';
+                $content .= '<a href="#" class="setVisible" ' .
+                            ($text->visibility ? 'style="display:none"' : '') .
+                            '><i class="fa fa-eye-slash"></i></a>';
 
-                $content .= '<a href="#" class="setInvisible" ' . (!$text->visibility ? 'style="display:none"' : '').'><i class="fa fa-eye"></i></a>';
+                $content .= '<a href="#" class="setInvisible" ' .
+                            (!$text->visibility ? 'style="display:none"' : '') .
+                            '><i class="fa fa-eye"></i></a>';
 
                 $content .= '</td>';
             }

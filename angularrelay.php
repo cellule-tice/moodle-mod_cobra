@@ -38,9 +38,9 @@ $data = array();
 switch($call->action)
 {
     case 'loadText' :
-        $params = array( 'id_text' => $call->textId );
+        $params = array('id_text' => $call->textId);
         try {
-            $data = CobraRemoteService::call( 'getFormattedText', $params, 'json', true );
+            $data = CobraRemoteService::call('getFormattedText', $params, 'json', true);
             echo utf8_encode($data);
             die();
         } catch (Exception $e) {

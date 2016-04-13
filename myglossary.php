@@ -27,7 +27,7 @@
 
 // Replace cobra with the name of your module and remove this line.
 
-require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
+require(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/mod/cobra/lib.php');
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
 require_once($CFG->dirroot . '/mod/cobra/lib/glossary.lib.php');
@@ -69,7 +69,7 @@ $exportbutton = '<a href="' . $_SERVER['PHP_SELF'] .
                 '</a>';
 $content .= $OUTPUT->heading(get_string('myglossary', 'cobra') . '&nbsp;&nbsp;&nbsp;' . $exportbutton);
 
-$content .= $OUTPUT->box_start('generalbox box-content' );
+$content .= $OUTPUT->box_start('generalbox box-content');
 
 //$content = '';
 $content .= '<div id="courseid" class="hidden" name="' . $course->id .'">' . $course->id . '</div>';

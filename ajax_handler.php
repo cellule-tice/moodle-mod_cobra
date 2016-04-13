@@ -74,9 +74,9 @@ header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past.
 if ('getDisplayParams' == $call) {
     $displayprefs = get_cobra_preferences();
     $ccorder = get_corpus_type_display_order();
-    $order = implode( ',', $ccorder );
+    $order = implode(',', $ccorder);
     $displayprefs['ccOrder'] = $order;
-    echo json_encode( $displayprefs );
+    echo json_encode($displayprefs);
 }
 
 if ('setVisible' == $call) {

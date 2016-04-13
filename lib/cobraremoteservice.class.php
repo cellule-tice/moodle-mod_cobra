@@ -31,33 +31,33 @@
 
 class CobraRemoteService
 {
-    public static function call( $servicename, $params = array(), $returntype = 'json' ) {
+    public static function call($servicename, $params = array(), $returntype = 'json') {
         global $CFG;
         try {
-            $validreturntypes = array( 'html', 'object', 'objectList', 'string', 'integer', 'boolean', 'error' );
+            $validreturntypes = array('html', 'object', 'objectList', 'string', 'integer', 'boolean', 'error');
             $site = get_site();
             $url = $_SERVER['SERVER_NAME'] = $CFG->cobra_serverhost;
             // Localhost config url   $url = 'http://localhost/cobra/services/service_handler.php'; .
             $params['caller'] = $site->shortname;
-            if ( count( $params ) ) {
-                $querystring = http_build_query( $params, '', '&' );
+            if (count($params)) {
+                $querystring = http_build_query($params, '', '&');
             }
-            if ( !$response = cobra_http_request( $url . '?verb=' . $servicename . '&' . $querystring ) ) {
-                throw new Exception( 'Unable to access required URL' . $url );
+            if (!$response = cobra_http_request($url . '?verb=' . $servicename . '&' . $querystring)) {
+                throw new Exception('Unable to access required URL' . $url);
             }
-            $response = json_decode( $response );
+            $response = json_decode($response);
 
-            if ( !in_array( $response->responseType, $validreturntypes ) ) {
-                throw new Exception( get_string( 'Unhandled return type' ) . '&nbsp;:&nbsp;' . $response->responseType );
+            if (!in_array($response->responseType, $validreturntypes)) {
+                throw new Exception(get_string('Unhandled return type') . '&nbsp;:&nbsp;' . $response->responseType);
             }
-            if ( 'error' == $response->responseType ) {
-                throw new Exception( get_string( utf8_decode( $response->content ) ) );
-            } else if ( 'html' == $response->responseType ) {
-                return utf8_decode( $response->content );
+            if ('error' == $response->responseType) {
+                throw new Exception(get_string(utf8_decode($response->content)));
+            } else if ('html' == $response->responseType) {
+                return utf8_decode($response->content);
             } else {
                 return $response->content;
             }
-        } catch ( Exception $e ) {
+        } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
