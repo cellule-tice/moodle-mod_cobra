@@ -44,15 +44,26 @@ if (!has_capability('mod/cobra:edit', $context)) {
       redirect('view.php?id=' . $cm->id);
 }
 // Prepare settings menu.
-$sectionlist = array('collections' => get_string('manage_text_collections', 'cobra'),
+$sectionlist = array(
+    'collections' => get_string('manage_text_collections', 'cobra'),
     'corpus' => get_string('corpus_selection', 'cobra'),
-    'display' => get_string('display_preferences', 'cobra'));
+    'display' => get_string('display_preferences', 'cobra')
+);
 $currentsection = optional_param('section', 'collections', PARAM_ALPHANUM);
 
 // Define accepted command list.
-$acceptedcmdlist = array('rqEditLabel', 'exEditLabel', 'exRemove', 'exAdd',
-                          'selectionEdit', 'selectionSave', 'saveOrder', 'editOrder',
-                          'savePrefs', 'exRefresh');
+$acceptedcmdlist = array(
+    'rqEditLabel',
+    'exEditLabel',
+    'exRemove',
+    'exAdd',
+    'selectionEdit',
+    'selectionSave',
+    'saveOrder',
+    'editOrder',
+    'savePrefs',
+    'exRefresh'
+);
 
 $cmd = optional_param('cmd', '', PARAM_ALPHANUM);
 if (!in_array($cmd, $acceptedcmdlist)) {

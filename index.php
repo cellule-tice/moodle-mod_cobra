@@ -36,9 +36,7 @@ $course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
 
 require_course_login($course);
 
-$params = array(
-    'context' => context_course::instance($course->id)
-);
+$params = array('context' => context_course::instance($course->id));
 $event = \mod_cobra\event\course_module_instance_list_viewed::create($params);
 $event->add_record_snapshot('course', $course);
 $event->trigger();
@@ -46,7 +44,7 @@ $event->trigger();
 $strname = get_string('modulenameplural', 'mod_cobra');
 $PAGE->set_url('/mod/cobra/index.php', array('id' => $id));
 $PAGE->navbar->add($strname);
-$PAGE->set_title("$course->shortname: $strname");
+$PAGE->set_title($course->shortname . ':' . $strname);
 $PAGE->set_heading($course->fullname);
 $PAGE->set_pagelayout('incourse');
 

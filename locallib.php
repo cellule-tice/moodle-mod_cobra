@@ -171,8 +171,10 @@ function get_filtered_cobra_collections($language, $exclusionlist = array()) {
         if (in_array($remotecollection->id, $exclusionlist)) {
             continue;
         }
-        $collections[] = array('id' => utf8_decode($remotecollection->id),
-                                'label' => $remotecollection->label);
+        $collections[] = array(
+            'id' => utf8_decode($remotecollection->id),
+            'label' => $remotecollection->label
+        );
     }
     return $collections;
 }
@@ -189,9 +191,12 @@ function get_registered_collections($loadmode = 'all') {
     $params = null;
     $list = $DB->get_records_select('cobra_registered_collections', "course='$course->id'");
     foreach ($list as $collectioninfo) {
-        $collectionslist[$collectioninfo->id_collection] = array('id_collection' => $collectioninfo->id_collection,
-           'label' => $collectioninfo->label,
-           'local_label' => $collectioninfo->local_label, 'visibility' => $collectioninfo->visibility);
+        $collectionslist[$collectioninfo->id_collection] = array(
+            'id_collection' => $collectioninfo->id_collection,
+            'label' => $collectioninfo->label,
+            'local_label' => $collectioninfo->local_label,
+            'visibility' => $collectioninfo->visibility
+        );
     }
     return $collectionslist;
 }
@@ -448,7 +453,7 @@ function cobra_http_request($url) {
             return $response;
         }
     } else {
-        throw new Exception("Your PHP install does not support url access.");
+        throw new Exception('Your PHP install does not support url access.');
     }
 }
 
@@ -460,10 +465,11 @@ function cobra_http_request($url) {
 function cobra_curl_request($url) {
     $handle = curl_init();
 
-    $options = array(CURLOPT_URL => $url,
-                      CURLOPT_HEADER => false,
-                      CURLOPT_RETURNTRANSFER => true
-                   );
+    $options = array(
+        CURLOPT_URL => $url,
+        CURLOPT_HEADER => false,
+        CURLOPT_RETURNTRANSFER => true
+    );
     curl_setopt_array($handle, $options);
 
     if (!$content = curl_exec($handle)) {
@@ -585,8 +591,11 @@ function get_user_list_for_clic () {
     $userlist = array();
     foreach ($list as $info) {
         $user = $DB->get_record_select('user', "id='$info->user_id'");
-        $userlist[] = array('userId' => $info->user_id, 'lastName' => $user->lastname,
-            'firstName' => $user->firstname);
+        $userlist[] = array(
+            'userId' => $info->user_id,
+            'lastName' => $user->lastname,
+            'firstName' => $user->firstname
+        );
     }
     return $userlist;
 }

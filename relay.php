@@ -37,8 +37,8 @@ try {
 
     // Force headers.
     header('Content-Type: text/html; charset=iso-8859-1'); // Charset.
-    header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1.
-    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past.
+    header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1.
+    header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past.
 
     if ('displayEntry' == $call) {
         $conceptid = optional_param('concept_id', null, PARAM_INT);
@@ -48,7 +48,12 @@ try {
         $courseid = optional_param('courseId', 0, PARAM_INT);
         $userid = optional_param('userId', 0, PARAM_INT);
         $pref = isset($_REQUEST['params']) ? $_REQUEST['params'] : null;
-        $params = array('concept_id' => $conceptid, 'resource_id' => $resourceid, 'is_expr' => $isexpr, 'params' => $pref);
+        $params = array(
+            'concept_id' => $conceptid,
+            'resource_id' => $resourceid,
+            'is_expr' => $isexpr,
+            'params' => $pref
+        );
 
         $html = CobraRemoteService::call('displayEntry', $params, 'json');
         $entrytype = $isexpr ? 'expression' : 'lemma';
@@ -59,7 +64,12 @@ try {
             clic($resourceid, $lingentity, $DB, $courseid, $userid);
         }
         $glossarystatus = is_in_glossary($lingentity, $courseid);
-        $response = array('html' => $html, 'inglossary' => $glossarystatus, 'lingentity' => $lingentity, 'userId' => $userid);
+        $response = array(
+            'html' => $html,
+            'inglossary' => $glossarystatus,
+            'lingentity' => $lingentity,
+            'userId' => $userid
+        );
         array_walk(
             $response,
             function (&$entry) {
@@ -84,8 +94,12 @@ try {
         $isexpr = optional_param('is_expr'  , false, PARAM_BOOL);
         $construction = optional_param('currentConstruction', null, PARAM_ALPHANUM);
         $prefs = isset($_REQUEST['params']) ? $_REQUEST['params'] : null;
-        $params = array('entry_id' => $entryid, 'is_expr' => $isexpr, 'currentConstruction' => $construction,
-            'params' => $prefs);
+        $params = array(
+            'entry_id' => $entryid,
+            'is_expr' => $isexpr,
+            'currentConstruction' => $construction,
+            'params' => $prefs
+        );
         $html = CobraRemoteService::call('displayCard', $params, 'html');
         echo $html;
     }

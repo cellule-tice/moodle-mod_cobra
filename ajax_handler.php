@@ -68,8 +68,8 @@ $sibling = optional_param('sibling_id', null, PARAM_ALPHANUM);
 
 // Force headers for export.
 header('Content-Type: text/html; charset=iso-8859-1'); // Charset
-header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past.
+header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past.
 
 if ('getDisplayParams' == $call) {
     $displayprefs = get_cobra_preferences();
