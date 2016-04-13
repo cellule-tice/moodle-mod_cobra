@@ -29,7 +29,7 @@
 
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/locallib.php');
-require_once(__DIR__ . '/lib/glossary.lib.php');
+require_once(__DIR__ . '/lib/glossarylib.php');
 
 $id = required_param('id', PARAM_INT);
 $cmd = optional_param('cmd', null, PARAM_ALPHA);
@@ -43,6 +43,7 @@ require_capability('mod/cobra:view', $context);
 
 // Print the page header.
 $PAGE->set_url('/mod/cobra/myglossary.php', array('id' => $cm->id));
+
 $PAGE->set_title(format_string($cobra->name));
 
 $PAGE->add_body_class('noblocks');

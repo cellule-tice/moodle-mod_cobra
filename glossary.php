@@ -27,9 +27,9 @@
 
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/locallib.php');
-require_once(__DIR__ . '/lib/glossary.lib.php');
-require_once(__DIR__ . '/lib/cobraremoteservice.class.php');
-require_once(__DIR__ . '/lib/cobracollectionwrapper.class.php');
+require_once(__DIR__ . '/lib/glossarylib.php');
+require_once(__DIR__ . '/lib/cobraremoteservice.php');
+require_once(__DIR__ . '/lib/cobracollectionwrapper.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or

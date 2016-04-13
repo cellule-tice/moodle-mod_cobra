@@ -92,7 +92,7 @@ if (has_capability('mod/cobra:edit', $context)) {
     $isallowedtoedit = true;
     $content .= '<a href="cobra_settings.php?id=' . $id . '">'. get_string('parameters', 'cobra') . '</a> &nbsp; ' .
                 '<a href="glossary.php?id=' . $id . '">' . get_string('glossary', 'cobra') . '</a> &nbsp; ' .
-                '<a href="stat.php?id=' . $id . '">' . get_string('statistics', 'cobra') . '</a>&nbsp;&nbsp;&nbsp;';
+                '<a href="statistics.php?id=' . $id . '">' . get_string('statistics', 'cobra') . '</a>&nbsp;&nbsp;&nbsp;';
 }
 
 $preferences = get_cobra_preferences();

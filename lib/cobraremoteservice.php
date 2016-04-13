@@ -31,8 +31,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class CobraRemoteService
-{
+class cobra_remote_service {
     public static function call($servicename, $params = array(), $returntype = 'json') {
         global $CFG;
         try {

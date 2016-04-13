@@ -16,8 +16,8 @@
 
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/locallib.php');
-require_once(__DIR__ . '/lib/cobraremoteservice.class.php');
-require_once(__DIR__ . '/lib/cobracollectionwrapper.class.php');
+require_once(__DIR__ . '/lib/cobraremoteservice.php');
+require_once(__DIR__ . '/lib/cobracollectionwrapper.php');
 
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID.
@@ -75,7 +75,7 @@ if (!is_null($cmd)) {
         // Clean Stats.
          $out .= get_string('Clean_Clic_Stats', 'cobra');
          $out .= '<span class="warning"> ' . get_string('Delete_is_definitive._No_way_to_rollback', 'cobra') . '</span>';
-         $thisform = new mod_cleanStats_form($_SERVER['PHP_SELF'].'?id=' .$id . '&cmd=exDelete');
+         $thisform = new mod_clean_statistics_form($_SERVER['PHP_SELF'].'?id=' .$id . '&cmd=exDelete');
          $out = $thisform->display();
     } else if ($cmd == 'exDelete') {
         // Delete Stats.

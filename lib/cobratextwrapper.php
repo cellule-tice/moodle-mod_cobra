@@ -31,8 +31,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class CobraTextWrapper
-{
+class cobra_text_wrapper {
     // Locally stored data plugin.
     private $id = 0;
     private $textid = 0;
@@ -141,7 +140,7 @@ class CobraTextWrapper
 
     public function load_remote_data() {
         $params = array('id_text' => (int)$this->get_text_id());
-        $jsonobj = CobraRemoteService::call('loadTextData', $params);
+        $jsonobj = cobra_remote_service::call('loadTextData', $params);
 
         $this->set_source(utf8_decode($jsonobj->source));
         $this->set_title(utf8_decode($jsonobj->title));
@@ -155,13 +154,13 @@ class CobraTextWrapper
 
     public function format_html() {
         $params = array('id_text' => (int)$this->get_text_id());
-        $html = CobraRemoteService::call('getFormattedText', $params);
+        $html = cobra_remote_service::call('getFormattedText', $params);
         return utf8_encode($html);
     }
 
     public function get_audio_file_url() {
         $params = array('id_text' => (int)$this->get_text_id());
-        $url = CobraRemoteService::call('getAudioFileUrl', $params);
+        $url = cobra_remote_service::call('getAudioFileUrl', $params);
         return utf8_decode($url);
     }
 

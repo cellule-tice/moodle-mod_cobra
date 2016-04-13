@@ -17,9 +17,9 @@
 require(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/medialib.php');
 require_once(__DIR__ . '/locallib.php');
-require_once(__DIR__ . '/lib/cobraremoteservice.class.php');
-require_once(__DIR__ . '/lib/cobracollectionwrapper.class.php');
-require_once(__DIR__ . '/lib/glossary.lib.php');
+require_once(__DIR__ . '/lib/cobraremoteservice.php');
+require_once(__DIR__ . '/lib/cobracollectionwrapper.php');
+require_once(__DIR__ . '/lib/glossarylib.php');
 
 $id = required_param('id', PARAM_INT);
 $textid = required_param('id_text', PARAM_INT);
@@ -34,6 +34,7 @@ require_capability('mod/cobra:view', $context);
 // Add event management here.
 
 $PAGE->set_url('/mod/cobra/view.php', array('id' => $cm->id));
+
 $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->add_body_class('noblocks');
@@ -61,7 +62,7 @@ echo $OUTPUT->header();
 
 $content = '';
 // Load content to display.
-$text = new CobraTextWrapper();
+$text = new cobra_text_wrapper();
 $text->set_text_id($textid);
 $text->load();
 $preferences = get_cobra_preferences();

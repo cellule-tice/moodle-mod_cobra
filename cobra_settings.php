@@ -17,8 +17,8 @@
 
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/locallib.php');
-require_once(__DIR__ . '/lib/cobraremoteservice.class.php');
-require_once(__DIR__ . '/lib/cobracollectionwrapper.class.php');
+require_once(__DIR__ . '/lib/cobraremoteservice.php');
+require_once(__DIR__ . '/lib/cobracollectionwrapper.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // ... cobra instance ID - it should be named as the first character of the module.
@@ -112,7 +112,7 @@ if ('collections' == $currentsection) {
     if ('exEditLabel' == $cmd) {
         $label = optional_param('label', null, PARAM_ALPHANUM);
         if (!empty($label)) {
-            $collection = new Cobracollectionwrapper($collectionid);
+            $collection = new cobra_collection_wrapper($collectionid);
             $collection->load();
             $collection->set_local_name($label);
             if ($collection->update()) {
@@ -126,7 +126,7 @@ if ('collections' == $currentsection) {
         }
     }
     if ('rqEditLabel' == $cmd) {
-        $collection = new Cobracollectionwrapper($collectionid);
+        $collection = new cobra_collection_wrapper($collectionid);
         $collection->load();
         $editform = '<strong>' . get_string('edit_collection', 'cobra') . '</strong>' .
                     '<form action="' . $_SERVER['PHP_SELF'] . '?id='.$id .'" method="post">' .
@@ -141,7 +141,7 @@ if ('collections' == $currentsection) {
 
         echo $OUTPUT->box($editform);
     } else if ('exAdd' == $cmd && !empty($remotecollection)) {
-        $collection = new Cobracollectionwrapper();
+        $collection = new cobra_collection_wrapper();
         $collection->wrapremote($remotecollection);
         $textlist = load_remote_text_list($collection->get_id());
         $savemode = $collection->save();
@@ -150,7 +150,7 @@ if ('collections' == $currentsection) {
         } else if ('saved' == $savemode) {
             $position = 1;
             foreach ($textlist as $remotetext) {
-                $text = new CobraTextWrapper();
+                $text = new cobra_text_wrapper();
                 $text->set_text_id($remotetext['id']);
                 $text->set_collection_id($collection->get_id());
                 $text->set_position($position++);
@@ -159,7 +159,7 @@ if ('collections' == $currentsection) {
             echo $OUTPUT->box(get_string('text_collection_added', 'cobra'));
         }
     } else if ('exRemove' == $cmd) {
-        $collection = new Cobracollectionwrapper($collectionid);
+        $collection = new cobra_collection_wrapper($collectionid);
         if (remote_text_list($collectionid)) {
             if (!$collection->remove()) {
                 echo $OUTPUT->notification(get_string('unable_unregister_collection', 'cobra'));
@@ -168,9 +168,9 @@ if ('collections' == $currentsection) {
             echo $OUTPUT->notification(get_string('unable_remove_texts_collection', 'cobra'));
         }
     } else if ('exRefresh' == $cmd) {
-        $localcollection = new Cobracollectionwrapper($collectionid);
+        $localcollection = new cobra_collection_wrapper($collectionid);
         $localcollection->load();
-        $remotecollection = new Cobracollectionwrapper();
+        $remotecollection = new cobra_collection_wrapper();
         $remotecollection->wrapremote($collectionid);
         // Refresh collection name if it has not be changed locally.
         if ($localcollection->get_local_name() == $localcollection->get_remote_name()) {
@@ -187,7 +187,7 @@ if ('collections' == $currentsection) {
             $localtextidlist[] = $localtext->id_text;
             if (empty($localtext->title)) {
                 $legacytextcount++;
-                $text = new CobraTextWrapper();
+                $text = new cobra_text_wrapper();
                 $text->set_text_id($localtext->id_text);
                 $text->load();
                 if ($text->remove()) {
@@ -214,11 +214,11 @@ if ('collections' == $currentsection) {
                 continue;
             }
             $newtextcount++;
-            $text = new CobraTextWrapper();
+            $text = new cobra_text_wrapper();
             $text->set_text_id($remotetext['id']);
             $text->set_collection_id($collectionid);
             $text->set_type('Lesson');
-            $text->set_position(CobraTextWrapper::getmaxposition() + 1);
+            $text->set_position(cobra_text_wrapper::getmaxposition() + 1);
             if ($text->save()) {
                 $addedtextcount++;
             }

@@ -112,7 +112,7 @@ function get_glossary_for_text($textid) {
         foreach ($conceptidlist as $conceptid) {
             if (!in_array($conceptid, $oldconceptlist)) {
                 $params = array('conceptId' => $conceptid, 'entryType' => $entrytype);
-                $entitylingid = CobraRemoteService::call('getEntityLingIdFromConcept', $params);
+                $entitylingid = cobra_remote_service::call('getEntityLingIdFromConcept', $params);
                 $glossary[$textid][] = $entitylingid;
                 $oldconceptlist[] = $conceptid;
             }
@@ -134,7 +134,7 @@ function cobra_list_concepts_in_text($textid, $entrytype) {
     }
     if (!$textid) {
         // Get concept list for one text.
-        $text = new CobraTextWrapper();
+        $text = new cobra_text_wrapper();
 
         $text->set_text_id($textid);
         $text->load_remote_data();
@@ -193,7 +193,7 @@ function get_glossary_entry_of_text($glossary, $text, $num) {
     $tempglossary = array();
     foreach ($glossary as $key => $entitelingid) {
         $params = array('id_entite_ling' => $entitelingid);
-        $tempglossary[$key] = CobraRemoteService::call('getGlossaryInfoForEntityLing', $params);
+        $tempglossary[$key] = cobra_remote_service::call('getGlossaryInfoForEntityLing', $params);
     }
     $glossary = array();
     foreach ($tempglossary as $key => $glossaryentry) {
@@ -238,13 +238,13 @@ function array_sort($array) {
 
 function word_exists_as_flexion($word, $language) {
     $params = array('word' => $word, 'language' => $language);
-    $list = CobraRemoteService::call('wordExistsAsFlexion', $params);
+    $list = cobra_remote_service::call('wordExistsAsFlexion', $params);
     return $list;
 }
 
 function get_lemmacat_list_from_ff($word, $language) {
     $params = array('word' => $word, 'language' => $language);
-    $list = CobraRemoteService::call('getLemmaCatListFromFlexion', $params);
+    $list = cobra_remote_service::call('getLemmaCatListFromFlexion', $params);
     $lemmalist = array();
     foreach ($list as $listobject) {
         $lemmalist[] = $listobject->value;
@@ -258,7 +258,7 @@ function return_list_of_words_in_text($mytext, $language) {
     $words = array();
     foreach ($paragraphs as $para) {
         $params = array('text' => $para, 'language' => $language);
-        $wordlist = CobraRemoteService::call('returnListOfWordsInText', $params);
+        $wordlist = cobra_remote_service::call('returnListOfWordsInText', $params);
         foreach ($wordlist as $word) {
             if (!in_array(utf8_decode($word->value), $words)) {
                 $words[] = utf8_decode($word->value);
@@ -309,7 +309,7 @@ function list_concepts_in_text($textid, $entrytype) {
         return false;
     }
     if ($textid != 0) {
-        $text = new COBRATextWrapper();
+        $text = new cobra_text_wrapper();
         $text->set_text_id($textid);
         $text->load();
         $text->load_remote_data();
@@ -395,7 +395,7 @@ function get_remote_glossary_info_for_student($textid = 0, $courseid = 0) {
     $entitiesintext = array();
     $listtoload = array();
     if ($textid) {
-        $entitiesintext = CobraRemoteService::call('getEntitiesListForText', array('textId' => $textid));
+        $entitiesintext = cobra_remote_service::call('getEntitiesListForText', array('textId' => $textid));
         $textquery = "SELECT DISTINCT(id_entite_ling) AS id_entite_ling
                         FROM {cobra_clic}
                        WHERE course = :courseid
@@ -419,7 +419,7 @@ function get_remote_glossary_info_for_student($textid = 0, $courseid = 0) {
     foreach ($chunks as $chunk) {
         $flatlisttoload = implode(',', $chunk);
         $params = array('entity_list' => $flatlisttoload);
-        $glossaryentries = array_merge($glossaryentries, CobraRemoteService::call('getGlossaryInfoForStudent', $params));
+        $glossaryentries = array_merge($glossaryentries, cobra_remote_service::call('getGlossaryInfoForStudent', $params));
     }
 
     if ($textid) {

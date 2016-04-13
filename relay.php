@@ -17,7 +17,7 @@
 try {
     require(__DIR__ . '/../../config.php');
     require_once(__DIR__ . '/locallib.php');
-    require_once(__DIR__ . '/lib/glossary.lib.php');
+    require_once(__DIR__ . '/lib/glossarylib.php');
 
     // Init request vars.
     $acceptedcmdlist = array(
@@ -55,10 +55,10 @@ try {
             'params' => $pref
         );
 
-        $html = CobraRemoteService::call('displayEntry', $params, 'json');
+        $html = cobra_remote_service::call('displayEntry', $params, 'json');
         $entrytype = $isexpr ? 'expression' : 'lemma';
         $params = array('conceptId' => $conceptid, 'entryType' => $entrytype);
-        $lingentity = CobraRemoteService::call('getEntityLingIdFromConcept', $params, 'html');
+        $lingentity = cobra_remote_service::call('getEntityLingIdFromConcept', $params, 'html');
         $lingentity = str_replace("\"", "", $lingentity);
         if ($encodeclic) {
             clic($resourceid, $lingentity, $DB, $courseid, $userid);
@@ -85,7 +85,7 @@ try {
         $color = optional_param('bg_color', null, PARAM_ALPHANUMEXT);
         $pref = isset($_REQUEST['params']) ? $_REQUEST['params'] : null;
         $params = array('id_cc' => $id, 'id_occ' => $occid, 'params' => $pref);
-        $html = CobraRemoteService::call('displayCC', $params, 'html');
+        $html = cobra_remote_service::call('displayCC', $params, 'html');
         echo $html;
     }
 
@@ -100,7 +100,7 @@ try {
             'currentConstruction' => $construction,
             'params' => $prefs
         );
-        $html = CobraRemoteService::call('displayCard', $params, 'html');
+        $html = cobra_remote_service::call('displayCard', $params, 'html');
         echo $html;
     }
 } catch (Exception $e) {

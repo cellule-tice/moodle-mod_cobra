@@ -31,8 +31,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class Cobracollectionwrapper
-{
+class cobra_collection_wrapper {
     private $id = 0;
     private $language = '';
     private $remotename = '';
@@ -164,7 +163,7 @@ class Cobracollectionwrapper
 
     public function wrapremote($remoteid) {
         $params = array('id_collection' => (int)$remoteid);
-        $remotecollection = CobraRemoteService::call('getCollection', $params);
+        $remotecollection = cobra_remote_service::call('getCollection', $params);
 
         $this->set_id($remoteid);
         $this->set_language($remotecollection->language);

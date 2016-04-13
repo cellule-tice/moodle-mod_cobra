@@ -28,7 +28,7 @@
 // Load CoBRA main lib and config.
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/locallib.php');
-require_once(__DIR__ . '/lib/glossary.lib.php');
+require_once(__DIR__ . '/lib/glossarylib.php');
 
 global $DB, $USER;
 

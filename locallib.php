@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/lib.php');
-require_once(__DIR__ . '/lib/cobratextwrapper.class.php');
-require_once(__DIR__ . '/lib/cobraremoteservice.class.php');
+require_once(__DIR__ . '/lib/cobratextwrapper.php');
+require_once(__DIR__ . '/lib/cobraremoteservice.php');
 require_once($CFG->libdir . '/formslib.php');
 
 /**
@@ -55,7 +55,7 @@ function load_text_list($collection, $loadmode = 'all') {
     $textlist = array();
 
     $params = array('collection' => (int)$collection);
-    $remotetextobjectlist = CobraRemoteService::call('loadTexts', $params);
+    $remotetextobjectlist = cobra_remote_service::call('loadTexts', $params);
 
     foreach ($list as $text) {
         $text->title = '';
@@ -168,7 +168,7 @@ function insert_corpus_type_display_order($typeid) {
 function get_filtered_cobra_collections($language, $exclusionlist = array()) {
     $collections = array();
     $params = array('language' => $language);
-    $collectionsobjectlist = CobraRemoteService::call('loadFilteredCollections', $params);
+    $collectionsobjectlist = cobra_remote_service::call('loadFilteredCollections', $params);
     foreach ($collectionsobjectlist as $remotecollection) {
         if (in_array($remotecollection->id, $exclusionlist)) {
             continue;
@@ -211,7 +211,7 @@ function get_registered_collections($loadmode = 'all') {
 function load_remote_text_list($collection) {
     $textlist = array();
     $params = array('collection' => (int)$collection);
-    $remotetextobjectlist = CobraRemoteService::call('loadTexts', $params);
+    $remotetextobjectlist = cobra_remote_service::call('loadTexts', $params);
 
     foreach ($remotetextobjectlist as $textobject) {
         $text['id'] = utf8_decode($textobject->id);
@@ -336,7 +336,7 @@ function clic($textid, $lingentityid, $DB, $courseid, $userid) {
  */
 function get_translations($conceptid, $entrytype) {
     $params = array('id_concept' => (int)$conceptid, 'entry_type' => $entrytype);
-    $translations = CobraRemoteService::call('get_translations', $params);
+    $translations = cobra_remote_service::call('get_translations', $params);
     return $translations;
 }
 
@@ -348,7 +348,7 @@ function get_translations($conceptid, $entrytype) {
  */
 function get_concept_info_from_ling_entity($lingentityid) {
     $params = array('ling_entity_id' => (int)$lingentityid);
-    $conceptinfo = CobraRemoteService::call('get_concept_info_from_ling_entity', $params);
+    $conceptinfo = cobra_remote_service::call('get_concept_info_from_ling_entity', $params);
     return array($conceptinfo->id_concept, $conceptinfo->construction , $conceptinfo->entry_type,
         $conceptinfo->entry_category, $conceptinfo->entry, $conceptinfo->entry_id);
 }
@@ -361,7 +361,7 @@ function get_concept_info_from_ling_entity($lingentityid) {
  */
 function return_valid_list_type_corpus($language) {
     $params = array('language' => $language);
-    $remotelistofcorpustype = CobraRemoteService::call('returnValidListTypeCorpus', $params);
+    $remotelistofcorpustype = cobra_remote_service::call('returnValidListTypeCorpus', $params);
     $listofcorpustype = array();
     foreach ($remotelistofcorpustype as $corpusobject) {
         $corpus['id'] = $corpusobject->id;
@@ -395,7 +395,7 @@ function get_corpus_type_display_order() {
  */
 function get_corpus_info($corpusid) {
     $params = array('id_corpus' => $corpusid);
-    $corpusinfo = CobraRemoteService::call('getCorpusInfo', $params);
+    $corpusinfo = cobra_remote_service::call('getCorpusInfo', $params);
     if (is_array($corpusinfo)) {
         return array($corpusinfo->id_groupe, $corpusinfo->nom_corpus,
             utf8_decode($corpusinfo->reference), $corpusinfo->langue, $corpusinfo->id_type);
@@ -411,7 +411,7 @@ function get_corpus_info($corpusid) {
  */
 function find_background($typeid) {
     $params = array('typeId' => $typeid);
-    $backgroundclass = CobraRemoteService::call('findBackGround', $params);
+    $backgroundclass = cobra_remote_service::call('findBackGround', $params);
     return $backgroundclass;
 }
 
@@ -423,7 +423,7 @@ function find_background($typeid) {
  */
 function corpus_type_exists($typeid, $language) {
     $params = array('language' => $language, 'typeId' => $typeid);
-    $ok = CobraRemoteService::call('corpusTypeExists', $params);
+    $ok = cobra_remote_service::call('corpusTypeExists', $params);
     return $ok;
 }
 
@@ -603,7 +603,7 @@ function get_user_list_for_clic() {
 }
 
 function get_nb_tags_in_text($textid) {
-    $text = new CobraTextWrapper();
+    $text = new cobra_text_wrapper();
     $text->set_text_id($textid);
     $text->load();
     $html = $text->format_html();
@@ -682,11 +682,11 @@ function get_clicked_entries($courseid, $nb = 20) {
 }
 
 function cobra_get_text_title_from_id($textid) {
-    $texttitle = CobraRemoteService::call('getTextTitle', array('id_text' => $textid));
+    $texttitle = cobra_remote_service::call('getTextTitle', array('id_text' => $textid));
     return strip_tags($texttitle);
 }
 
-class mod_cleanStats_form extends moodleform {
+class mod_clean_statistics_form extends moodleform {
     /**
      * Define this form - called by the parent constructor
      */

@@ -28,9 +28,9 @@
 require(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/medialib.php');
 require_once(__DIR__ . '/locallib.php');
-require_once(__DIR__ . '/lib/cobraremoteservice.class.php');
-require_once(__DIR__ . '/lib/cobracollectionwrapper.class.php');
-require_once(__DIR__ . '/lib/glossary.lib.php');
+require_once(__DIR__ . '/lib/cobraremoteservice.php');
+require_once(__DIR__ . '/lib/cobracollectionwrapper.php');
+require_once(__DIR__ . '/lib/glossarylib.php');
 
 $call = json_decode(file_get_contents('php://input'));
 $data = array();
@@ -39,7 +39,7 @@ switch($call->action)
     case 'loadText' :
         $params = array('id_text' => $call->textId);
         try {
-            $data = CobraRemoteService::call('getFormattedText', $params, 'json', true);
+            $data = cobra_remote_service::call('getFormattedText', $params, 'json', true);
             echo utf8_encode($data);
             die();
         } catch (Exception $e) {
