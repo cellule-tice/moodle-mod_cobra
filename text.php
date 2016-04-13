@@ -16,11 +16,10 @@
 
 require(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/medialib.php');
-require_once($CFG->dirroot . '/mod/cobra/lib.php');
-require_once($CFG->dirroot . '/mod/cobra/locallib.php');
-require_once($CFG->dirroot . '/mod/cobra/lib/cobraremoteservice.class.php');
-require_once($CFG->dirroot . '/mod/cobra/lib/cobracollectionwrapper.class.php');
-require_once($CFG->dirroot . '/mod/cobra/lib/glossary.lib.php');
+require_once(__DIR__ . '/locallib.php');
+require_once(__DIR__ . '/lib/cobraremoteservice.class.php');
+require_once(__DIR__ . '/lib/cobracollectionwrapper.class.php');
+require_once(__DIR__ . '/lib/glossary.lib.php');
 
 $id = required_param('id', PARAM_INT);
 $textid = required_param('id_text', PARAM_INT);

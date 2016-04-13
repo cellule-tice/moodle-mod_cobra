@@ -27,9 +27,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/lib/cobratextwrapper.class.php');
 require_once(__DIR__ . '/lib/cobraremoteservice.class.php');
-require_once($CFG->libdir.'/formslib.php');
+require_once($CFG->libdir . '/formslib.php');
 
 /**
  * Loads the local list of E-Lex texts associated to a text collection (with filter on user profile)
@@ -40,6 +41,7 @@ require_once($CFG->libdir.'/formslib.php');
 function load_text_list($collection, $loadmode = 'all') {
     global $DB, $course;
     $andclause = '';
+    //print_object($collection);
     if ('visible' == $loadmode) {
         $andclause = " AND visibility = '1' ";
     }

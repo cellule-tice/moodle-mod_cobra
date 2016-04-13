@@ -16,7 +16,6 @@
 
 
 require(__DIR__ . '/../../config.php');
-require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/lib/cobraremoteservice.class.php');
 require_once(__DIR__ . '/lib/cobracollectionwrapper.class.php');
