@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-function export_glossary ($glossary) {
+function export_glossary($glossary) {
     global $CFG;
     require_once($CFG->libdir . '/csvlib.class.php');
 
@@ -89,7 +89,6 @@ function export_glossary ($glossary) {
     die;
 }
 
-
 /**
  * @param $textid integer
  * @return $glossary array
@@ -119,6 +118,7 @@ function get_glossary_for_text($textid) {
     }
     return $glossary;
 }
+
 /*
  * @param $textid integer
  * @param $entrytype : lemma or expression
@@ -266,7 +266,7 @@ function return_list_of_words_in_text($mytext, $language) {
     return $words;
 }
 
-function explode_array_on_key ($array, $key) {
+function explode_array_on_key($array, $key) {
     $tab = array();
     foreach ($array as $key2 => $arrayvalue) {
         $tab[$arrayvalue[$key]] = $arrayvalue;
@@ -274,7 +274,7 @@ function explode_array_on_key ($array, $key) {
     return $tab;
 }
 
-function explode_glossary_into_lemmas_and_expression ($glossary) {
+function explode_glossary_into_lemmas_and_expression($glossary) {
     $lemmalist = array();
     $explist = array();
     foreach ($glossary as $key => $element) {

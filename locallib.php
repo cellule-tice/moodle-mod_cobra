@@ -114,7 +114,7 @@ function set_visibility($resourceid, $setvisible, $resourcetype, $courseid) {
  * @param $position the new position to assign to the resource
  * @return boolean true on success, false otherwise
  */
-function set_position($resourceid, $position, $resourcetype,  $courseid) {
+function set_position($resourceid, $position, $resourcetype, $courseid) {
     global $DB;
     $dataobject = new  stdClass();
     $dataobject->course = $courseid;
@@ -549,7 +549,7 @@ function get_distinct_access_for_text($textid) {
     return $userlist;
 }
 
-function has_anonymous_clic () {
+function has_anonymous_clic() {
     global $DB, $course;
     $list = $DB->get_records_select('cobra_clic', "course='$course->id' AND user_id='0'");
     if (!empty($list)) {
@@ -558,7 +558,7 @@ function has_anonymous_clic () {
     return false;
 }
 
-function get_nb_clics_for_text ($textid) {
+function get_nb_clics_for_text($textid) {
     global $DB, $course;
     $list = $DB->get_records_select('cobra_clic', "course='$course->id' AND id_text='$textid'");
     $nb = 0;
@@ -568,14 +568,14 @@ function get_nb_clics_for_text ($textid) {
     return $nb;
 }
 
-function get_nb_texts_for_user ($userid) {
+function get_nb_texts_for_user($userid) {
     global $DB, $course;
     $list = $DB->get_recordset_select('cobra_clic',
             "course='$course->id' AND user_id='$userid'", null, '', 'DISTINCT id_text');
     return count($list);
 }
 
-function get_nb_clic_for_user ($userid) {
+function get_nb_clic_for_user($userid) {
     global $DB, $course;
     $list = $DB->get_records_select('cobra_clic', "course='$course->id' AND user_id='$userid'");
     $nb = 0;
@@ -585,7 +585,7 @@ function get_nb_clic_for_user ($userid) {
     return $nb;
 }
 
-function get_user_list_for_clic () {
+function get_user_list_for_clic() {
     global $DB, $course;
     $list = $DB->get_records_select('cobra_clic', "course='$course->id'", null, '', 'DISTINCT user_id');
     $userlist = array();
@@ -600,7 +600,7 @@ function get_user_list_for_clic () {
     return $userlist;
 }
 
-function get_nb_tags_in_text ($textid) {
+function get_nb_tags_in_text($textid) {
     $text = new CobraTextWrapper();
     $text->set_text_id($textid);
     $text->load();
@@ -618,7 +618,7 @@ function clean_all_stats($courseid) {
     return $DB->delete_records('cobra_clic', array('course' => $courseid));
 }
 
-function clean_stats_before_date ($courseid, $mydate) {
+function clean_stats_before_date($courseid, $mydate) {
     global $DB;
     $datemodif = ' < FROM_UNIXTIME('. $mydate.')';
     return $DB->delete_records('cobra_clic', array('course' => $courseid, 'datemodif' => $datemodif));
@@ -666,7 +666,7 @@ function get_clicked_texts_frequency($courseid) {
     return $nbcliclist;
 }
 
-function get_clicked_entries ($courseid, $nb = 20) {
+function get_clicked_entries($courseid, $nb = 20) {
     global $DB;
     $params = array();
     $nbcliclist = array();

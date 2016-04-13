@@ -72,7 +72,7 @@ try {
         );
         array_walk(
             $response,
-            function (&$entry) {
+            function(&$entry) {
                 $entry = utf8_encode($entry);
             }
         );
