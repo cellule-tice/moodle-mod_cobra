@@ -41,7 +41,6 @@ require_once($CFG->libdir . '/formslib.php');
 function load_text_list($collection, $loadmode = 'all') {
     global $DB, $course;
     $andclause = '';
-    //print_object($collection);
     if ('visible' == $loadmode) {
         $andclause = " AND visibility = '1' ";
     }
@@ -686,7 +685,7 @@ function cobra_get_text_title_from_id($textid) {
     return strip_tags($texttitle);
 }
 
-class mod_clean_statistics_form extends moodleform {
+class cobra_clean_statistics_form extends moodleform {
     /**
      * Define this form - called by the parent constructor
      */

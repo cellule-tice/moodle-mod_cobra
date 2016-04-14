@@ -51,17 +51,17 @@ switch($call->action)
         break;
 
     case 'loadGlossary' :
-        $data = get_remote_glossary_info_for_student($call->textid, $call->courseid);
+        $data = cobra_get_remote_glossary_info_for_student($call->textid, $call->courseid);
         break;
 
     case 'addToGlossary' :
         $lingentity = $call->lingEntity;
-        add_to_glossary($lingentity, $call->textid, $call->courseid);
+        cobra_add_to_glossary($lingentity, $call->textid, $call->courseid);
         break;
 
     case 'removeFromGlossary' :
         $lingentity = $call->lingEntity;
-        remove_from_glossary($lingentity, $call->courseid);
+        cobra_remove_from_glossary($lingentity, $call->courseid);
         break;
 }
 

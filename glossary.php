@@ -73,15 +73,15 @@ if ($cmd == 'exExport') {
         foreach ($textlist as $num => $text) {
             if (array_key_exists($text->id, $_REQUEST)) {
                 $textid = $text->id_text;
-                $glossary2 = get_glossary_for_text ( $textid );
+                $glossary2 = cobra_get_glossary_for_text ( $textid );
                 if (array_key_exists( $text->id_text, $glossary2 )) {
-                    $glossary2 = get_glossary_entry_of_text( $glossary2[$text->id_text], $text, $num );
+                    $glossary2 = cobra_get_glossary_entry_of_text( $glossary2[$text->id_text], $text, $num );
                     $glossary = array_merge( $glossary, $glossary2 );
                 }
             }
         }
     }
-    export_glossary ($glossary);
+    cobra_export_glossary($glossary);
 }
 
 // Print the page header.
@@ -168,27 +168,27 @@ if ($cmd == 'rqExport') {
         foreach ($textlist as $num => $text) {
             if (array_key_exists($text->id, $_REQUEST)) {
                 $textid = $text->id;
-                $glossary2 = get_glossary_for_text ( $textid );
+                $glossary2 = cobra_get_glossary_for_text ( $textid );
                 if (array_key_exists( $textid, $glossary2 )) {
-                    $glossary2 = get_glossary_entry_of_text( $glossary2[$text->id], $text, $num );
+                    $glossary2 = cobra_get_glossary_entry_of_text( $glossary2[$text->id], $text, $num );
                     $glossary = array_merge( $glossary, $glossary2 );
                 }
             }
         }
     }
 
-    list( $lemmaglossary, $expglossary ) = explode_glossary_into_lemmas_and_expression( $glossary );
-    $glossarylemmaid = explode_array_on_key ( $lemmaglossary, 'id' );
+    list( $lemmaglossary, $expglossary ) = cobra_explode_glossary_into_lemmas_and_expression( $glossary );
+    $glossarylemmaid = cobra_explode_array_on_key ( $lemmaglossary, 'id' );
     $mytext = $_REQUEST['myText'];
     $newwords = '';
     $otherwords = '';
-    $words = return_list_of_words_in_text ( $mytext, $language );
+    $words = cobra_return_list_of_words_in_text ( $mytext, $language );
 
     foreach ($words as $word) {
-        $listflexions = word_exists_as_flexion ( $word, $language );
+        $listflexions = cobra_word_exists_as_flexion ( $word, $language );
         if (count( $listflexions) != 0) {
             $trouve = false;
-            $listpossiblelemmas = get_lemmacat_list_from_ff( $word, $language );
+            $listpossiblelemmas = cobra_get_lemmacat_list_from_ff( $word, $language );
             foreach ($listpossiblelemmas as $lemmaid) {
                 if (array_key_exists($lemmaid, $glossarylemmaid)) {
                     $trouve = true;

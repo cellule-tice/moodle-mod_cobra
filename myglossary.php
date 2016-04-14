@@ -90,7 +90,7 @@ $content .= '<table class="table table-condensed table-hover table-striped" id="
             '</tr>' .
             '</thead>';
 
-$data = get_remote_glossary_info_for_student();
+$data = cobra_get_remote_glossary_info_for_student();
 $entries = array();
 if (!empty($data)) {
     foreach ($data as $entry) {

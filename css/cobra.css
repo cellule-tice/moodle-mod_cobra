@@ -106,7 +106,6 @@ h2.titre_lecon {
     background-color: #FFFFFF;
     padding: 15px;
     overflow:auto;
-    /*box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);*/
 }
 
 #card, #glossary {
@@ -400,6 +399,3 @@ p{
     background-repeat: no-repeat;
     background-position: center left;
 }
-
-
-

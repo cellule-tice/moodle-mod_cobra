@@ -63,7 +63,7 @@ try {
         if ($encodeclic) {
             clic($resourceid, $lingentity, $DB, $courseid, $userid);
         }
-        $glossarystatus = is_in_glossary($lingentity, $courseid);
+        $glossarystatus = cobra_is_in_glossary($lingentity, $courseid);
         $response = array(
             'html' => $html,
             'inglossary' => $glossarystatus,

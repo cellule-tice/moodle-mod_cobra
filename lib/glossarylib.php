@@ -16,7 +16,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-function export_glossary($glossary) {
+function cobra_export_glossary($glossary) {
     global $CFG;
     require_once($CFG->libdir . '/csvlib.class.php');
 
@@ -28,7 +28,7 @@ function export_glossary($glossary) {
     // Get the title of the columns.
     $records[0] = array(get_string('Lemma_form', 'cobra'), get_string('Category', 'cobra'),
         get_string('info', 'cobra'), get_string('Translation', 'cobra'), get_string('Text', 'cobra'));
-    list($lemmaglossary, $expglossary) = explode_glossary_into_lemmas_and_expression($glossary);
+    list($lemmaglossary, $expglossary) = cobra_explode_glossary_into_lemmas_and_expression($glossary);
     $entry = array();
     $category = array();
     $num = array();
@@ -96,7 +96,7 @@ function export_glossary($glossary) {
  * @return $glossary array
  */
 
-function get_glossary_for_text($textid) {
+function cobra_get_glossary_for_text($textid) {
     $glossary = array();
     increase_script_time();
     $oldconceptlist = array();
@@ -140,9 +140,9 @@ function cobra_list_concepts_in_text($textid, $entrytype) {
         $text->load_remote_data();
         $titre = $text->get_title();
         $content = $text->get_content();
-        $conceptidlist = get_concept_list_from_para ($titre, $entrytype);
+        $conceptidlist = cobra_get_concept_list_from_para ($titre, $entrytype);
         foreach ($content as $i => $element) {
-            $conceptidlist = get_concept_list_from_para($element['content'], $entrytype, $conceptidlist);
+            $conceptidlist = cobra_get_concept_list_from_para($element['content'], $entrytype, $conceptidlist);
         }
     } else {
         // Get concept list for all texts of registrered collections.
@@ -150,8 +150,8 @@ function cobra_list_concepts_in_text($textid, $entrytype) {
         foreach ($collectionlist as $collection) {
             $textlist = load_text_list($collection['id_collection'], 'visible');
             foreach ($textlist as $text) {
-                $tabidconcept2 = cobra_list_concepts_in_text($text['id_text'], $entrytype);
-                foreach ($tabidconcept2 as $conceptid) {
+                $conceptids = cobra_list_concepts_in_text($text['id_text'], $entrytype);
+                foreach ($conceptids as $conceptid) {
                     if (!in_array($conceptid, $conceptidlist)) {
                         $conceptidlist[] = $conceptid;
                     }
@@ -167,7 +167,7 @@ function cobra_list_concepts_in_text($textid, $entrytype) {
  * @param tentrytype : lemma or expression
  * @return tabidconcept : array
  */
-function  get_concept_list_from_para($para, $entrytype, $conceptlist = array()) {
+function  cobra_get_concept_list_from_para($para, $entrytype, $conceptlist = array()) {
     $sep1 = '<span class="'.$entrytype.'" name="';
     $sep2 = '>';
     $para = ' ' . $para . ' ';
@@ -188,7 +188,7 @@ function  get_concept_list_from_para($para, $entrytype, $conceptlist = array()) 
  * @param text : class Text
  * @return @glossary : array
  */
-function get_glossary_entry_of_text($glossary, $text, $num) {
+function cobra_get_glossary_entry_of_text($glossary, $text, $num) {
     $textid = $text->id_text;
     $tempglossary = array();
     foreach ($glossary as $key => $entitelingid) {
@@ -210,7 +210,7 @@ function get_glossary_entry_of_text($glossary, $text, $num) {
 }
 
 
-function array_sort_func($a, $b=null) {
+function cobra_array_sort_func($a, $b=null) {
     static $keys;
     if ($b === null) {
         return $keys = $a;
@@ -228,21 +228,21 @@ function array_sort_func($a, $b=null) {
     return 0;
 }
 
-function array_sort($array) {
+function cobra_array_sort($array) {
     $keys = func_get_args();
     array_shift($keys);
-    array_sort_func($keys);
-    usort($array, "array_sort_func");
+    cobra_array_sort_func($keys);
+    usort($array, "cobra_array_sort_func");
     return $array;
 }
 
-function word_exists_as_flexion($word, $language) {
+function cobra_word_exists_as_flexion($word, $language) {
     $params = array('word' => $word, 'language' => $language);
     $list = cobra_remote_service::call('wordExistsAsFlexion', $params);
     return $list;
 }
 
-function get_lemmacat_list_from_ff($word, $language) {
+function cobra_get_lemmacat_list_from_ff($word, $language) {
     $params = array('word' => $word, 'language' => $language);
     $list = cobra_remote_service::call('getLemmaCatListFromFlexion', $params);
     $lemmalist = array();
@@ -252,7 +252,7 @@ function get_lemmacat_list_from_ff($word, $language) {
     return $lemmalist;
 }
 
-function return_list_of_words_in_text($mytext, $language) {
+function cobra_return_list_of_words_in_text($mytext, $language) {
     increase_script_time();
     $paragraphs = explode ("\n", $mytext);
     $words = array();
@@ -268,7 +268,7 @@ function return_list_of_words_in_text($mytext, $language) {
     return $words;
 }
 
-function explode_array_on_key($array, $key) {
+function cobra_explode_array_on_key($array, $key) {
     $tab = array();
     foreach ($array as $key2 => $arrayvalue) {
         $tab[$arrayvalue[$key]] = $arrayvalue;
@@ -276,7 +276,7 @@ function explode_array_on_key($array, $key) {
     return $tab;
 }
 
-function explode_glossary_into_lemmas_and_expression($glossary) {
+function cobra_explode_glossary_into_lemmas_and_expression($glossary) {
     $lemmalist = array();
     $explist = array();
     foreach ($glossary as $key => $element) {
@@ -303,41 +303,8 @@ function explode_glossary_into_lemmas_and_expression($glossary) {
     return array($lemmalist, $explist);
 }
 
-function list_concepts_in_text($textid, $entrytype) {
-    $conceptidlist = array();
-    if (!in_array($entrytype, get_valid_entry_types())) {
-        return false;
-    }
-    if ($textid != 0) {
-        $text = new cobra_text_wrapper();
-        $text->set_text_id($textid);
-        $text->load();
-        $text->load_remote_data();
-        $titre = $text->getTitle();
-        $content = $text->getContent();
-        $conceptidlist = get_concept_list_from_para($titre, $entrytype);
-        foreach ($content as $i => $element) {
-            $conceptidlist = get_concept_list_from_para($element['content'], $entrytype, $conceptidlist);
-        }
-    } else {
-        $collectionlist = get_registered_collections();
-        foreach ($collectionlist as $collection) {
-            $textlist = load_text_list($collection['id_collection'], 'visible');
-            foreach ($textlist as $text) {
-                $conceptids = list_concepts_in_text($text['id_text'], $entrytype);
-                foreach ($conceptids as $conceptid) {
-                    if (!in_array($conceptid, $conceptidlist)) {
-                        $conceptidlist[] = $conceptid;
-                    }
-                }
-            }
-        }
-    }
-    return $conceptidlist;
-}
-
 // Functions dedicated to student personal glossary.
-function is_in_glossary($lingentity, $courseid) {
+function cobra_is_in_glossary($lingentity, $courseid) {
     global $DB, $USER;
     return (int)$DB->record_exists('cobra_clic', array(
                 'course' => $courseid,
@@ -347,7 +314,7 @@ function is_in_glossary($lingentity, $courseid) {
             );
 }
 
-function add_to_glossary($lingentity, $textid, $courseid) {
+function cobra_add_to_glossary($lingentity, $textid, $courseid) {
     global $DB, $USER;
     return (int)$DB->set_field('cobra_clic',
             'in_glossary',
@@ -361,7 +328,7 @@ function add_to_glossary($lingentity, $textid, $courseid) {
         );
 }
 
-function remove_from_glossary($lingentity, $courseid) {
+function cobra_remove_from_glossary($lingentity, $courseid) {
     global $DB, $COURSE, $USER;
     if (empty($courseid)) {
         $courseid = $COURSE->id;
@@ -378,7 +345,7 @@ function remove_from_glossary($lingentity, $courseid) {
     return $courseid;
 }
 
-function get_remote_glossary_info_for_student($textid = 0, $courseid = 0) {
+function cobra_get_remote_glossary_info_for_student($textid = 0, $courseid = 0) {
     global $DB, $COURSE, $USER;
     if (!$courseid) {
         $courseid = $COURSE->id;

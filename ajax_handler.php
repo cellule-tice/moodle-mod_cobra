@@ -130,6 +130,6 @@ if ('removeFromGlossary' == $call) {
     $courseid = optional_param('courseid', 0, PARAM_INT);
 
     if ($lingentity && $courseid) {
-        echo true == remove_from_glossary($lingentity, $courseid) ? 'true' : 'false';
+        echo true == cobra_remove_from_glossary($lingentity, $courseid) ? 'true' : 'false';
     }
 }
