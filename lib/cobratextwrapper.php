@@ -29,8 +29,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class CobraTextWrapper
-{
+defined('MOODLE_INTERNAL') || die();
+
+class cobra_text_wrapper {
     // Locally stored data plugin.
     private $id = 0;
     private $textid = 0;
@@ -45,11 +46,11 @@ class CobraTextWrapper
     private $content = array();
     private $source = '';
 
-    public function __construct( $id = 0 ) {
-        $this->set_id( $id );
+    public function __construct($id = 0) {
+        $this->set_id($id);
     }
 
-    public function set_id( $id ) {
+    public function set_id($id) {
         $this->id = $id;
     }
 
@@ -57,7 +58,7 @@ class CobraTextWrapper
         return (int)$this->id;
     }
 
-    public function set_text_id( $id ) {
+    public function set_text_id($id) {
         $this->textid = $id;
     }
 
@@ -65,7 +66,7 @@ class CobraTextWrapper
         return (int)$this->textid;
     }
 
-    public function set_collection_id( $id ) {
+    public function set_collection_id($id) {
         $this->collectionid = $id;
     }
 
@@ -73,7 +74,7 @@ class CobraTextWrapper
         return (int)$this->collectionid;
     }
 
-    public function set_position( $index ) {
+    public function set_position($index) {
         $this->position = (int)$index;
     }
 
@@ -81,7 +82,7 @@ class CobraTextWrapper
         return $this->position;
     }
 
-    public function set_visibility( $value ) {
+    public function set_visibility($value) {
         $this->visibility = $value;
     }
 
@@ -89,7 +90,7 @@ class CobraTextWrapper
         return true === $this->visibility ? true : false;
     }
 
-    public function set_type( $type ) {
+    public function set_type($type) {
         $this->type = '' != $type ? $type : 'Lesson';
     }
 
@@ -97,7 +98,7 @@ class CobraTextWrapper
         return $this->type;
     }
 
-    public function set_title( $title ) {
+    public function set_title($title) {
         $this->title = $title;
     }
 
@@ -105,7 +106,7 @@ class CobraTextWrapper
         return $this->title;
     }
 
-    public function set_content( $content ) {
+    public function set_content($content) {
         $this->content = $content;
     }
 
@@ -113,7 +114,7 @@ class CobraTextWrapper
         return $this->content;
     }
 
-    public function set_source( $source ) {
+    public function set_source($source) {
         $this->source = $source;
     }
 
@@ -123,50 +124,50 @@ class CobraTextWrapper
 
     public function load() {
         global $DB, $course;
-        if ( !$this->get_text_id() ) {
+        if (!$this->get_text_id()) {
             return false;
         }
-        $text = $DB->get_record_select('cobra_texts_config', "course='$course->id' AND id_text= ".$this->get_text_id() );
+        $text = $DB->get_record_select('cobra_texts_config', "course='$course->id' AND id_text= ".$this->get_text_id());
 
-        $this->set_id( $text->id );
-        $this->set_text_id( $text->id_text );
-        $this->set_collection_id( $text->id_collection );
-        $this->set_type( $text->text_type );
-        $this->set_position( $text->position );
-        $this->set_visibility( $text->visibility ? true : false );
+        $this->set_id($text->id);
+        $this->set_text_id($text->id_text);
+        $this->set_collection_id($text->id_collection);
+        $this->set_type($text->text_type);
+        $this->set_position($text->position);
+        $this->set_visibility($text->visibility ? true : false);
         return true;
     }
 
     public function load_remote_data() {
-        $params = array( 'id_text' => (int)$this->get_text_id() );
-        $jsonobj = CobraRemoteService::call( 'loadTextData', $params );
+        $params = array('id_text' => (int)$this->get_text_id());
+        $jsonobj = cobra_remote_service::call('loadTextData', $params);
 
-        $this->set_source( utf8_decode( $jsonobj->source ) );
-        $this->set_title( utf8_decode( $jsonobj->title ) );
+        $this->set_source(utf8_decode($jsonobj->source));
+        $this->set_title(utf8_decode($jsonobj->title));
         $content = array();
         foreach ($jsonobj->content as $item) {
-            $content[$item->num] = array( 'content' => utf8_decode( $item->content ) );
+            $content[$item->num] = array('content' => utf8_decode($item->content));
         }
-        $this->set_content( $content );
+        $this->set_content($content);
         return true;
     }
 
     public function format_html() {
-        $params = array( 'id_text' => (int)$this->get_text_id() );
-        $html = CobraRemoteService::call( 'getFormattedText', $params );
+        $params = array('id_text' => (int)$this->get_text_id());
+        $html = cobra_remote_service::call('getFormattedText', $params);
         return utf8_encode($html);
     }
 
     public function get_audio_file_url() {
-        $params = array( 'id_text' => (int)$this->get_text_id() );
-        $url = CobraRemoteService::call( 'getAudioFileUrl', $params );
-        return utf8_decode( $url );
+        $params = array('id_text' => (int)$this->get_text_id());
+        $url = cobra_remote_service::call('getAudioFileUrl', $params);
+        return utf8_decode($url);
     }
 
     public function save() {
         global $DB, $course;
         if ($this->get_id()) {
-            $visibility = ( true === $this->is_visible() ? '1' : '0' );
+            $visibility = (true === $this->is_visible() ? '1' : '0');
             $dataobject = new  stdClass();
             $dataobject->id = $this->getiId();
             $dataobject->course = $course->id;
@@ -177,7 +178,7 @@ class CobraTextWrapper
             $dataobject->visibility = $visibility;
             return  $DB->update_record('cobra_texts_config', $dataobject);
         } else {
-            $visibility = ( true === $this->is_visible() ? '1' : '0' );
+            $visibility = (true === $this->is_visible() ? '1' : '0');
             $dataobject = new  stdClass();
             $dataobject->course = $course->id;
             $dataobject->id_text = $this->get_text_id();

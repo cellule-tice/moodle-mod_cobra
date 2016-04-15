@@ -25,12 +25,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once(dirname(__FILE__).'/lib.php');
-require_once(dirname(__FILE__).'/locallib.php');
-require_once(dirname(__FILE__).'/lib/glossary.lib.php');
-require_once(dirname(__FILE__).'/lib/cobraremoteservice.class.php');
-require_once(dirname(__FILE__).'/lib/cobracollectionwrapper.class.php');
+require(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/locallib.php');
+require_once(__DIR__ . '/lib/glossarylib.php');
+require_once(__DIR__ . '/lib/cobraremoteservice.php');
+require_once(__DIR__ . '/lib/cobracollectionwrapper.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
@@ -65,24 +64,24 @@ $acceptedcmdlist = array(  'rqExport', 'exExport', 'rqCompare', 'exCompare' );
 
 $cmd = isset( $_REQUEST['cmd'] ) && in_array( $_REQUEST['cmd'], $acceptedcmdlist ) ? $_REQUEST['cmd'] : null;
 
-$collectionlist = get_registered_collections('visible');
+$collectionlist = cobra_get_registered_collections('visible');
 
 if ($cmd == 'exExport') {
     $glossary = array();
     foreach ($collectionlist as $collection) {
-        $textlist = load_text_list( $collection['id_collection'], 'visible' );
+        $textlist = cobra_load_text_list( $collection['id_collection'], 'visible' );
         foreach ($textlist as $num => $text) {
             if (array_key_exists($text->id, $_REQUEST)) {
                 $textid = $text->id_text;
-                $glossary2 = get_glossary_for_text ( $textid );
+                $glossary2 = cobra_get_glossary_for_text ( $textid );
                 if (array_key_exists( $text->id_text, $glossary2 )) {
-                    $glossary2 = get_glossary_entry_of_text( $glossary2[$text->id_text], $text, $num );
+                    $glossary2 = cobra_get_glossary_entry_of_text( $glossary2[$text->id_text], $text, $num );
                     $glossary = array_merge( $glossary, $glossary2 );
                 }
             }
         }
     }
-    export_glossary ($glossary);
+    cobra_export_glossary($glossary);
 }
 
 // Print the page header.
@@ -103,7 +102,7 @@ echo $OUTPUT->heading(get_string('textreading', 'cobra'));
 
 echo $OUTPUT->box_start('Glossaire');
 
-$prefs = get_cobra_preferences();
+$prefs = cobra_get_preferences();
 $language = $prefs['language'];
 
 $display = '';
@@ -119,7 +118,7 @@ if ($cmd == 'rqExport') {
     $display .= '<tr> <td><input type="checkbox" class="selectall" id="selectall"  >'
             .get_string('checkall_uncheckall', 'cobra') .'</td></tr>';
     foreach ($collectionlist as $collection) {
-        $textlist = load_text_list( $collection['id_collection'], 'visible' );
+        $textlist = cobra_load_text_list( $collection['id_collection'], 'visible' );
         foreach ($textlist as $text) {
             // Display Title.
             $display  .= '<tr><td style="min-width:33%;">' . "\n"
@@ -144,7 +143,7 @@ if ($cmd == 'rqExport') {
         . get_string('checkall_uncheckall', 'cobra') .'</td></tr>';
 
     foreach ($collectionlist as $collection) {
-        $textlist = load_text_list( $collection['id_collection'], 'visible' );
+        $textlist = cobra_load_text_list( $collection['id_collection'], 'visible' );
         foreach ($textlist as $text) {
             // Display checkbox foreach text.
             $display  .= '<tr><td style="min-width:33%;">' . "\n"
@@ -162,34 +161,34 @@ if ($cmd == 'rqExport') {
             . '" type="submit" name="submit" />&nbsp;</td></tr>' . "\n" . '</table> </form>' . "\n";
     $out .= $display;
 } else if ( $cmd == 'exCompare') {
-    increase_script_time();
+    cobra_increase_script_time();
     $glossary = array();
     foreach ($collectionlist as $collection) {
-        $textlist = load_text_list( $collection['id_collection'], 'visible' );
+        $textlist = cobra_load_text_list( $collection['id_collection'], 'visible' );
         foreach ($textlist as $num => $text) {
             if (array_key_exists($text->id, $_REQUEST)) {
                 $textid = $text->id;
-                $glossary2 = get_glossary_for_text ( $textid );
+                $glossary2 = cobra_get_glossary_for_text ( $textid );
                 if (array_key_exists( $textid, $glossary2 )) {
-                    $glossary2 = get_glossary_entry_of_text( $glossary2[$text->id], $text, $num );
+                    $glossary2 = cobra_get_glossary_entry_of_text( $glossary2[$text->id], $text, $num );
                     $glossary = array_merge( $glossary, $glossary2 );
                 }
             }
         }
     }
 
-    list( $lemmaglossary, $expglossary ) = explode_glossary_into_lemmas_and_expression( $glossary );
-    $glossarylemmaid = explode_array_on_key ( $lemmaglossary, 'id' );
+    list( $lemmaglossary, $expglossary ) = cobra_explode_glossary_into_lemmas_and_expression( $glossary );
+    $glossarylemmaid = cobra_explode_array_on_key ( $lemmaglossary, 'id' );
     $mytext = $_REQUEST['myText'];
     $newwords = '';
     $otherwords = '';
-    $words = return_list_of_words_in_text ( $mytext, $language );
+    $words = cobra_get_list_of_words_in_text ( $mytext, $language );
 
     foreach ($words as $word) {
-        $listflexions = word_exists_as_flexion ( $word, $language );
+        $listflexions = cobra_word_exists_as_flexion ( $word, $language );
         if (count( $listflexions) != 0) {
             $trouve = false;
-            $listpossiblelemmas = get_lemmacat_list_from_ff( $word, $language );
+            $listpossiblelemmas = cobra_get_lemmacat_list_from_ff( $word, $language );
             foreach ($listpossiblelemmas as $lemmaid) {
                 if (array_key_exists($lemmaid, $glossarylemmaid)) {
                     $trouve = true;

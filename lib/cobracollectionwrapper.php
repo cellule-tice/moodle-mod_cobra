@@ -29,8 +29,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class Cobracollectionwrapper
-{
+defined('MOODLE_INTERNAL') || die();
+
+class cobra_collection_wrapper {
     private $id = 0;
     private $language = '';
     private $remotename = '';
@@ -38,11 +39,11 @@ class Cobracollectionwrapper
     private $position = 1;
     private $visibility = true;
 
-    public function __construct( $id = 0 ) {
-        $this->set_id( $id );
+    public function __construct($id = 0) {
+        $this->set_id($id);
     }
 
-    public function set_id( $id ) {
+    public function set_id($id) {
         $this->id = $id;
     }
 
@@ -50,7 +51,7 @@ class Cobracollectionwrapper
         return (int)$this->id;
     }
 
-    public function set_language( $language ) {
+    public function set_language($language) {
         $this->language = $language;
     }
 
@@ -58,7 +59,7 @@ class Cobracollectionwrapper
         return $this->language;
     }
 
-    public function set_remote_name( $name ) {
+    public function set_remote_name($name) {
         $this->remotename = $name;
     }
 
@@ -66,7 +67,7 @@ class Cobracollectionwrapper
         return $this->remotename;
     }
 
-    public function set_local_name( $name ) {
+    public function set_local_name($name) {
         $this->localname = $name;
     }
 
@@ -74,7 +75,7 @@ class Cobracollectionwrapper
         return $this->localname;
     }
 
-    public function set_position( $index ) {
+    public function set_position($index) {
         $this->position = (int)$index;
     }
 
@@ -82,7 +83,7 @@ class Cobracollectionwrapper
         return $this->position;
     }
 
-    public function set_visibility( $value ) {
+    public function set_visibility($value) {
         $this->visibility = $value;
     }
 
@@ -92,7 +93,7 @@ class Cobracollectionwrapper
 
     public function load() {
         global $DB, $course;
-        if ( !$this->get_id() ) {
+        if (!$this->get_id()) {
             return false;
         }
 
@@ -121,7 +122,7 @@ class Cobracollectionwrapper
             return $this->update();
         }
 
-        $visibility = ( true === $this->is_visible() ? '1' : '0' );
+        $visibility = (true === $this->is_visible() ? '1' : '0');
         $dataobject = new stdClass();
         $dataobject->course = $course->id;
         $dataobject->id_collection = $this->get_id();
@@ -130,7 +131,7 @@ class Cobracollectionwrapper
         $dataobject->position = $this->get_position();
         $dataobject->visibility = $visibility;
 
-        if ($DB->insert_record('cobra_registered_collections', $dataobject) ) {
+        if ($DB->insert_record('cobra_registered_collections', $dataobject)) {
             return 'saved';
         } else {
             return 'error';
@@ -140,7 +141,7 @@ class Cobracollectionwrapper
     public function update() {
         global $DB, $course;
         if ($this->get_id()) {
-            $visibility = ( true === $this->is_visible() ? '1' : '0' );
+            $visibility = (true === $this->is_visible() ? '1' : '0');
             $dataobject = new stdClass();
             $dataobject->id = $this->get_id();
             $dataobject->course = $course->id;
@@ -150,7 +151,7 @@ class Cobracollectionwrapper
             $dataobject->position = $this->get_position();
             $dataobject->visibility = $visibility;
 
-            if ($DB->update_record('cobra_registered_collections', $dataobject) ) {
+            if ($DB->update_record('cobra_registered_collections', $dataobject)) {
                 return 'updated';
             } else {
                 return 'error';
@@ -160,15 +161,15 @@ class Cobracollectionwrapper
         }
     }
 
-    public function wrapremote( $remoteid ) {
-        $params = array( 'id_collection' => (int)$remoteid );
-        $remotecollection = CobraRemoteService::call( 'getCollection', $params );
+    public function wrapremote($remoteid) {
+        $params = array('id_collection' => (int)$remoteid);
+        $remotecollection = cobra_remote_service::call('getCollection', $params);
 
-        $this->set_id( $remoteid );
-        $this->set_language( $remotecollection->language );
-        $this->set_remote_name( $remotecollection->label );
-        $this->set_local_name(  $remotecollection->label );
-        $this->set_position( self::getmaxposition() + 1 );
+        $this->set_id($remoteid);
+        $this->set_language($remotecollection->language);
+        $this->set_remote_name($remotecollection->label);
+        $this->set_local_name($remotecollection->label);
+        $this->set_position(self::getmaxposition() + 1);
         return true;
     }
 

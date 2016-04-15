@@ -26,17 +26,24 @@
  */
 
 // Load CoBRA main lib and config.
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-    require_once(dirname(__FILE__).'/locallib.php');
-require_once($CFG->dirroot . '/mod/cobra/lib/glossary.lib.php');
-    global $DB, $USER;
+require(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/locallib.php');
+require_once(__DIR__ . '/lib/glossarylib.php');
+
+global $DB, $USER;
 
 // Define accepted commands.
-$acceptedcmdlist = array('getDisplayParams', 'setVisible', 'setInvisible', 'moveUp', 'moveDown', 'changeType', 'removeFromGlossary', 'getTextListForGlossaryEntry');
+$acceptedcmdlist = array(
+    'getDisplayParams',
+    'setVisible',
+    'setInvisible',
+    'moveUp',
+    'moveDown',
+    'changeType',
+    'removeFromGlossary',
+    'getTextListForGlossaryEntry');
 
-if (isset($_REQUEST['ajaxcall']) && in_array($_REQUEST['ajaxcall'], $acceptedcmdlist)) {
-    $call = $_REQUEST['ajaxcall'];
-}
+$call = required_param('ajaxcall', PARAM_ALPHA);
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // ... cobra instance ID - it should be named as the first character of the module.
@@ -61,19 +68,19 @@ $sibling = optional_param('sibling_id', null, PARAM_ALPHANUM);
 
 // Force headers for export.
 header('Content-Type: text/html; charset=iso-8859-1'); // Charset
-header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past.
+header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past.
 
 if ('getDisplayParams' == $call) {
-    $displayprefs = get_cobra_preferences();
-    $ccorder = get_corpus_type_display_order();
-    $order = implode( ',', $ccorder );
+    $displayprefs = cobra_get_preferences();
+    $ccorder = cobra_get_corpus_type_display_order();
+    $order = implode(',', $ccorder);
     $displayprefs['ccOrder'] = $order;
-    echo json_encode( $displayprefs );
+    echo json_encode($displayprefs);
 }
 
 if ('setVisible' == $call) {
-    if (set_visibility($resource, true, $resourcetype, $course->id)) {
+    if (cobra_set_visibility($resource, true, $resourcetype, $course->id)) {
         echo 'true';
         return true;
     }
@@ -81,7 +88,7 @@ if ('setVisible' == $call) {
 }
 
 if ('setInvisible' == $call) {
-    if (set_visibility($resource, false, $resourcetype, $course->id)) {
+    if (cobra_set_visibility($resource, false, $resourcetype, $course->id)) {
         echo 'true';
         return true;
     }
@@ -90,8 +97,8 @@ if ('setInvisible' == $call) {
 
 if ('moveDown' == $call) {
     $position = optional_param('position', 0, PARAM_INT);
-    if ($position && set_position($sibling, $position++, $resourcetype, $course->id)
-        && set_position($resource, $position, $resourcetype, $course->id)) {
+    if ($position && cobra_set_position($sibling, $position++, $resourcetype, $course->id)
+        && cobra_set_position($resource, $position, $resourcetype, $course->id)) {
         echo 'true';
         return true;
     }
@@ -100,8 +107,8 @@ if ('moveDown' == $call) {
 
 if ('moveUp' == $call) {
     $position = optional_param('position', 0, PARAM_INT);
-    if ($position && set_position($sibling, $position--, $resourcetype, $course->id)
-        && set_position($resource, $position, $resourcetype, $course->id)) {
+    if ($position && cobra_set_position($sibling, $position--, $resourcetype, $course->id)
+        && cobra_set_position($resource, $position, $resourcetype, $course->id)) {
         echo 'true';
         return true;
     }
@@ -110,8 +117,8 @@ if ('moveUp' == $call) {
 
 if ('changeType' == $call) {
     $textid = optional_param('resource_id', 0, PARAM_INT);
-    if (change_text_type($textid, $course->id)) {
-        $newtype = get_text_type($textid, $course->id);
+    if (cobra_change_text_type($textid, $course->id)) {
+        $newtype = cobra_get_text_type($textid, $course->id);
         echo get_string($newtype, 'cobra');
         return true;
     }
@@ -123,6 +130,6 @@ if ('removeFromGlossary' == $call) {
     $courseid = optional_param('courseid', 0, PARAM_INT);
 
     if ($lingentity && $courseid) {
-        echo true == remove_from_glossary($lingentity, $courseid) ? 'true' : 'false';
+        echo true == cobra_remove_from_glossary($lingentity, $courseid) ? 'true' : 'false';
     }
 }

@@ -3,7 +3,7 @@ angular.module('cobra.services', [])
 .factory('dataService', ['$http', '$rootScope', function($http, $rootScope) {
 
     var glossaryEntries = [];
-    var service =  {
+    var service = {
         getEntries : function(textid, courseid) {
             var request = $http({
                 method: 'POST',
@@ -22,7 +22,6 @@ angular.module('cobra.services', [])
                 else {
                     glossaryEntries = [];
                 }
-                ///glossaryEntries = response.data;
 
                 return glossaryEntries;
             });
@@ -35,11 +34,9 @@ angular.module('cobra.services', [])
                     'Content-Type': undefined
                 },
                 data: { action: 'loadText', textId: textId}
-
             });
 
             return request.then(function(response) {
-                //glossaryEntries = response.data;
                 return response.data;
             });
         },

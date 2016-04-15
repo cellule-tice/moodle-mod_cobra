@@ -27,9 +27,8 @@
 
 // Replace cobra with the name of your module and remove this line.
 
-require_once(__DIR__ . '/../../config.php');
-require_once(dirname(__FILE__).'/lib.php');
-require_once(dirname(__FILE__).'/locallib.php');
+require(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/locallib.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // ... cobra instance ID - it should be named as the first character of the module.
@@ -86,25 +85,23 @@ echo $OUTPUT->heading(get_string('textreading', 'cobra'));
 
 echo $OUTPUT->box_start('generalbox box-content');
 
-
 $content = '';
 $isallowedtoedit = false;
 if (has_capability('mod/cobra:edit', $context)) {
     $isallowedtoedit = true;
     $content .= '<a href="cobra_settings.php?id=' . $id . '">'. get_string('parameters', 'cobra') . '</a> &nbsp; ' .
                 '<a href="glossary.php?id=' . $id . '">' . get_string('glossary', 'cobra') . '</a> &nbsp; ' .
-                '<a href="stat.php?id=' . $id . '">' . get_string('statistics', 'cobra') . '</a>&nbsp;&nbsp;&nbsp;';
+                '<a href="statistics.php?id=' . $id . '">' . get_string('statistics', 'cobra') . '</a>&nbsp;&nbsp;&nbsp;';
 }
 
-$preferences = get_cobra_preferences();
+$preferences = cobra_get_preferences();
 if ('SHOW' == $preferences['show_glossary']) {
-    //$content .= '<a href="myglossary.php">' . get_string('myglossary', 'cobra') . '</a>';
     $content .= '<a href="myglossary.php?id=' . $id . '">' . get_string('myglossary', 'cobra') . '</a>';
 }
 
 // For all chosen collections display text in selected order.
 
-$collectionlist = $isallowedtoedit ? get_registered_collections('all') : get_registered_collections('visible');
+$collectionlist = $isallowedtoedit ? cobra_get_registered_collections('all') : cobra_get_registered_collections('visible');
 foreach ($collectionlist as $collection) {
     $content .= '<h3>' . $collection['local_label'] . '</h3>';
     $content .= '<table class="table table-condensed table-hover table-striped" id="textlist">' .
@@ -114,7 +111,7 @@ foreach ($collectionlist as $collection) {
                 '<th>' . get_string('text', 'cobra') . '</th>' .
                 '<th>' . get_string('source', 'cobra') . '</th>';
 
-    if ($isallowedtoedit ) {
+    if ($isallowedtoedit) {
         $content .= '<th>' . get_string ('type', 'cobra') . '</th>' .
                     '<th>' . get_string ('move') . '</th>' .
                     '<th>' . get_string('visibility' , 'cobra') . '</th>';
@@ -124,10 +121,10 @@ foreach ($collectionlist as $collection) {
 
     if ($isallowedtoedit) {
         // Load all texts to display for course admin.
-        $textlist = load_text_list($collection['id_collection'], 'all');
+        $textlist = cobra_load_text_list($collection['id_collection'], 'all');
     } else {
         // Load only visible texts to display for students.
-        $textlist = load_text_list( $collection['id_collection'], 'visible' );
+        $textlist = cobra_load_text_list($collection['id_collection'], 'visible');
     }
     if (!empty($textlist) && is_array($textlist)) {
         $content .= '<tbody>';
@@ -159,9 +156,13 @@ foreach ($collectionlist as $collection) {
 
                 // Change visibility commands.
                 $content .= '<td align="center">';
-                $content .= '<a href="#" class="setVisible" ' . ($text->visibility ? 'style="display:none"' : '').'><i class="fa fa-eye-slash"></i></a>';
+                $content .= '<a href="#" class="setVisible" ' .
+                            ($text->visibility ? 'style="display:none"' : '') .
+                            '><i class="fa fa-eye-slash"></i></a>';
 
-                $content .= '<a href="#" class="setInvisible" ' . (!$text->visibility ? 'style="display:none"' : '').'><i class="fa fa-eye"></i></a>';
+                $content .= '<a href="#" class="setInvisible" ' .
+                            (!$text->visibility ? 'style="display:none"' : '') .
+                            '><i class="fa fa-eye"></i></a>';
 
                 $content .= '</td>';
             }

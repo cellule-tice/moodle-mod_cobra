@@ -27,8 +27,8 @@
 
 // Replace cobra with the name of your module and remove this line.
 
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once(dirname(__FILE__).'/lib.php');
+require(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/lib.php');
 
 $id = required_param('id', PARAM_INT); // Course.
 
@@ -36,9 +36,7 @@ $course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
 
 require_course_login($course);
 
-$params = array(
-    'context' => context_course::instance($course->id)
-);
+$params = array('context' => context_course::instance($course->id));
 $event = \mod_cobra\event\course_module_instance_list_viewed::create($params);
 $event->add_record_snapshot('course', $course);
 $event->trigger();
@@ -46,13 +44,14 @@ $event->trigger();
 $strname = get_string('modulenameplural', 'mod_cobra');
 $PAGE->set_url('/mod/cobra/index.php', array('id' => $id));
 $PAGE->navbar->add($strname);
-$PAGE->set_title("$course->shortname: $strname");
+$PAGE->set_title($course->shortname . ':' . $strname);
 $PAGE->set_heading($course->fullname);
 $PAGE->set_pagelayout('incourse');
 
+$PAGE->requires->css('/mod/cobra/css/cobra.css');
+
 echo $OUTPUT->header();
 echo $OUTPUT->heading($strname);
-$PAGE->requires->css('/mod/cobra/css/cobra.css');
 
 if (! $cobras = get_all_instances_in_course('cobra', $course)) {
     notice(get_string('nocobras', 'cobra'), new moodle_url('/course/view.php', array('id' => $course->id)));

@@ -27,10 +27,9 @@
 
 // Replace cobra with the name of your module and remove this line.
 
-require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
-require_once($CFG->dirroot . '/mod/cobra/lib.php');
-require_once($CFG->dirroot . '/mod/cobra/locallib.php');
-require_once($CFG->dirroot . '/mod/cobra/lib/glossary.lib.php');
+require(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/locallib.php');
+require_once(__DIR__ . '/lib/glossarylib.php');
 
 $id = required_param('id', PARAM_INT);
 $cmd = optional_param('cmd', null, PARAM_ALPHA);
@@ -44,8 +43,9 @@ require_capability('mod/cobra:view', $context);
 
 // Print the page header.
 $PAGE->set_url('/mod/cobra/myglossary.php', array('id' => $cm->id));
+
 $PAGE->set_title(format_string($cobra->name));
-//$PAGE->set_heading(format_string($course->fullname));
+
 $PAGE->add_body_class('noblocks');
 
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
@@ -62,28 +62,20 @@ $content = $OUTPUT->header();
 $exportbutton = '<a href="' . $_SERVER['PHP_SELF'] .
                 '?id=' . $id .
                 '&cmd=export" ' .
-                //'class="btn btn-default" ' .
                 'class="glossaryExport" ' .
                 'title="' .
                 get_string('exportmyglossary', 'cobra') . '">   ' .
                 '</a>';
 $content .= $OUTPUT->heading(get_string('myglossary', 'cobra') . '&nbsp;&nbsp;&nbsp;' . $exportbutton);
 
-$content .= $OUTPUT->box_start('generalbox box-content' );
+$content .= $OUTPUT->box_start('generalbox box-content');
 
-//$content = '';
 $content .= '<div id="courseid" class="hidden" name="' . $course->id .'">' . $course->id . '</div>';
 
-$preferences = get_cobra_preferences();
+$preferences = cobra_get_preferences();
 if ('HIDE' == $preferences['show_glossary']) {
-    //$content .= '<a href="myglossary.php">' . get_string('myglossary', 'cobra') . '</a>';
     die('not allowed');
 }
-
-/*$content .= '<a href="' . $_SERVER['PHP_SELF'] .
-            '?id=' . $id .
-            '&cmd=export' .
-            '" class="btn btn-default" role="button">Exporter mon glossaire</a>';*/
 
 $content .= '<table class="table table-condensed table-hover table-striped" id="myglossary">' .
             '<thead>' .
@@ -98,7 +90,7 @@ $content .= '<table class="table table-condensed table-hover table-striped" id="
             '</tr>' .
             '</thead>';
 
-$data = get_remote_glossary_info_for_student();
+$data = cobra_get_remote_glossary_info_for_student();
 $entries = array();
 if (!empty($data)) {
     foreach ($data as $entry) {
@@ -108,7 +100,9 @@ if (!empty($data)) {
                     'course' => $course->id,
                     'id_entite_ling' => $entry->ling_entity,
                     'user_id' => $USER->id,
-                    'in_glossary' => 1));
+                    'in_glossary' => 1
+                )
+        );
         $sourcetexttitle = cobra_get_text_title_from_id($sourcetextid);
         $entry->sourcetexttitle = $sourcetexttitle;
 
@@ -118,7 +112,12 @@ if (!empty($data)) {
                          AND id_entite_ling = :lingentity
                          AND course = :course
                    GROUP BY id_entite_ling";
-        $result = $DB->get_field_sql($query, array('userid' => $USER->id, 'lingentity' => $entry->ling_entity, 'course' => $course->id));
+        $result = $DB->get_field_sql($query, array(
+                'userid' => $USER->id,
+                'lingentity' => $entry->ling_entity,
+                'course' => $course->id
+            )
+        );
         $textidlist = explode(',', $result);
         asort($textidlist);
 
@@ -128,17 +127,23 @@ if (!empty($data)) {
         }
         $entry->texttitles = $texttitles;
         $removeiconurl = $OUTPUT->pix_url('glossaryremove', 'cobra');
-        $content .= '<tr>'
-            . '<td>' . $entry->entry . '</td>'
-            . '<td>' . $entry->translations . '</td>'
-            . '<td>' . $entry->category . '</td>'
-            . '<td>' . $entry->extra_info . '</td>'
-            . '<td>' . $sourcetexttitle . '</td>'
-            . '<td><span title="' . implode("\n", $texttitles) . '">' . count($texttitles) . '&nbsp;' . get_string('texts', 'cobra') . '</span></td>'
-            . '<td class="glossaryIcon">'
-            . '<span id="currentLingEntity" class="hidden">' . $entry->ling_entity . '</span>'
-                . '<img alt="' . get_string('myglossaryremove', 'cobra') . '" title="' . get_string('myglossaryremove', 'cobra') . '" class="gGlossaryRemove inDisplay" src="' . $removeiconurl . '"></td>'
-            . '</tr>';
+        $content .= '<tr>' .
+            '<td>' . $entry->entry . '</td>' .
+            '<td>' . $entry->translations . '</td>' .
+            '<td>' . $entry->category . '</td>' .
+            '<td>' . $entry->extra_info . '</td>' .
+            '<td>' . $sourcetexttitle . '</td>' .
+            '<td>' .
+            '<span title="' . implode("\n", $texttitles) . '">' .
+            count($texttitles) . '&nbsp;' . get_string('texts', 'cobra') .
+            '</span></td>' .
+            '<td class="glossaryIcon">' .
+            '<span id="currentLingEntity" class="hidden">' . $entry->ling_entity . '</span>' .
+            '<img alt="' . get_string('myglossaryremove', 'cobra') .
+            '" title="' . get_string('myglossaryremove', 'cobra') .
+            '" class="gGlossaryRemove inDisplay" src="' . $removeiconurl . '">' .
+            '</td>' .
+            '</tr>';
         $entries[] = $entry;
     }
     if ('export' == $cmd) {

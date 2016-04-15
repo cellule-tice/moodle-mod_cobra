@@ -1,7 +1,6 @@
 /**
  * Created by jmeuriss on 13/01/2015.
  */
-//'use strict';
 
 angular.module('cobra.controllers', ['ngRoute'])
 
@@ -14,10 +13,6 @@ angular.module('cobra.controllers', ['ngRoute'])
     $rootScope.textId = $stateParams.textId;
     dataService.getText($stateParams.textId).then(function(data) {
         $scope.text = data;
-        //uncomment and remove $scope.text binding to handle text loading through angular and not cobra.js
-        /*var tmp = $compile(data)($scope);
-        $("#cobraText").append(tmp);*/
-
     }).then(function() {
         if('SHOW' == $scope.showGlossary) {
             dataService.getEntries($stateParams.textId, $rootScope.courseid).then(function (data) {
@@ -28,14 +23,12 @@ angular.module('cobra.controllers', ['ngRoute'])
         }
     });
 
-
     $scope.$on('entryAdded', function(event, args) {
         $scope.newEntries.push(args);
         $scope.newEntry = args;
         dataService.getEntries($stateParams.textId, $rootScope.courseid).then(function (data) {
             $scope.glossaryEntries = data;
             angular.forEach($scope.glossaryEntries, function(value, key) {
-                //if($scope.newEntry == value.ling_entity)
                 if($scope.newEntries.indexOf(value.ling_entity) > -1)
                 {
                      value.new = true;
@@ -84,10 +77,9 @@ angular.module('cobra.controllers', ['ngRoute'])
             });
     };
 
-    //test to populate ng-click dynamically...
+    // Test to populate ng-click dynamically...
     $scope.displayLemma = function(object){
         console.log(object);
         console.log(object.target.attributes.name.value);
     }
 })
-
