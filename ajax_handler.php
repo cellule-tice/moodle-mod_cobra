@@ -118,7 +118,7 @@ if ('moveUp' == $call) {
 if ('changeType' == $call) {
     $textid = optional_param('resource_id', 0, PARAM_INT);
     if (cobra_change_text_type($textid, $course->id)) {
-        $newtype = cobra_get_text_type($textid, $course->id);
+        $newtype = cobra_°get_text_type($textid, $course->id);
         echo get_string($newtype, 'cobra');
         return true;
     }

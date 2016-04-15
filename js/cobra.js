@@ -12,40 +12,38 @@ M.mod_cobra.init = function() {
     init();
     function init() {
         $('small').hide();
-        $(document).on('click','a.changeType', changeType);
+        $(document).on('click', 'a.changeType', changeType);
         updateMoveIcons();
     }
 }
 
 M.mod_cobra.init_no_blocks = function() {
-    initnoblocks();
-    function initnoblocks() {
+    initNoBlocks();
+    function initNoBlocks() {
         $('small').hide();
         $('.hbl').hide();
         $('.sbl').hide();
-        /*$(document).on('click','a.changeType', changeType);
-        updateMoveIcons();*/
     }
 }
 
-M.mod_cobra.TextChangeType = function(){
-    $(document).on('click','a.changeType', changeType);
+M.mod_cobra.text_change_type = function() {
+    $(document).on('click', 'a.changeType', changeType);
 }
 
-M.mod_cobra.TextMove = function(){
-     $(document).on('click','a.moveUp', moveUp);
-     $(document).on('click','a.moveDown', moveDown);
+M.mod_cobra.text_move = function() {
+     $(document).on('click', 'a.moveUp', moveUp);
+     $(document).on('click', 'a.moveDown', moveDown);
      updateMoveIcons();
 };
 
-M.mod_cobra.TextVisibility = function(){
-     $(document).on('click','a.setVisible', setVisible);
-     $(document).on('click','a.setInvisible', setInvisible);
+M.mod_cobra.text_visibility = function() {
+     $(document).on('click', 'a.setVisible', setVisible);
+     $(document).on('click', 'a.setInvisible', setInvisible);
 };
 
-M.mod_cobra.SelectAll = function(){
-    $('#selectall').on('click',function(){
-        if(this.checked) {
+M.mod_cobra.select_all = function() {
+    $('#selectall').on('click', function() {
+        if (this.checked) {
             $('.checkbox').each(function() {
                 this.checked = true;
             });
@@ -55,28 +53,24 @@ M.mod_cobra.SelectAll = function(){
              });
         }
     });
-    $('.checkbox').on('click',function(){
-        if($('.checkbox:checked').length == $('.checkbox').length){
-            $('#select_all').prop('checked',true);
-        }else{
-            $('#select_all').prop('checked',false);
+    $('.checkbox').on('click', function() {
+        if ($('.checkbox:checked').length == $('.checkbox').length) {
+            $('#select_all').prop('checked', true);
+        } else {
+            $('#select_all').prop('checked', false);
         }
     });
 }
 
-M.mod_cobra.showCard = function(){
-    $(document).on('click','#showCard',displayCard);
+M.mod_cobra.show_full_concordance = function() {
+    $(document).on('click', '.cc_source', displayFullConcordance);
 };
 
-M.mod_cobra.showFullConcordance = function(){
-    $(document).on('click','.cc_source',displayFullCC);
-};
-
-M.mod_cobra.lemma_on_click = function(){
+M.mod_cobra.lemma_on_click = function() {
     $(document).on('click', '.lemma', function() {
         $('.clicked').removeClass('clicked');
         $('.emphasize').removeClass('emphasize');
-        var conceptId = $(this).attr("name");
+        var conceptId = $(this).attr('name');
         $('.lemma[name=' + conceptId + ']').addClass('emphasize');
         $(this).removeClass('emphasize');
         $(this).addClass('clicked');
@@ -84,15 +78,15 @@ M.mod_cobra.lemma_on_click = function(){
     });
 };
 
-M.mod_cobra.expression_on_click = function(){
+M.mod_cobra.expression_on_click = function() {
     $(document).on('click', '.expression', function() {
         $('.clicked').removeClass('clicked');
         $('.emphasize').removeClass('emphasize');
-        var conceptid = $(this).attr('name');
+        var conceptId = $(this).attr('name');
 
-        $('.expression[name=' + conceptid + ']').addClass('emphasize');
+        $('.expression[name=' + conceptId + ']').addClass('emphasize');
         $(this).prevAll('span.expression').each(function() {
-            if ($(this).attr('name') == conceptid) {
+            if ($(this).attr('name') == conceptId) {
                 $(this).removeClass('emphasize');
                 $(this).addClass('clicked');
             } else {
@@ -100,7 +94,7 @@ M.mod_cobra.expression_on_click = function(){
             }
         });
         $(this).nextAll('span.expression').each(function() {
-            if( $(this).attr('name') == conceptid ) {
+            if( $(this).attr('name') == conceptid) {
                 $(this).removeClass('emphasize');
                 $(this).addClass('clicked');
             } else {
@@ -109,49 +103,57 @@ M.mod_cobra.expression_on_click = function(){
         });
         $(this).removeClass('emphasize');
         $(this).addClass('clicked');
-        displayDetails(conceptid, true);
+        displayDetails(conceptId, true);
     });
 };
 
 M.mod_cobra.add_to_glossary = function() {
     $(document).on('click', '.glossaryAdd', function() {
-        console.log('add to glossary');
-        var lingentity = $(this).prev().text();
-        $('.glossaryAdd').removeClass('glossaryAdd').addClass('inGlossary').attr('src', 'pix/inglossary.png').attr('title', 'Pr&eacute;sent dans mon glossaire');
-        angular.element('#bottom').scope().addEntry(lingentity);
+        var lingEntity = $(this).prev().text();
+        $('.glossaryAdd').removeClass('glossaryAdd')
+                .addClass('inGlossary')
+                .attr('src', 'pix/inglossary.png')
+                .attr('title', 'Pr&eacute;sent dans mon glossaire');
+        angular.element('#bottom').scope().addEntry(lingEntity);
     });
 }
 
 M.mod_cobra.remove_from_glossary = function() {
-
     $(document).on('click', '.glossaryRemove', function() {
-        console.log('remove from glossary');
         var lingEntity = $(this).prev().text();
-        $('.inGlossary').removeClass('inGlossary').addClass('glossaryAdd').attr('src', 'pix/glossaryadd.png').attr('title', 'Ajouter &agrave; mon glossaire');
+        $('.inGlossary').removeClass('inGlossary')
+                .addClass('glossaryAdd')
+                .attr('src', 'pix/glossaryadd.png')
+                .attr('title', 'Ajouter &agrave; mon glossaire');
         angular.element('#bottom').scope().removeEntry(lingEntity);
     });
 }
 
 M.mod_cobra.remove_from_global_glossary = function() {
     $(document).on('click', '.gGlossaryRemove', function() {
-        var courseid = $('#courseid').attr('name');
-        var lingentity = $(this).prev().text();
+        var courseId = $('#courseid').attr('name');
+        var lingEntity = $(this).prev().text();
         var currentElement = $(this);
-        $.post( 'ajax_handler.php', { ajaxcall: 'removeFromGlossary', lingentity: lingentity, courseid: courseid },
+        $.post('ajax_handler.php',
+            {
+                ajaxcall: 'removeFromGlossary',
+                lingentity: lingEntity,
+                courseid: courseId
+            },
             function(response) {
-                if(response == "true")
+                if (response == "true")
                 {
-                    if($(currentElement).hasClass('inDisplay'))
+                    if ($(currentElement).hasClass('inDisplay'))
                     {
                         $(currentElement).parent().parent().remove();
                     }
-
                 }
-            });
+            }
+        );
     });
 }
 
-function displayDetails(conceptid, isexpr) {
+function displayDetails(conceptId, isExpression) {
     $('#card').hide();
     $('#full_concordance').hide();
     var detailsDiv = $('#details');
@@ -169,45 +171,48 @@ function displayDetails(conceptid, isexpr) {
     }
 
     var json = JSON.stringify(pref);
-    $.post(
-        'relay.php',
+    $.post('relay.php',
         {
             verb: 'displayEntry',
-            concept_id: conceptid,
+            concept_id: conceptId,
             resource_id: textId,
-            is_expr: isexpr,
+            is_expr: isExpression,
             encodeClic : encodeClic,
             courseId : courseId,
             userId : userId,
             params : json
         },
-        function(data){
+        function(data) {
             var response = JSON.parse(data);
-            var str = response.html.replace(/class="label"/g,'class="cobralabel"').replace(/img\//g,'pix\/');
+            var str = response.html.replace(/class="label"/g,'class="cobralabel"')
+                    .replace(/img\//g,'pix\/');
             detailsDiv.html(str);
-            if('SHOW' == $('#showglossary').text()) {
-                var lingentityspan = '<span id="currentlingentity" class="hidden">' + response.lingentity + '</span>';
-                var glossaryicon = '';
-                var angularclick = '';
-                if('1' == response.inglossary) {
-                    glossaryicon = '<img height="20px" class="inGlossary" src="pix/inglossary.png" title="Pr&eacute;sent dans mon glossaire"/>';
-                    angularclick = 'ng-click="addEntry(' + response.lingentity + ')"';
+            if ('SHOW' == $('#showglossary').text()) {
+                var lingEntitySpan = '<span id="currentlingentity" class="hidden">' + response.lingentity + '</span>';
+                var glossaryIcon = '';
+                var angularClick = '';
+                if ('1' == response.inglossary) {
+                    glossaryIcon = '<img height="20px" class="inGlossary" src="pix/inglossary.png" title="Pr&eacute;sent dans mon glossaire"/>';
+                    angularClick = 'ng-click="addEntry(' + response.lingentity + ')"';
                 } else {
-                    glossaryicon = '<img height="20px" class="glossaryAdd" src="pix/glossaryadd.png" title="Ajouter &agrave; mon glossaire"/>';
+                    glossaryIcon = '<img height="20px" class="glossaryAdd" src="pix/glossaryadd.png" title="Ajouter &agrave; mon glossaire"/>';
                 }
-                var tr = $('#displayOnClic').find('tr:first').prepend('<th ' + angularclick + ' class="glossaryIcon">' + lingentityspan + glossaryicon + '</th>').addClass('digestRow');
+                var tr = $('#displayOnClic').find('tr:first')
+                        .prepend('<th ' + angularClick + ' class="glossaryIcon">' + lingEntitySpan + glossaryIcon + '</th>')
+                        .addClass('digestRow');
             } else {
                 $('#glossary').remove();
             }
-        });
+        }
+    );
 }
 
 // Display full text of clicked concordance.
-function displayFullCC()
+function displayFullConcordance()
 {
-    var fullCCDiv = $('#full_concordance');
-    var id_cc = $(this).attr('name');
-    var bg_color = $(this).parent().parent().css("background-color");
+    var fullConcordanceDiv = $('#full_concordance');
+    var idConcordance = $(this).attr('name');
+    var backgroundColor = $(this).parent().parent().css('background-color');
     var sizePref = $("#preferencesNb").attr('name');
     var nb = parseInt(sizePref);
     var pref = new Array();
@@ -218,100 +223,106 @@ function displayFullCC()
     }
 
     var json = JSON.stringify(pref);
-    $.post( 'relay.php', { verb: 'displayCC', id_cc: id_cc, params : json },
-            function(data){
-                fullCCDiv.html(data);
-                fullCCDiv.css("background-color", bg_color);
-                fullCCDiv.show();
-            });
+    $.post('relay.php',
+        {
+            verb: 'displayCC',
+            id_cc: idConcordance,
+            params : json
+        },
+        function(data) {
+            fullConcordanceDiv.html(data);
+            fullConcordanceDiv.css('background-color', backgroundColor);
+            fullConcordanceDiv.show();
+        }
+    );
 }
 
 // Display full text of clicked occurrence.
 function displayFullOcc()
 {
-    var fullCCDiv = $('#full_concordance');
-    var id_occ = $(this).attr('name');
-    var bg_color = $(this).parent().parent().css("background-color");
-    $.post( 'relay.php', { verb: 'displayCC', id_occ: id_occ, params : jsonObject  },
-            function(data){
-                fullCCDiv.html(data);
-                fullCCDiv.css("background-color", bg_color);
-                fullCCDiv.show();
-            });
-}
-
-// Display syntactic card for clicked word.
-function displayCard()
-{
-    var cardDiv = $("#card");
-    var entryId = $(this).attr('name');
-    var currentConstruction = $("#currentConstruction").text();
-    var isExpr = $("#currentConstruction").hasClass('expression') ? 1 : 0;
-     var sizePref = $("#preferencesNb").attr('name');
-    var nb = parseInt(sizePref);
-    var pref = new Array();
-    for (var i = 0; i < nb; i++) {
-        var key = $("#preferences_" + i + "_key").attr('name');
-        var value = $("#preferences_" + i + "_value").attr('name');
-        pref[key] = value;
-    }
-
-    var json = JSON.stringify(pref);
-    $.post( 'relay.php', { verb: 'displayCard', entry_id: entryId, currentConstruction: currentConstruction, is_expr: isExpr, params : json },
-            function(data){
-                cardDiv.html(data);
-                cardDiv.show();
-            });
+    var fullConcordanceDiv = $('#full_concordance');
+    var idOccurrence = $(this).attr('name');
+    var backgroundColor = $(this).parent().parent().css('background-color');
+    $.post('relay.php',
+        {
+            verb: 'displayCC',
+            id_occ: idOccurrence,
+            params : jsonObject
+        },
+        function(data) {
+            fullConcordanceDiv.html(data);
+            fullConcordanceDiv.css('background-color', backgroundColor);
+            fullConcordanceDiv.show();
+        }
+    );
 }
 
 /*
  * Interaction functions for text list.
  */
-
 // Make current text visible for students.
 function setVisible()
 {
-    var test = $('.textList');
+    var test = $('#textlist');
     var resourceType = test.size() != 0 ? 'text' : 'collection';
     var tableRow = $(this.parentNode.parentNode);
     var rawId = tableRow.attr('id');
-    var resourceId = rawId.substring( 0, rawId.indexOf( '#', 0 ) );
-    var Id = getUrlParam('id', document.location.href);
-    Id = parseInt(Id.replace('#',''));
-    $.ajax({
-        url: "ajax_handler.php",
-        data: "ajaxcall=setVisible&resource_id=" + resourceId + '&resource_type=' + resourceType + '&courseId=' + Id,
+    var resourceId = rawId.substring(0, rawId.indexOf('#', 0));
+    var id = getUrlParam('id', document.location.href);
+    id = parseInt(id.replace('#',''));
+    /*$.ajax({
+        url: 'ajax_handler.php',
+        data: 'ajaxcall=setVisible&resource_id=' + resourceId + '&resource_type=' + resourceType + '&courseId=' + id,
         success: function(response){
-            if (response == "true") {
+            if (response == 'true') {
                 $('.setVisible', tableRow).hide();
-                    $('.setInvisible', tableRow).show();
+                $('.setInvisible', tableRow).show();
+                $(tableRow).removeClass('dimmed_text');
             } else {
                 alert(response);
             }
         },
         dataType: 'html'
-    });
+    });*/
+    $.post('ajax_handler.php',
+        {
+            ajaxcall: 'setVisible',
+            resource_id: resourceId,
+            resource_type: resourceType,
+            courseId: id
+        },
+        function(response) {
+            if (response == 'true') {
+                $('.setVisible', tableRow).hide();
+                $('.setInvisible', tableRow).show();
+                $(tableRow).removeClass('dimmed_text');
+            } else {
+                alert(response);
+            }
+        }
+    );
 
     return false;
 }
 
 // Make current text invisible for students.
 function setInvisible() {
-    var test = $('.textList');
+    var test = $('#textlist');
     var resourceType = test.size() != 0 ? 'text' : 'collection';
     var tableRow = $(this.parentNode.parentNode);
     var rawId = tableRow.attr('id');
-    var resourceId = rawId.substring( 0, rawId.indexOf( '#', 0 ) );
-    var Id = getUrlParam('id', document.location.href);
-    Id = parseInt(Id.replace('#',''));
+    var resourceId = rawId.substring( 0, rawId.indexOf('#', 0));
+    var id = getUrlParam('id', document.location.href);
+    id = parseInt(id.replace('#',''));
 
     $.ajax({
-        url: "ajax_handler.php",
-        data: "ajaxcall=setInvisible&resource_id=" + resourceId + '&resource_type=' + resourceType + '&courseId=' + Id,
-        success: function(response){
-            if ( response == "true" ){
-                    $('.setVisible', tableRow).show();
-                    $('.setInvisible', tableRow).hide();
+        url: 'ajax_handler.php',
+        data: 'ajaxcall=setInvisible&resource_id=' + resourceId + '&resource_type=' + resourceType + '&courseId=' + id,
+        success: function(response) {
+            if (response == 'true') {
+                $('.setVisible', tableRow).show();
+                $('.setInvisible', tableRow).hide();
+                $(tableRow).addClass('dimmed_text');
             } else {
                     alert(response);
             }
@@ -326,26 +337,26 @@ function setInvisible() {
 function moveUp()
 {
     // Retrieve parent <tr> tag.
-    var test = $('.textList');
+    var test = $('#textList');
     var resourceType = test.size() != 0 ? 'text' : 'collection';
     var componentDiv = $(this.parentNode.parentNode);
     var previousSibling = $(componentDiv).prev();
     var rawId = $(componentDiv).attr('id');
     var rawPos = $(componentDiv).attr('name');
     var rawSiblingId = $(previousSibling).attr('id');
-    var id = rawId.substring( 0, rawId.indexOf( '#', 0 ) );
-    var position = rawPos.substring( 0, rawPos.indexOf( '#', 0 ) );
-    var siblingId = rawSiblingId.substring( 0, rawSiblingId.indexOf( '#', 0 ) );
-      var courseId = getUrlParam('id', document.location.href);
+    var id = rawId.substring(0, rawId.indexOf('#', 0));
+    var position = rawPos.substring(0, rawPos.indexOf('#', 0));
+    var siblingId = rawSiblingId.substring(0, rawSiblingId.indexOf('#', 0));
+    var courseId = getUrlParam('id', document.location.href);
     courseId = parseInt(courseId.replace('#',''));
     $.ajax({
-        url: "ajax_handler.php",
-        data: "ajaxcall=moveUp&resource_id=" + id + "&position=" + position + "&sibling_id=" + siblingId + '&resource_type=' + resourceType + '&courseId=' + courseId,
-        success: function(response){
-            if( response == "true" ) {
-                $(previousSibling).attr('name', position + "#pos" );
-                $(componentDiv).attr('name', --position + "#pos" );
-                $(previousSibling).before( $(componentDiv) );
+        url: 'ajax_handler.php',
+        data: 'ajaxcall=moveUp&resource_id=' + id + '&position=' + position + '&sibling_id=' + siblingId + '&resource_type=' + resourceType + '&courseId=' + courseId,
+        success: function(response) {
+            if (response == 'true') {
+                $(previousSibling).attr('name', position + '#pos');
+                $(componentDiv).attr('name', --position + '#pos');
+                $(previousSibling).before($(componentDiv));
                 updateMoveIcons();
             } else {
                 alert(response);
@@ -360,23 +371,23 @@ function moveUp()
 // Move down current text by one row.
 function moveDown() {
     // Retrieve parent <tr> tag.
-    var test = $('.textList');
+    var test = $('#textList');
     var resourceType = test.size() != 0 ? 'text' : 'collection';
     var componentDiv = $(this.parentNode.parentNode);
     var nextSibling = $(componentDiv).next();
     var rawId = $(componentDiv).attr('id');
     var rawPos = $(componentDiv).attr('name');
     var rawSiblingId = $(nextSibling).attr('id');
-    var id = rawId.substring( 0, rawId.indexOf( '#', 0 ) );
-    var position = rawPos.substring( 0, rawPos.indexOf( '#', 0 ) );
-    var siblingId = rawSiblingId.substring( 0, rawSiblingId.indexOf( '#', 0 ) );
+    var id = rawId.substring(0, rawId.indexOf('#', 0));
+    var position = rawPos.substring(0, rawPos.indexOf('#', 0));
+    var siblingId = rawSiblingId.substring(0, rawSiblingId.indexOf('#', 0));
     var courseId = getUrlParam('id', document.location.href);
     courseId = parseInt(courseId.replace('#',''));
     $.ajax({
-        url: "ajax_handler.php",
-        data: "ajaxcall=moveDown&resource_id=" + id + "&position=" + position + "&sibling_id=" + siblingId + '&resource_type=' + resourceType + '&courseId=' + courseId,
-        success: function(response){
-            if( response == "true" ) {
+        url: 'ajax_handler.php',
+        data: 'ajaxcall=moveDown&resource_id=' + id + '&position=' + position + '&sibling_id=' + siblingId + '&resource_type=' + resourceType + '&courseId=' + courseId,
+        success: function(response) {
+            if (response == 'true') {
                 $(nextSibling).attr('name', position + "#pos" );
                 $(componentDiv).attr('name', ++position + "#pos" );
                 $(nextSibling).after( $(componentDiv) );
@@ -393,12 +404,12 @@ function moveDown() {
 function updateMoveIcons()
 {
     // Show all.
-    $('.textList .row a.moveUp').show();
-    $('.textList .row a.moveDown').show();
+    $('#textList .row a.moveUp').show();
+    $('#textList .row a.moveDown').show();
 
     // Hide up command for first component, and down command for the last.
-    $('.textList .row:first-child a.moveUp').hide();
-    $('.textList .row:last-child a.moveDown').hide();
+    $('#textList .row:first-child a.moveUp').hide();
+    $('#textList .row:last-child a.moveDown').hide();
 
     // Show all.
     $('#collectionList .row a.moveUp').show();
@@ -410,7 +421,7 @@ function updateMoveIcons()
 }
 
 // General purpose functions.
-function getUrlParam( param, url )
+function getUrlParam(param, url)
 {
     var u = url == undefined ? document.location.href : url;
     var reg = new RegExp('(\\?|&|^)' + param + '=(.*?)(&|$)');
@@ -418,23 +429,22 @@ function getUrlParam( param, url )
     return matches[2] != undefined ? decodeURIComponent(matches[2]).replace(/\+/g,' ') : '';
 }
 
-function changeType ()
+function changeType()
 {
-    var test = $('.textList');
     var tableRow = $(this.parentNode.parentNode);
     var rawId = tableRow.attr('id');
-    var resourceId = rawId.substring( 0, rawId.indexOf( '#', 0 ) );
+    var resourceId = rawId.substring(0, rawId.indexOf('#', 0));
     var courseId = getUrlParam('id', document.location.href);
     courseId = parseInt(courseId.replace('#',''));
         $.ajax({
-            url: "ajax_handler.php",
-            data: "ajaxcall=changeType&resource_id=" + resourceId + '&courseId=' + courseId,
-            success: function(response){
+            url: 'ajax_handler.php',
+            data: 'ajaxcall=changeType&resource_id=' + resourceId + '&courseId=' + courseId,
+            success: function(response) {
                 $('.changeType', tableRow).text(response);
-                if( response == "true" ) {
-                    $(nextSibling).attr('name', position + "#pos" );
-                    $(componentDiv).attr('name', ++position + "#pos" );
-                    $(nextSibling).after( $(componentDiv) );
+                if (response == 'true') {
+                    $(nextSibling).attr('name', position + '#pos');
+                    $(componentDiv).attr('name', ++position + '#pos');
+                    $(nextSibling).after($(componentDiv));
                     updateMoveIcons();
                 }
             },
