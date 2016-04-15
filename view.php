@@ -85,7 +85,6 @@ echo $OUTPUT->heading(get_string('textreading', 'cobra'));
 
 echo $OUTPUT->box_start('generalbox box-content');
 
-
 $content = '';
 $isallowedtoedit = false;
 if (has_capability('mod/cobra:edit', $context)) {
@@ -95,14 +94,14 @@ if (has_capability('mod/cobra:edit', $context)) {
                 '<a href="statistics.php?id=' . $id . '">' . get_string('statistics', 'cobra') . '</a>&nbsp;&nbsp;&nbsp;';
 }
 
-$preferences = get_cobra_preferences();
+$preferences = cobra_get_preferences();
 if ('SHOW' == $preferences['show_glossary']) {
     $content .= '<a href="myglossary.php?id=' . $id . '">' . get_string('myglossary', 'cobra') . '</a>';
 }
 
 // For all chosen collections display text in selected order.
 
-$collectionlist = $isallowedtoedit ? get_registered_collections('all') : get_registered_collections('visible');
+$collectionlist = $isallowedtoedit ? cobra_get_registered_collections('all') : cobra_get_registered_collections('visible');
 foreach ($collectionlist as $collection) {
     $content .= '<h3>' . $collection['local_label'] . '</h3>';
     $content .= '<table class="table table-condensed table-hover table-striped" id="textlist">' .
@@ -122,10 +121,10 @@ foreach ($collectionlist as $collection) {
 
     if ($isallowedtoedit) {
         // Load all texts to display for course admin.
-        $textlist = load_text_list($collection['id_collection'], 'all');
+        $textlist = cobra_load_text_list($collection['id_collection'], 'all');
     } else {
         // Load only visible texts to display for students.
-        $textlist = load_text_list($collection['id_collection'], 'visible');
+        $textlist = cobra_load_text_list($collection['id_collection'], 'visible');
     }
     if (!empty($textlist) && is_array($textlist)) {
         $content .= '<tbody>';

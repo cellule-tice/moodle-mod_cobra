@@ -61,7 +61,7 @@ try {
         $lingentity = cobra_remote_service::call('getEntityLingIdFromConcept', $params, 'html');
         $lingentity = str_replace("\"", "", $lingentity);
         if ($encodeclic) {
-            clic($resourceid, $lingentity, $DB, $courseid, $userid);
+            cobra_clic($resourceid, $lingentity, $DB, $courseid, $userid);
         }
         $glossarystatus = cobra_is_in_glossary($lingentity, $courseid);
         $response = array(

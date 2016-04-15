@@ -108,7 +108,7 @@ if (!is_null($cmd)) {
             }
             if ( !is_null($beforedate) ) {
                 // Execute delete before date.
-                if (clean_stats_before_date ($course->id, $beforedate)) {
+                if (cobra_clean_stats_before_date ($course->id, $beforedate)) {
                     $mydate = $_REQUEST['before_date']['day'] . '/'.  $_REQUEST['before_date']['month']
                             . '/'. $_REQUEST['before_date']['year'];
                     $out .= '<span class="pre"> Clic stats deleted before ' . $mydate . '</span>';
@@ -118,7 +118,7 @@ if (!is_null($cmd)) {
             }
         } else if ('ALL' == $scope) {
             // Delete all stats.
-            if (clean_all_stats($course->id)) {
+            if (cobra_clean_all_stats($course->id)) {
                  $out .= '<span class="pre"> All click stats deleted</span>';
             }
         }
@@ -155,13 +155,13 @@ if ( !is_null( $view ) ) {
                  .  '</tr>'
                  .  '</thead>';
 
-            $list = get_clicked_entries ($course->id, 20);
+            $list = cobra_get_clicked_entries ($course->id, 20);
             foreach ($list as $lingentityid => $nb) {
-                list( $conceptid, $construction, $entrytype, $category ) = get_concept_info_from_ling_entity($lingentityid);
+                list( $conceptid, $construction, $entrytype, $category ) = cobra_get_concept_info_from_ling_entity($lingentityid);
                 $out .= '<tr>'
                      .  '<td>' . $nb . '</td>'
                      .  '<td>' . $construction . '</td>'
-                     .  '<td>' . get_translations( $conceptid, $entrytype ) . '</td>'
+                     .  '<td>' . cobra_get_translations( $conceptid, $entrytype ) . '</td>'
                      .  '<td>' . $category . '</td>'
                      .  '</tr>';
             }
@@ -171,9 +171,9 @@ if ( !is_null( $view ) ) {
         case '2' :
             $out .= '<h3><small>' . get_string( 'Display_the_10_most_frequently_clicked_entries_per_text', 'cobra' )
                 . '</small></h3>';
-            $collectionlist = get_registered_collections( 'all' );
+            $collectionlist = cobra_get_registered_collections( 'all' );
             foreach ($collectionlist as $collection) {
-                $textlist = load_text_list( $collection['id_collection'], 'all' );
+                $textlist = cobra_load_text_list( $collection['id_collection'], 'all' );
 
                 $out .= '<table>'
                      .  '<thead>'
@@ -207,11 +207,12 @@ if ( !is_null( $view ) ) {
                         }
                         $out .= '&nbsp; </td>';
 
-                        list( $conceptid, $construction, $entrytype, $category ) = get_concept_info_from_ling_entity($lingentityid);
+                        list($conceptid, $construction, $entrytype, $category)
+                                = cobra_get_concept_info_from_ling_entity($lingentityid);
 
                         $out .= '<td>' . $nbclics  . '</td>'
                              .  '<td>' . $construction . '</td>'
-                             .  '<td>' . get_translations($conceptid, $entrytype) . '</td>'
+                             .  '<td>' . cobra_get_translations($conceptid, $entrytype) . '</td>'
                              .  '<td>' . $category . '</td>'
                              .  '</tr>';
                     }
@@ -222,9 +223,9 @@ if ( !is_null( $view ) ) {
 
         case '3' :
             $out .= '<h3><small>' . get_string( 'Display_the_most_frequently_analysed_texts', 'cobra' ) . '</small></h3>';
-            $collectionlist = get_registered_collections( 'all' );
+            $collectionlist = cobra_get_registered_collections( 'all' );
             foreach ($collectionlist as $collection) {
-                $textlist = load_text_list( $collection['id_collection'], 'all' );
+                $textlist = cobra_load_text_list( $collection['id_collection'], 'all' );
                 $textinfo = array();
                 foreach ($textlist as $text) {
                     $textinfo[$text->id_text] = $text->title;
@@ -239,7 +240,7 @@ if ( !is_null( $view ) ) {
                      .  '<th> Texte </th>'
                      .  '</tr>'
                      .  '</thead>';
-                $nbclicslist = get_clicked_texts_frequency($course->id);
+                $nbclicslist = cobra_get_clicked_texts_frequency($course->id);
                 foreach ($nbclicslist as $textid => $nbtotalclics) {
                     if ( isset( $textinfo[$textid] ) ) {
                         $out .= '<tr>'
@@ -252,7 +253,7 @@ if ( !is_null( $view ) ) {
             }
             break;
         case '4' :
-            $collectionlist = get_registered_collections( 'all' );
+            $collectionlist = cobra_get_registered_collections( 'all' );
             foreach ($collectionlist as $collection) {
                 $out .= '<table class="claroTable emphaseLine textList" width="100%" border="0" '.
                         'cellspacing="2" style="margin-bottom:20px;">'
@@ -265,18 +266,18 @@ if ( !is_null( $view ) ) {
                 .  '<th>' . get_string( 'Nb_of_clickable_words', 'cobra' ) . '</th>' . "\n"
                 .  '<th>' . get_string( 'Different_users', 'cobra' ) . '</th>' . "\n"
                 .  '<th>' . get_string( 'Total_clic', 'cobra' ) . '</th>' . "\n";
-                $textlist = load_text_list( $collection['id_collection'], 'all' );
+                $textlist = cobra_load_text_list( $collection['id_collection'], 'all' );
                 foreach ($textlist as $text) {
                     $out .= '<tr> <td>' . $text->title. '</td>' . "\n"
-                            . '<td>' . get_nb_tags_in_text ($text->id_text) . '</td>' . "\n"
-                            . '<td> ' . count(get_distinct_access_for_text($text->id_text)).' </td>' . "\n"
-                            . '<td> ' . get_nb_clics_for_text($text->id_text). '</td> </tr>' . "\n";
+                            . '<td>' . cobra_get_nb_tags_in_text ($text->id_text) . '</td>' . "\n"
+                            . '<td> ' . count(cobra_get_distinct_access_for_text($text->id_text)).' </td>' . "\n"
+                            . '<td> ' . cobra_get_nb_clics_for_text($text->id_text). '</td> </tr>' . "\n";
                 }
                 $out .= '</table>';
             }
             break;
         case '5' :
-            $usercliclist = get_user_list_for_clic ();
+            $usercliclist = cobra_get_user_list_for_clic ();
             if (!empty($usercliclist)) {
                 $out .= '<table class="claroTable emphaseLine textList" width="100%" border="0" '
                       . 'cellspacing="2" style="margin-bottom:20px;">' . "\n"
@@ -288,13 +289,13 @@ if ( !is_null( $view ) ) {
 
                 foreach ($usercliclist as $userinfo) {
                     $out .= '<tr> <td> '. $userinfo['lastName'] . ' ' . $userinfo['firstName'] . '</td>' . "\n"
-                         . '<td> ' . get_nb_texts_for_user($userinfo['userId']) . '</td>' . "\n"
-                         . '<td> ' . get_nb_clic_for_user ($userinfo['userId']) . '</td></tr>'  . "\n";
+                         . '<td> ' . cobra_get_nb_texts_for_user($userinfo['userId']) . '</td>' . "\n"
+                         . '<td> ' . cobra_get_nb_clic_for_user ($userinfo['userId']) . '</td></tr>'  . "\n";
                 }
-                if (has_anonymous_clic()) {
+                if (cobra_has_anonymous_clic()) {
                     $out .= '<tr> <td> '. get_string('Anonymous', 'cobra') . '</td>' . "\n"
-                         . '<td> ' . get_nb_texts_for_user('0') . '</td>' . "\n"
-                         . '<td> ' . get_nb_clic_for_user ('0') . '</td></tr>'  . "\n";
+                         . '<td> ' . cobra_get_nb_texts_for_user('0') . '</td>' . "\n"
+                         . '<td> ' . cobra_get_nb_clic_for_user ('0') . '</td></tr>'  . "\n";
                 }
                 $out .= '</table>';
             }

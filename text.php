@@ -65,8 +65,8 @@ $content = '';
 $text = new cobra_text_wrapper();
 $text->set_text_id($textid);
 $text->load();
-$preferences = get_cobra_preferences();
-$ccorder = get_corpus_type_display_order();
+$preferences = cobra_get_preferences();
+$ccorder = cobra_get_corpus_type_display_order();
 $order = implode(',', $ccorder);
 $preferences['ccOrder'] = $order;
 $encodeclic = 1;
@@ -100,8 +100,8 @@ if (!empty($audiofileurl) && 'SHOW' == $preferences['player']) {
 if ('SHOW' == strtoupper($preferences['nextprevbuttons'])) {
     $clearfix = true;
     $content .= '<div class="textnavbuttons">';
-    $nextid = get_next_textid($text);
-    $previousid = get_previous_textid($text);
+    $nextid = cobra_get_next_textid($text);
+    $previousid = cobra_get_previous_textid($text);
     if ($previousid) {
         $content .= '<a href="' .
                     $_SERVER['PHP_SELF'] .

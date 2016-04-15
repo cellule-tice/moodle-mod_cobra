@@ -143,7 +143,7 @@ if ('collections' == $currentsection) {
     } else if ('exAdd' == $cmd && !empty($remotecollection)) {
         $collection = new cobra_collection_wrapper();
         $collection->wrapremote($remotecollection);
-        $textlist = load_remote_text_list($collection->get_id());
+        $textlist = cobra_load_remote_text_list($collection->get_id());
         $savemode = $collection->save();
         if ('error' == $savemode) {
             echo $OUTPUT->notification(get_string('unable_register_collection', 'cobra'));
@@ -160,7 +160,7 @@ if ('collections' == $currentsection) {
         }
     } else if ('exRemove' == $cmd) {
         $collection = new cobra_collection_wrapper($collectionid);
-        if (remote_text_list($collectionid)) {
+        if (cobra_remove_text_list($collectionid)) {
             if (!$collection->remove()) {
                 echo $OUTPUT->notification(get_string('unable_unregister_collection', 'cobra'));
             }
@@ -178,8 +178,8 @@ if ('collections' == $currentsection) {
         }
         $localcollection->set_remote_name($remotecollection->get_remote_name());
         $localcollection->save();
-        $remotetextlist = load_remote_text_list($collectionid);
-        $localtextlist = load_text_list($collectionid);
+        $remotetextlist = cobra_load_remote_text_list($collectionid);
+        $localtextlist = cobra_load_text_list($collectionid);
         $localtextidlist = array();
         // Remove legacy texts.
         $legacytextcount = $removedtextcount = 0;
@@ -237,10 +237,10 @@ if ('collections' == $currentsection) {
         }
     }
 } else if ('corpus' == $currentsection) {
-    $prefs = get_cobra_preferences();
-    $tabcorpustype = return_valid_list_type_corpus($prefs['language']);
+    $prefs = cobra_get_preferences();
+    $tabcorpustype = cobra_get_valid_list_type_corpus($prefs['language']);
     if ('saveOrder' == $cmd) {
-        if (!clear_corpus_selection()) {
+        if (!cobra_clear_corpus_selection()) {
             echo 'error while saving preferences' . '<br/>';
         } else {
             $tabnewordre = array();
@@ -252,14 +252,14 @@ if ('collections' == $currentsection) {
             }
             ksort($tabnewordre);
             foreach ($tabnewordre as $typeid) {
-                insert_corpus_type_display_order($typeid);
+                cobra_insert_corpus_type_display_order($typeid);
             }
             echo 'Concordances Order Saved' . '<br/>';
         }
     }
 } else if ('display' == $currentsection) {
     if ('savePrefs' == $cmd) {
-        $prefs = get_cobra_preferences();
+        $prefs = cobra_get_preferences();
         $prefs['gender'] = isset($_REQUEST['gender']) && is_string($_REQUEST['gender']) ? $_REQUEST['gender'] : $prefs['gender'];
         $prefs['ff'] = isset($_REQUEST['ff']) && is_string($_REQUEST['ff']) ? $_REQUEST['ff'] : $prefs['ff'];
         if (isset($_REQUEST['translations']) && is_string($_REQUEST['translations'])) {
@@ -281,7 +281,7 @@ if ('collections' == $currentsection) {
         if (isset($_REQUEST['nextprevbuttons']) && is_string($_REQUEST['nextprevbuttons'])) {
             $prefs['nextprevbuttons'] = $_REQUEST['nextprevbuttons'];
         }
-        if (!save_cobra_preferences($prefs)) {
+        if (!cobra_save_preferences($prefs)) {
                 echo ' probleme <br/>';
         } else {
             echo  get_string('Display_preferences_updated', 'cobra') . '<br/>';
@@ -307,7 +307,7 @@ if ('collections' == $currentsection) {
                 '<tbody>';
 
     $idlist = array();
-    $registeredcollectionslist = get_registered_collections('all');
+    $registeredcollectionslist = cobra_get_registered_collections('all');
 
     $position = 1;
     foreach ($registeredcollectionslist as $collection) {
@@ -361,7 +361,7 @@ if ('collections' == $currentsection) {
                 '</tr>' .
                 '</thead>' .
                 '<tbody>';
-    $availablecollectionslist = get_filtered_cobra_collections($cobra->language, $idlist);
+    $availablecollectionslist = cobra_get_filtered_collections($cobra->language, $idlist);
     foreach ($availablecollectionslist as $collection) {
         $content .= '<tr>' .
                     '<td>' . $collection['label'] . '</td>' .
@@ -375,14 +375,14 @@ if ('collections' == $currentsection) {
                 '</table>' .
                 '</blockquote>';
 } else if ('corpus' == $currentsection) {
-    $ordretypelist = get_corpus_type_display_order();
+    $ordretypelist = cobra_get_corpus_type_display_order();
     $list = '';
     foreach ($tabcorpustype as $corpustypeinfo) {
         $typeid = (int)$corpustypeinfo['id'];
-        $couleur = find_background($typeid);
+        $couleur = cobra_find_background($typeid);
         $corpustypename = $corpustypeinfo['name'];
 
-        if (corpus_type_exists($typeid, $prefs['language'])) {
+        if (cobra_corpus_type_exists($typeid, $prefs['language'])) {
             $typeselected = '';
             if (in_array($typeid, $ordretypelist)) {
                 $typeselected = ' checked="checked"';
@@ -422,7 +422,7 @@ if ('collections' == $currentsection) {
     $content .= $form;
 } else if ('display' == $currentsection) {
     if (!isset($prefs)) {
-        $prefs = get_cobra_preferences();
+        $prefs = cobra_get_preferences();
     }
     $checkedstring = ' checked="checked"';
     $content .= '<form method="post" action="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&section=display">' .

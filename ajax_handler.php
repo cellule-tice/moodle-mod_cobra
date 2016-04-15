@@ -72,15 +72,15 @@ header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past.
 
 if ('getDisplayParams' == $call) {
-    $displayprefs = get_cobra_preferences();
-    $ccorder = get_corpus_type_display_order();
+    $displayprefs = cobra_get_preferences();
+    $ccorder = cobra_get_corpus_type_display_order();
     $order = implode(',', $ccorder);
     $displayprefs['ccOrder'] = $order;
     echo json_encode($displayprefs);
 }
 
 if ('setVisible' == $call) {
-    if (set_visibility($resource, true, $resourcetype, $course->id)) {
+    if (cobra_set_visibility($resource, true, $resourcetype, $course->id)) {
         echo 'true';
         return true;
     }
@@ -88,7 +88,7 @@ if ('setVisible' == $call) {
 }
 
 if ('setInvisible' == $call) {
-    if (set_visibility($resource, false, $resourcetype, $course->id)) {
+    if (cobra_set_visibility($resource, false, $resourcetype, $course->id)) {
         echo 'true';
         return true;
     }
@@ -97,8 +97,8 @@ if ('setInvisible' == $call) {
 
 if ('moveDown' == $call) {
     $position = optional_param('position', 0, PARAM_INT);
-    if ($position && set_position($sibling, $position++, $resourcetype, $course->id)
-        && set_position($resource, $position, $resourcetype, $course->id)) {
+    if ($position && cobra_set_position($sibling, $position++, $resourcetype, $course->id)
+        && cobra_set_position($resource, $position, $resourcetype, $course->id)) {
         echo 'true';
         return true;
     }
@@ -107,8 +107,8 @@ if ('moveDown' == $call) {
 
 if ('moveUp' == $call) {
     $position = optional_param('position', 0, PARAM_INT);
-    if ($position && set_position($sibling, $position--, $resourcetype, $course->id)
-        && set_position($resource, $position, $resourcetype, $course->id)) {
+    if ($position && cobra_set_position($sibling, $position--, $resourcetype, $course->id)
+        && cobra_set_position($resource, $position, $resourcetype, $course->id)) {
         echo 'true';
         return true;
     }
@@ -117,8 +117,8 @@ if ('moveUp' == $call) {
 
 if ('changeType' == $call) {
     $textid = optional_param('resource_id', 0, PARAM_INT);
-    if (change_text_type($textid, $course->id)) {
-        $newtype = get_text_type($textid, $course->id);
+    if (cobra_change_text_type($textid, $course->id)) {
+        $newtype = cobra_get_text_type($textid, $course->id);
         echo get_string($newtype, 'cobra');
         return true;
     }

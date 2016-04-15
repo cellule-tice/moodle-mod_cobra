@@ -98,7 +98,7 @@ function cobra_export_glossary($glossary) {
 
 function cobra_get_glossary_for_text($textid) {
     $glossary = array();
-    increase_script_time();
+    cobra_increase_script_time();
     $oldconceptlist = array();
     for ($i = 1; $i <= 2; $i++) {
         switch ($i) {
@@ -129,7 +129,7 @@ function cobra_get_glossary_for_text($textid) {
  */
 function cobra_list_concepts_in_text($textid, $entrytype) {
     $conceptidlist = array();
-    if (!in_array($entrytype, get_valid_entry_types())) {
+    if (!in_array($entrytype, cobra_get_valid_entry_types())) {
         return false;
     }
     if (!$textid) {
@@ -146,9 +146,9 @@ function cobra_list_concepts_in_text($textid, $entrytype) {
         }
     } else {
         // Get concept list for all texts of registrered collections.
-        $collectionlist = get_registered_collections();
+        $collectionlist = cobra_get_registered_collections();
         foreach ($collectionlist as $collection) {
-            $textlist = load_text_list($collection['id_collection'], 'visible');
+            $textlist = cobra_load_text_list($collection['id_collection'], 'visible');
             foreach ($textlist as $text) {
                 $conceptids = cobra_list_concepts_in_text($text['id_text'], $entrytype);
                 foreach ($conceptids as $conceptid) {
@@ -252,8 +252,8 @@ function cobra_get_lemmacat_list_from_ff($word, $language) {
     return $lemmalist;
 }
 
-function cobra_return_list_of_words_in_text($mytext, $language) {
-    increase_script_time();
+function cobra_get_list_of_words_in_text($mytext, $language) {
+    cobra_increase_script_time();
     $paragraphs = explode ("\n", $mytext);
     $words = array();
     foreach ($paragraphs as $para) {

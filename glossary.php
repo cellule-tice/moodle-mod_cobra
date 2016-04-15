@@ -64,12 +64,12 @@ $acceptedcmdlist = array(  'rqExport', 'exExport', 'rqCompare', 'exCompare' );
 
 $cmd = isset( $_REQUEST['cmd'] ) && in_array( $_REQUEST['cmd'], $acceptedcmdlist ) ? $_REQUEST['cmd'] : null;
 
-$collectionlist = get_registered_collections('visible');
+$collectionlist = cobra_get_registered_collections('visible');
 
 if ($cmd == 'exExport') {
     $glossary = array();
     foreach ($collectionlist as $collection) {
-        $textlist = load_text_list( $collection['id_collection'], 'visible' );
+        $textlist = cobra_load_text_list( $collection['id_collection'], 'visible' );
         foreach ($textlist as $num => $text) {
             if (array_key_exists($text->id, $_REQUEST)) {
                 $textid = $text->id_text;
@@ -102,7 +102,7 @@ echo $OUTPUT->heading(get_string('textreading', 'cobra'));
 
 echo $OUTPUT->box_start('Glossaire');
 
-$prefs = get_cobra_preferences();
+$prefs = cobra_get_preferences();
 $language = $prefs['language'];
 
 $display = '';
@@ -118,7 +118,7 @@ if ($cmd == 'rqExport') {
     $display .= '<tr> <td><input type="checkbox" class="selectall" id="selectall"  >'
             .get_string('checkall_uncheckall', 'cobra') .'</td></tr>';
     foreach ($collectionlist as $collection) {
-        $textlist = load_text_list( $collection['id_collection'], 'visible' );
+        $textlist = cobra_load_text_list( $collection['id_collection'], 'visible' );
         foreach ($textlist as $text) {
             // Display Title.
             $display  .= '<tr><td style="min-width:33%;">' . "\n"
@@ -143,7 +143,7 @@ if ($cmd == 'rqExport') {
         . get_string('checkall_uncheckall', 'cobra') .'</td></tr>';
 
     foreach ($collectionlist as $collection) {
-        $textlist = load_text_list( $collection['id_collection'], 'visible' );
+        $textlist = cobra_load_text_list( $collection['id_collection'], 'visible' );
         foreach ($textlist as $text) {
             // Display checkbox foreach text.
             $display  .= '<tr><td style="min-width:33%;">' . "\n"
@@ -161,10 +161,10 @@ if ($cmd == 'rqExport') {
             . '" type="submit" name="submit" />&nbsp;</td></tr>' . "\n" . '</table> </form>' . "\n";
     $out .= $display;
 } else if ( $cmd == 'exCompare') {
-    increase_script_time();
+    cobra_increase_script_time();
     $glossary = array();
     foreach ($collectionlist as $collection) {
-        $textlist = load_text_list( $collection['id_collection'], 'visible' );
+        $textlist = cobra_load_text_list( $collection['id_collection'], 'visible' );
         foreach ($textlist as $num => $text) {
             if (array_key_exists($text->id, $_REQUEST)) {
                 $textid = $text->id;
@@ -182,7 +182,7 @@ if ($cmd == 'rqExport') {
     $mytext = $_REQUEST['myText'];
     $newwords = '';
     $otherwords = '';
-    $words = cobra_return_list_of_words_in_text ( $mytext, $language );
+    $words = cobra_get_list_of_words_in_text ( $mytext, $language );
 
     foreach ($words as $word) {
         $listflexions = cobra_word_exists_as_flexion ( $word, $language );

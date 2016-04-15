@@ -72,7 +72,7 @@ $content .= $OUTPUT->box_start('generalbox box-content');
 
 $content .= '<div id="courseid" class="hidden" name="' . $course->id .'">' . $course->id . '</div>';
 
-$preferences = get_cobra_preferences();
+$preferences = cobra_get_preferences();
 if ('HIDE' == $preferences['show_glossary']) {
     die('not allowed');
 }
