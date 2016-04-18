@@ -154,7 +154,6 @@ M.mod_cobra.remove_from_global_glossary = function() {
 }
 
 function displayDetails(conceptId, isExpression) {
-    $('#card').hide();
     $('#full_concordance').hide();
     var detailsDiv = $('#details');
     var textId = getUrlParam('id_text', document.location.href);
@@ -268,7 +267,7 @@ function displayFullOcc()
     $.post('relay.php',
         {
             verb: 'displayCC',
-            id_occ: idOccurrence,
+            occurrenceid: idOccurrence,
             params : json
         },
         function(data) {

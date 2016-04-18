@@ -22,8 +22,7 @@ require_once(__DIR__ . '/lib/glossarylib.php');
 // Init request vars.
 $acceptedcmdlist = array(
     'displayEntry',
-    'displayCC',
-    'displayCard'
+    'displayCC'
 );
 // Security checks.
 if (!isset($_SERVER['HTTP_REFERER'])) {
@@ -39,7 +38,7 @@ if (empty($call) || !in_array($call, $acceptedcmdlist)) {
 }
 
 // Force headers.
-header('Content-Type: text/html; charset=iso-8859-1'); // Charset.
+header('Content-Type: text/html; charset=utf-8'); // Charset.
 header('Cache-Control: no-cache, must-revalidate'); // HTTP/1.1.
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past.
 
@@ -71,7 +70,7 @@ if ('displayEntry' == $call) {
         'html' => $html,
         'inglossary' => $glossarystatus,
         'lingentity' => $lingentity,
-        'userId' => $userid
+        'userId' => $userid,
     );
     array_walk(
         $response,
@@ -79,29 +78,17 @@ if ('displayEntry' == $call) {
             $entry = utf8_encode($entry);
         }
     );
+
     $response = json_encode($response);
 }
 
 if ('displayCC' == $call) {
     $concordanceid = optional_param('concordanceid', null, PARAM_INT);
-    $occid = optional_param('id_occ', null, PARAM_INT);
+    $occurrenceid = optional_param('occurrenceid', null, PARAM_INT);
     $color = optional_param('bg_color', null, PARAM_ALPHANUMEXT);
     $pref = isset($_REQUEST['params']) ? $_REQUEST['params'] : null;
-    $params = array('id_cc' => $concordanceid, 'id_occ' => $occid, 'params' => $pref);
-    $response = cobra_remote_service::call('displayCC', $params, 'html');
+    $params = array('id_cc' => $concordanceid, 'id_occ' => $occurrenceid, 'params' => $pref);
+    $response = utf8_encode(cobra_remote_service::call('displayCC', $params, 'html'));
 }
 
-if ('displayCard' == $call) {
-    $entryid = optional_param('entry_id', null, PARAM_INT);
-    $isexpr = optional_param('is_expr'  , false, PARAM_BOOL);
-    $construction = optional_param('currentConstruction', null, PARAM_ALPHANUM);
-    $prefs = isset($_REQUEST['params']) ? $_REQUEST['params'] : null;
-    $params = array(
-        'entry_id' => $entryid,
-        'is_expr' => $isexpr,
-        'currentConstruction' => $construction,
-        'params' => $prefs
-    );
-    $response = cobra_remote_service::call('displayCard', $params, 'html');
-}
 echo $response;
