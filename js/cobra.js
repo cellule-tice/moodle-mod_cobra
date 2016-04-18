@@ -174,34 +174,46 @@ function displayDetails(conceptId, isExpression) {
     $.post('relay.php',
         {
             verb: 'displayEntry',
-            concept_id: conceptId,
-            resource_id: textId,
-            is_expr: isExpression,
-            encodeClic : encodeClic,
-            courseId : courseId,
-            userId : userId,
+            conceptid: conceptId,
+            resourceid: textId,
+            isexpression: isExpression,
+            encodeclic : encodeClic,
+            courseid : courseId,
+            userid : userId,
             params : json
         },
         function(data) {
             var response = JSON.parse(data);
-            var str = response.html.replace(/class="label"/g,'class="cobralabel"')
-                    .replace(/img\//g,'pix\/');
-            detailsDiv.html(str);
-            if ('SHOW' == $('#showglossary').text()) {
-                var lingEntitySpan = '<span id="currentlingentity" class="hidden">' + response.lingentity + '</span>';
-                var glossaryIcon = '';
-                var angularClick = '';
-                if ('1' == response.inglossary) {
-                    glossaryIcon = '<img height="20px" class="inGlossary" src="pix/inglossary.png" title="Pr&eacute;sent dans mon glossaire"/>';
-                    angularClick = 'ng-click="addEntry(' + response.lingentity + ')"';
-                } else {
-                    glossaryIcon = '<img height="20px" class="glossaryAdd" src="pix/glossaryadd.png" title="Ajouter &agrave; mon glossaire"/>';
-                }
-                var tr = $('#displayOnClic').find('tr:first')
+            if (response.error) {
+                detailsDiv.html(response.error);
+            } else {
+                var str = response.html.replace(/class="label"/g, 'class="cobralabel"')
+                    .replace(/img\//g, 'pix\/');
+                detailsDiv.html(str);
+                if ('SHOW' == $('#showglossary').text()) {
+                    var lingEntitySpan = '<span id="currentlingentity" class="hidden">' +
+                                         response.lingentity +
+                                         '</span>';
+                    var glossaryIcon = '';
+                    var angularClick = '';
+                    if ('1' == response.inglossary) {
+                        glossaryIcon = '<img height="20px" ' +
+                                       'class="inGlossary" ' +
+                                       'src="pix/inglossary.png" ' +
+                                       'title="Pr&eacute;sent dans mon glossaire"/>';
+                        angularClick = 'ng-click="addEntry(' + response.lingentity + ')"';
+                    } else {
+                        glossaryIcon = '<img height="20px" ' +
+                                       'class="glossaryAdd" ' +
+                                       'src="pix/glossaryadd.png" ' +
+                                       'title="Ajouter &agrave; mon glossaire"/>';
+                    }
+                    var tr = $('#displayOnClic').find('tr:first')
                         .prepend('<th ' + angularClick + ' class="glossaryIcon">' + lingEntitySpan + glossaryIcon + '</th>')
                         .addClass('digestRow');
-            } else {
-                $('#glossary').remove();
+                } else {
+                    $('#glossary').remove();
+                }
             }
         }
     );
@@ -226,7 +238,7 @@ function displayFullConcordance()
     $.post('relay.php',
         {
             verb: 'displayCC',
-            id_cc: idConcordance,
+            concordanceid: idConcordance,
             params : json
         },
         function(data) {
@@ -243,11 +255,21 @@ function displayFullOcc()
     var fullConcordanceDiv = $('#full_concordance');
     var idOccurrence = $(this).attr('name');
     var backgroundColor = $(this).parent().parent().css('background-color');
+    var sizePref = $("#preferencesNb").attr('name');
+    var nb = parseInt(sizePref);
+    var pref = new Array();
+    for (var i = 0; i < nb; i++) {
+        var key = $("#preferences_" + i + "_key").attr('name');
+        var value = $("#preferences_" + i + "_value").attr('name');
+        pref[key] = value;
+    }
+
+    var json = JSON.stringify(pref);
     $.post('relay.php',
         {
             verb: 'displayCC',
             id_occ: idOccurrence,
-            params : jsonObject
+            params : json
         },
         function(data) {
             fullConcordanceDiv.html(data);
@@ -268,28 +290,15 @@ function setVisible()
     var tableRow = $(this.parentNode.parentNode);
     var rawId = tableRow.attr('id');
     var resourceId = rawId.substring(0, rawId.indexOf('#', 0));
-    var id = getUrlParam('id', document.location.href);
-    id = parseInt(id.replace('#',''));
-    /*$.ajax({
-        url: 'ajax_handler.php',
-        data: 'ajaxcall=setVisible&resource_id=' + resourceId + '&resource_type=' + resourceType + '&courseId=' + id,
-        success: function(response){
-            if (response == 'true') {
-                $('.setVisible', tableRow).hide();
-                $('.setInvisible', tableRow).show();
-                $(tableRow).removeClass('dimmed_text');
-            } else {
-                alert(response);
-            }
-        },
-        dataType: 'html'
-    });*/
+    var courseId = getUrlParam('id', document.location.href);
+    courseId = parseInt(id.replace('#',''));
+
     $.post('ajax_handler.php',
         {
             ajaxcall: 'setVisible',
             resource_id: resourceId,
             resource_type: resourceType,
-            courseId: id
+            courseId: courseId
         },
         function(response) {
             if (response == 'true') {
@@ -312,24 +321,26 @@ function setInvisible() {
     var tableRow = $(this.parentNode.parentNode);
     var rawId = tableRow.attr('id');
     var resourceId = rawId.substring( 0, rawId.indexOf('#', 0));
-    var id = getUrlParam('id', document.location.href);
-    id = parseInt(id.replace('#',''));
+    var courseId = getUrlParam('id', document.location.href);
+    courseId = parseInt(id.replace('#',''));
 
-    $.ajax({
-        url: 'ajax_handler.php',
-        data: 'ajaxcall=setInvisible&resource_id=' + resourceId + '&resource_type=' + resourceType + '&courseId=' + id,
-        success: function(response) {
+    $.post('ajax_handler.php',
+        {
+            ajaxcall: 'setInvisible',
+            resource_id: resourceId,
+            resource_type: resourceType,
+            courseId: courseId
+        },
+        function(response) {
             if (response == 'true') {
                 $('.setVisible', tableRow).show();
                 $('.setInvisible', tableRow).hide();
                 $(tableRow).addClass('dimmed_text');
             } else {
-                    alert(response);
+                alert(response);
             }
-        },
-        dataType: 'html'
-    });
-
+        }
+    );
     return false;
 }
 
@@ -337,22 +348,29 @@ function setInvisible() {
 function moveUp()
 {
     // Retrieve parent <tr> tag.
-    var test = $('#textList');
+    var test = $('#textlist');
     var resourceType = test.size() != 0 ? 'text' : 'collection';
     var componentDiv = $(this.parentNode.parentNode);
     var previousSibling = $(componentDiv).prev();
     var rawId = $(componentDiv).attr('id');
     var rawPos = $(componentDiv).attr('name');
     var rawSiblingId = $(previousSibling).attr('id');
-    var id = rawId.substring(0, rawId.indexOf('#', 0));
+    var resourceId = rawId.substring(0, rawId.indexOf('#', 0));
     var position = rawPos.substring(0, rawPos.indexOf('#', 0));
     var siblingId = rawSiblingId.substring(0, rawSiblingId.indexOf('#', 0));
     var courseId = getUrlParam('id', document.location.href);
     courseId = parseInt(courseId.replace('#',''));
-    $.ajax({
-        url: 'ajax_handler.php',
-        data: 'ajaxcall=moveUp&resource_id=' + id + '&position=' + position + '&sibling_id=' + siblingId + '&resource_type=' + resourceType + '&courseId=' + courseId,
-        success: function(response) {
+
+    $.post('ajax_handler.php',
+        {
+            ajaxcall: 'moveUp',
+            resource_id: resourceId,
+            position: position,
+            sibling_id: siblingId,
+            resource_type: resourceType,
+            courseId: courseId
+        },
+        function(response) {
             if (response == 'true') {
                 $(previousSibling).attr('name', position + '#pos');
                 $(componentDiv).attr('name', --position + '#pos');
@@ -361,9 +379,8 @@ function moveUp()
             } else {
                 alert(response);
             }
-        },
-        dataType: 'html'
-    });
+        }
+    );
 
     return false;
 }
@@ -371,32 +388,39 @@ function moveUp()
 // Move down current text by one row.
 function moveDown() {
     // Retrieve parent <tr> tag.
-    var test = $('#textList');
+    var test = $('#textlist');
     var resourceType = test.size() != 0 ? 'text' : 'collection';
     var componentDiv = $(this.parentNode.parentNode);
     var nextSibling = $(componentDiv).next();
     var rawId = $(componentDiv).attr('id');
     var rawPos = $(componentDiv).attr('name');
     var rawSiblingId = $(nextSibling).attr('id');
-    var id = rawId.substring(0, rawId.indexOf('#', 0));
+    var resourceId = rawId.substring(0, rawId.indexOf('#', 0));
     var position = rawPos.substring(0, rawPos.indexOf('#', 0));
     var siblingId = rawSiblingId.substring(0, rawSiblingId.indexOf('#', 0));
     var courseId = getUrlParam('id', document.location.href);
     courseId = parseInt(courseId.replace('#',''));
-    $.ajax({
-        url: 'ajax_handler.php',
-        data: 'ajaxcall=moveDown&resource_id=' + id + '&position=' + position + '&sibling_id=' + siblingId + '&resource_type=' + resourceType + '&courseId=' + courseId,
-        success: function(response) {
+
+    $.post('ajax_handler.php',
+        {
+            ajaxcall: 'moveDown',
+            resource_id: resourceId,
+            position: position,
+            sibling_id: siblingId,
+            resource_type: resourceType,
+            courseId: courseId
+        },
+        function(response) {
             if (response == 'true') {
                 $(nextSibling).attr('name', position + "#pos" );
                 $(componentDiv).attr('name', ++position + "#pos" );
                 $(nextSibling).after( $(componentDiv) );
                 updateMoveIcons();
+            } else {
+                alert(response);
             }
-        },
-        dataType: 'html'
-    });
-
+        }
+    );
     return false;
 }
 
@@ -404,12 +428,12 @@ function moveDown() {
 function updateMoveIcons()
 {
     // Show all.
-    $('#textList .row a.moveUp').show();
+    $('#textlist .row a.moveUp').show();
     $('#textList .row a.moveDown').show();
 
     // Hide up command for first component, and down command for the last.
-    $('#textList .row:first-child a.moveUp').hide();
-    $('#textList .row:last-child a.moveDown').hide();
+    $('#textlist .row:first-child a.moveUp').hide();
+    $('#textlist .row:last-child a.moveDown').hide();
 
     // Show all.
     $('#collectionList .row a.moveUp').show();
@@ -436,40 +460,37 @@ function changeType()
     var resourceId = rawId.substring(0, rawId.indexOf('#', 0));
     var courseId = getUrlParam('id', document.location.href);
     courseId = parseInt(courseId.replace('#',''));
-        $.ajax({
-            url: 'ajax_handler.php',
-            data: 'ajaxcall=changeType&resource_id=' + resourceId + '&courseId=' + courseId,
-            success: function(response) {
-                $('.changeType', tableRow).text(response);
-                if (response == 'true') {
-                    $(nextSibling).attr('name', position + '#pos');
-                    $(componentDiv).attr('name', ++position + '#pos');
-                    $(nextSibling).after($(componentDiv));
-                    updateMoveIcons();
-                }
-            },
-            dataType: 'html'
-        });
+
+    $.post('ajax_handler.php',
+        {
+            ajaxcall: 'changeType',
+            resource_id: resourceId,
+            courseId: courseId
+        },
+        function(response) {
+            $('.changeType', tableRow).text(response);
+        }
+    );
 }
 
-    // Convert array to object.
-    var convArrToObj = function(array){
-        var thisEleObj = new Object();
-        if (typeof array == "object") {
-            for(var i in array){
-                var thisEle = convArrToObj(array[i]);
-                thisEleObj[i] = thisEle;
-            }
-        } else {
-            thisEleObj = array;
+// Convert array to object.
+var convArrToObj = function(array){
+    var thisEleObj = new Object();
+    if (typeof array == "object") {
+        for(var i in array){
+            var thisEle = convArrToObj(array[i]);
+            thisEleObj[i] = thisEle;
         }
-        return thisEleObj;
-    };
-    var oldJSONStringify = JSON.stringify;
-    JSON.stringify = function(input){
-        if(oldJSONStringify(input) == '[]') {
-            return oldJSONStringify(convArrToObj(input));
-        } else {
-            return oldJSONStringify(input);
-        }
-    };
+    } else {
+        thisEleObj = array;
+    }
+    return thisEleObj;
+};
+var oldJSONStringify = JSON.stringify;
+JSON.stringify = function(input){
+    if(oldJSONStringify(input) == '[]') {
+        return oldJSONStringify(convArrToObj(input));
+    } else {
+        return oldJSONStringify(input);
+    }
+};

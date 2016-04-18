@@ -1,17 +1,17 @@
 angular.module('cobra.services', [])
 
-.factory('dataService', ['$http', '$rootScope', function($http, $rootScope) {
+.factory('DataService', ['$http', '$rootScope', function($http, $rootScope) {
 
     var glossaryEntries = [];
     var service = {
-        getEntries : function(textid, courseid) {
+        getEntries : function(textId, courseId) {
             var request = $http({
                 method: 'POST',
                 url: 'angularrelay.php',
                 headers: {
                     'Content-Type': undefined
                 },
-                data: { action: 'loadGlossary', textid: textid, courseid: courseid}
+                data: {action: 'loadGlossary', textid: textId, courseid: courseId}
 
             });
 
@@ -33,27 +33,11 @@ angular.module('cobra.services', [])
                 headers: {
                     'Content-Type': undefined
                 },
-                data: { action: 'loadText', textId: textId}
+                data: {action: 'loadText', textid: textId}
             });
 
             return request.then(function(response) {
                 return response.data;
-            });
-        },
-        addEntry2 : function(lingEntity, textId) {
-            console.log(lingEntity, textId);
-            var addRequest = $http({
-                method: 'POST',
-                url: 'angularrelay.php',
-                headers: {
-                    'Content-Type': undefined
-                },
-                data: { action: 'addToGlossary', lingEntity: lingEntity, textId: textId}
-
-            });
-            return addRequest.then(function(response) {
-                $rootScope.$broadcast('entryAdded', lingEntity);
-                return true;
             });
         },
         addEntry : function(lingEntity, textId) {
@@ -63,7 +47,7 @@ angular.module('cobra.services', [])
                 headers: {
                     'Content-Type': undefined
                 },
-                data: { action: 'addToGlossary', lingEntity: lingEntity, textid: textId, courseid: $rootScope.courseid}
+                data: { action: 'addToGlossary', lingentity: lingEntity, textid: textId, courseid: $rootScope.courseId}
 
             });
             return addRequest.then(function(response) {
@@ -72,18 +56,16 @@ angular.module('cobra.services', [])
             });
         },
         removeEntry : function(lingEntity) {
-            console.log('in data service')
             var removeRequest = $http({
                 method: 'POST',
                 url: 'angularrelay.php',
                 headers: {
                     'Content-Type': undefined
                 },
-                data: {action: 'removeFromGlossary', lingEntity: lingEntity, courseid:$rootScope.courseid}
+                data: {action: 'removeFromGlossary', lingentity: lingEntity, courseid:$rootScope.courseId}
 
             });
             return removeRequest.then(function (response) {
-                console.log(response);
                 $rootScope.$broadcast('entryDeleted', lingEntity);
                 return true;
             });

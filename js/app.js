@@ -13,7 +13,7 @@ angular.module('cobra',
 
 .run(function($rootScope) {
     $rootScope.showGlossary = angular.element('#showglossary').text();
-    $rootScope.courseid = angular.element('#courseid').text();
+    $rootScope.courseId = angular.element('#courseid').text();
 
 })
 
