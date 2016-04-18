@@ -7,7 +7,7 @@ angular.module('cobra.services', [])
         getEntries : function(textId, courseId) {
             var request = $http({
                 method: 'POST',
-                url: 'angularrelay.php',
+                url: 'relay.php',
                 headers: {
                     'Content-Type': undefined
                 },
@@ -16,6 +16,7 @@ angular.module('cobra.services', [])
             });
 
             return request.then(function(response) {
+                console.log(response);
                 if(response.data) {
                     glossaryEntries = response.data;
                 }
@@ -29,7 +30,7 @@ angular.module('cobra.services', [])
         getText : function(textId) {
             var request = $http({
                 method: 'POST',
-                url: 'angularrelay.php',
+                url: 'relay.php',
                 headers: {
                     'Content-Type': undefined
                 },
@@ -43,7 +44,7 @@ angular.module('cobra.services', [])
         addEntry : function(lingEntity, textId) {
             var addRequest = $http({
                 method: 'POST',
-                url: 'angularrelay.php',
+                url: 'relay.php',
                 headers: {
                     'Content-Type': undefined
                 },
@@ -58,7 +59,7 @@ angular.module('cobra.services', [])
         removeEntry : function(lingEntity) {
             var removeRequest = $http({
                 method: 'POST',
-                url: 'angularrelay.php',
+                url: 'relay.php',
                 headers: {
                     'Content-Type': undefined
                 },
