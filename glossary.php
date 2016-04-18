@@ -93,7 +93,7 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
  $PAGE->requires->jquery();
  $PAGE->requires->js('/mod/cobra/js/cobra.js');
- $PAGE->requires->js_init_call('M.mod_cobra.SelectAll');
+ $PAGE->requires->js_init_call('M.mod_cobra.select_all');
 
 echo $OUTPUT->header();
 

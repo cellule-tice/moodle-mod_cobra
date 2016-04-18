@@ -37,7 +37,7 @@ $data = array();
 switch($call->action)
 {
     case 'loadText' :
-        $params = array('id_text' => $call->textId);
+        $params = array('id_text' => $call->textid);
         try {
             $data = cobra_remote_service::call('getFormattedText', $params, 'json', true);
             echo utf8_encode($data);
@@ -55,12 +55,12 @@ switch($call->action)
         break;
 
     case 'addToGlossary' :
-        $lingentity = $call->lingEntity;
+        $lingentity = $call->lingentity;
         cobra_add_to_glossary($lingentity, $call->textid, $call->courseid);
         break;
 
     case 'removeFromGlossary' :
-        $lingentity = $call->lingEntity;
+        $lingentity = $call->lingentity;
         cobra_remove_from_glossary($lingentity, $call->courseid);
         break;
 }

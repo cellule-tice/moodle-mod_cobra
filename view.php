@@ -74,9 +74,9 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 // Add the ajaxcommand for the form.
 $PAGE->requires->jquery();
 $PAGE->requires->js('/mod/cobra/js/cobra.js');
-$PAGE->requires->js_init_call('M.mod_cobra.TextVisibility');
-$PAGE->requires->js_init_call('M.mod_cobra.TextMove');
-$PAGE->requires->js_init_call('M.mod_cobra.TextChangeType');
+$PAGE->requires->js_init_call('M.mod_cobra.text_visibility');
+$PAGE->requires->js_init_call('M.mod_cobra.text_move');
+$PAGE->requires->js_init_call('M.mod_cobra.text_change_type');
 // Output starts here.
 echo $OUTPUT->header();
 
@@ -131,7 +131,8 @@ foreach ($collectionlist as $collection) {
         $position = 1;
         foreach ($textlist as $text) {
             // Display title.
-            $content .= '<tr id="' . $text->id_text . '#textId" class="row" name="' . $position++ .
+            $rowcssclass = $text->visibility ? 'row' : 'row dimmed_text';
+            $content .= '<tr id="' . $text->id_text . '#textId" class="' . $rowcssclass . '" name="' . $position++ .
                         '#pos"><td style="min-width:50%;">' .
                         '<a href="text.php?id='.$id.'&id_text=' . $text->id_text . '#/' . $text->id_text . '">' .
                         '<i class="fa fa-file-text"></i> ' .

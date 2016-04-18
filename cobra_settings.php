@@ -92,8 +92,8 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 // Add link for Ajax commands.
 $PAGE->requires->jquery();
 $PAGE->requires->js('/mod/cobra/js/cobra.js');
-$PAGE->requires->js_init_call('M.mod_cobra.TextVisibility');
-$PAGE->requires->js_init_call('M.mod_cobra.TextMove');
+$PAGE->requires->js_init_call('M.mod_cobra.text_visibility');
+$PAGE->requires->js_init_call('M.mod_cobra.text_move');
 
 // Output starts here.
 echo $OUTPUT->header();
@@ -311,7 +311,8 @@ if ('collections' == $currentsection) {
 
     $position = 1;
     foreach ($registeredcollectionslist as $collection) {
-        $content .= '<tr id="' . $collection['id_collection']  . '#collectionId" class="row" name="' . $position++ . '#pos">' .
+        $rowcssclass = $collection['visibility'] ? 'row' : 'row dimmed_text';
+        $content .= '<tr id="' . $collection['id_collection']  . '#collectionId" class="' . $rowcssclass . '" name="' . $position++ . '#pos">' .
                     '<td>' . $collection['local_label'] . '</td>' .
                     '<td align="center">' .
                     '<a href="'.$_SERVER['PHP_SELF'].'?id=' . $id .

@@ -53,8 +53,7 @@ $PAGE->requires->js('/mod/cobra/js/components/filters.js');
 $PAGE->requires->js_init_call('M.mod_cobra.init_no_blocks');
 $PAGE->requires->js_init_call('M.mod_cobra.expression_on_click');
 $PAGE->requires->js_init_call('M.mod_cobra.lemma_on_click');
-$PAGE->requires->js_init_call('M.mod_cobra.showFullConcordance');
-$PAGE->requires->js_init_call('M.mod_cobra.showCard');
+$PAGE->requires->js_init_call('M.mod_cobra.show_full_concordance');
 $PAGE->requires->js_init_call('M.mod_cobra.add_to_glossary');
 $PAGE->requires->js_init_call('M.mod_cobra.remove_from_glossary');
 
