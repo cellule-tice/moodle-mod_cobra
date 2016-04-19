@@ -131,7 +131,6 @@ M.mod_cobra.remove_from_glossary = function() {
 
 M.mod_cobra.remove_from_global_glossary = function() {
     $(document).on('click', '.gGlossaryRemove', function() {
-        //var courseId = $('#courseid').attr('name');
         var lingEntity = $(this).prev().text();
         var currentElement = $(this);
         var moduleId = getUrlParam('id', document.location.href);
@@ -143,6 +142,7 @@ M.mod_cobra.remove_from_global_glossary = function() {
                 id: moduleId
             },
             function(response) {
+                console.log(response)
                 if (response == "true")
                 {
                     if ($(currentElement).hasClass('inDisplay'))
@@ -170,6 +170,8 @@ function displayDetails(conceptId, isExpression) {
         var value = $("#preferences_" + i + "_value").attr('name');
         pref[key] = value;
     }
+    var moduleId = getUrlParam('id', document.location.href);
+    moduleId = parseInt(moduleId.replace('#',''));
 
     var json = JSON.stringify(pref);
     $.post('relay.php',
@@ -181,7 +183,8 @@ function displayDetails(conceptId, isExpression) {
             encodeclic : encodeClic,
             courseid : courseId,
             userid : userId,
-            params : json
+            params : json,
+            id: moduleId
         },
         function(data) {
             var response = JSON.parse(data);
@@ -234,13 +237,16 @@ function displayFullConcordance()
         var value = $("#preferences_" + i + "_value").attr('name');
         pref[key] = value;
     }
+    var moduleId = getUrlParam('id', document.location.href);
+    moduleId = parseInt(moduleId.replace('#',''));
 
     var json = JSON.stringify(pref);
     $.post('relay.php',
         {
             verb: 'displayCC',
             concordanceid: idConcordance,
-            params : json
+            params : json,
+            id: moduleId
         },
         function(data) {
             fullConcordanceDiv.html(data);
@@ -280,10 +286,10 @@ function displayFullOcc()
     );
 }
 
-/*
- * Interaction functions for text list.
- */
-// Mask/unmask text or collection for students
+
+// Interaction functions for text list.
+
+// Mask/unmask text or collection for students.
 function changeVisibility()
 {
     var test = $('.textlist');
@@ -302,7 +308,6 @@ function changeVisibility()
             id: moduleId
         },
         function(response) {
-            console.log(response);
             if (response == 'true') {
                 $('.setVisible', tableRow).toggle();
                 $('.setInvisible', tableRow).toggle();
@@ -382,7 +387,6 @@ function moveDown() {
             id: moduleId
         },
         function(response) {
-            console.log(response);
             if (response == 'true') {
                 $(nextSibling).attr('name', position + "#pos" );
                 $(componentDiv).attr('name', ++position + "#pos" );

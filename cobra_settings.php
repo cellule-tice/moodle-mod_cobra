@@ -312,7 +312,8 @@ if ('collections' == $currentsection) {
     $position = 1;
     foreach ($registeredcollectionslist as $collection) {
         $rowcssclass = $collection['visibility'] ? 'row' : 'row dimmed_text';
-        $content .= '<tr id="' . $collection['id_collection']  . '#collectionId" class="' . $rowcssclass . '" name="' . $position++ . '#pos">' .
+        $content .= '<tr id="' . $collection['id_collection']  .
+                    '#collectionId" class="' . $rowcssclass . '" name="' . $position++ . '#pos">' .
                     '<td>' . $collection['local_label'] . '</td>' .
                     '<td align="center">' .
                     '<a href="'.$_SERVER['PHP_SELF'].'?id=' . $id .

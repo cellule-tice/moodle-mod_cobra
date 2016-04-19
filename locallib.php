@@ -99,20 +99,6 @@ function cobra_change_visibility($resourceid, $resourcetype, $courseid) {
         return true;
     }
     return false;
-    /*} else if ('collection' == $resourcetype) {
-        $list = $DB->get_record_select('cobra_registered_collections', "course='$courseid' AND id_collection='$resourceid'");
-        if (!empty($list)) {
-            // Update record.
-            $dataobject->id = $list->id;
-            $dataobject->visibility = $list->visibility == 1 ?0 : 1;
-            if (!$DB->update_record('cobra_registered_collections', $dataobject)) {
-                return false;
-            }
-            return true;
-        }
-        return false;
-    }
-    return true;*/
 }
 
 
@@ -138,7 +124,6 @@ function cobra_set_visibility($resourceid, $setvisible, $resourcetype, $courseid
             }
             return true;
         }
-        return $resourceid.$courseid;
         return false;
     } else if ('collection' == $resourcetype) {
         $list = $DB->get_record_select('cobra_registered_collections', "course='$courseid' AND id_collection='$resourceid'");

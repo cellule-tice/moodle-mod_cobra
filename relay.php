@@ -25,7 +25,7 @@ require_once(__DIR__ . '/lib/glossarylib.php');
 // Init call vars.
 $acceptedcmdlist = array();
 
-// Init $call variable if called from angular
+// Init $call variable if called from angular.
 $call = json_decode(file_get_contents('php://input'));
 
 if (!empty($call)) {
@@ -110,6 +110,8 @@ if (!empty($call)) {
 
     switch ($call) {
         case 'changeVisibility':
+            $resource = optional_param('resourceid', null, PARAM_ALPHANUM);
+            $resourcetype = optional_param('resourcetype', null, PARAM_ALPHANUM);
             if (cobra_change_visibility($resource, $resourcetype, $course->id)) {
                 echo 'true';
                 return true;
@@ -153,56 +155,57 @@ if (!empty($call)) {
             $response = 'error';
             break;
 
+        case 'displayEntry':
+            $conceptid = optional_param('conceptid', null, PARAM_INT);
+            $resourceid = optional_param('resourceid', null, PARAM_INT);
+            $isexpression = optional_param('isexpression'  , null, PARAM_BOOL);
+            $encodeclic = optional_param('encodeclic', 1, PARAM_ALPHANUM);
+            $courseid = optional_param('courseid', 0, PARAM_INT);
+            $userid = optional_param('userid', 0, PARAM_INT);
+            $pref = isset($_REQUEST['params']) ? $_REQUEST['params'] : null;
+            $params = array(
+                'concept_id' => $conceptid,
+                'resource_id' => $resourceid,
+                'is_expr' => $isexpression,
+                'params' => $pref
+            );
+
+            $html = cobra_remote_service::call('displayEntry', $params, 'json');
+            $entrytype = $isexpression ? 'expression' : 'lemma';
+            $params = array('conceptId' => $conceptid, 'entryType' => $entrytype);
+            $lingentity = cobra_remote_service::call('getEntityLingIdFromConcept', $params, 'html');
+            $lingentity = str_replace("\"", "", $lingentity);
+            if ($encodeclic) {
+                cobra_clic($resourceid, $lingentity, $DB, $courseid, $userid);
+            }
+            $glossarystatus = cobra_is_in_glossary($lingentity, $courseid);
+            $response = array(
+                'html' => $html,
+                'inglossary' => $glossarystatus,
+                'lingentity' => $lingentity,
+                'userId' => $userid,
+            );
+            array_walk(
+                $response,
+                function(&$entry) {
+                    $entry = utf8_encode($entry);
+                }
+            );
+
+            $response = json_encode($response);
+            break;
+
+        case 'displayCC':
+            $concordanceid = optional_param('concordanceid', null, PARAM_INT);
+            $occurrenceid = optional_param('occurrenceid', null, PARAM_INT);
+            $color = optional_param('bg_color', null, PARAM_ALPHANUMEXT);
+            $pref = isset($_REQUEST['params']) ? $_REQUEST['params'] : null;
+            $params = array('id_cc' => $concordanceid, 'id_occ' => $occurrenceid, 'params' => $pref);
+            $response = utf8_encode(cobra_remote_service::call('displayCC', $params, 'html'));
+            break;
+
         default:
             break;
-    }
-
-    if ('displayEntry' == $call) {
-        $conceptid = optional_param('conceptid', null, PARAM_INT);
-        $resourceid = optional_param('resourceid', null, PARAM_INT);
-        $isexpression = optional_param('isexpression'  , null, PARAM_BOOL);
-        $encodeclic = optional_param('encodeclic', 1, PARAM_ALPHANUM);
-        $courseid = optional_param('courseid', 0, PARAM_INT);
-        $userid = optional_param('userid', 0, PARAM_INT);
-        $pref = isset($_REQUEST['params']) ? $_REQUEST['params'] : null;
-        $params = array(
-            'concept_id' => $conceptid,
-            'resource_id' => $resourceid,
-            'is_expr' => $isexpression,
-            'params' => $pref
-        );
-
-        $html = cobra_remote_service::call('displayEntry', $params, 'json');
-        $entrytype = $isexpression ? 'expression' : 'lemma';
-        $params = array('conceptId' => $conceptid, 'entryType' => $entrytype);
-        $lingentity = cobra_remote_service::call('getEntityLingIdFromConcept', $params, 'html');
-        $lingentity = str_replace("\"", "", $lingentity);
-        if ($encodeclic) {
-            cobra_clic($resourceid, $lingentity, $DB, $courseid, $userid);
-        }
-        $glossarystatus = cobra_is_in_glossary($lingentity, $courseid);
-        $response = array(
-            'html' => $html,
-            'inglossary' => $glossarystatus,
-            'lingentity' => $lingentity,
-            'userId' => $userid,
-        );
-        array_walk(
-            $response,
-            function(&$entry) {
-                $entry = utf8_encode($entry);
-            }
-        );
-
-        $response = json_encode($response);
-    }
-    if ('displayCC' == $call) {
-        $concordanceid = optional_param('concordanceid', null, PARAM_INT);
-        $occurrenceid = optional_param('occurrenceid', null, PARAM_INT);
-        $color = optional_param('bg_color', null, PARAM_ALPHANUMEXT);
-        $pref = isset($_REQUEST['params']) ? $_REQUEST['params'] : null;
-        $params = array('id_cc' => $concordanceid, 'id_occ' => $occurrenceid, 'params' => $pref);
-        $response = utf8_encode(cobra_remote_service::call('displayCC', $params, 'html'));
     }
     echo $response;
 }

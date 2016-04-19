@@ -4,9 +4,10 @@
 
 angular.module('cobra.controllers', ['ngRoute'])
 
-.controller('TextController',
+.controller(
+    'TextController',
     ['$scope', '$rootScope', '$stateParams', 'DataService',
-        function($scope, $rootScope, $stateParams, DataService) {
+    function($scope, $rootScope, $stateParams, DataService) {
 
     $scope.dataLoaded = false;
     $scope.showGlossary = $rootScope.showGlossary;
@@ -65,13 +66,17 @@ angular.module('cobra.controllers', ['ngRoute'])
     $scope.addEntry = function(lingEntity) {
         DataService.addEntry(lingEntity, $rootScope.textId)
             .then(function(result) {
-            });
-    }
+                }
+            );
+    };
 
     $scope.removeEntry = function(lingEntity) {
-        DataService.removeEntry(lingEntity)
-            .then(function(result) {
-            });
+        if (!angular.isObject(lingEntity)) {
+            DataService.removeEntry(lingEntity)
+                .then(function(result) {
+                    }
+                );
+        }
     };
 
     // Test to populate ng-click dynamically...

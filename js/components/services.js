@@ -62,7 +62,7 @@ angular.module('cobra.services', [])
                 headers: {
                     'Content-Type': undefined
                 },
-                data: {action: 'removeFromGlossary', lingentity: lingEntity, courseid:$rootScope.courseId}
+                data: {action: 'removeFromGlossary', lingentity: lingEntity, courseid: $rootScope.courseId}
 
             });
             return removeRequest.then(function (response) {
