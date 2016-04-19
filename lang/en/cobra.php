@@ -141,3 +141,4 @@ $string['emptyglossary'] = 'Glossary empty !';
 $string['textreading'] = 'Text reading';
 $string['myglossaryremove'] = 'Remove from my glossary';
 $string['exportmyglossary'] = 'Export my glossary';
+$string['mycollections'] = 'Collections currently linked to the course';

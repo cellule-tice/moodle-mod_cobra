@@ -290,13 +290,11 @@ if ('collections' == $currentsection) {
 }
 
 if ('collections' == $currentsection) {
-    $content .= '<h3 style="margin-left:24px;">' . 'Collections currently linked to your course' . '</h3>';
-    $content .= '<blockquote>' .
-                '<table id="collectionList" class="table table-condensed table-hover table-striped">' .
+    $content .= '<h3>' . get_string('mycollections', 'cobra') . '</h3>';
+    $content .= '<table class="table table-condensed table-hover table-striped collectionlist">' .
                 '<thead>' .
-                '<tr class="headerX">' .
-                '<th> &nbsp; </th>' .
-                '<th>' . get_string('collection_name', 'cobra') . '</th>' .
+                '<tr>' .
+                '<th style="text-align:left;">' . get_string('collection_name', 'cobra') . '</th>' .
                 '<th>' . get_string('edit') . '</th>' .
                 '<th>' . get_string('refresh') . '</th>' .
                 '<th>' . get_string('remove') . '</th>' .
@@ -311,10 +309,10 @@ if ('collections' == $currentsection) {
 
     $position = 1;
     foreach ($registeredcollectionslist as $collection) {
-        $rowcssclass = $collection['visibility'] ? 'row' : 'row dimmed_text';
+        $rowcssclass = $collection['visibility'] ? 'tablerow' : 'tablerow dimmed_text';
         $content .= '<tr id="' . $collection['id_collection']  .
                     '#collectionId" class="' . $rowcssclass . '" name="' . $position++ . '#pos">' .
-                    '<td>' . $collection['local_label'] . '</td>' .
+                    '<td><i class="fa fa-list"></i> ' . $collection['local_label'] . '</td>' .
                     '<td align="center">' .
                     '<a href="'.$_SERVER['PHP_SELF'].'?id=' . $id .
                     '&cmd=rqEditLabel&amp;collection='.$collection['id_collection'].'">'.
@@ -350,23 +348,21 @@ if ('collections' == $currentsection) {
         $content .= '<tr><td colspan="6" align="center"> / </td> </tr>';
     }
     $content .= '</tbody>' .
-                '</table>' .
-                '</blockquote>';
+                '</table>';
 
-    $content .= '<h3 style="margin-left:24px;">' . get_string('collections_available', 'cobra') . '</h3>';
-    $content .= '<blockquote>' .
-                '<table class="table table-condensed table-hover table-striped">' .
+    $content .= '<h3>' . get_string('collections_available', 'cobra') . '</h3>';
+    $content .= '<table class="table table-condensed table-hover table-striped">' .
                 '<thead>' .
-                '<tr class="headerX">' .
+                '<tr>' .
                 '<th>' . get_string('collection_name', 'cobra') . '</th>' .
-                '<th>' . get_string('add') . '</th>' .
+                '<th style="text-align:center;">' . get_string('add') . '</th>' .
                 '</tr>' .
                 '</thead>' .
                 '<tbody>';
     $availablecollectionslist = cobra_get_filtered_collections($cobra->language, $idlist);
     foreach ($availablecollectionslist as $collection) {
         $content .= '<tr>' .
-                    '<td>' . $collection['label'] . '</td>' .
+                    '<td><i class="fa fa-list"></i> ' . $collection['label'] . '</td>' .
                     '<td align="center">' .
                     '<a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&cmd=exAdd&amp;remote_collection=' . $collection['id'] . '">' .
                     '<i class="fa fa-plus"></i>' .
@@ -374,8 +370,7 @@ if ('collections' == $currentsection) {
                     '</tr>';
     }
     $content .= '</tbody>' .
-                '</table>' .
-                '</blockquote>';
+                '</table>';
 } else if ('corpus' == $currentsection) {
     $ordretypelist = cobra_get_corpus_type_display_order();
     $list = '';

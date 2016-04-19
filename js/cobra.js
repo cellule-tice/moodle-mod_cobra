@@ -404,20 +404,20 @@ function moveDown() {
 function updateMoveIcons()
 {
     // Show all.
-    $('.textlist .row a.moveUp').show();
-    $('.textlist .row a.moveDown').show();
+    $('.textlist .tablerow a.moveUp').show();
+    $('.textlist .tablerow a.moveDown').show();
 
     // Hide up command for first component, and down command for the last.
-    $('.textlist .row:first-child a.moveUp').hide();
-    $('.textlist .row:last-child a.moveDown').hide();
+    $('.textlist .tablerow:first-child a.moveUp').hide();
+    $('.textlist .tablerow:last-child a.moveDown').hide();
 
     // Show all.
-    $('#collectionList .row a.moveUp').show();
-    $('#collectionList .row a.moveDown').show();
+    $('.collectionlist .tablerow a.moveUp').show();
+    $('.collectionlist .tablerow a.moveDown').show();
 
     // Hide up command for first component, and down command for the last.
-    $('#collectionList .row:first-child a.moveUp').hide();
-    $('#collectionList .row:last-child a.moveDown').hide();
+    $('.collectionlist .tablerow:first-child a.moveUp').hide();
+    $('.collectionlist .tablerow:last-child a.moveDown').hide();
 }
 
 // General purpose functions.
