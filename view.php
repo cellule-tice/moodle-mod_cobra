@@ -104,7 +104,7 @@ if ('SHOW' == $preferences['show_glossary']) {
 $collectionlist = $isallowedtoedit ? cobra_get_registered_collections('all') : cobra_get_registered_collections('visible');
 foreach ($collectionlist as $collection) {
     $content .= '<h3>' . $collection['local_label'] . '</h3>';
-    $content .= '<table class="table table-condensed table-hover table-striped" id="textlist">' .
+    $content .= '<table class="table table-condensed table-hover table-striped textlist">' .
                 '<thead>' .
                 '<tr align="center">' .
                 '<th width="1px"> &nbsp; </th>' .

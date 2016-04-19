@@ -16,7 +16,6 @@ angular.module('cobra.services', [])
             });
 
             return request.then(function(response) {
-                console.log(response);
                 if(response.data) {
                     glossaryEntries = response.data;
                 }

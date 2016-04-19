@@ -81,16 +81,80 @@ if (!empty($call)) {
     }
     $acceptedcmdlist = array(
         'displayEntry',
-        'displayCC'
+        'displayCC',
+        'changeVisibility',
+        'moveDown',
+        'moveUp',
+        'changeType',
+        'removeFromGlossary'
     );
     // Init $call variable if called from jQuery.
     $call = optional_param('verb', null, PARAM_ALPHA);
+    if (empty($call)) {
+        $call = optional_param('call', null, PARAM_ALPHA);
+    }
     if (empty($call) || !in_array($call, $acceptedcmdlist)) {
-        //throw new Exception('Missing or invalid command');
         $response = array(
             'error' => 'Missing or invalid command'
         );
-        $response = json_encode($response);
+        echo json_encode($response);
+        die();
+    }
+
+    $id = optional_param('id', 0, PARAM_INT);
+    list($course, $cm) = get_course_and_cm_from_cmid($id, 'cobra');
+    $position = optional_param('position', 0, PARAM_INT);
+    $resource = optional_param('resourceid', null, PARAM_ALPHANUM);
+    $resourcetype = optional_param('resourcetype', null, PARAM_ALPHANUM);
+    $sibling = optional_param('siblingid', null, PARAM_ALPHANUM);
+
+    switch ($call) {
+        case 'changeVisibility':
+            if (cobra_change_visibility($resource, $resourcetype, $course->id)) {
+                echo 'true';
+                return true;
+            }
+            $response = 'error';
+            break;
+
+        case 'moveDown':
+            if ($position && cobra_set_position($sibling, $position++, $resourcetype, $course->id)
+                && cobra_set_position($resource, $position, $resourcetype, $course->id)) {
+                echo 'true';
+                return true;
+            }
+            $response = 'error';
+            break;
+
+        case 'moveUp':
+            if ($position && cobra_set_position($sibling, $position--, $resourcetype, $course->id)
+                && cobra_set_position($resource, $position, $resourcetype, $course->id)) {
+                echo 'true';
+                return true;
+            }
+            $response = 'error';
+            break;
+
+        case 'changeType':
+            $newtype = cobra_change_text_type($resource, $course->id);
+            if ($newtype) {
+                echo get_string($newtype, 'cobra');
+                return true;
+            }
+            $response = 'error';
+            break;
+
+        case 'removeFromGlossary':
+            $lingentity = optional_param('lingentity', 0, PARAM_INT);
+            if (cobra_remove_from_glossary($lingentity, $course->id)) {
+                echo 'true';
+                return true;
+            }
+            $response = 'error';
+            break;
+
+        default:
+            break;
     }
 
     if ('displayEntry' == $call) {
@@ -132,7 +196,6 @@ if (!empty($call)) {
 
         $response = json_encode($response);
     }
-
     if ('displayCC' == $call) {
         $concordanceid = optional_param('concordanceid', null, PARAM_INT);
         $occurrenceid = optional_param('occurrenceid', null, PARAM_INT);
@@ -141,7 +204,6 @@ if (!empty($call)) {
         $params = array('id_cc' => $concordanceid, 'id_occ' => $occurrenceid, 'params' => $pref);
         $response = utf8_encode(cobra_remote_service::call('displayCC', $params, 'html'));
     }
-
     echo $response;
 }
 
