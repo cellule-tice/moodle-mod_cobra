@@ -104,10 +104,9 @@ if ('SHOW' == $preferences['show_glossary']) {
 $collectionlist = $isallowedtoedit ? cobra_get_registered_collections('all') : cobra_get_registered_collections('visible');
 foreach ($collectionlist as $collection) {
     $content .= '<h3>' . $collection['local_label'] . '</h3>';
-    $content .= '<table class="table table-condensed table-hover table-striped" id="textlist">' .
+    $content .= '<table class="table table-condensed table-hover table-striped textlist">' .
                 '<thead>' .
                 '<tr align="center">' .
-                '<th width="1px"> &nbsp; </th>' .
                 '<th>' . get_string('text', 'cobra') . '</th>' .
                 '<th>' . get_string('source', 'cobra') . '</th>';
 
@@ -131,7 +130,7 @@ foreach ($collectionlist as $collection) {
         $position = 1;
         foreach ($textlist as $text) {
             // Display title.
-            $rowcssclass = $text->visibility ? 'row' : 'row dimmed_text';
+            $rowcssclass = $text->visibility ? 'tablerow' : 'tablerow dimmed_text';
             $content .= '<tr id="' . $text->id_text . '#textId" class="' . $rowcssclass . '" name="' . $position++ .
                         '#pos"><td style="min-width:50%;">' .
                         '<a href="text.php?id='.$id.'&id_text=' . $text->id_text . '#/' . $text->id_text . '">' .

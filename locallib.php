@@ -76,6 +76,38 @@ function cobra_load_text_list($collection, $loadmode = 'all') {
  * @param $setvisible boolean 'true' to make the resource visible for students, 'false' to hide it
  * @return boolean true on success, false otherwise
  */
+function cobra_change_visibility($resourceid, $resourcetype, $courseid) {
+    global $DB;
+
+    $dataobject = new  stdClass();
+    $dataobject->course = $courseid;
+    if ('text' == $resourcetype) {
+        $table = 'cobra_texts_config';
+        $columnname = 'id_text';
+    } else {
+        $table = 'cobra_registered_collections';
+        $columnname = 'id_collection';
+    }
+    $list = $DB->get_record($table, array('course' => $courseid, $columnname => $resourceid));
+    if (!empty($list)) {
+        // Update record.
+        $dataobject->id = $list->id;
+        $dataobject->visibility = $list->visibility == 1 ? 0 : 1;
+        if (!$DB->update_record($table, $dataobject)) {
+            return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+
+/**
+ * Changes the visibility status of the given resource (collection or text)
+ * @param $resourceid identifier of the resource
+ * @param $setvisible boolean 'true' to make the resource visible for students, 'false' to hide it
+ * @return boolean true on success, false otherwise
+ */
 function cobra_set_visibility($resourceid, $setvisible, $resourcetype, $courseid) {
     global $DB;
     $visibility = $setvisible ? '1' : '0';
@@ -500,7 +532,7 @@ function cobra_change_text_type($textid, $courseid) {
         if (!$DB->update_record('cobra_texts_config', $dataobject)) {
             return false;
         }
-        return true;
+        return $newtype;
     }
     return false;
 }

@@ -385,7 +385,7 @@ p{
     padding:0pt;
 }
 
-#textlist th {
+.textlist th, .collectionlist th {
     text-align: center;
 }
 

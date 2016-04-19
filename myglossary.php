@@ -47,6 +47,7 @@ $PAGE->set_url('/mod/cobra/myglossary.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($cobra->name));
 
 $PAGE->add_body_class('noblocks');
+$PAGE->navbar->add(get_string('myglossary', 'cobra'));
 
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
@@ -151,7 +152,7 @@ if (!empty($data)) {
     }
 } else {
     $content .= '<tr>'
-        . '<td colspan="7" style="text-align:center;">' . get_string('emptyglossary') . '</td>'
+        . '<td colspan="7" style="text-align:center;">' . get_string('emptyglossary', 'cobra') . '</td>'
         . '</tr>';
 }
 

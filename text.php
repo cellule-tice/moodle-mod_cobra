@@ -38,6 +38,7 @@ $PAGE->set_url('/mod/cobra/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->add_body_class('noblocks');
+$PAGE->navbar->add(cobra_get_text_title_from_id($textid));
 
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
@@ -72,6 +73,8 @@ $encodeclic = 1;
 if (has_capability('mod/cobra:edit', $context) && false) {
     $encodeclic = 0;
 }
+
+
 
 $content .= '<div id="encode_clic" name="' . $encodeclic . '" class="hidden"></div>';
 $content .= '<div id="id_text" class="hidden" name="' . $textid . '">' . $textid . '</div>';

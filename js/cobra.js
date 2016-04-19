@@ -37,8 +37,8 @@ M.mod_cobra.text_move = function() {
 };
 
 M.mod_cobra.text_visibility = function() {
-     $(document).on('click', 'a.setVisible', setVisible);
-     $(document).on('click', 'a.setInvisible', setInvisible);
+     $(document).on('click', 'a.setVisible', changeVisibility);
+     $(document).on('click', 'a.setInvisible', changeVisibility);
 };
 
 M.mod_cobra.select_all = function() {
@@ -131,16 +131,18 @@ M.mod_cobra.remove_from_glossary = function() {
 
 M.mod_cobra.remove_from_global_glossary = function() {
     $(document).on('click', '.gGlossaryRemove', function() {
-        var courseId = $('#courseid').attr('name');
         var lingEntity = $(this).prev().text();
         var currentElement = $(this);
-        $.post('ajax_handler.php',
+        var moduleId = getUrlParam('id', document.location.href);
+        moduleId = parseInt(moduleId.replace('#',''));
+        $.post('relay.php',
             {
-                ajaxcall: 'removeFromGlossary',
+                call: 'removeFromGlossary',
                 lingentity: lingEntity,
-                courseid: courseId
+                id: moduleId
             },
             function(response) {
+                console.log(response)
                 if (response == "true")
                 {
                     if ($(currentElement).hasClass('inDisplay'))
@@ -168,6 +170,8 @@ function displayDetails(conceptId, isExpression) {
         var value = $("#preferences_" + i + "_value").attr('name');
         pref[key] = value;
     }
+    var moduleId = getUrlParam('id', document.location.href);
+    moduleId = parseInt(moduleId.replace('#',''));
 
     var json = JSON.stringify(pref);
     $.post('relay.php',
@@ -179,7 +183,8 @@ function displayDetails(conceptId, isExpression) {
             encodeclic : encodeClic,
             courseid : courseId,
             userid : userId,
-            params : json
+            params : json,
+            id: moduleId
         },
         function(data) {
             var response = JSON.parse(data);
@@ -232,13 +237,16 @@ function displayFullConcordance()
         var value = $("#preferences_" + i + "_value").attr('name');
         pref[key] = value;
     }
+    var moduleId = getUrlParam('id', document.location.href);
+    moduleId = parseInt(moduleId.replace('#',''));
 
     var json = JSON.stringify(pref);
     $.post('relay.php',
         {
             verb: 'displayCC',
             concordanceid: idConcordance,
-            params : json
+            params : json,
+            id: moduleId
         },
         function(data) {
             fullConcordanceDiv.html(data);
@@ -278,63 +286,32 @@ function displayFullOcc()
     );
 }
 
-/*
- * Interaction functions for text list.
- */
-// Make current text visible for students.
-function setVisible()
+
+// Interaction functions for text list.
+
+// Mask/unmask text or collection for students.
+function changeVisibility()
 {
-    var test = $('#textlist');
+    var test = $('.textlist');
     var resourceType = test.size() != 0 ? 'text' : 'collection';
     var tableRow = $(this.parentNode.parentNode);
     var rawId = tableRow.attr('id');
     var resourceId = rawId.substring(0, rawId.indexOf('#', 0));
-    var courseId = getUrlParam('id', document.location.href);
-    courseId = parseInt(id.replace('#',''));
+    var moduleId = getUrlParam('id', document.location.href);
+    moduleId = parseInt(moduleId.replace('#',''));
 
-    $.post('ajax_handler.php',
+    $.post('relay.php',
         {
-            ajaxcall: 'setVisible',
-            resource_id: resourceId,
-            resource_type: resourceType,
-            courseId: courseId
+            call: 'changeVisibility',
+            resourceid: resourceId,
+            resourcetype: resourceType,
+            id: moduleId
         },
         function(response) {
             if (response == 'true') {
-                $('.setVisible', tableRow).hide();
-                $('.setInvisible', tableRow).show();
-                $(tableRow).removeClass('dimmed_text');
-            } else {
-                alert(response);
-            }
-        }
-    );
-
-    return false;
-}
-
-// Make current text invisible for students.
-function setInvisible() {
-    var test = $('#textlist');
-    var resourceType = test.size() != 0 ? 'text' : 'collection';
-    var tableRow = $(this.parentNode.parentNode);
-    var rawId = tableRow.attr('id');
-    var resourceId = rawId.substring( 0, rawId.indexOf('#', 0));
-    var courseId = getUrlParam('id', document.location.href);
-    courseId = parseInt(id.replace('#',''));
-
-    $.post('ajax_handler.php',
-        {
-            ajaxcall: 'setInvisible',
-            resource_id: resourceId,
-            resource_type: resourceType,
-            courseId: courseId
-        },
-        function(response) {
-            if (response == 'true') {
-                $('.setVisible', tableRow).show();
-                $('.setInvisible', tableRow).hide();
-                $(tableRow).addClass('dimmed_text');
+                $('.setVisible', tableRow).toggle();
+                $('.setInvisible', tableRow).toggle();
+                $(tableRow).toggleClass('dimmed_text');
             } else {
                 alert(response);
             }
@@ -347,7 +324,7 @@ function setInvisible() {
 function moveUp()
 {
     // Retrieve parent <tr> tag.
-    var test = $('#textlist');
+    var test = $('.textlist');
     var resourceType = test.size() != 0 ? 'text' : 'collection';
     var componentDiv = $(this.parentNode.parentNode);
     var previousSibling = $(componentDiv).prev();
@@ -357,17 +334,17 @@ function moveUp()
     var resourceId = rawId.substring(0, rawId.indexOf('#', 0));
     var position = rawPos.substring(0, rawPos.indexOf('#', 0));
     var siblingId = rawSiblingId.substring(0, rawSiblingId.indexOf('#', 0));
-    var courseId = getUrlParam('id', document.location.href);
-    courseId = parseInt(courseId.replace('#',''));
+    var moduleId = getUrlParam('id', document.location.href);
+    moduleId = parseInt(moduleId.replace('#',''));
 
-    $.post('ajax_handler.php',
+    $.post('relay.php',
         {
-            ajaxcall: 'moveUp',
-            resource_id: resourceId,
+            call: 'moveUp',
+            resourceid: resourceId,
             position: position,
-            sibling_id: siblingId,
-            resource_type: resourceType,
-            courseId: courseId
+            siblingid: siblingId,
+            resourcetype: resourceType,
+            id: moduleId
         },
         function(response) {
             if (response == 'true') {
@@ -387,7 +364,7 @@ function moveUp()
 // Move down current text by one row.
 function moveDown() {
     // Retrieve parent <tr> tag.
-    var test = $('#textlist');
+    var test = $('.textlist');
     var resourceType = test.size() != 0 ? 'text' : 'collection';
     var componentDiv = $(this.parentNode.parentNode);
     var nextSibling = $(componentDiv).next();
@@ -397,17 +374,17 @@ function moveDown() {
     var resourceId = rawId.substring(0, rawId.indexOf('#', 0));
     var position = rawPos.substring(0, rawPos.indexOf('#', 0));
     var siblingId = rawSiblingId.substring(0, rawSiblingId.indexOf('#', 0));
-    var courseId = getUrlParam('id', document.location.href);
-    courseId = parseInt(courseId.replace('#',''));
+    var moduleId = getUrlParam('id', document.location.href);
+    moduleId = parseInt(moduleId.replace('#',''));
 
-    $.post('ajax_handler.php',
+    $.post('relay.php',
         {
-            ajaxcall: 'moveDown',
-            resource_id: resourceId,
+            call: 'moveDown',
+            resourceid: resourceId,
             position: position,
-            sibling_id: siblingId,
-            resource_type: resourceType,
-            courseId: courseId
+            siblingid: siblingId,
+            resourcetype: resourceType,
+            id: moduleId
         },
         function(response) {
             if (response == 'true') {
@@ -427,20 +404,20 @@ function moveDown() {
 function updateMoveIcons()
 {
     // Show all.
-    $('#textlist .row a.moveUp').show();
-    $('#textList .row a.moveDown').show();
+    $('.textlist .tablerow a.moveUp').show();
+    $('.textlist .tablerow a.moveDown').show();
 
     // Hide up command for first component, and down command for the last.
-    $('#textlist .row:first-child a.moveUp').hide();
-    $('#textlist .row:last-child a.moveDown').hide();
+    $('.textlist .tablerow:first-child a.moveUp').hide();
+    $('.textlist .tablerow:last-child a.moveDown').hide();
 
     // Show all.
-    $('#collectionList .row a.moveUp').show();
-    $('#collectionList .row a.moveDown').show();
+    $('.collectionlist .tablerow a.moveUp').show();
+    $('.collectionlist .tablerow a.moveDown').show();
 
     // Hide up command for first component, and down command for the last.
-    $('#collectionList .row:first-child a.moveUp').hide();
-    $('#collectionList .row:last-child a.moveDown').hide();
+    $('.collectionlist .tablerow:first-child a.moveUp').hide();
+    $('.collectionlist .tablerow:last-child a.moveDown').hide();
 }
 
 // General purpose functions.
@@ -457,14 +434,14 @@ function changeType()
     var tableRow = $(this.parentNode.parentNode);
     var rawId = tableRow.attr('id');
     var resourceId = rawId.substring(0, rawId.indexOf('#', 0));
-    var courseId = getUrlParam('id', document.location.href);
-    courseId = parseInt(courseId.replace('#',''));
+    var moduleId = getUrlParam('id', document.location.href);
+    moduleId = parseInt(moduleId.replace('#',''));
 
-    $.post('ajax_handler.php',
+    $.post('relay.php',
         {
-            ajaxcall: 'changeType',
-            resource_id: resourceId,
-            courseId: courseId
+            call: 'changeType',
+            resourceid: resourceId,
+            id: moduleId
         },
         function(response) {
             $('.changeType', tableRow).text(response);
