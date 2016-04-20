@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/cobra/db" VERSION="20160405" COMMENT="XMLDB file for Moodle mod/cobra"
+<XMLDB PATH="mod/cobra/db" VERSION="20160420" COMMENT="XMLDB file for Moodle mod/cobra"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -9,9 +9,17 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course lectopt activity belongs to"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="name field for moodle instances"/>
-        <FIELD NAME="language" TYPE="char" LENGTH="2" NOTNULL="true" SEQUENCE="false" COMMENT="language used for this cours"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="language" TYPE="char" LENGTH="2" NOTNULL="true" SEQUENCE="false" COMMENT="language used for this cours"/>
+        <FIELD NAME="nextprevbuttons" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="userglossary" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="audioplayer" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="examples" TYPE="char" LENGTH="8" NOTNULL="true" DEFAULT="bi-text" SEQUENCE="false"/>
+        <FIELD NAME="translations" TYPE="char" LENGTH="12" NOTNULL="true" DEFAULT="conditional" SEQUENCE="false"/>
+        <FIELD NAME="descriptions" TYPE="char" LENGTH="12" NOTNULL="true" DEFAULT="conditional" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
