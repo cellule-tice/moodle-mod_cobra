@@ -18,7 +18,8 @@ angular.module('cobra.controllers', ['ngRoute'])
     DataService.getText($stateParams.textId).then(function(data) {
         $scope.text = data;
     }).then(function() {
-        if ('SHOW' == $scope.showGlossary) {
+        console.log($scope.showGlossary);
+        if ($scope.showGlossary) {
             DataService.getEntries($stateParams.textId, $rootScope.courseId).then(function(data) {
                 $scope.glossaryEntries = data;
                 $scope.dataLoaded = true;

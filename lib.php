@@ -46,12 +46,14 @@ function cobra_supports($feature) {
     switch($feature) {
         case FEATURE_MOD_ARCHETYPE :
             return MOD_ARCHETYPE_RESOURCE;
-        case    FEATURE_MOD_INTRO :
+        case FEATURE_MOD_INTRO :
             return false;
         case FEATURE_GROUPS:
             return false;
         case FEATURE_GROUPINGS:
             return false;
+        case FEATURE_SHOW_DESCRIPTION:
+            return true;
         default:
             return null;
     }

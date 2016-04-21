@@ -74,32 +74,44 @@ if (has_capability('mod/cobra:edit', $context) && false) {
     $encodeclic = 0;
 }
 
-
-
 $content .= '<div id="encode_clic" name="' . $encodeclic . '" class="hidden"></div>';
 $content .= '<div id="id_text" class="hidden" name="' . $textid . '">' . $textid . '</div>';
 $content .= '<div id="courseLabel" class="hidden" name="' . $course->id . '">&nbsp;</div>';
-$content .= '<div id="showglossary" class="hidden" name="SHOW">SHOW</div>';
+$content .= '<div id="showglossary" class="hidden">' . $cobra->userglossary . '</div>';
 $content .= '<div id="userId" class="hidden" name="' . $USER->id . '">&nbsp;</div>';
 $content .= '<div id="courseid" class="hidden" name="' . $course->id .'">' . $course->id . '</div>';
 $i = 0;
-foreach ($preferences as $key => $info) {
+/*foreach ($preferences as $key => $info) {
+    $content .= '<div id="preferences_' . $i . '_key" class="hidden" name="' . $key . '">' . $key . '</div>';
+    $content .= '<div id="preferences_' . $i . '_value" class="hidden" name="' . strtolower($info) . '">' . $info . '</div>';
+    $i++;
+}*/
+
+$legacyprefs = cobra_get_legacy_preferences_values($cobra);
+$legacyprefs['ccOrder'] = $order;
+
+foreach ($legacyprefs as $key => $info) {
     $content .= '<div id="preferences_' . $i . '_key" class="hidden" name="' . $key . '">' . $key . '</div>';
     $content .= '<div id="preferences_' . $i . '_value" class="hidden" name="' . strtolower($info) . '">' . $info . '</div>';
     $i++;
 }
+
+
 $content .= '<div id="preferencesNb" class="hidden" name="' . count($preferences) . '">' . count($preferences) . '</div>';
 
 $clearfix = false;
-$audiofileurl = $text->get_audio_file_url();
-if (!empty($audiofileurl) && 'SHOW' == $preferences['player']) {
-    $clearfix = true;
-    $content .= '<div id="audioplayer"> <audio controls="controls">' .
-                '<source src="' . $audiofileurl . '" />' .
-                '</audio></div>';
+
+if ($cobra->audioplayer) {
+    $audiofileurl = $text->get_audio_file_url();
+    if (!empty($audiofileurl)) {
+        $clearfix = true;
+        $content .= '<div id="audioplayer"> <audio controls="controls">' .
+            '<source src="' . $audiofileurl . '" />' .
+            '</audio></div>';
+    }
 }
 
-if ('SHOW' == strtoupper($preferences['nextprevbuttons'])) {
+if ($cobra->nextprevbuttons) {
     $clearfix = true;
     $content .= '<div class="textnavbuttons">';
     $nextid = cobra_get_next_textid($text);

@@ -91,9 +91,9 @@ $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
- $PAGE->requires->jquery();
- $PAGE->requires->js('/mod/cobra/js/cobra.js');
- $PAGE->requires->js_init_call('M.mod_cobra.select_all');
+$PAGE->requires->jquery();
+$PAGE->requires->js('/mod/cobra/js/cobra.js');
+$PAGE->requires->js_init_call('M.mod_cobra.select_all');
 
 echo $OUTPUT->header();
 
@@ -102,8 +102,7 @@ echo $OUTPUT->heading(get_string('textreading', 'cobra'));
 
 echo $OUTPUT->box_start('Glossaire');
 
-$prefs = cobra_get_preferences();
-$language = $prefs['language'];
+$language = $cobra->language;
 
 $display = '';
 $out = '';

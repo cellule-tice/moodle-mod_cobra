@@ -17,9 +17,9 @@
         <FIELD NAME="nextprevbuttons" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="userglossary" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
         <FIELD NAME="audioplayer" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
-        <FIELD NAME="examples" TYPE="char" LENGTH="8" NOTNULL="true" DEFAULT="bi-text" SEQUENCE="false"/>
+        <FIELD NAME="examples" TYPE="char" LENGTH="8" NOTNULL="true" DEFAULT="bilingual" SEQUENCE="false"/>
         <FIELD NAME="translations" TYPE="char" LENGTH="12" NOTNULL="true" DEFAULT="conditional" SEQUENCE="false"/>
-        <FIELD NAME="descriptions" TYPE="char" LENGTH="12" NOTNULL="true" DEFAULT="conditional" SEQUENCE="false"/>
+        <FIELD NAME="annotations" TYPE="char" LENGTH="12" NOTNULL="true" DEFAULT="conditional" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

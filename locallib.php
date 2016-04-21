@@ -33,6 +33,23 @@ require_once(__DIR__ . '/lib/cobraremoteservice.php');
 require_once($CFG->libdir . '/formslib.php');
 
 /**
+ * Constants definition for CoBRA settings.
+ */
+// Display mode for concordances.
+define('COBRA_EXAMPLES_BILINGUAL', 'bilingual');
+define('COBRA_EXAMPLES_MONOLINGUAL', 'monolingual');
+
+// Display mode for translations.
+define('COBRA_TRANSLATIONS_ALWAYS', 'always');
+define('COBRA_TRANSLATIONS_CONDITIONAL', 'conditional');
+define('COBRA_TRANSLATIONS_NEVER', 'never');
+
+// Display mode for descriptions
+define('COBRA_ANNOTATIONS_ALWAYS', 'always');
+define('COBRA_ANNOTATIONS_CONDITIONAL', 'conditional');
+define('COBRA_ANNOTATIONS_NEVER', 'never');
+
+/**
  * Loads the local list of E-Lex texts associated to a text collection (with filter on user profile)
  * @param $collection identifier of the text collection
  * @param $loadmode 'all' for course managers, 'visible' for students
@@ -291,6 +308,28 @@ function cobra_get_preferences() {
         $params[$elt->param] = $elt->value;
     }
     return $params;
+}
+
+function cobra_get_legacy_preferences_values($cobra) {
+    $preferences = array();
+    $preferences['nextprevbuttons'] = $cobra->nextprevbuttons ? 'SHOW' : 'HIDE';
+    $preferences['player'] = $cobra->audioplayer ? 'SHOW' : 'HIDE';
+    $preferences['examples'] = $cobra->examples == 'bilingual' ? 'bi-text' : 'mono';
+    if ($cobra->translations == COBRA_TRANSLATIONS_CONDITIONAL) {
+        $preferences['translations'] = 'CONDITIONAL';
+    } else if ($cobra->translations == COBRA_TRANSLATIONS_ALWAYS) {
+        $preferences['translations'] = 'ALWAYS';
+    } else {
+        $preferences['translations'] = 'NEVER';
+    }
+    if ($cobra->annotations == COBRA_ANNOTATIONS_CONDITIONAL) {
+        $preferences['descriptions'] = 'CONDITIONAL';
+    } else if ($cobra->translations == COBRA_ANNOTATIONS_ALWAYS) {
+        $preferences['descriptions'] = 'ALWAYS';
+    } else {
+        $preferences['descriptions'] = 'NEVER';
+    }
+    return $preferences;
 }
 
 /**
