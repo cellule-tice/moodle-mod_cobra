@@ -40,6 +40,7 @@ class cobra_remote_service {
             $url = $_SERVER['SERVER_NAME'] = $CFG->cobra_serverhost;
             // Localhost config url   $url = 'http://localhost/cobra/services/service_handler.php'; .
             $params['caller'] = $site->shortname;
+            $params['from'] = 'moodle';
             if (count($params)) {
                 $querystring = http_build_query($params, '', '&');
             }

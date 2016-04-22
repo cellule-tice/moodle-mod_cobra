@@ -94,7 +94,7 @@ M.mod_cobra.expression_on_click = function() {
             }
         });
         $(this).nextAll('span.expression').each(function() {
-            if( $(this).attr('name') == conceptid) {
+            if( $(this).attr('name') == conceptId) {
                 $(this).removeClass('emphasize');
                 $(this).addClass('clicked');
             } else {

@@ -71,7 +71,7 @@ echo $OUTPUT->box_start('Statistics generalbox box-content' );
 $out = '';
 
 if (!is_null($cmd)) {
-    if ($cmd == 'cleanStats') {
+    if ($cmd == 'cleanstats') {
         // Clean Stats.
          $out .= get_string('Clean_Clic_Stats', 'cobra');
          $out .= '<span class="warning"> ' . get_string('Delete_is_definitive._No_way_to_rollback', 'cobra') . '</span>';
@@ -82,7 +82,7 @@ if (!is_null($cmd)) {
         $acceptedscopelist = array( 'ALL', 'BEFORE' );
 
         $scope = optional_param('scope', null, PARAM_ALPHANUM);
-        if (!in_array($sope, $acceptedscopelist)) {
+        if (!in_array($scope, $acceptedscopelist)) {
             $scope = null;
         }
         // Get date.
@@ -136,7 +136,7 @@ if (!is_null($cmd)) {
             . get_string( 'Display_statistics_by_text' , 'cobra') . '</a></li>';
     $out .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&view=5">'
             . get_string( 'Display_statistics_by_user', 'cobra' ) . '</a></li>';
-    $out .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&cmd=cleanStats">'
+    $out .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&cmd=cleanstats">'
             . get_string('Clean_Clic_Stats', 'cobra') .'</a></li>';
     $out .= '</ul>';
 }

@@ -97,18 +97,18 @@ $PAGE->requires->js_init_call('M.mod_cobra.text_move');
 
 // Output starts here.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('textreading', 'cobra'));
-echo $OUTPUT->box_start('generalbox box-content');
 
 $content = '';
-$content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">' .
+/*$content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">' .
             get_string('manage_text_collections', 'cobra').'</a> &nbsp; ' .
             '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=corpus">'.
             get_string('corpus_selection', 'cobra') . '</a> &nbsp; ' .
             '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=display">' .
-            get_string('display_preferences', 'cobra') .'</a>';
+            get_string('display_preferences', 'cobra') .'</a>';*/
 
 if ('collections' == $currentsection) {
+    echo $OUTPUT->heading(get_string('modulename', 'cobra') . ' - ' . get_string('manage_text_collections', 'cobra'));
+    echo $OUTPUT->box_start('generalbox box-content');
     if ('exEditLabel' == $cmd) {
         $label = optional_param('label', null, PARAM_ALPHANUM);
         if (!empty($label)) {
@@ -237,6 +237,8 @@ if ('collections' == $currentsection) {
         }
     }
 } else if ('corpus' == $currentsection) {
+    echo $OUTPUT->heading(get_string('modulename', 'cobra') . ' - ' . get_string('corpus_selection', 'cobra'));
+    echo $OUTPUT->box_start('generalbox box-content');
     $prefs = cobra_get_preferences();
     $tabcorpustype = cobra_get_valid_list_type_corpus($cobra->language);
     if ('saveOrder' == $cmd) {

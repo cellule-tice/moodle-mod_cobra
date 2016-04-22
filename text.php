@@ -65,10 +65,9 @@ $content = '';
 $text = new cobra_text_wrapper();
 $text->set_text_id($textid);
 $text->load();
-$preferences = cobra_get_preferences();
 $ccorder = cobra_get_corpus_type_display_order();
 $order = implode(',', $ccorder);
-$preferences['ccOrder'] = $order;
+$cobra->ccorder = $order;
 $encodeclic = 1;
 if (has_capability('mod/cobra:edit', $context) && false) {
     $encodeclic = 0;
@@ -80,24 +79,20 @@ $content .= '<div id="courseLabel" class="hidden" name="' . $course->id . '">&nb
 $content .= '<div id="showglossary" class="hidden">' . $cobra->userglossary . '</div>';
 $content .= '<div id="userId" class="hidden" name="' . $USER->id . '">&nbsp;</div>';
 $content .= '<div id="courseid" class="hidden" name="' . $course->id .'">' . $course->id . '</div>';
+
+
+
+$cobra->ccorder = $order;
 $i = 0;
-/*foreach ($preferences as $key => $info) {
+foreach ($cobra as $key => $info) {
     $content .= '<div id="preferences_' . $i . '_key" class="hidden" name="' . $key . '">' . $key . '</div>';
-    $content .= '<div id="preferences_' . $i . '_value" class="hidden" name="' . strtolower($info) . '">' . $info . '</div>';
-    $i++;
-}*/
+        $content .= '<div id="preferences_' . $i . '_value" class="hidden" name="' . strtolower($info) . '">' . $info . '</div>';
 
-$legacyprefs = cobra_get_legacy_preferences_values($cobra);
-$legacyprefs['ccOrder'] = $order;
-
-foreach ($legacyprefs as $key => $info) {
-    $content .= '<div id="preferences_' . $i . '_key" class="hidden" name="' . $key . '">' . $key . '</div>';
-    $content .= '<div id="preferences_' . $i . '_value" class="hidden" name="' . strtolower($info) . '">' . $info . '</div>';
     $i++;
 }
 
 
-$content .= '<div id="preferencesNb" class="hidden" name="' . count($preferences) . '">' . count($preferences) . '</div>';
+$content .= '<div id="preferencesNb" class="hidden" name="' . $i . '">' . $i . '</div>';
 
 $clearfix = false;
 
