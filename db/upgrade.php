@@ -85,7 +85,7 @@ function xmldb_cobra_upgrade($oldversion) {
         }
 
         // Define field examples to be added to cobra.
-        $field = new xmldb_field('examples', XMLDB_TYPE_CHAR, '8', null, XMLDB_NOTNULL, null, 'bilingual', 'audioplayer');
+        $field = new xmldb_field('examples', XMLDB_TYPE_CHAR, '12', null, XMLDB_NOTNULL, null, 'bilingual', 'audioplayer');
 
         // Conditionally launch add field examples.
         if (!$dbman->field_exists($table, $field)) {
