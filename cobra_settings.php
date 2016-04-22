@@ -97,18 +97,18 @@ $PAGE->requires->js_init_call('M.mod_cobra.text_move');
 
 // Output starts here.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('textreading', 'cobra'));
-echo $OUTPUT->box_start('generalbox box-content');
 
 $content = '';
-$content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">' .
+/*$content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">' .
             get_string('manage_text_collections', 'cobra').'</a> &nbsp; ' .
             '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=corpus">'.
             get_string('corpus_selection', 'cobra') . '</a> &nbsp; ' .
             '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=display">' .
-            get_string('display_preferences', 'cobra') .'</a>';
+            get_string('display_preferences', 'cobra') .'</a>';*/
 
 if ('collections' == $currentsection) {
+    echo $OUTPUT->heading(get_string('modulename', 'cobra') . ' - ' . get_string('manage_text_collections', 'cobra'));
+    echo $OUTPUT->box_start('generalbox box-content');
     if ('exEditLabel' == $cmd) {
         $label = optional_param('label', null, PARAM_ALPHANUM);
         if (!empty($label)) {
@@ -237,8 +237,10 @@ if ('collections' == $currentsection) {
         }
     }
 } else if ('corpus' == $currentsection) {
+    echo $OUTPUT->heading(get_string('modulename', 'cobra') . ' - ' . get_string('corpus_selection', 'cobra'));
+    echo $OUTPUT->box_start('generalbox box-content');
     $prefs = cobra_get_preferences();
-    $tabcorpustype = cobra_get_valid_list_type_corpus($prefs['language']);
+    $tabcorpustype = cobra_get_valid_list_type_corpus($cobra->language);
     if ('saveOrder' == $cmd) {
         if (!cobra_clear_corpus_selection()) {
             echo 'error while saving preferences' . '<br/>';
@@ -379,7 +381,7 @@ if ('collections' == $currentsection) {
         $couleur = cobra_find_background($typeid);
         $corpustypename = $corpustypeinfo['name'];
 
-        if (cobra_corpus_type_exists($typeid, $prefs['language'])) {
+        if (cobra_corpus_type_exists($typeid, $cobra->language)) {
             $typeselected = '';
             if (in_array($typeid, $ordretypelist)) {
                 $typeselected = ' checked="checked"';
@@ -480,13 +482,13 @@ if ('collections' == $currentsection) {
                 '<td nowrap="nowrap" width="25%">' .
                 '<input id="translationsYes" type="radio" name="translations" value="ALWAYS"' .
                 ('ALWAYS' == $prefs['translations'] ? $checkedstring : '') . '/>' .
-                '<label for="translationsYes">' . get_string('Always', 'cobra') . '</label><br/>' .
+                '<label for="translationsYes">' . get_string('always', 'cobra') . '</label><br/>' .
                 '<input id="translationsNo" type="radio" name="translations" value="NEVER"' .
                 ('NEVER' == $prefs['translations'] ? $checkedstring : '') . '/>' .
-                '<label for="translationsNo">' . get_string('Never', 'cobra') . '</label><br/>' .
+                '<label for="translationsNo">' . get_string('never', 'cobra') . '</label><br/>' .
                 '<input id="translationsCond" type="radio" name="translations" value="CONDITIONAL"' .
                 ('CONDITIONAL' == $prefs['translations'] ? $checkedstring : '') . '/>' .
-                '<label for="translationsCond">' . get_string('When_no_concordances', 'cobra') . '</label>' .
+                '<label for="translationsCond">' . get_string('conditional', 'cobra') . '</label>' .
                 '</td>' .
                 '<td width="50%"><em><small>' . get_string('Display_preference_for_translations', 'cobra') . '</small></em></td>' .
                 '</tr>';
@@ -496,13 +498,13 @@ if ('collections' == $currentsection) {
                 '<td nowrap="nowrap" width="25%">' .
                 '<input id="descriptionsYes" type="radio" name="descriptions" value="ALWAYS"' .
                 ('ALWAYS' == $prefs['descriptions'] ? $checkedstring : '') . '/>' .
-                '<label for="descriptionsYes">' . get_string('Always', 'cobra') . '</label><br/>' .
+                '<label for="descriptionsYes">' . get_string('always', 'cobra') . '</label><br/>' .
                 '<input id="descriptionsNo" type="radio" name="descriptions" value="NEVER"' .
                 ('NEVER' == $prefs['descriptions'] ? $checkedstring : '') . '/>' .
-                '<label for="descriptionsNo">' . get_string('Never', 'cobra') . '</label><br/>' .
+                '<label for="descriptionsNo">' . get_string('never', 'cobra') . '</label><br/>' .
                 '<input id="descriptionsCond" type="radio" name="descriptions" value="CONDITIONAL"' .
                 ('CONDITIONAL' == $prefs['descriptions'] ? $checkedstring : '') . '/>' .
-                '<label for="descriptionsCond">' . get_string('When_no_concordances', 'cobra') . '</label>' .
+                '<label for="descriptionsCond">' . get_string('conditional', 'cobra') . '</label>' .
                 '</td>' .
                 '<td width="50%"><em><small>' . get_string('Display_preference_for_definitions-annotations', 'cobra') .
                 '</small></em></td>' .
@@ -528,10 +530,10 @@ if ('collections' == $currentsection) {
                 '<td nowrap="nowrap" width="25%">' .
                 '<input id="examplesYes" type="radio" name="examples" value="bi-text"' .
                 ('bi-text' == $prefs['examples'] ? $checkedstring : '') . '/>' .
-                '<label for="examplesYes">' . get_string('Bilingual', 'cobra') . '</label><br/>' .
+                '<label for="examplesYes">' . get_string('bilingual', 'cobra') . '</label><br/>' .
                 '<input id="examplesNo" type="radio" name="examples" value="mono"' .
                 ('mono' == $prefs['examples'] ? $checkedstring : '') . '/>' .
-                '<label for="examplesNo">' . get_string('Monolingual', 'cobra') . '</label>' .
+                '<label for="examplesNo">' . get_string('monolingual', 'cobra') . '</label>' .
                 '</td>' .
                 '<td width="50%">&nbsp;</td>' .
                 '</tr>';

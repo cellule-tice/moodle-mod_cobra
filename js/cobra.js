@@ -94,7 +94,7 @@ M.mod_cobra.expression_on_click = function() {
             }
         });
         $(this).nextAll('span.expression').each(function() {
-            if( $(this).attr('name') == conceptid) {
+            if( $(this).attr('name') == conceptId) {
                 $(this).removeClass('emphasize');
                 $(this).addClass('clicked');
             } else {
@@ -170,6 +170,7 @@ function displayDetails(conceptId, isExpression) {
         var value = $("#preferences_" + i + "_value").attr('name');
         pref[key] = value;
     }
+
     var moduleId = getUrlParam('id', document.location.href);
     moduleId = parseInt(moduleId.replace('#',''));
 
@@ -194,7 +195,7 @@ function displayDetails(conceptId, isExpression) {
                 var str = response.html.replace(/class="label"/g, 'class="cobralabel"')
                     .replace(/img\//g, 'pix\/');
                 detailsDiv.html(str);
-                if ('SHOW' == $('#showglossary').text()) {
+                if ($('#showglossary').text()) {
                     var lingEntitySpan = '<span id="currentlingentity" class="hidden">' +
                                          response.lingentity +
                                          '</span>';

@@ -60,13 +60,13 @@ if (!has_capability('mod/cobra:edit', $context)) {
  * Init request vars.
  */
 
-$acceptedcmdlist = array(  'rqExport', 'exExport', 'rqCompare', 'exCompare' );
+$acceptedcmdlist = array(  'rqexport', 'exexport', 'rqcompare', 'excompare' );
 
 $cmd = isset( $_REQUEST['cmd'] ) && in_array( $_REQUEST['cmd'], $acceptedcmdlist ) ? $_REQUEST['cmd'] : null;
 
 $collectionlist = cobra_get_registered_collections('visible');
 
-if ($cmd == 'exExport') {
+if ($cmd == 'exexport') {
     $glossary = array();
     foreach ($collectionlist as $collection) {
         $textlist = cobra_load_text_list( $collection['id_collection'], 'visible' );
@@ -91,9 +91,9 @@ $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
- $PAGE->requires->jquery();
- $PAGE->requires->js('/mod/cobra/js/cobra.js');
- $PAGE->requires->js_init_call('M.mod_cobra.select_all');
+$PAGE->requires->jquery();
+$PAGE->requires->js('/mod/cobra/js/cobra.js');
+$PAGE->requires->js_init_call('M.mod_cobra.select_all');
 
 echo $OUTPUT->header();
 
@@ -102,16 +102,15 @@ echo $OUTPUT->heading(get_string('textreading', 'cobra'));
 
 echo $OUTPUT->box_start('Glossaire');
 
-$prefs = cobra_get_preferences();
-$language = $prefs['language'];
+$language = $cobra->language;
 
 $display = '';
 $out = '';
 
-$out .= '<a href="?cmd=rqExport&id='.$id. '">'. get_string('ExportGlossary', 'cobra') . '</a> &nbsp; '. "\n"
-               .'<a href="?cmd=rqCompare&id='.$id. '">'. get_string('Compare_text_with_glossary', 'cobra') . '</a> &nbsp; '. "\n";
+$out .= '<a href="?cmd=rqexport&id='.$id. '">'. get_string('ExportGlossary', 'cobra') . '</a> &nbsp; '. "\n"
+               .'<a href="?cmd=rqcompare&id='.$id. '">'. get_string('Compare_text_with_glossary', 'cobra') . '</a> &nbsp; '. "\n";
 
-if ($cmd == 'rqExport') {
+if ($cmd == 'rqexport') {
     // Show checkbox foreach text of this course.
     $display = '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">' . "\n";
     $display .= '<table>';
@@ -130,13 +129,13 @@ if ($cmd == 'rqExport') {
     }
     $display .= '<tr><td align="center"><input type="submit" value="' . get_string( 'ok' ) . '" />&nbsp; </td></tr>';
     $display  .= '</table>';
-    $display .= '<input type="hidden" name="cmd" value="exExport" >';
+    $display .= '<input type="hidden" name="cmd" value="exexport" >';
     $display .= '<input type="hidden" name="id" value="'.$id. '" >';
     $display .= '</form>';
     $out .= $display;
-} else if ($cmd == 'rqCompare') {
+} else if ($cmd == 'rqcompare') {
     $display = '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">' . "\n";
-    $display .= '<input type="hidden" name="cmd" value="exCompare" >';
+    $display .= '<input type="hidden" name="cmd" value="excompare" >';
     $display .= '<input type="hidden" name="id" value="'.$id. '" >';
     $display .= '<table>';
     $display .= '<tr> <td colspan="2"><input type="checkbox" class="selectall" id="selectall"  >'
@@ -160,7 +159,7 @@ if ($cmd == 'rqExport') {
             . '<tr><td align="center"><input value="' . get_string ( 'ok' )
             . '" type="submit" name="submit" />&nbsp;</td></tr>' . "\n" . '</table> </form>' . "\n";
     $out .= $display;
-} else if ( $cmd == 'exCompare') {
+} else if ( $cmd == 'excompare') {
     cobra_increase_script_time();
     $glossary = array();
     foreach ($collectionlist as $collection) {

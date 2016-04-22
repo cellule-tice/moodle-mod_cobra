@@ -41,5 +41,85 @@ function xmldb_cobra_upgrade($oldversion) {
     global $DB;
 
     $dbman = $DB->get_manager(); // Loads ddl manager and xmldb classes.
+    if ($oldversion < 2016042000) {
+
+        // Define field intro to be added to cobra.
+        $table = new xmldb_table('cobra');
+        $field = new xmldb_field('intro', XMLDB_TYPE_TEXT, null, null, null, null, null, 'name');
+
+        // Conditionally launch add field intro.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field introformat to be added to cobra.
+        $field = new xmldb_field('introformat', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, '0', 'intro');
+
+        // Conditionally launch add field introformat.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field nextprevbuttons to be added to cobra.
+        $field = new xmldb_field('nextprevbuttons', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'language');
+
+        // Conditionally launch add field nextprevbuttons.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field userglossary to be added to cobra.
+        $field = new xmldb_field('userglossary', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1', 'nextprevbuttons');
+
+        // Conditionally launch add field userglossary.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field audioplayer to be added to cobra.
+        $field = new xmldb_field('audioplayer', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1', 'userglossary');
+
+        // Conditionally launch add field audioplayer.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field examples to be added to cobra.
+        $field = new xmldb_field('examples', XMLDB_TYPE_CHAR, '8', null, XMLDB_NOTNULL, null, 'bilingual', 'audioplayer');
+
+        // Conditionally launch add field examples.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field translations to be added to cobra.
+        $field = new xmldb_field('translations', XMLDB_TYPE_CHAR, '12', null, XMLDB_NOTNULL, null, 'conditional', 'examples');
+
+        // Conditionally launch add field translations.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field descriptions to be added to cobra.
+        $field = new xmldb_field('annotations', XMLDB_TYPE_CHAR, '12', null, XMLDB_NOTNULL, null, 'conditional', 'translations');
+
+        // Conditionally launch add field descriptions.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field in_glossary to be added to cobra_clic.
+        $table = new xmldb_table('cobra_clic');
+        $field = new xmldb_field('in_glossary', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'datemodif');
+
+        // Conditionally launch add field in_glossary.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2016042000, 'cobra');
+    }
+
     return true;
 }

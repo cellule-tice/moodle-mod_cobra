@@ -46,12 +46,14 @@ function cobra_supports($feature) {
     switch($feature) {
         case FEATURE_MOD_ARCHETYPE :
             return MOD_ARCHETYPE_RESOURCE;
-        case    FEATURE_MOD_INTRO :
+        case FEATURE_MOD_INTRO :
             return false;
         case FEATURE_GROUPS:
             return false;
         case FEATURE_GROUPINGS:
             return false;
+        case FEATURE_SHOW_DESCRIPTION:
+            return true;
         default:
             return null;
     }
@@ -204,4 +206,110 @@ function cobra_pluginfile($course, $cm, $context, $filearea, array $args, $force
 
 function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
 
+}
+
+/**
+ * This function extends the settings navigation block for the site.
+ *
+ * It is safe to rely on PAGE here as we will only ever be within the module
+ * context when this is called
+ *
+ * @param settings_navigation $settings
+ * @param navigation_node $quiznode
+ * @return void
+ */
+function cobra_extend_settings_navigation($settings, $cobranode) {
+    global $PAGE, $CFG;
+
+    // We want to add these new nodes after the Edit settings node, and before the
+    // Locally assigned roles node. Of course, both of those are controlled by capabilities.
+    $keys = $cobranode->get_children_key_list();
+    $beforekey = null;
+    $i = array_search('modedit', $keys);
+    if ($i === false and array_key_exists(0, $keys)) {
+        $beforekey = $keys[0];
+    } else if (array_key_exists($i + 1, $keys)) {
+        $beforekey = $keys[$i + 1];
+    }
+
+    /*if (has_capability('mod/quiz:manageoverrides', $PAGE->cm->context)) {
+        $url = new moodle_url('/mod/quiz/overrides.php', array('cmid'=>$PAGE->cm->id));
+        $node = navigation_node::create(get_string('groupoverrides', 'quiz'),
+            new moodle_url($url, array('mode'=>'group')),
+            navigation_node::TYPE_SETTING, null, 'mod_quiz_groupoverrides');
+        $quiznode->add_node($node, $beforekey);
+
+        $node = navigation_node::create(get_string('useroverrides', 'quiz'),
+            new moodle_url($url, array('mode'=>'user')),
+            navigation_node::TYPE_SETTING, null, 'mod_quiz_useroverrides');
+        $quiznode->add_node($node, $beforekey);
+    }*/
+
+    if (has_capability('mod/cobra:settings', $PAGE->cm->context)) {
+        $node = navigation_node::create(get_string('manage_text_collections', 'cobra'),
+            new moodle_url('/mod/cobra/cobra_settings.php', array('id' => $PAGE->cm->id, 'section' => 'collections')),
+            navigation_node::TYPE_SETTING, null, 'mod_cobra_collections',
+            new pix_icon('i/navigationitem', ''));
+        $cobranode->add_node($node, $beforekey);
+    }
+
+    if (has_capability('mod/cobra:settings', $PAGE->cm->context)) {
+        $node = navigation_node::create(get_string('corpus_selection', 'cobra'),
+            new moodle_url('/mod/cobra/cobra_settings.php', array('id' => $PAGE->cm->id, 'section' => 'corpus')),
+            navigation_node::TYPE_SETTING, null, 'mod_cobra_corpus',
+            new pix_icon('i/navigationitem', ''));
+        $cobranode->add_node($node, $beforekey);
+    }
+
+    if (has_capability('mod/cobra:glossaryedit', $PAGE->cm->context)) {
+        $node = navigation_node::create(get_string('glossary', 'cobra'));
+        $node->icon = null;
+        $glossarynode = $cobranode->add_node($node, $beforekey);
+        $url = new moodle_url('/mod/cobra/glossary.php',
+            array('id' => $PAGE->cm->id, 'cmd' => 'rqexport'));
+        $glossarynode->add_node(navigation_node::create(get_string('ExportGlossary', 'cobra'), $url,
+            navigation_node::TYPE_SETTING,
+            null, null, new pix_icon('i/item', '')));
+        $url = new moodle_url('/mod/cobra/glossary.php',
+            array('id' => $PAGE->cm->id, 'cmd' => 'rqcompare'));
+        $glossarynode->add_node(navigation_node::create(get_string('Compare_text_with_glossary', 'cobra'), $url,
+            navigation_node::TYPE_SETTING,
+            null, null, new pix_icon('i/item', '')));
+    }
+
+    if (has_capability('mod/cobra:stat', $PAGE->cm->context)) {
+        $node = navigation_node::create(get_string('statistics', 'cobra'));
+        $node->icon = null;
+        $statisticsnode = $cobranode->add_node($node, $beforekey);
+        $url = new moodle_url('/mod/cobra/statistics.php',
+            array('id' => $PAGE->cm->id, 'view' => '1'));
+        $statisticsnode->add_node(navigation_node::create(get_string('mostclickedentries', 'cobra'), $url,
+            navigation_node::TYPE_SETTING,
+            null, null, new pix_icon('i/item', '')));
+        $url = new moodle_url('/mod/cobra/glossary.php',
+            array('id' => $PAGE->cm->id, 'view' => '2'));
+        $statisticsnode->add_node(navigation_node::create(get_string('mostclickedpertext', 'cobra'), $url,
+            navigation_node::TYPE_SETTING,
+            null, null, new pix_icon('i/item', '')));
+        $url = new moodle_url('/mod/cobra/glossary.php',
+            array('id' => $PAGE->cm->id, 'view' => '3'));
+        $statisticsnode->add_node(navigation_node::create(get_string('mostclickedtexts', 'cobra'), $url,
+            navigation_node::TYPE_SETTING,
+            null, null, new pix_icon('i/item', '')));
+        $url = new moodle_url('/mod/cobra/glossary.php',
+            array('id' => $PAGE->cm->id, 'view' => '4'));
+        $statisticsnode->add_node(navigation_node::create(get_string('statisticspertext', 'cobra'), $url,
+            navigation_node::TYPE_SETTING,
+            null, null, new pix_icon('i/item', '')));
+        $url = new moodle_url('/mod/cobra/glossary.php',
+            array('id' => $PAGE->cm->id, 'view' => '5'));
+        $statisticsnode->add_node(navigation_node::create(get_string('statisticsperuser', 'cobra'), $url,
+            navigation_node::TYPE_SETTING,
+            null, null, new pix_icon('i/item', '')));
+        $url = new moodle_url('/mod/cobra/glossary.php',
+            array('id' => $PAGE->cm->id, 'cmd' => 'cleanstats'));
+        $statisticsnode->add_node(navigation_node::create(get_string('cleanclicstats', 'cobra'), $url,
+            navigation_node::TYPE_SETTING,
+            null, null, new pix_icon('i/item', '')));
+    }
 }
