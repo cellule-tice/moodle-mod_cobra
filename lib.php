@@ -286,27 +286,27 @@ function cobra_extend_settings_navigation($settings, $cobranode) {
         $statisticsnode->add_node(navigation_node::create(get_string('mostclickedentries', 'cobra'), $url,
             navigation_node::TYPE_SETTING,
             null, null, new pix_icon('i/item', '')));
-        $url = new moodle_url('/mod/cobra/glossary.php',
+        $url = new moodle_url('/mod/cobra/statistics.php',
             array('id' => $PAGE->cm->id, 'view' => '2'));
         $statisticsnode->add_node(navigation_node::create(get_string('mostclickedpertext', 'cobra'), $url,
             navigation_node::TYPE_SETTING,
             null, null, new pix_icon('i/item', '')));
-        $url = new moodle_url('/mod/cobra/glossary.php',
+        $url = new moodle_url('/mod/cobra/statistics.php',
             array('id' => $PAGE->cm->id, 'view' => '3'));
         $statisticsnode->add_node(navigation_node::create(get_string('mostclickedtexts', 'cobra'), $url,
             navigation_node::TYPE_SETTING,
             null, null, new pix_icon('i/item', '')));
-        $url = new moodle_url('/mod/cobra/glossary.php',
+        $url = new moodle_url('/mod/cobra/statistics.php',
             array('id' => $PAGE->cm->id, 'view' => '4'));
         $statisticsnode->add_node(navigation_node::create(get_string('statisticspertext', 'cobra'), $url,
             navigation_node::TYPE_SETTING,
             null, null, new pix_icon('i/item', '')));
-        $url = new moodle_url('/mod/cobra/glossary.php',
+        $url = new moodle_url('/mod/cobra/statistics.php',
             array('id' => $PAGE->cm->id, 'view' => '5'));
         $statisticsnode->add_node(navigation_node::create(get_string('statisticsperuser', 'cobra'), $url,
             navigation_node::TYPE_SETTING,
             null, null, new pix_icon('i/item', '')));
-        $url = new moodle_url('/mod/cobra/glossary.php',
+        $url = new moodle_url('/mod/cobra/statistics.php',
             array('id' => $PAGE->cm->id, 'cmd' => 'cleanstats'));
         $statisticsnode->add_node(navigation_node::create(get_string('cleanclicstats', 'cobra'), $url,
             navigation_node::TYPE_SETTING,
