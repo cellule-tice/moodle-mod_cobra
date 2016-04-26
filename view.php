@@ -87,7 +87,7 @@ echo $OUTPUT->box_start('generalbox box-content');
 
 $content = '';
 $isallowedtoedit = false;
-if (has_capability('mod/cobra:edit', $context)) {
+/*if (has_capability('mod/cobra:edit', $context)) {
     $isallowedtoedit = true;
     $content .= '<a href="cobra_settings.php?id=' . $id . '">'. get_string('parameters', 'cobra') . '</a> &nbsp; ' .
                 '<a href="glossary.php?id=' . $id . '">' . get_string('glossary', 'cobra') . '</a> &nbsp; ' .
@@ -97,7 +97,7 @@ if (has_capability('mod/cobra:edit', $context)) {
 $preferences = cobra_get_preferences();
 if ('SHOW' == $preferences['show_glossary']) {
     $content .= '<a href="myglossary.php?id=' . $id . '">' . get_string('myglossary', 'cobra') . '</a>';
-}
+}*/
 
 // For all chosen collections display text in selected order.
 
