@@ -97,7 +97,7 @@ class mod_cobra_mod_form extends moodleform_mod {
                     'nextprevbuttons',
                     get_string('nextprevbuttons', 'cobra'),
                     null,
-                    array(),
+                    null,
                     array(0, 1)
                 );
             $mform->addHelpButton('nextprevbuttons', 'nextprevbuttons', 'cobra');
@@ -107,7 +107,7 @@ class mod_cobra_mod_form extends moodleform_mod {
                     'userglossary',
                     get_string('userglossary', 'cobra'),
                     null,
-                    array(),
+                    null,
                     array(0, 1)
                 );
             $mform->addHelpButton('userglossary', 'userglossary', 'cobra');
@@ -117,7 +117,7 @@ class mod_cobra_mod_form extends moodleform_mod {
                     'audioplayer',
                     get_string('audioplayer', 'cobra'),
                     null,
-                    array(),
+                    null,
                     array(0, 1)
                 );
             $mform->addHelpButton('audioplayer', 'audioplayer', 'cobra');
