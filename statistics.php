@@ -125,7 +125,7 @@ if (!is_null($cmd)) {
     } // End of exDelete.
 } else {
 
-    $out .= '<ul>';
+    /*$out .= '<ul>';
     $out .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&view=1">'
             . get_string( 'Display_entries_clicked_at_least_20_times' , 'cobra') . '</a></li>';
     $out .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&view=2">'
@@ -138,7 +138,7 @@ if (!is_null($cmd)) {
             . get_string( 'Display_statistics_by_user', 'cobra' ) . '</a></li>';
     $out .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&cmd=cleanstats">'
             . get_string('Clean_Clic_Stats', 'cobra') .'</a></li>';
-    $out .= '</ul>';
+    $out .= '</ul>';*/
 }
 
 if ( !is_null( $view ) ) {

@@ -107,8 +107,8 @@ $language = $cobra->language;
 $display = '';
 $out = '';
 
-$out .= '<a href="?cmd=rqexport&id='.$id. '">'. get_string('ExportGlossary', 'cobra') . '</a> &nbsp; '. "\n"
-               .'<a href="?cmd=rqcompare&id='.$id. '">'. get_string('Compare_text_with_glossary', 'cobra') . '</a> &nbsp; '. "\n";
+/*$out .= '<a href="?cmd=rqexport&id='.$id. '">'. get_string('ExportGlossary', 'cobra') . '</a> &nbsp; '. "\n"
+               .'<a href="?cmd=rqcompare&id='.$id. '">'. get_string('Compare_text_with_glossary', 'cobra') . '</a> &nbsp; '. "\n";*/
 
 if ($cmd == 'rqexport') {
     // Show checkbox foreach text of this course.
