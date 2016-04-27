@@ -275,7 +275,7 @@ function cobra_load_remote_text_list($collection) {
  * @param int $collection identifier of the collection
  * @return boolean true on success, false otherwise
  */
-function cobra_remote_text_list($collection) {
+function cobra_remove_text_list($collection) {
     global $course, $DB;
     return $DB->delete_records('cobra_texts_config',
             array('course' => $course->id, 'id_collection' => $collection));

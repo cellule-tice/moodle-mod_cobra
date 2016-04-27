@@ -116,12 +116,17 @@ function cobra_update_instance(stdClass $cobra, mod_cobra_mod_form $mform = null
 function cobra_delete_instance($id) {
     global $DB;
 
-    if (! $cobra = $DB->get_record('cobra', array('id' => $id))) {
+    if (!$cobra = $DB->get_record('cobra', array('id' => $id))) {
         return false;
     }
 
     // Delete any dependent records here.
-
+    $DB->delete_records('cobra_clic', array('course' => $cobra->course));
+    $DB->delete_records('cobra_glossaire', array('course' => $cobra->course));
+    $DB->delete_records('cobra_ordre_concordances', array('course' => $cobra->course));
+    $DB->delete_records('cobra_prefs', array('course' => $cobra->course));
+    $DB->delete_records('cobra_registered_collections', array('course' => $cobra->course));
+    $DB->delete_records('cobra_texts_config', array('course' => $cobra->course));
     $DB->delete_records('cobra', array('id' => $cobra->id));
 
     return true;
