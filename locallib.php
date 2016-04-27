@@ -396,6 +396,7 @@ function cobra_clic($textid, $lingentityid, $DB, $courseid, $userid) {
         $dataobject->id = $info->id;
         $dataobject->nbclicsstats = ($info->nbclicsstats + 1);
         $dataobject->nbclicsglossary = ($info->nbclicsglossary + 1);
+        $dataobject->datemodif = time();
         return  $DB->update_record('cobra_clic', $dataobject);
     }
 }
@@ -691,13 +692,17 @@ function cobra_increase_script_time($time = 0) {
 
 function cobra_clean_all_stats($courseid) {
     global $DB;
-    return $DB->delete_records('cobra_clic', array('course' => $courseid));
+    $sql = "UPDATE {cobra_clic}
+               SET nbclicsstats = 0";
+    return $DB->execute($sql);
 }
 
 function cobra_clean_stats_before_date($courseid, $mydate) {
     global $DB;
-    $datemodif = ' < FROM_UNIXTIME('. $mydate.')';
-    return $DB->delete_records('cobra_clic', array('course' => $courseid, 'datemodif' => $datemodif));
+    $sql = "UPDATE {cobra_clic}
+               SET nbclicsstats = 0
+             WHERE datemodif < :limit";
+    return $DB->execute($sql, array('limit' => $mydate));
 }
 
 function cobra_get_next_textid($text) {
