@@ -195,7 +195,7 @@ function displayDetails(conceptId, isExpression) {
                 var str = response.html.replace(/class="label"/g, 'class="cobralabel"')
                     .replace(/img\//g, 'pix\/');
                 detailsDiv.html(str);
-                if ($('#showglossary').text()) {
+                if(pref['userglossary'] == 1) {
                     var lingEntitySpan = '<span id="currentlingentity" class="hidden">' +
                                          response.lingentity +
                                          '</span>';
