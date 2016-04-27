@@ -121,5 +121,28 @@ function xmldb_cobra_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016042000, 'cobra');
     }
 
+    if ($oldversion < 2016042700) {
+
+        // Rename field nbclicsstats on table cobra_clic to NEWNAMEGOESHERE.
+        $table = new xmldb_table('cobra_clic');
+        $field = new xmldb_field('nb_clics', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, '0', 'user_id');
+
+        // Launch rename field nbclicsstats.
+        $dbman->rename_field($table, $field, 'nbclicsstats');
+
+        // Define field nbclicsglossary to be added to cobra_clic.
+        $field = new xmldb_field('nbclicsglossary', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, '0', 'nbclicsstats');
+
+        // Conditionally launch add field nbclicsglossary.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        $updatedata = "UPDATE {cobra_clic}
+                          SET nbclicsglossary = nbclicsstats";
+        $DB->execute($updatedata);
+
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2016042700, 'cobra');
+    }
     return true;
 }
