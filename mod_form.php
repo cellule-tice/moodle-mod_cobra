@@ -86,7 +86,7 @@ class mod_cobra_mod_form extends moodleform_mod {
 
             $options = cobra_get_foreign_languages();
             $mform->addElement('select', 'language', get_string('language', 'cobra'), $options);
-            $mform->disabledIf('language', 'mode', 'edit');
+            $mform->disabledIf('language', 'mode', 'eq', 'edit');
             $mform->addHelpButton('language', 'language', 'cobra');
 
             // Add display preferences elements
