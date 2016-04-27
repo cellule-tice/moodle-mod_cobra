@@ -239,7 +239,7 @@ function cobra_get_registered_collections($loadmode = 'all') {
     global $DB,  $course;
     $collectionslist = array();
     $params = null;
-    $list = $DB->get_records_select('cobra_registered_collections', "course='$course->id'");
+    $list = $DB->get_records_select('cobra_registered_collections', "course='$course->id'", null, 'position');
     foreach ($list as $collectioninfo) {
         $collectionslist[$collectioninfo->id_collection] = array(
             'id_collection' => $collectioninfo->id_collection,
