@@ -385,7 +385,8 @@ function cobra_clic($textid, $lingentityid, $DB, $courseid, $userid) {
         $dataobject->user_id = $userid;
         $dataobject->id_text = $textid;
         $dataobject->id_entite_ling = $lingentityid;
-        $dataobject->nb_clics = 1;
+        $dataobject->nbclicsstats = 1;
+        $dataobject->nbclicsglossary = 1;
         $dataobject->datecreate = time();
         $dataobject->datemodif = time();
         return  $DB->insert_record('cobra_clic', $dataobject);
@@ -393,7 +394,8 @@ function cobra_clic($textid, $lingentityid, $DB, $courseid, $userid) {
         // Update record.
         $dataobject = new  stdClass();
         $dataobject->id = $info->id;
-        $dataobject->nb_clics = ($info->nb_clics + 1);
+        $dataobject->nbclicsstats = ($info->nbclicsstats + 1);
+        $dataobject->nbclicsglossary = ($info->nbclicsglossary + 1);
         return  $DB->update_record('cobra_clic', $dataobject);
     }
 }
@@ -637,7 +639,7 @@ function cobra_get_nb_clics_for_text($textid) {
     $list = $DB->get_records_select('cobra_clic', "course='$course->id' AND id_text='$textid'");
     $nb = 0;
     foreach ($list as $info) {
-        $nb += $info->nb_clics;
+        $nb += $info->nbclicsstats;
     }
     return $nb;
 }
@@ -654,7 +656,7 @@ function cobra_get_nb_clic_for_user($userid) {
     $list = $DB->get_records_select('cobra_clic', "course='$course->id' AND user_id='$userid'");
     $nb = 0;
     foreach ($list as $info) {
-        $nb += $info->nb_clics;
+        $nb += $info->nbclicsstats;
     }
     return $nb;
 }
@@ -731,7 +733,7 @@ function cobra_get_clicked_texts_frequency($courseid) {
     $nbcliclist = array();
     $params = array('GROUP BY id_text', 'HAVING nb >=5');
     $list = $DB->get_records_select('cobra_clic',
-            "course='$courseid'", $params, 'nb DESC, id_text', 'id_text, SUM(nb_clics) AS nb');
+            "course='$courseid'", $params, 'nb DESC, id_text', 'id_text, SUM(nbclicsstats) AS nb');
     foreach ($list as $info) {
         $textid = $info->id_text;
         $nbcliclist[$textid] = $info->nb;
@@ -745,7 +747,7 @@ function cobra_get_clicked_entries($courseid, $nb = 20) {
     $params = array();
     $nbcliclist = array();
     $list = $DB->get_records_select('cobra_clic', "course='$courseid' GROUP BY id_entite_ling HAVING nb >=' $nb' ",
-            $params, 'id_entite_ling ASC LIMIT 100', 'id_entite_ling, SUM(nb_clics) AS nb');
+            $params, 'id_entite_ling ASC LIMIT 100', 'id_entite_ling, SUM(nbclicsstats) AS nb');
     foreach ($list as $info) {
         $nbtotalclics = $info->nb;
         $nbcliclist[$info->id_entite_ling] = $nbtotalclics;

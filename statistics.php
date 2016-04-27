@@ -193,13 +193,13 @@ if ( !is_null( $view ) ) {
                     $textid = $textinfo->id_text;
                     $texttitle = $textinfo->title;
                     $cliclist = $DB->get_records_select('cobra_clic',
-                            "course='$course->id' AND id_text='$textid' AND nb_clics >= 10",  array(),
-                            'nb_clics DESC LIMIT 10', 'id_entite_ling, nb_clics');
+                            "course='$course->id' AND id_text='$textid' AND nbclicsstats >= 10",  array(),
+                            'nbclicsstats DESC LIMIT 10', 'id_entite_ling, nbclicsstats');
 
                     $nbmots = 0;
                     foreach ($cliclist as $info2) {
                         $lingentityid = $info2->id_entite_ling;
-                        $nbclics  = $info2->nb_clics;
+                        $nbclics  = $info2->nbclicsstats;
                         $nbmots++;
                         $out .= '<tr><td>';
                         if ($nbmots == 1) {
