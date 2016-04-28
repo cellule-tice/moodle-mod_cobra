@@ -150,7 +150,7 @@ function cobra_list_concepts_in_text($textid, $entrytype) {
         foreach ($collectionlist as $collection) {
             $textlist = cobra_load_text_list($collection['id_collection'], 'visible');
             foreach ($textlist as $text) {
-                $conceptids = cobra_list_concepts_in_text($text['id_text'], $entrytype);
+                $conceptids = cobra_list_concepts_in_text($text->id_text, $entrytype);
                 foreach ($conceptids as $conceptid) {
                     if (!in_array($conceptid, $conceptidlist)) {
                         $conceptidlist[] = $conceptid;
