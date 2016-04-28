@@ -160,7 +160,6 @@ function displayDetails(conceptId, isExpression) {
     var detailsDiv = $('#details');
     var textId = getUrlParam('id_text', document.location.href);
     var encodeClic = $('#encode_clic').attr('name');
-    var courseId = $('#courseLabel').attr('name');
     var userId = $('#userId').attr('name');
     var sizePref = $("#preferencesNb").attr('name');
     var nb = parseInt(sizePref);
@@ -182,7 +181,6 @@ function displayDetails(conceptId, isExpression) {
             resourceid: textId,
             isexpression: isExpression,
             encodeclic : encodeClic,
-            courseid : courseId,
             userid : userId,
             params : json,
             id: moduleId

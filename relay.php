@@ -110,8 +110,6 @@ if (!empty($call)) {
 
     switch ($call) {
         case 'changeVisibility':
-            $resource = optional_param('resourceid', null, PARAM_ALPHANUM);
-            $resourcetype = optional_param('resourcetype', null, PARAM_ALPHANUM);
             if (cobra_change_visibility($resource, $resourcetype, $course->id)) {
                 echo 'true';
                 return true;
@@ -160,7 +158,6 @@ if (!empty($call)) {
             $resourceid = optional_param('resourceid', null, PARAM_INT);
             $isexpression = optional_param('isexpression'  , null, PARAM_BOOL);
             $encodeclic = optional_param('encodeclic', 1, PARAM_ALPHANUM);
-            $courseid = optional_param('courseid', 0, PARAM_INT);
             $userid = optional_param('userid', 0, PARAM_INT);
             $pref = isset($_REQUEST['params']) ? $_REQUEST['params'] : null;
             $params = array(
@@ -176,9 +173,9 @@ if (!empty($call)) {
             $lingentity = cobra_remote_service::call('getEntityLingIdFromConcept', $params, 'html');
             $lingentity = str_replace("\"", "", $lingentity);
             if ($encodeclic) {
-                cobra_clic($resourceid, $lingentity, $DB, $courseid, $userid);
+                cobra_clic($resourceid, $lingentity, $DB, $course->id, $userid);
             }
-            $glossarystatus = cobra_is_in_glossary($lingentity, $courseid);
+            $glossarystatus = cobra_is_in_glossary($lingentity, $course->id);
             $response = array(
                 'html' => $html,
                 'inglossary' => $glossarystatus,
