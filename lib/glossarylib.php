@@ -72,7 +72,7 @@ function cobra_export_glossary($glossary) {
             $entry['entry'],
             $entry['category'],
             $entry['ss_cat'],
-            $entry[traduction]
+            $entry['traduction']
         );
         if (!in_array($newrecord, $records)) {
             $records[] = array(
@@ -132,7 +132,7 @@ function cobra_list_concepts_in_text($textid, $entrytype) {
     if (!in_array($entrytype, cobra_get_valid_entry_types())) {
         return false;
     }
-    if (!$textid) {
+    if ($textid) {
         // Get concept list for one text.
         $text = new cobra_text_wrapper();
 
