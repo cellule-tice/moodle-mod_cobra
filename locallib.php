@@ -769,26 +769,3 @@ class cobra_clean_statistics_form extends moodleform {
         $this->add_action_buttons(true, get_string('OK', 'cobra'));
     }
 }
-
-class cobra_exception extends moodle_exception {
-    public function __construct($errorcode, $a = null, $link = '', $debuginfo = null) {
-        parent::__construct($errorcode, 'CoBRA', $link, $a, $debuginfo);
-    }
-
-    public function display_redirect_message() {
-        global $CFG;
-        if ($this->errorcode == COBRA_ERROR_SERVICE_UNAVAILABLE) {
-            redirect($this->link, $this->module . ': ' . get_string('serviceunavailable', 'cobra', $CFG->cobra_serverhost), 3);
-        }
-        else if ($this->errorcode == COBRA_ERROR_RETURNTYPE) {
-            redirect($this->link, $this->module . ': ' . get_string('unhandledreturntype', 'cobra', $this->a), 3);
-        }
-        else if ($this->errorcode == COBRA_ERROR_UNTRUSTED_USER) {
-            redirect($this->link, $this->module . ': ' . get_string('platformnotallowed', 'cobra'), 3);
-        }
-        else  {
-            print_object('coucou');
-            print_error('coucou', 'gamin');
-        }
-    }
-}

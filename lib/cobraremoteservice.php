@@ -56,22 +56,17 @@ class cobra_remote_service {
             $querystring = http_build_query($params, '', '&');
         }
         if (!$data = cobra_http_request($url . '?verb=' . $servicename . '&' . $querystring)) {
-            throw new cobra_exception(COBRA_ERROR_SERVICE_UNAVAILABLE, null,
-                    new moodle_url('/course/view.php', array('id' => $COURSE->id)));
+            redirect(new moodle_url('/course/view.php', array('id' => $COURSE->id)), 'CoBRA' . ': ' . get_string('serviceunavailable', 'cobra', $CFG->cobra_serverhost), 5);
         } else {
             $response = json_decode($data);
         }
 
         if (!in_array($response->responseType, $validreturntypes)) {
-            /*throw new cobra_exception(COBRA_ERROR_RETURNTYPE, $response->responseType,
-                new moodle_url('/course/view.php', array('id' => $COURSE->id)), $response->responseType);*/
             print_error('unhandledreturntype', 'cobra', '', $response->responseType);
         }
         if ('accesserror' == $response->responseType) {
             if ($response->content == COBRA_ERROR_UNTRUSTED_USER) {
-
-
-                throw new cobra_exception(COBRA_ERROR_UNTRUSTED_USER, null, new moodle_url('/course/view.php', array('id' => $COURSE->id)), $response->responseType);
+                redirect(new moodle_url('/course/view.php', array('id' => $COURSE->id)), 'CoBRA' . ': ' . get_string('platformnotallowed', 'cobra'), 5);
             }
         } else if ('paramerror' == $response->responseType) {
                 print_error('missingparam', '', '', $response->content);
