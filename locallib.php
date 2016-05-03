@@ -49,20 +49,26 @@ define('COBRA_ANNOTATIONS_ALWAYS', 'always');
 define('COBRA_ANNOTATIONS_CONDITIONAL', 'conditional');
 define('COBRA_ANNOTATIONS_NEVER', 'never');
 
+// Web service error types
+define('COBRA_ERROR_RETURNTYPE', 'unhandledreturntype');
+define('COBRA_ERROR_SERVICE_UNAVAILABLE', 'serviceunavailable');
+define('COBRA_ERROR_UNTRUSTED_USER', 'platformnotallowed');
+define('COBRA_ERROR_MISSING_PARAM', 'missingparam');
 /**
- * Loads the local list of E-Lex texts associated to a text collection (with filter on user profile)
+ * Loads the local list of CoBRA texts associated to a text collection (with filter on user profile)
  * @param $collection identifier of the text collection
  * @param $loadmode 'all' for course managers, 'visible' for students
  * @return array containing information on texts to display
  */
 function cobra_load_text_list($collection, $loadmode = 'all') {
     global $DB, $course;
+
     $andclause = '';
     if ('visible' == $loadmode) {
         $andclause = " AND visibility = '1' ";
     }
     $list = $DB->get_records_select('cobra_texts_config', "course='$course->id' AND id_collection=$collection "
-            . $andclause, null, 'position');
+        . $andclause, null, 'position');
 
     if (empty($list)) {
         return false;
@@ -71,7 +77,7 @@ function cobra_load_text_list($collection, $loadmode = 'all') {
     $textlist = array();
 
     $params = array('collection' => (int)$collection);
-    $remotetextobjectlist = cobra_remote_service::call('loadTexts', $params);
+    $remotetextobjectlist = cobra_remote_service::call('getTexts', $params);
 
     foreach ($list as $text) {
         $text->title = '';
@@ -216,7 +222,7 @@ function cobra_insert_corpus_type_display_order($typeid) {
 function cobra_get_filtered_collections($language, $exclusionlist = array()) {
     $collections = array();
     $params = array('language' => $language);
-    $collectionsobjectlist = cobra_remote_service::call('loadFilteredCollections', $params);
+    $collectionsobjectlist = cobra_remote_service::call('getFilteredCollections', $params);
     foreach ($collectionsobjectlist as $remotecollection) {
         if (in_array($remotecollection->id, $exclusionlist)) {
             continue;
@@ -259,12 +265,12 @@ function cobra_get_registered_collections($loadmode = 'all') {
 function cobra_load_remote_text_list($collection) {
     $textlist = array();
     $params = array('collection' => (int)$collection);
-    $remotetextobjectlist = cobra_remote_service::call('loadTexts', $params);
+    $remotetextobjectlist = cobra_remote_service::call('getTexts', $params);
 
     foreach ($remotetextobjectlist as $textobject) {
-        $text['id'] = utf8_decode($textobject->id);
-        $text['title'] = utf8_decode($textobject->title);
-        $text['source'] = utf8_decode($textobject->source);
+        $text['id'] = $textobject->id;
+        $text['title'] = $textobject->title;
+        $text['source'] = $textobject->source;
         $textlist[] = $text;
     }
     return $textlist;
@@ -434,7 +440,7 @@ function cobra_get_concept_info_from_ling_entity($lingentityid) {
  */
 function cobra_get_valid_list_type_corpus($language) {
     $params = array('language' => $language);
-    $remotelistofcorpustype = cobra_remote_service::call('returnValidListTypeCorpus', $params);
+    $remotelistofcorpustype = cobra_remote_service::call('getValidListTypeCorpus', $params);
     $listofcorpustype = array();
     foreach ($remotelistofcorpustype as $corpusobject) {
         $corpus['id'] = $corpusobject->id;
@@ -458,24 +464,6 @@ function cobra_get_corpus_type_display_order() {
         $typelist[$i] = $info->id_type;
     }
     return $typelist;
-}
-
-/**
- * Collects information associated to the given corpus
- * Handled with remote call
- * @deprecated apparently no longer used.
- * @todo check before deleting
- * @param int $lingentityid identifier of the corpus
- * @return array containing information about the corpus
- */
-function cobra_get_corpus_info($corpusid) {
-    $params = array('id_corpus' => $corpusid);
-    $corpusinfo = cobra_remote_service::call('getCorpusInfo', $params);
-    if (is_array($corpusinfo)) {
-        return array($corpusinfo->id_groupe, $corpusinfo->nom_corpus,
-            utf8_decode($corpusinfo->reference), $corpusinfo->langue, $corpusinfo->id_type);
-    }
-    return array();
 }
 
 /**
@@ -779,5 +767,28 @@ class cobra_clean_statistics_form extends moodleform {
         $mform->addElement('select', 'scope', get_string('Delete', 'cobra'), $options);
         $mform->addElement('date_selector', 'before_date', get_string('Before', 'cobra'));
         $this->add_action_buttons(true, get_string('OK', 'cobra'));
+    }
+}
+
+class cobra_exception extends moodle_exception {
+    public function __construct($errorcode, $a = null, $link = '', $debuginfo = null) {
+        parent::__construct($errorcode, 'CoBRA', $link, $a, $debuginfo);
+    }
+
+    public function display_redirect_message() {
+        global $CFG;
+        if ($this->errorcode == COBRA_ERROR_SERVICE_UNAVAILABLE) {
+            redirect($this->link, $this->module . ': ' . get_string('serviceunavailable', 'cobra', $CFG->cobra_serverhost), 3);
+        }
+        else if ($this->errorcode == COBRA_ERROR_RETURNTYPE) {
+            redirect($this->link, $this->module . ': ' . get_string('unhandledreturntype', 'cobra', $this->a), 3);
+        }
+        else if ($this->errorcode == COBRA_ERROR_UNTRUSTED_USER) {
+            redirect($this->link, $this->module . ': ' . get_string('platformnotallowed', 'cobra'), 3);
+        }
+        else  {
+            print_object('coucou');
+            print_error('coucou', 'gamin');
+        }
     }
 }

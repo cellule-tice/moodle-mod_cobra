@@ -163,3 +163,6 @@ $string['mostclickedtexts'] = 'Most clicked texts';
 $string['statisticspertext'] = 'Statistics per text';
 $string['statisticsperuser'] = 'Statistics per user';
 $string['cleanclicstats'] = 'Clean statistics';
+$string['serviceunavailable'] = 'Unable to access CoBRA service at {$a}';
+$string['unhandledreturntype'] = 'Unhandled return type - {$a}';
+$string['platformnotallowed'] = 'Your platform is not allowed to access CoBRA service !';

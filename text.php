@@ -80,9 +80,6 @@ $content .= '<div id="showglossary" class="hidden">' . $cobra->userglossary . '<
 $content .= '<div id="userId" class="hidden" name="' . $USER->id . '">&nbsp;</div>';
 $content .= '<div id="courseid" class="hidden" name="' . $course->id .'">' . $course->id . '</div>';
 
-
-
-$cobra->ccorder = $order;
 $i = 0;
 foreach ($cobra as $key => $info) {
     $content .= '<div id="preferences_' . $i . '_key" class="hidden" name="' . $key . '">' . $key . '</div>';
