@@ -166,10 +166,10 @@ if ($cmd == 'rqexport') {
         $textlist = cobra_load_text_list( $collection['id_collection'], 'visible' );
         foreach ($textlist as $num => $text) {
             if (array_key_exists($text->id, $_REQUEST)) {
-                $textid = $text->id;
+                $textid = $text->id_text;
                 $glossary2 = cobra_get_glossary_for_text ( $textid );
                 if (array_key_exists( $textid, $glossary2 )) {
-                    $glossary2 = cobra_get_glossary_entry_of_text( $glossary2[$text->id], $text, $num );
+                    $glossary2 = cobra_get_glossary_entry_of_text( $glossary2[$text->id_text], $text, $num );
                     $glossary = array_merge( $glossary, $glossary2 );
                 }
             }

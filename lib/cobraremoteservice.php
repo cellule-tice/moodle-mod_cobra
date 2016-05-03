@@ -32,35 +32,53 @@
 defined('MOODLE_INTERNAL') || die();
 
 class cobra_remote_service {
-    public static function call($servicename, $params = array(), $returntype = 'json') {
-        global $CFG;
-        try {
-            $validreturntypes = array('html', 'object', 'objectList', 'string', 'integer', 'boolean', 'error');
-            $site = get_site();
-            $url = $_SERVER['SERVER_NAME'] = $CFG->cobra_serverhost;
-            // Localhost config url   $url = 'http://localhost/cobra/services/service_handler.php'; .
-            $params['caller'] = $site->shortname;
-            $params['from'] = 'moodle';
-            if (count($params)) {
-                $querystring = http_build_query($params, '', '&');
-            }
-            if (!$response = cobra_http_request($url . '?verb=' . $servicename . '&' . $querystring)) {
-                throw new Exception('Unable to access required URL' . $url);
-            }
-            $response = json_decode($response);
 
-            if (!in_array($response->responseType, $validreturntypes)) {
-                throw new Exception(get_string('Unhandled return type') . '&nbsp;:&nbsp;' . $response->responseType);
+    public static function call($servicename, $params = array(), $returntype = 'json') {
+        global $CFG, $COURSE;
+        $validreturntypes = array(
+            'html',
+            'object',
+            'objectList',
+            'string',
+            'integer',
+            'boolean',
+            'error',
+            'accesserror',
+            'paramerror'
+        );
+        $response = new stdClass();
+        $site = get_site();
+        $url = $CFG->cobra_serverhost;
+
+        $params['caller'] = $site->shortname;
+        $params['from'] = 'moodle';
+        if (count($params)) {
+            $querystring = http_build_query($params, '', '&');
+        }
+        if (!$data = cobra_http_request($url . '?verb=' . $servicename . '&' . $querystring)) {
+            throw new cobra_exception(COBRA_ERROR_SERVICE_UNAVAILABLE, null,
+                    new moodle_url('/course/view.php', array('id' => $COURSE->id)));
+        } else {
+            $response = json_decode($data);
+        }
+
+        if (!in_array($response->responseType, $validreturntypes)) {
+            /*throw new cobra_exception(COBRA_ERROR_RETURNTYPE, $response->responseType,
+                new moodle_url('/course/view.php', array('id' => $COURSE->id)), $response->responseType);*/
+            print_error('unhandledreturntype', 'cobra', '', $response->responseType);
+        }
+        if ('accesserror' == $response->responseType) {
+            if ($response->content == COBRA_ERROR_UNTRUSTED_USER) {
+
+
+                throw new cobra_exception(COBRA_ERROR_UNTRUSTED_USER, null, new moodle_url('/course/view.php', array('id' => $COURSE->id)), $response->responseType);
             }
-            if ('error' == $response->responseType) {
-                throw new Exception(get_string(utf8_decode($response->content)));
-            } else if ('html' == $response->responseType) {
-                return utf8_decode($response->content);
-            } else {
-                return $response->content;
-            }
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } else if ('paramerror' == $response->responseType) {
+                print_error('missingparam', '', '', $response->content);
+        } else if ('html' == $response->responseType) {
+            return utf8_decode($response->content);
+        } else {
+            return $response->content;
         }
     }
 }

@@ -140,7 +140,7 @@ class cobra_text_wrapper {
 
     public function load_remote_data() {
         $params = array('id_text' => (int)$this->get_text_id());
-        $jsonobj = cobra_remote_service::call('loadTextData', $params);
+        $jsonobj = cobra_remote_service::call('getTextData', $params);
 
         $this->set_source(utf8_decode($jsonobj->source));
         $this->set_title(utf8_decode($jsonobj->title));

@@ -78,98 +78,115 @@ $PAGE->requires->js_init_call('M.mod_cobra.text_visibility');
 $PAGE->requires->js_init_call('M.mod_cobra.text_move');
 $PAGE->requires->js_init_call('M.mod_cobra.text_change_type');
 // Output starts here.
-echo $OUTPUT->header();
+/*echo $OUTPUT->header();
 
 // Replace the following lines with you own code.
 echo $OUTPUT->heading(get_string('textreading', 'cobra'));
 
-echo $OUTPUT->box_start('generalbox box-content');
+echo $OUTPUT->box_start('generalbox box-content');*/
 
 $content = '';
 $isallowedtoedit = has_capability('mod/cobra:edit', $context);
 
 // For all chosen collections display text in selected order.
+try {
+    $collectionlist = $isallowedtoedit ? cobra_get_registered_collections('all') : cobra_get_registered_collections('visible');
+    foreach ($collectionlist as $collection) {
+        $content .= '<h3>' . $collection['local_label'] . '</h3>';
+        $content .= '<table class="table table-condensed table-hover table-striped textlist">' .
+            '<thead>' .
+            '<tr align="center">' .
+            '<th>' . get_string('text', 'cobra') . '</th>' .
+            '<th>' . get_string('source', 'cobra') . '</th>';
 
-$collectionlist = $isallowedtoedit ? cobra_get_registered_collections('all') : cobra_get_registered_collections('visible');
-foreach ($collectionlist as $collection) {
-    $content .= '<h3>' . $collection['local_label'] . '</h3>';
-    $content .= '<table class="table table-condensed table-hover table-striped textlist">' .
-                '<thead>' .
-                '<tr align="center">' .
-                '<th>' . get_string('text', 'cobra') . '</th>' .
-                '<th>' . get_string('source', 'cobra') . '</th>';
-
-    if ($isallowedtoedit) {
-        $content .= '<th>' . get_string ('type', 'cobra') . '</th>' .
-                    '<th>' . get_string ('move') . '</th>' .
-                    '<th>' . get_string('visibility' , 'cobra') . '</th>';
-    }
-    $content .= '</tr>' .
-                '</thead>';
-
-    if ($isallowedtoedit) {
-        // Load all texts to display for course admin.
-        $textlist = cobra_load_text_list($collection['id_collection'], 'all');
-    } else {
-        // Load only visible texts to display for students.
-        $textlist = cobra_load_text_list($collection['id_collection'], 'visible');
-    }
-    if (!empty($textlist) && is_array($textlist)) {
-        $content .= '<tbody>';
-        $position = 1;
-        foreach ($textlist as $text) {
-            // Display title.
-            $rowcssclass = $text->visibility ? 'tablerow' : 'tablerow dimmed_text';
-            $content .= '<tr id="' . $text->id_text . '#textId" class="' . $rowcssclass . '" name="' . $position++ .
-                        '#pos"><td style="min-width:50%;">' .
-                        '<a href="text.php?id='.$id.'&id_text=' . $text->id_text . '#/' . $text->id_text . '">' .
-                        '<i class="fa fa-file-text"></i> ' .
-                        trim(strip_tags($text->title)) .
-                        '</a>' .
-                        '</td>' .
-            // Display source.
-                        '<td style="width: 350px;" title="' . $text->source . '">' .
-                        substr($text->source, 0, 30) . '...' .
-                        '</td>';
-
-            if ($isallowedtoedit) {
-                // Display text type.
-                $content .= '<td align="center">' . "\n" . '<a href="#" class="changeType">' .
-                            (!empty($text->text_type) ? get_string($text->text_type, 'cobra') : '&nbsp;') .
-                            '</a></td>';
-                // Change position commands.
-                $content .= '<td align="center">';
-                $content .= '<a href="#" class="moveUp"><i class="fa fa-arrow-up"></i></a>&nbsp;';
-                $content .= '<a href="#" class="moveDown"><i class="fa fa-arrow-down"></i></a>&nbsp;';
-                $content .= '</td>';
-
-                // Change visibility commands.
-                $content .= '<td align="center">';
-                $content .= '<a href="#" class="setVisible" ' .
-                            ($text->visibility ? 'style="display:none"' : '') .
-                            '><i class="fa fa-eye-slash"></i></a>';
-
-                $content .= '<a href="#" class="setInvisible" ' .
-                            (!$text->visibility ? 'style="display:none"' : '') .
-                            '><i class="fa fa-eye"></i></a>';
-
-                $content .= '</td>';
-            }
-            $content .= '</tr>';
+        if ($isallowedtoedit) {
+            $content .= '<th>' . get_string('type', 'cobra') . '</th>' .
+                '<th>' . get_string('move') . '</th>' .
+                '<th>' . get_string('visibility', 'cobra') . '</th>';
         }
-        $content .= '</tbody>';
-    } else {
-        $content .= '<tfoot>' .
-                    '<tr>' .
-                    '<td align="center" colspan="' . ($isallowedtoedit ? '4' : '2') . '">' . get_lang('No text') . '</td>' .
-                    '</tr>' .
-                    '</tfoot>';
+        $content .= '</tr>' .
+            '</thead>';
+
+        if ($isallowedtoedit) {
+            // Load all texts to display for course admin.
+            $textlist = cobra_load_text_list($collection['id_collection'], 'all');
+        } else {
+            // Load only visible texts to display for students.
+            $textlist = cobra_load_text_list($collection['id_collection'], 'visible');
+        }
+        if (!empty($textlist) && is_array($textlist)) {
+            $content .= '<tbody>';
+            $position = 1;
+            foreach ($textlist as $text) {
+                // Display title.
+                $rowcssclass = $text->visibility ? 'tablerow' : 'tablerow dimmed_text';
+                $content .= '<tr id="' . $text->id_text . '#textId" class="' . $rowcssclass . '" name="' . $position++ .
+                    '#pos"><td style="min-width:50%;">' .
+                    '<a href="text.php?id=' . $id . '&id_text=' . $text->id_text . '#/' . $text->id_text . '">' .
+                    '<i class="fa fa-file-text"></i> ' .
+                    trim(strip_tags($text->title)) .
+                    '</a>' .
+                    '</td>' .
+                    // Display source.
+                    '<td style="width: 350px;" title="' . $text->source . '">' .
+                    substr($text->source, 0, 30) . '...' .
+                    '</td>';
+
+                if ($isallowedtoedit) {
+                    // Display text type.
+                    $content .= '<td align="center">' . "\n" . '<a href="#" class="changeType">' .
+                        (!empty($text->text_type) ? get_string($text->text_type, 'cobra') : '&nbsp;') .
+                        '</a></td>';
+                    // Change position commands.
+                    $content .= '<td align="center">';
+                    $content .= '<a href="#" class="moveUp"><i class="fa fa-arrow-up"></i></a>&nbsp;';
+                    $content .= '<a href="#" class="moveDown"><i class="fa fa-arrow-down"></i></a>&nbsp;';
+                    $content .= '</td>';
+
+                    // Change visibility commands.
+                    $content .= '<td align="center">';
+                    $content .= '<a href="#" class="setVisible" ' .
+                        ($text->visibility ? 'style="display:none"' : '') .
+                        '><i class="fa fa-eye-slash"></i></a>';
+
+                    $content .= '<a href="#" class="setInvisible" ' .
+                        (!$text->visibility ? 'style="display:none"' : '') .
+                        '><i class="fa fa-eye"></i></a>';
+
+                    $content .= '</td>';
+                }
+                $content .= '</tr>';
+            }
+            $content .= '</tbody>';
+        } else {
+            $content .= '<tfoot>' .
+                '<tr>' .
+                '<td align="center" colspan="' . ($isallowedtoedit ? '4' : '2') . '">' . get_lang('No text') . '</td>' .
+                '</tr>' .
+                '</tfoot>';
+        }
+        $content .= '</table>';
     }
-    $content .= '</table>';
+} catch (cobra_exception $e) {
+    /*if ($e->errorcode == COBRA_ERROR_SERVICE_UNAVAILABLE) {
+        redirect($e->link, $e->module . ': ' . 'unable to access CoBRA service at ' . $CFG->cobra_serverhost, 3);
+    }
+    else if ($e->errorcode == COBRA_ERROR_RETURNTYPE) {
+        redirect($e->link, $e->module . ': ' . 'unhandled return type - ' . $e->a, 3);
+    }
+    else if ($e->errorcode == COBRA_ERROR_UNTRUSTED_USER) {
+        redirect($e->link, $e->module . ': ' . 'not allowed ' . $e->a, 3);
+    }*/
+    $e->display_redirect_message();
 }
+// Output starts here.
+echo $OUTPUT->header();
+
+echo $OUTPUT->heading(get_string('textreading', 'cobra'));
+
+echo $OUTPUT->box_start('generalbox box-content');
 
 echo $content;
-
 
 echo $OUTPUT->box_end();
 
