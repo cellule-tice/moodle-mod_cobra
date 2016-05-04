@@ -90,18 +90,18 @@ if ($isallowedtoedit) {
 foreach ($collectionlist as $collection) {
     $content .= '<h3>' . $collection['local_label'] . '</h3>';
     $content .= '<table class="table table-condensed table-hover table-striped textlist">' .
-        '<thead>' .
-        '<tr align="center">' .
-        '<th>' . get_string('text', 'cobra') . '</th>' .
-        '<th>' . get_string('source', 'cobra') . '</th>';
+                '<thead>' .
+                '<tr align="center">' .
+                '<th>' . get_string('text', 'cobra') . '</th>' .
+                '<th>' . get_string('source', 'cobra') . '</th>';
 
     if ($isallowedtoedit) {
         $content .= '<th>' . get_string('type', 'cobra') . '</th>' .
-            '<th>' . get_string('move') . '</th>' .
-            '<th>' . get_string('visibility', 'cobra') . '</th>';
+                    '<th>' . get_string('move') . '</th>' .
+                    '<th>' . get_string('visibility', 'cobra') . '</th>';
     }
     $content .= '</tr>' .
-        '</thead>';
+                '</thead>';
 
     if ($isallowedtoedit) {
         // Load all texts to display for course admin.
@@ -117,22 +117,22 @@ foreach ($collectionlist as $collection) {
             // Display title.
             $rowcssclass = $text->visibility ? 'tablerow' : 'tablerow dimmed_text';
             $content .= '<tr id="' . $text->id_text . '#textId" class="' . $rowcssclass . '" name="' . $position++ .
-                '#pos"><td style="min-width:50%;">' .
-                '<a href="text.php?id=' . $id . '&id_text=' . $text->id_text . '#/' . $text->id_text . '">' .
-                '<i class="fa fa-file-text"></i> ' .
-                trim(strip_tags($text->title)) .
-                '</a>' .
-                '</td>' .
-                // Display source.
-                '<td style="width: 350px;" title="' . $text->source . '">' .
-                substr($text->source, 0, 30) . '...' .
-                '</td>';
+                        '#pos"><td style="min-width:50%;">' .
+                        '<a href="text.php?id=' . $id . '&id_text=' . $text->id_text . '#/' . $text->id_text . '">' .
+                        '<i class="fa fa-file-text"></i> ' .
+                        trim(strip_tags($text->title)) .
+                        '</a>' .
+                        '</td>' .
+                        // Display source.
+                        '<td style="width: 350px;" title="' . $text->source . '">' .
+                        substr($text->source, 0, 30) . '...' .
+                        '</td>';
 
             if ($isallowedtoedit) {
                 // Display text type.
                 $content .= '<td align="center">' . "\n" . '<a href="#" class="changeType">' .
-                    (!empty($text->text_type) ? get_string($text->text_type, 'cobra') : '&nbsp;') .
-                    '</a></td>';
+                            (!empty($text->text_type) ? get_string($text->text_type, 'cobra') : '&nbsp;') .
+                            '</a></td>';
                 // Change position commands.
                 $content .= '<td align="center">';
                 $content .= '<a href="#" class="moveUp"><i class="fa fa-arrow-up"></i></a>&nbsp;';
@@ -142,12 +142,12 @@ foreach ($collectionlist as $collection) {
                 // Change visibility commands.
                 $content .= '<td align="center">';
                 $content .= '<a href="#" class="setVisible" ' .
-                    ($text->visibility ? 'style="display:none"' : '') .
-                    '><i class="fa fa-eye-slash"></i></a>';
+                            ($text->visibility ? 'style="display:none"' : '') .
+                            '><i class="fa fa-eye-slash"></i></a>';
 
                 $content .= '<a href="#" class="setInvisible" ' .
-                    (!$text->visibility ? 'style="display:none"' : '') .
-                    '><i class="fa fa-eye"></i></a>';
+                            (!$text->visibility ? 'style="display:none"' : '') .
+                            '><i class="fa fa-eye"></i></a>';
 
                 $content .= '</td>';
             }
@@ -156,23 +156,19 @@ foreach ($collectionlist as $collection) {
         $content .= '</tbody>';
     } else {
         $content .= '<tfoot>' .
-            '<tr>' .
-            '<td align="center" colspan="' . ($isallowedtoedit ? '4' : '2') . '">' . get_lang('No text') . '</td>' .
-            '</tr>' .
-            '</tfoot>';
+                    '<tr>' .
+                    '<td align="center" colspan="' . ($isallowedtoedit ? '4' : '2') . '">' . get_lang('No text') . '</td>' .
+                    '</tr>' .
+                    '</tfoot>';
     }
     $content .= '</table>';
 }
 
 // Output starts here.
 echo $OUTPUT->header();
-
 echo $OUTPUT->heading(get_string('textreading', 'cobra'));
-
 echo $OUTPUT->box_start('generalbox box-content');
-
 echo $content;
-
 echo $OUTPUT->box_end();
 
 // Finish the page.

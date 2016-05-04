@@ -95,20 +95,13 @@ $PAGE->requires->js('/mod/cobra/js/cobra.js');
 $PAGE->requires->js_init_call('M.mod_cobra.text_visibility');
 $PAGE->requires->js_init_call('M.mod_cobra.text_move');
 
-// Output starts here.
-echo $OUTPUT->header();
-
+// Buffer output
 $content = '';
-/*$content .= '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=collections">' .
-            get_string('manage_text_collections', 'cobra').'</a> &nbsp; ' .
-            '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=corpus">'.
-            get_string('corpus_selection', 'cobra') . '</a> &nbsp; ' .
-            '<a href="'.$_SERVER['PHP_SELF'].'?id='.$id.'&section=display">' .
-            get_string('display_preferences', 'cobra') .'</a>';*/
 
 if ('collections' == $currentsection) {
-    echo $OUTPUT->heading(get_string('modulename', 'cobra') . ' - ' . get_string('manage_text_collections', 'cobra'));
-    echo $OUTPUT->box_start('generalbox box-content');
+    //$content .= $OUTPUT->heading(get_string('modulename', 'cobra') . ' - ' . get_string('manage_text_collections', 'cobra'));
+    $heading = get_string('modulename', 'cobra') . ' - ' . get_string('manage_text_collections', 'cobra');
+    //$content .= $OUTPUT->box_start('generalbox box-content');
     if ('exEditLabel' == $cmd) {
         $label = optional_param('label', null, PARAM_ALPHANUM);
         if (!empty($label)) {
@@ -116,12 +109,12 @@ if ('collections' == $currentsection) {
             $collection->load();
             $collection->set_local_name($label);
             if ($collection->update()) {
-                echo $OUTPUT->notification(get_string('Collection_name_changed', 'cobra'));
+                $content .= $OUTPUT->notification(get_string('Collection_name_changed', 'cobra'));
             } else {
-                echo $OUTPUT->notification(get_string('Unable_to_change_collection_name', 'cobra'));
+                $content .= $OUTPUT->notification(get_string('Unable_to_change_collection_name', 'cobra'));
             }
         } else {
-            echo $OUTPUT->notification(get_string('Collection_name_cannot_be_empty', 'cobra'));
+            $content .= $OUTPUT->notification(get_string('Collection_name_cannot_be_empty', 'cobra'));
             $cmd = 'rqEditLabel';
         }
     }
@@ -139,14 +132,14 @@ if ('collections' == $currentsection) {
                     '<input type="submit" value="' . get_string('ok') . '" />&nbsp; ' .
                     '</form>';
 
-        echo $OUTPUT->box($editform);
+        $content .= $OUTPUT->box($editform);
     } else if ('exAdd' == $cmd && !empty($remotecollection)) {
         $collection = new cobra_collection_wrapper();
         $collection->wrapremote($remotecollection);
         $textlist = cobra_load_remote_text_list($collection->get_id());
         $savemode = $collection->save();
         if ('error' == $savemode) {
-            echo $OUTPUT->notification(get_string('unable_register_collection', 'cobra'));
+            $content .= $OUTPUT->notification(get_string('unable_register_collection', 'cobra'));
         } else if ('saved' == $savemode) {
             $position = 1;
             foreach ($textlist as $remotetext) {
@@ -156,16 +149,16 @@ if ('collections' == $currentsection) {
                 $text->set_position($position++);
                 $text->save();
             }
-            echo $OUTPUT->box(get_string('text_collection_added', 'cobra'));
+            $content .= $OUTPUT->box(get_string('text_collection_added', 'cobra'));
         }
     } else if ('exRemove' == $cmd) {
         $collection = new cobra_collection_wrapper($collectionid);
         if (cobra_remove_text_list($collectionid)) {
             if (!$collection->remove()) {
-                echo $OUTPUT->notification(get_string('unable_unregister_collection', 'cobra'));
+                $content .= $OUTPUT->notification(get_string('unable_unregister_collection', 'cobra'));
             }
         } else {
-            echo $OUTPUT->notification(get_string('unable_remove_texts_collection', 'cobra'));
+            $content .= $OUTPUT->notification(get_string('unable_remove_texts_collection', 'cobra'));
         }
     } else if ('exRefresh' == $cmd) {
         $localcollection = new cobra_collection_wrapper($collectionid);
@@ -196,15 +189,15 @@ if ('collections' == $currentsection) {
             }
         }
         if ($legacytextcount != 0) {
-            echo '<br> textt(s) removed';
+            $content .= '<br> textt(s) removed';
             if ($legacytextcount != $removedtextcount) {
-                echo '' .
+                $content .= '' .
                     $legacytextcount - $removedtextcount .
                     ' ' . get_string('could_not_be_removed', 'cobra') .
                     '</br>';
             }
         } else {
-            echo get_string('No_text_to_remove', 'cobra');
+            $content .= get_string('No_text_to_remove', 'cobra');
         }
 
         // Add new texts.
@@ -224,26 +217,25 @@ if ('collections' == $currentsection) {
             }
         }
         if ($newtextcount != 0) {
-            echo '<br> new text(s) added';
+            $content .= '<br> new text(s) added';
             if ($newtextcount != $addedtextcount) {
-                echo '' .
+                $content .= '' .
                     $newtextcount - $addedtextcount .
                     ' ' .
                     get_string('could_not_be_added', 'cobra') .
                     '<br/> ';
             }
         } else {
-            echo get_string('No_text_to_add', 'cobra'). '<br/>';
+            $content .= get_string('No_text_to_add', 'cobra'). '<br/>';
         }
     }
 } else if ('corpus' == $currentsection) {
-    echo $OUTPUT->heading(get_string('modulename', 'cobra') . ' - ' . get_string('corpus_selection', 'cobra'));
-    echo $OUTPUT->box_start('generalbox box-content');
+    $heading = (get_string('modulename', 'cobra') . ' - ' . get_string('corpus_selection', 'cobra'));
     $prefs = cobra_get_preferences();
     $tabcorpustype = cobra_get_valid_list_type_corpus($cobra->language);
     if ('saveOrder' == $cmd) {
         if (!cobra_clear_corpus_selection()) {
-            echo 'error while saving preferences' . '<br/>';
+            $content .= 'error while saving preferences' . '<br/>';
         } else {
             $tabnewordre = array();
             foreach ($tabcorpustype as $corpustypeinfo) {
@@ -256,37 +248,7 @@ if ('collections' == $currentsection) {
             foreach ($tabnewordre as $typeid) {
                 cobra_insert_corpus_type_display_order($typeid);
             }
-            echo 'Concordances Order Saved' . '<br/>';
-        }
-    }
-} else if ('display' == $currentsection) {
-    if ('savePrefs' == $cmd) {
-        $prefs = cobra_get_preferences();
-        $prefs['gender'] = isset($_REQUEST['gender']) && is_string($_REQUEST['gender']) ? $_REQUEST['gender'] : $prefs['gender'];
-        $prefs['ff'] = isset($_REQUEST['ff']) && is_string($_REQUEST['ff']) ? $_REQUEST['ff'] : $prefs['ff'];
-        if (isset($_REQUEST['translations']) && is_string($_REQUEST['translations'])) {
-            $prefs['translations'] = $_REQUEST['translations'];
-        }
-        if (isset($_REQUEST['illustrations']) && is_string($_REQUEST['illustrations'])) {
-             $prefs['illustrations'] = $_REQUEST['illustrations'];
-        }
-        if (isset($_REQUEST['examples']) && is_string($_REQUEST['examples'])) {
-            $prefs['examples'] = $_REQUEST['examples'];
-        }
-        if (isset($_REQUEST['occurrences']) && is_string($_REQUEST['occurrences'])) {
-            $prefs['occurrences'] = $_REQUEST['occurrences'];
-        }
-        if (isset($_REQUEST['descriptions']) && is_string($_REQUEST['descriptions'])) {
-            $prefs['descriptions'] = $_REQUEST['descriptions'];
-        }
-        $prefs['player'] = isset($_REQUEST['player']) && is_string($_REQUEST['player']) ? $_REQUEST['player'] : $prefs['player'];
-        if (isset($_REQUEST['nextprevbuttons']) && is_string($_REQUEST['nextprevbuttons'])) {
-            $prefs['nextprevbuttons'] = $_REQUEST['nextprevbuttons'];
-        }
-        if (!cobra_save_preferences($prefs)) {
-                echo ' probleme <br/>';
-        } else {
-            echo  get_string('Display_preferences_updated', 'cobra') . '<br/>';
+            $content .= 'Concordances Order Saved' . '<br/>';
         }
     }
 }
@@ -419,147 +381,11 @@ if ('collections' == $currentsection) {
             '</form>' .
             '</div>';
     $content .= $form;
-} else if ('display' == $currentsection) {
-    if (!isset($prefs)) {
-        $prefs = cobra_get_preferences();
-    }
-    $checkedstring = ' checked="checked"';
-    $content .= '<form method="post" action="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&section=display">' .
-                '<input type="hidden" name="cmd" value="savePrefs" />' .
-                '<table border="0" cellpadding="5" width="100%">' .
-                '<tr style="vertical-align:top;">' .
-                '<td style="text-align: right" width="25%">' . get_string('Previous_and_Next_buttons', 'cobra') . '&nbsp;:</td>' .
-                '<td nowrap="nowrap" width="25%">' .
-                '<input id="nextPrevYes" type="radio" name="nextprevbuttons" value="SHOW"' .
-                ('SHOW' == $prefs['nextprevbuttons'] ? $checkedstring : '') . '/>' .
-                '<label for="nextPrevYes">' . get_string('yes') . '</label><br/>' .
-                '<input id="nextPrevNo" type="radio" name="nextprevbuttons" value="HIDE"' .
-                ('HIDE' == $prefs['nextprevbuttons'] ? $checkedstring : '') . '/>' .
-                '<label for="nextPrevNo">' . get_string('no') . '</label>' .
-                '</td>' .
-                '<td width="50%"><em><small>' .
-                get_string('Display_Prev_and_Next_buttons', 'cobra') .
-                '</small></em></td>' .
-                '</tr>' .
-                '<tr style="vertical-align:top;">' .
-                '<td style="text-align: right" width="25%">' . get_string ('MP3_player', 'cobra') . '&nbsp;:</td>' .
-                '<td nowrap="nowrap" width="25%">' .
-                '<input id="playerYes" type="radio" name="player" value="SHOW"' .
-                ('SHOW' == $prefs['player'] ? $checkedstring : '') . '/>' .
-                '<label for="playerYes">' . get_string('yes') . '</label><br/>' .
-                '<input id="playerNo" type="radio" name="player" value="HIDE"' .
-                ('HIDE' == $prefs['player'] ? $checkedstring : '') . '/>' .
-                '<label for="playerNo">' . get_string('no') . '</label>' .
-                '</td>' .
-                '<td width="50%"><em><small>' . get_string ('Show_MP3_player', 'cobra') . '</small></em></td>' .
-                '</tr>' .
-                '<tr style="vertical-align:top;">' .
-                '<td style="text-align: right" width="25%">' . get_string('Display_gender', 'cobra') . '&nbsp;:</td>' .
-                '<td nowrap="nowrap" width="25%">' .
-                '<input id="genderYes" type="radio" name="gender" value="SHOW"' .
-                ('SHOW' == $prefs['gender'] ? $checkedstring : '') . '/>' .
-                '<label for="genderYes">' . get_string ('yes') . '</label><br/>' .
-                '<input id="genderNo" type="radio" name="gender" value="HIDE"' .
-                ('HIDE' == $prefs['gender'] ? $checkedstring : '') . '/>' .
-                '<label for="genderNo">' . get_string('no') . '</label>' .
-                '</td>' .
-                '<td width="50%"><em><small>' . get_string('Only_for_Dutch_courses', 'cobra') . '</small></em></td>' .
-                '</tr>' .
-                '<tr style="vertical-align:top;">' .
-                '<td style="text-align: right" width="25%">' . get_string('All_inflected_forms', 'cobra') . '&nbsp;:</td>' .
-                '<td nowrap="nowrap" width="25%">' .
-                '<input id="ffYes" type="radio" name="ff" value="SHOW"' . ('SHOW' == $prefs['ff'] ? $checkedstring : '') . '/>' .
-                '<label for="ffYes">' . get_string('yes') . '</label><br/>' .
-                '<input id="ffNo" type="radio" name="ff" value="HIDE"' . ('HIDE' == $prefs['ff'] ? $checkedstring : '') . '/>' .
-                '<label for="ffNo">' . get_string('no') . '</label>' .
-                '</td>' .
-                '<td width="50%"><em><small>' . get_string('Choose_yes_to_display_all_inflected_forms_in_lexical_card', 'cobra') .
-                '</small></em></td>' .
-                '</tr>';
-
-    $content .= '<tr style="vertical-align:top;">' .
-                '<td style="text-align: right" width="25%">' . get_string('Show_translations', 'cobra') . '&nbsp;:</td>' .
-                '<td nowrap="nowrap" width="25%">' .
-                '<input id="translationsYes" type="radio" name="translations" value="ALWAYS"' .
-                ('ALWAYS' == $prefs['translations'] ? $checkedstring : '') . '/>' .
-                '<label for="translationsYes">' . get_string('always', 'cobra') . '</label><br/>' .
-                '<input id="translationsNo" type="radio" name="translations" value="NEVER"' .
-                ('NEVER' == $prefs['translations'] ? $checkedstring : '') . '/>' .
-                '<label for="translationsNo">' . get_string('never', 'cobra') . '</label><br/>' .
-                '<input id="translationsCond" type="radio" name="translations" value="CONDITIONAL"' .
-                ('CONDITIONAL' == $prefs['translations'] ? $checkedstring : '') . '/>' .
-                '<label for="translationsCond">' . get_string('conditional', 'cobra') . '</label>' .
-                '</td>' .
-                '<td width="50%"><em><small>' . get_string('Display_preference_for_translations', 'cobra') . '</small></em></td>' .
-                '</tr>';
-
-    $content .= '<tr style="vertical-align:top;">' .
-                '<td style="text-align: right" width="25%">' . get_string('Show_annotations', 'cobra') . '&nbsp;:</td>' .
-                '<td nowrap="nowrap" width="25%">' .
-                '<input id="descriptionsYes" type="radio" name="descriptions" value="ALWAYS"' .
-                ('ALWAYS' == $prefs['descriptions'] ? $checkedstring : '') . '/>' .
-                '<label for="descriptionsYes">' . get_string('always', 'cobra') . '</label><br/>' .
-                '<input id="descriptionsNo" type="radio" name="descriptions" value="NEVER"' .
-                ('NEVER' == $prefs['descriptions'] ? $checkedstring : '') . '/>' .
-                '<label for="descriptionsNo">' . get_string('never', 'cobra') . '</label><br/>' .
-                '<input id="descriptionsCond" type="radio" name="descriptions" value="CONDITIONAL"' .
-                ('CONDITIONAL' == $prefs['descriptions'] ? $checkedstring : '') . '/>' .
-                '<label for="descriptionsCond">' . get_string('conditional', 'cobra') . '</label>' .
-                '</td>' .
-                '<td width="50%"><em><small>' . get_string('Display_preference_for_definitions-annotations', 'cobra') .
-                '</small></em></td>' .
-                '</tr>';
-
-    $content .= '<tr style="vertical-align:top;">' .
-                '<td style="text-align: right" width="25%">' . get_string('Show_illustrations', 'cobra') . '&nbsp;:</td>' .
-                '<td nowrap="nowrap" width="25%">' .
-                '<input id="illustrationsYes" type="radio" name="illustrations" value="SHOW"' .
-                ('SHOW' == $prefs['illustrations'] ? $checkedstring : '') . '/>' .
-                '<label for="illustrationsYes">' . get_string('yes') . '</label><br/>' .
-                '<input id="illustrationsNo" type="radio" name="illustrations" value="HIDE"' .
-                ('HIDE' == $prefs['illustrations'] ? $checkedstring : '') . '/>' .
-                '<label for="illustrationsNo">' . get_string('no') . '</label>' .
-                '</td> <td width="50%"><em><small>' .
-                get_string('Choose_yes_to_display_possible_illustrations_associated_to_the_entry', 'cobra') .
-                '</small></em></td>' .
-                '</tr>';
-
-    $content .= '<tr style="vertical-align:top;">' .
-                '<td style="text-align: right" width="25%">' . get_string('Display_mode_for_examples', 'cobra') .
-                '&nbsp;:</td>' .
-                '<td nowrap="nowrap" width="25%">' .
-                '<input id="examplesYes" type="radio" name="examples" value="bi-text"' .
-                ('bi-text' == $prefs['examples'] ? $checkedstring : '') . '/>' .
-                '<label for="examplesYes">' . get_string('bilingual', 'cobra') . '</label><br/>' .
-                '<input id="examplesNo" type="radio" name="examples" value="mono"' .
-                ('mono' == $prefs['examples'] ? $checkedstring : '') . '/>' .
-                '<label for="examplesNo">' . get_string('monolingual', 'cobra') . '</label>' .
-                '</td>' .
-                '<td width="50%">&nbsp;</td>' .
-                '</tr>';
-
-     $content .= '<tr style="vertical-align:top;">' .
-                 '<td style="text-align: right" width="25%">' . get_string('Show_occurrences', 'cobra') . '&nbsp;:</td>' .
-    '<td nowrap="nowrap" width="25%">' .
-    '<input id="occurrencesYes" type="radio" name="occurrences" value="SHOW"' .
-    ('SHOW' == $prefs['occurrences'] ? $checkedstring : '') . '/>' .
-    '<label for="occurrencesYes">' . get_string('yes') . '</label><br/>' .
-    '<input id="occurrencesNo" type="radio" name="occurrences" value="HIDE"' .
-    ('HIDE' == $prefs['occurrences'] ? $checkedstring : '') . '/>' .
-    '<label for="occurrencesNo">' . get_string('no') . '</label>' .
-    '</td> <td width="50%"><em><small>' .
-    get_string('Choose_yes_to_display_possible_contexts_when_there_are_no_concordances', 'cobra') .
-    '</small></em></td>' .
-    '<tr>' .
-    '<td style="text-align: right">' . get_string('Save_changes', 'cobra') . '&nbsp;:</td>' .
-    '<td colspan="2"><input id="submit" type="submit" value="Ok" />&nbsp;' .
-    '<a href="index.php"><input type="reset" value="Annuler" /></a>' .
-    '</td>' .
-    '</tr>' .
-    '</table>' .
-    '</form>';
 }
 
+echo $OUTPUT->header();
+echo $OUTPUT->heading($heading);
+echo $OUTPUT->box_start('generalbox box-content');
 echo $content;
 
 echo $OUTPUT->box_end();

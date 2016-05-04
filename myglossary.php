@@ -56,22 +56,9 @@ $PAGE->requires->jquery();
 $PAGE->requires->js('/mod/cobra/js/cobra.js');
 $PAGE->requires->js_init_call('M.mod_cobra.remove_from_global_glossary');
 
-// Output starts here.
-$content = $OUTPUT->header();
 
-// Replace the following lines with you own code.
-$exportbutton = '<a href="' . $_SERVER['PHP_SELF'] .
-                '?id=' . $id .
-                '&cmd=export" ' .
-                'class="glossaryExport" ' .
-                'title="' .
-                get_string('exportmyglossary', 'cobra') . '">   ' .
-                '</a>';
-$content .= $OUTPUT->heading(get_string('myglossary', 'cobra') . '&nbsp;&nbsp;&nbsp;' . $exportbutton);
 
-$content .= $OUTPUT->box_start('generalbox box-content');
-
-$content .= '<div id="courseid" class="hidden" name="' . $course->id .'">' . $course->id . '</div>';
+$content = '<div id="courseid" class="hidden" name="' . $course->id .'">' . $course->id . '</div>';
 
 $preferences = cobra_get_preferences();
 if ('HIDE' == $preferences['show_glossary']) {
@@ -158,8 +145,21 @@ if (!empty($data)) {
 
 $content .= '</table>';
 
-echo $content;
+// Output starts here.
+echo $OUTPUT->header();
 
+// Replace the following lines with you own code.
+$exportbutton = '<a href="' . $_SERVER['PHP_SELF'] .
+    '?id=' . $id .
+    '&cmd=export" ' .
+    'class="glossaryExport" ' .
+    'title="' .
+    get_string('exportmyglossary', 'cobra') . '">   ' .
+    '</a>';
+echo $OUTPUT->heading(get_string('myglossary', 'cobra') . '&nbsp;&nbsp;&nbsp;' . $exportbutton);
+
+echo $OUTPUT->box_start('generalbox box-content');
+echo $content;
 
 echo $OUTPUT->box_end();
 
