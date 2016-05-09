@@ -228,7 +228,7 @@ function cobra_get_filtered_collections($language, $exclusionlist = array()) {
             continue;
         }
         $collections[] = array(
-            'id' => utf8_decode($remotecollection->id),
+            'remoteid' => $remotecollection->id,
             'label' => $remotecollection->label
         );
     }
@@ -246,6 +246,7 @@ function cobra_get_registered_collections($loadmode = 'all') {
     $collectionslist = array();
     $params = null;
     $list = $DB->get_records_select('cobra_registered_collections', "course='$course->id'", null, 'position');
+    return $list;
     foreach ($list as $collectioninfo) {
         $collectionslist[$collectioninfo->id_collection] = array(
             'id_collection' => $collectioninfo->id_collection,
@@ -259,7 +260,7 @@ function cobra_get_registered_collections($loadmode = 'all') {
 
 /**
  * Loads the list of E-Lex texts associated to a text collection from the remote E-Lex repository
- * @param $collection identifier of the text collection
+ * @param $collection identifier of the remote text collection
  * @return array containing information on texts to display
  */
 function cobra_load_remote_text_list($collection) {

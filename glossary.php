@@ -69,7 +69,7 @@ $collectionlist = cobra_get_registered_collections('visible');
 if ($cmd == 'exexport') {
     $glossary = array();
     foreach ($collectionlist as $collection) {
-        $textlist = cobra_load_text_list( $collection['id_collection'], 'visible' );
+        $textlist = cobra_load_text_list( $collection->id_collection, 'visible' );
         foreach ($textlist as $num => $text) {
             if (array_key_exists($text->id, $_REQUEST)) {
                 $textid = $text->id_text;

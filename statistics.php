@@ -173,7 +173,7 @@ if ( !is_null( $view ) ) {
                 . '</small></h3>';
             $collectionlist = cobra_get_registered_collections( 'all' );
             foreach ($collectionlist as $collection) {
-                $textlist = cobra_load_text_list( $collection['id_collection'], 'all' );
+                $textlist = cobra_load_text_list( $collection->id_collection, 'all' );
 
                 $out .= '<table>'
                      .  '<thead>'
@@ -225,7 +225,7 @@ if ( !is_null( $view ) ) {
             $out .= '<h3><small>' . get_string( 'Display_the_most_frequently_analysed_texts', 'cobra' ) . '</small></h3>';
             $collectionlist = cobra_get_registered_collections( 'all' );
             foreach ($collectionlist as $collection) {
-                $textlist = cobra_load_text_list( $collection['id_collection'], 'all' );
+                $textlist = cobra_load_text_list( $collection->id_collection, 'all' );
                 $textinfo = array();
                 foreach ($textlist as $text) {
                     $textinfo[$text->id_text] = $text->title;
@@ -266,7 +266,7 @@ if ( !is_null( $view ) ) {
                 .  '<th>' . get_string( 'Nb_of_clickable_words', 'cobra' ) . '</th>' . "\n"
                 .  '<th>' . get_string( 'Different_users', 'cobra' ) . '</th>' . "\n"
                 .  '<th>' . get_string( 'Total_clic', 'cobra' ) . '</th>' . "\n";
-                $textlist = cobra_load_text_list( $collection['id_collection'], 'all' );
+                $textlist = cobra_load_text_list( $collection->id_collection, 'all' );
                 foreach ($textlist as $text) {
                     $out .= '<tr> <td>' . $text->title. '</td>' . "\n"
                             . '<td>' . cobra_get_nb_tags_in_text ($text->id_text) . '</td>' . "\n"

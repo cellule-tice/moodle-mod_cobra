@@ -103,7 +103,7 @@ if ('collections' == $currentsection) {
     $heading = get_string('modulename', 'cobra') . ' - ' . get_string('manage_text_collections', 'cobra');
     //$content .= $OUTPUT->box_start('generalbox box-content');
     if ('exEditLabel' == $cmd) {
-        $label = optional_param('label', null, PARAM_ALPHANUM);
+        $label = optional_param('label', null, PARAM_TEXT);
         if (!empty($label)) {
             $collection = new cobra_collection_wrapper($collectionid);
             $collection->load();
@@ -136,7 +136,7 @@ if ('collections' == $currentsection) {
     } else if ('exAdd' == $cmd && !empty($remotecollection)) {
         $collection = new cobra_collection_wrapper();
         $collection->wrapremote($remotecollection);
-        $textlist = cobra_load_remote_text_list($collection->get_id());
+        $textlist = cobra_load_remote_text_list($collection->get_remote_id());
         $savemode = $collection->save();
         if ('error' == $savemode) {
             $content .= $OUTPUT->notification(get_string('unable_register_collection', 'cobra'));
@@ -145,7 +145,7 @@ if ('collections' == $currentsection) {
             foreach ($textlist as $remotetext) {
                 $text = new cobra_text_wrapper();
                 $text->set_text_id($remotetext['id']);
-                $text->set_collection_id($collection->get_id());
+                $text->set_collection_id($collection->get_remote_id());
                 $text->set_position($position++);
                 $text->save();
             }
@@ -153,7 +153,7 @@ if ('collections' == $currentsection) {
         }
     } else if ('exRemove' == $cmd) {
         $collection = new cobra_collection_wrapper($collectionid);
-        if (cobra_remove_text_list($collectionid)) {
+        if (cobra_remove_text_list($collection->get_remote_id())) {
             if (!$collection->remove()) {
                 $content .= $OUTPUT->notification(get_string('unable_unregister_collection', 'cobra'));
             }
@@ -164,15 +164,15 @@ if ('collections' == $currentsection) {
         $localcollection = new cobra_collection_wrapper($collectionid);
         $localcollection->load();
         $remotecollection = new cobra_collection_wrapper();
-        $remotecollection->wrapremote($collectionid);
+        $remotecollection->wrapremote($localcollection->get_remote_id());
         // Refresh collection name if it has not be changed locally.
         if ($localcollection->get_local_name() == $localcollection->get_remote_name()) {
             $localcollection->set_local_name($remotecollection->get_remote_name());
         }
         $localcollection->set_remote_name($remotecollection->get_remote_name());
         $localcollection->save();
-        $remotetextlist = cobra_load_remote_text_list($collectionid);
-        $localtextlist = cobra_load_text_list($collectionid);
+        $remotetextlist = cobra_load_remote_text_list($localcollection->get_remote_id());
+        $localtextlist = cobra_load_text_list($localcollection->get_remote_id());
         $localtextidlist = array();
         // Remove legacy texts.
         $legacytextcount = $removedtextcount = 0;
@@ -209,7 +209,7 @@ if ('collections' == $currentsection) {
             $newtextcount++;
             $text = new cobra_text_wrapper();
             $text->set_text_id($remotetext['id']);
-            $text->set_collection_id($collectionid);
+            $text->set_collection_id($localcollection->get_remote_id());
             $text->set_type('Lesson');
             $text->set_position(cobra_text_wrapper::getmaxposition() + 1);
             if ($text->save()) {
@@ -273,23 +273,23 @@ if ('collections' == $currentsection) {
 
     $position = 1;
     foreach ($registeredcollectionslist as $collection) {
-        $rowcssclass = $collection['visibility'] ? 'tablerow' : 'tablerow dimmed_text';
-        $content .= '<tr id="' . $collection['id_collection']  .
+        $rowcssclass = $collection->visibility ? 'tablerow' : 'tablerow dimmed_text';
+        $content .= '<tr id="' . $collection->id_collection  .
                     '#collectionId" class="' . $rowcssclass . '" name="' . $position++ . '#pos">' .
-                    '<td><i class="fa fa-list"></i> ' . $collection['local_label'] . '</td>' .
+                    '<td><i class="fa fa-list"></i> ' . $collection->local_label . '</td>' .
                     '<td align="center">' .
                     '<a href="'.$_SERVER['PHP_SELF'].'?id=' . $id .
-                    '&cmd=rqEditLabel&amp;collection='.$collection['id_collection'].'">'.
+                    '&cmd=rqEditLabel&amp;collection='.$collection->id.'">'.
                     '<i class="fa fa-edit"></i>' .
                     '</a></td>' .
                     '<td align="center">' .
                     '<a href="'.$_SERVER['PHP_SELF'].'?id=' . $id .
-                    '&cmd=exRefresh&amp;collection='.$collection['id_collection'].'">'.
+                    '&cmd=exRefresh&amp;collection='.$collection->id.'">'.
                     '<i class="fa fa-refresh"></i>' .
                     '</a></td>' .
                     '<td align="center">' .
                     '<a href="'.$_SERVER['PHP_SELF'] . '?id=' . $id .
-                    '&cmd=exRemove&amp;collection='.$collection['id_collection'].'">'.
+                    '&cmd=exRemove&amp;collection='.$collection->id.'">'.
                     '<i class="fa fa-remove"></i>' .
                     '</a></td>' .
                     // Change position commands.
@@ -300,13 +300,13 @@ if ('collections' == $currentsection) {
                     '</td>' .
                     // Visibility commands.
                     '<td align="center">' .
-                    '<a href="#" class="setInvisible" '. (!$collection['visibility'] ? 'style="display:none"' : '').'>' .
+                    '<a href="#" class="setInvisible" '. (!$collection->visibility ? 'style="display:none"' : '').'>' .
                     '<i class="fa fa-eye"></i>' . '</a>' .
-                    '<a href="#" class="setVisible" ' . ($collection['visibility'] ? 'style="display:none"' : '') . '>' .
+                    '<a href="#" class="setVisible" ' . ($collection->visibility ? 'style="display:none"' : '') . '>' .
                     '<i class="fa fa-eye-slash"></i>' . '</a>' .
                     '</td>' .
                     '</tr>';
-        $idlist[] = $collection['id_collection'];
+        $idlist[] = $collection->id_collection;
     }
     if (!count($registeredcollectionslist)) {
         $content .= '<tr><td colspan="6" align="center"> / </td> </tr>';
@@ -328,7 +328,7 @@ if ('collections' == $currentsection) {
         $content .= '<tr>' .
                     '<td><i class="fa fa-list"></i> ' . $collection['label'] . '</td>' .
                     '<td align="center">' .
-                    '<a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&cmd=exAdd&amp;remote_collection=' . $collection['id'] . '">' .
+                    '<a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&cmd=exAdd&amp;remote_collection=' . $collection['remoteid'] . '">' .
                     '<i class="fa fa-plus"></i>' .
                     '</a></td>' .
                     '</tr>';

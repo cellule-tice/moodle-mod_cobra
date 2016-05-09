@@ -88,7 +88,7 @@ if ($isallowedtoedit) {
     $collectionlist = cobra_get_registered_collections('visible');
 }
 foreach ($collectionlist as $collection) {
-    $content .= '<h3>' . $collection['local_label'] . '</h3>';
+    $content .= '<h3>' . $collection->local_label . '</h3>';
     $content .= '<table class="table table-condensed table-hover table-striped textlist">' .
                 '<thead>' .
                 '<tr align="center">' .
@@ -105,10 +105,10 @@ foreach ($collectionlist as $collection) {
 
     if ($isallowedtoedit) {
         // Load all texts to display for course admin.
-        $textlist = cobra_load_text_list($collection['id_collection'], 'all');
+        $textlist = cobra_load_text_list($collection->id_collection, 'all');
     } else {
         // Load only visible texts to display for students.
-        $textlist = cobra_load_text_list($collection['id_collection'], 'visible');
+        $textlist = cobra_load_text_list($collection->id_collection, 'visible');
     }
     if (!empty($textlist) && is_array($textlist)) {
         $content .= '<tbody>';
