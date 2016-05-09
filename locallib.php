@@ -245,16 +245,8 @@ function cobra_get_registered_collections($loadmode = 'all') {
     global $DB,  $course;
     $collectionslist = array();
     $params = null;
-    $list = $DB->get_records_select('cobra_registered_collections', "course='$course->id'", null, 'position');
-    return $list;
-    foreach ($list as $collectioninfo) {
-        $collectionslist[$collectioninfo->id_collection] = array(
-            'id_collection' => $collectioninfo->id_collection,
-            'label' => $collectioninfo->label,
-            'local_label' => $collectioninfo->local_label,
-            'visibility' => $collectioninfo->visibility
-        );
-    }
+    $collectionslist = $DB->get_records_select('cobra_registered_collections', "course='$course->id'", null, 'position');
+
     return $collectionslist;
 }
 
@@ -769,4 +761,26 @@ class cobra_clean_statistics_form extends moodleform {
         $mform->addElement('date_selector', 'before_date', get_string('Before', 'cobra'));
         $this->add_action_buttons(true, get_string('OK', 'cobra'));
     }
+}
+
+class cobra_edit_collection_label_form extends moodleform {
+    public function definition() {
+        $mform = $this->_form;
+        $mform->addElement('header', 'title', get_string('edit_collection', 'cobra'));
+        $mform->addElement('text', 'label', get_string('collection_name', 'cobra'));
+        $mform->setType('label', PARAM_TEXT);
+        $mform->setDefault('label', $this->_customdata['collectionname']);
+        $this->add_action_buttons(true, get_string('OK', 'cobra'));
+    }
+
+/*$editform = '<strong>' . get_string('edit_collection', 'cobra') . '</strong>' .
+'<form action="' . $_SERVER['PHP_SELF'] . '?id='.$id .'" method="post">' .
+'<input type="hidden" name="claroFormId" value="' . uniqid('') . '" />' .
+'<input type="hidden" name="collection" value="' . $collectionid . '" />' .
+'<input type="hidden" name="cmd" value="exEditLabel" />' .
+'<label for="label">' . get_string('name') . ' : </label><br />' .
+'<input type="text" name="label" id="label"' .
+' value="' . $collection->get_local_name() . '" /><br /><br />' .
+'<input type="submit" value="' . get_string('ok') . '" />&nbsp; ' .
+'</form>';*/
 }

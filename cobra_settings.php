@@ -97,11 +97,10 @@ $PAGE->requires->js_init_call('M.mod_cobra.text_move');
 
 // Buffer output
 $content = '';
+$message = '';
 
 if ('collections' == $currentsection) {
-    //$content .= $OUTPUT->heading(get_string('modulename', 'cobra') . ' - ' . get_string('manage_text_collections', 'cobra'));
-    $heading = get_string('modulename', 'cobra') . ' - ' . get_string('manage_text_collections', 'cobra');
-    //$content .= $OUTPUT->box_start('generalbox box-content');
+        $heading = get_string('modulename', 'cobra') . ' - ' . get_string('manage_text_collections', 'cobra');
     if ('exEditLabel' == $cmd) {
         $label = optional_param('label', null, PARAM_TEXT);
         if (!empty($label)) {
@@ -109,30 +108,27 @@ if ('collections' == $currentsection) {
             $collection->load();
             $collection->set_local_name($label);
             if ($collection->update()) {
-                $content .= $OUTPUT->notification(get_string('Collection_name_changed', 'cobra'));
+                $message .= $OUTPUT->notification(get_string('Collection_name_changed', 'cobra'), 'notifysuccess');
             } else {
-                $content .= $OUTPUT->notification(get_string('Unable_to_change_collection_name', 'cobra'));
+                $message .= $OUTPUT->notification(get_string('Unable_to_change_collection_name', 'cobra'), 'notifiydanger');
             }
         } else {
-            $content .= $OUTPUT->notification(get_string('Collection_name_cannot_be_empty', 'cobra'));
+            $message .= $OUTPUT->notification(get_string('Collection_name_cannot_be_empty', 'cobra'), 'notifywarning');
             $cmd = 'rqEditLabel';
         }
     }
     if ('rqEditLabel' == $cmd) {
         $collection = new cobra_collection_wrapper($collectionid);
         $collection->load();
-        $editform = '<strong>' . get_string('edit_collection', 'cobra') . '</strong>' .
-                    '<form action="' . $_SERVER['PHP_SELF'] . '?id='.$id .'" method="post">' .
-                    '<input type="hidden" name="claroFormId" value="' . uniqid('') . '" />' .
-                    '<input type="hidden" name="collection" value="' . $collectionid . '" />' .
-                    '<input type="hidden" name="cmd" value="exEditLabel" />' .
-                    '<label for="label">' . get_string('name') . ' : </label><br />' .
-                    '<input type="text" name="label" id="label"' .
-                    ' value="' . $collection->get_local_name() . '" /><br /><br />' .
-                    '<input type="submit" value="' . get_string('ok') . '" />&nbsp; ' .
-                    '</form>';
+        $url = new moodle_url('/mod/cobra/cobra_settings.php',
+            array(
+                'id' => $id,
+                'cmd' => 'exEditLabel',
+                'collection' => $collection->get_id()
+            )
+        );
+        $thisform = new cobra_edit_collection_label_form($url, array('collectionname' => $collection->get_local_name()));
 
-        $content .= $OUTPUT->box($editform);
     } else if ('exAdd' == $cmd && !empty($remotecollection)) {
         $collection = new cobra_collection_wrapper();
         $collection->wrapremote($remotecollection);
@@ -254,87 +250,167 @@ if ('collections' == $currentsection) {
 }
 
 if ('collections' == $currentsection) {
-    $content .= '<h3>' . get_string('mycollections', 'cobra') . '</h3>';
-    $content .= '<table class="table table-condensed table-hover table-striped collectionlist">' .
-                '<thead>' .
-                '<tr>' .
-                '<th style="text-align:left;">' . get_string('collection_name', 'cobra') . '</th>' .
-                '<th>' . get_string('edit') . '</th>' .
-                '<th>' . get_string('refresh') . '</th>' .
-                '<th>' . get_string('remove') . '</th>' .
-                '<th>' . get_string('move') . '</th>' .
-                '<th>' . get_string('visibility', 'cobra') . '</th>' .
-                '</tr>' .
-                '</thead>' .
-                '<tbody>';
+
+    $content .= html_writer::tag('h3', get_string('mycollections', 'cobra'));
+    $table = new html_table();
+    $table->attributes['class'] = 'admintable generaltable collectionlist';
+    $headercell1 = new html_table_cell(get_string('collection_name', 'cobra'));
+    $headercell1->style = 'text-align:left;';
+    $headercell2 = new html_table_cell(get_string('edit'));
+    $headercell2->attributes['class'] = 'text-center';
+    $headercell3 = new html_table_cell(get_string('refresh'));
+    $headercell3->attributes['class'] = 'text-center';
+    $headercell4 = new html_table_cell(get_string('remove'));
+    $headercell4->attributes['class'] = 'text-center';
+    $headercell5 = new html_table_cell(get_string('move'));
+    $headercell5->attributes['class'] = 'text-center';
+    $headercell6 = new html_table_cell(get_string('visibility', 'cobra'));
+    $headercell6->attributes['class'] = 'text-center';
+    $table->head = array($headercell1, $headercell2, $headercell3, $headercell4, $headercell5, $headercell6);
 
     $idlist = array();
     $registeredcollectionslist = cobra_get_registered_collections('all');
 
     $position = 1;
     foreach ($registeredcollectionslist as $collection) {
+
         $rowcssclass = $collection->visibility ? 'tablerow' : 'tablerow dimmed_text';
-        $content .= '<tr id="' . $collection->id_collection  .
-                    '#collectionId" class="' . $rowcssclass . '" name="' . $position++ . '#pos">' .
-                    '<td><i class="fa fa-list"></i> ' . $collection->local_label . '</td>' .
-                    '<td align="center">' .
-                    '<a href="'.$_SERVER['PHP_SELF'].'?id=' . $id .
-                    '&cmd=rqEditLabel&amp;collection='.$collection->id.'">'.
-                    '<i class="fa fa-edit"></i>' .
-                    '</a></td>' .
-                    '<td align="center">' .
-                    '<a href="'.$_SERVER['PHP_SELF'].'?id=' . $id .
-                    '&cmd=exRefresh&amp;collection='.$collection->id.'">'.
-                    '<i class="fa fa-refresh"></i>' .
-                    '</a></td>' .
-                    '<td align="center">' .
-                    '<a href="'.$_SERVER['PHP_SELF'] . '?id=' . $id .
-                    '&cmd=exRemove&amp;collection='.$collection->id.'">'.
-                    '<i class="fa fa-remove"></i>' .
-                    '</a></td>' .
-                    // Change position commands.
-                    '<td align="center">' .
-                    '<a href="#" class="moveUp">' .  '<i class="fa fa-arrow-up"></i>' . '</a>' .
-                    '&nbsp;' .
-                    '<a href="#" class="moveDown">' .  '<i class="fa fa-arrow-down"></i>' . '</a>' .
-                    '</td>' .
-                    // Visibility commands.
-                    '<td align="center">' .
-                    '<a href="#" class="setInvisible" '. (!$collection->visibility ? 'style="display:none"' : '').'>' .
-                    '<i class="fa fa-eye"></i>' . '</a>' .
-                    '<a href="#" class="setVisible" ' . ($collection->visibility ? 'style="display:none"' : '') . '>' .
-                    '<i class="fa fa-eye-slash"></i>' . '</a>' .
-                    '</td>' .
-                    '</tr>';
+        $row = new html_table_row();
+        $row->id = $collection->id_collection . '#collectionId';
+        $row->attributes['name'] = $position++ . '#pos';
+        $row->attributes['class'] = $rowcssclass;
+        $cell = new html_table_cell();
+        //$cell->text = '<i class="fa fa-list"></i> ' . $collection['local_label'];
+        $cell->text = html_writer::tag('i', '', array('class' => 'fa fa-list')) . $collection->local_label;
+        $cell->attributes['class'] = 'text-left';
+        $row->cells[] = $cell;
+
+        $cell = new html_table_cell();
+        $cellcontent = html_writer::tag('i', '', array('class' => 'fa fa-edit'));
+        $cellcontent = html_writer::tag('a', $cellcontent, array(
+                'href' => new moodle_url('/mod/cobra/cobra_settings.php',
+                array(
+                    'id' => $id,
+                    'cmd' => 'rqEditLabel',
+                    'collection' => $collection->id
+                )
+            )
+        ));
+        $cell->text = $cellcontent;
+        $cell->attributes['class'] = 'text-center';
+        $row->cells[] = $cell;
+
+        $cell = new html_table_cell();
+        $cellcontent = html_writer::tag('i', '', array('class' => 'fa fa-refresh'));
+        $cellcontent = html_writer::tag('a', $cellcontent, array(
+            'href' => new moodle_url('/mod/cobra/cobra_settings.php',
+                array(
+                    'id' => $id,
+                    'cmd' => 'exRefresh',
+                    'collection' => $collection->id
+                )
+            )
+        ));
+        $cell->text = $cellcontent;
+        $cell->attributes['class'] = 'text-center';
+        $row->cells[] = $cell;
+
+        $cell = new html_table_cell();
+        $cellcontent = html_writer::tag('i', '', array('class' => 'fa fa-remove'));
+        $cellcontent = html_writer::tag('a', $cellcontent, array(
+            'href' => new moodle_url('/mod/cobra/cobra_settings.php',
+                array(
+                    'id' => $id,
+                    'cmd' => 'exRemove',
+                    'collection' => $collection->id
+                )
+            )
+        ));
+        $cell->text = $cellcontent;
+        $cell->attributes['class'] = 'text-center';
+        $row->cells[] = $cell;
+
+        $cell = new html_table_cell();
+        $cellcontent = html_writer::tag('i', '', array('class' => 'fa fa-arrow-up'));
+        $cellcontent = html_writer::tag('a', $cellcontent, array('href' => '#', 'class' => 'moveUp'));
+        $extracontent = html_writer::tag('i', '', array('class' => 'fa fa-arrow-down'));
+        $extracontent = html_writer::tag('a', $extracontent, array('href' => '#', 'class' => 'moveDown'));
+        $cell->text = $cellcontent . $extracontent;
+        $cell->attributes['class'] = 'text-center';
+        $row->cells[] = $cell;
+
+        $cell = new html_table_cell();
+
+        $cellcontent = html_writer::tag('i', '', array('class' => 'fa fa-eye'));
+        $params = array('href' => '#', 'class' => 'setInvisible');
+        if (!$collection->visibility) {
+            $params['style'] = 'display:none';
+        }
+        $cellcontent = html_writer::tag('a', $cellcontent, $params);
+        $extracontent = html_writer::tag('i', '', array('class' => 'fa fa-eye-slash'));
+        $params = array('href' => '#', 'class' => 'setVisible');
+        if ($collection->visibility) {
+            $params['style'] = 'display:none';
+        }
+        $extracontent = html_writer::tag('a', $extracontent, $params);
+        $cell->text = $cellcontent . $extracontent;
+        $cell->attributes['class'] = 'text-center';
+        $row->cells[] = $cell;
+
+        $table->data[] = $row;
+
         $idlist[] = $collection->id_collection;
     }
     if (!count($registeredcollectionslist)) {
-        $content .= '<tr><td colspan="6" align="center"> / </td> </tr>';
+        $row = new html_table_row();
+        $cell = new html_table_cell('no collection registered');
+        $cell->colspan = '6';
+        $cell->style = 'text-align:center;';
+        $row->cells[] = $cell;
+        $table->data[] = $row;
     }
-    $content .= '</tbody>' .
-                '</table>';
 
-    $content .= '<h3>' . get_string('collections_available', 'cobra') . '</h3>';
-    $content .= '<table class="table table-condensed table-hover table-striped">' .
-                '<thead>' .
-                '<tr>' .
-                '<th>' . get_string('collection_name', 'cobra') . '</th>' .
-                '<th style="text-align:center;">' . get_string('add') . '</th>' .
-                '</tr>' .
-                '</thead>' .
-                '<tbody>';
+    $content .= html_writer::start_tag('div', array('class'=>'no-overflow'));
+    $content .= html_writer::table($table);
+    $content .= html_writer::end_tag('div');
+
+    $content .= html_writer::tag('h3', get_string('collections_available', 'cobra'));
+    $table = new html_table();
+    $table->attributes['class'] = 'admintable generaltable';
+    $headercell1 = new html_table_cell(get_string('collection_name', 'cobra'));
+    $headercell1->style = 'text-align:left;';
+    $headercell2 = new html_table_cell(get_string('add'));
+    $headercell2->attributes['class'] = 'text-center';
+    $table->head = array($headercell1, $headercell2);
+
     $availablecollectionslist = cobra_get_filtered_collections($cobra->language, $idlist);
     foreach ($availablecollectionslist as $collection) {
-        $content .= '<tr>' .
-                    '<td><i class="fa fa-list"></i> ' . $collection['label'] . '</td>' .
-                    '<td align="center">' .
-                    '<a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&cmd=exAdd&amp;remote_collection=' . $collection['remoteid'] . '">' .
-                    '<i class="fa fa-plus"></i>' .
-                    '</a></td>' .
-                    '</tr>';
+        $row = new html_table_row();
+        $cell = new html_table_cell();
+        $cell->text = html_writer::tag('i', '', array('class' => 'fa fa-list')) . $collection['label'];
+        $cell->attributes['class'] = 'text-left';
+        $row->cells[] = $cell;
+
+        $cell = new html_table_cell();
+        $cellcontent = html_writer::tag('i', '', array('class' => 'fa fa-plus'));
+        $cellcontent = html_writer::tag('a', $cellcontent, array(
+            'href' => new moodle_url('/mod/cobra/cobra_settings.php',
+                array(
+                    'id' => $id,
+                    'cmd' => 'exAdd',
+                    'remote_collection' => $collection['remoteid']
+                )
+            )
+        ));
+        $cell->text = $cellcontent;
+        $cell->attributes['class'] = 'text-center';
+        $row->cells[] = $cell;
+        $table->data[] = $row;
     }
-    $content .= '</tbody>' .
-                '</table>';
+    $content .= html_writer::start_tag('div', array('class'=>'no-overflow'));
+    $content .= html_writer::table($table);
+    $content .= html_writer::end_tag('div');
+
 } else if ('corpus' == $currentsection) {
     $ordretypelist = cobra_get_corpus_type_display_order();
     $list = '';
@@ -386,6 +462,8 @@ if ('collections' == $currentsection) {
 echo $OUTPUT->header();
 echo $OUTPUT->heading($heading);
 echo $OUTPUT->box_start('generalbox box-content');
+if(!empty($message)) echo $message;
+if(!empty($thisform)) echo $thisform->display();
 echo $content;
 
 echo $OUTPUT->box_end();
