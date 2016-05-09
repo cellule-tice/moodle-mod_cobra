@@ -38,7 +38,7 @@ if ($id) {
 require_login($course, true, $cm);
 
 $context = context_module::instance($cm->id);
-
+require_capability('mod/cobra:edit',$context);
 if (!has_capability('mod/cobra:edit', $context)) {
       redirect('view.php?id=' . $cm->id);
 }
@@ -61,7 +61,9 @@ $acceptedcmdlist = array(
     'saveOrder',
     'editOrder',
     'savePrefs',
-    'exRefresh'
+    'exRefresh',
+    'exAddCorpus',
+    'exRemoveCorpus'
 );
 
 $cmd = optional_param('cmd', '', PARAM_ALPHANUM);
@@ -92,8 +94,7 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 // Add link for Ajax commands.
 $PAGE->requires->jquery();
 $PAGE->requires->js('/mod/cobra/js/cobra.js');
-$PAGE->requires->js_init_call('M.mod_cobra.text_visibility');
-$PAGE->requires->js_init_call('M.mod_cobra.text_move');
+$PAGE->requires->js_init_call('M.mod_cobra.move_resource');
 
 // Buffer output
 $content = '';
@@ -235,7 +236,7 @@ if ('collections' == $currentsection) {
         } else {
             $tabnewordre = array();
             foreach ($tabcorpustype as $corpustypeinfo) {
-                $typeid = $corpustypeinfo['id'];
+                $typeid = $corpustypeinfo->id;
                 if (isset($_REQUEST[$typeid]) && ('' != $_REQUEST['ordre' . $typeid])) {
                     $tabnewordre[$_REQUEST['ordre' . $typeid]] = $typeid;
                 }
@@ -245,6 +246,21 @@ if ('collections' == $currentsection) {
                 cobra_insert_corpus_type_display_order($typeid);
             }
             $content .= 'Concordances Order Saved' . '<br/>';
+        }
+    }
+    if ('exAddCorpus' == $cmd) {
+        $corpustypeid = required_param('corpus', PARAM_INT);
+        if(cobra_add_corpus_to_selection($corpustypeid)) {
+            $content .= $OUTPUT->notification('corpus added', 'notifysuccess');
+        } else {
+            $content .= $OUTPUT->notification('unable to add corpus type to selection');
+        }
+    } else if ('exRemoveCorpus' == $cmd) {
+        $corpustypeid = required_param('corpus', PARAM_INT);
+        if (cobra_remove_corpus_from_selection($corpustypeid)) {
+            $content .= $OUTPUT->notification('corpus_removed_from_selection', 'notifysuccess');
+        } else {
+            $content .= $OUTPUT->notification('unable_to_remove_corpus_from_selection', 'notifyerror');
         }
     }
 }
@@ -412,12 +428,113 @@ if ('collections' == $currentsection) {
     $content .= html_writer::end_tag('div');
 
 } else if ('corpus' == $currentsection) {
+    $content .= html_writer::tag('h3', 'todo string: ma liste de corpus');
+    $table = new html_table();
+    $table->attributes['class'] = 'admintable generaltable corpuslist';
+    $headercell1 = new html_table_cell('Type de corpus');
+    $headercell1->style = 'text-align:left;';
+    $headercell2 = new html_table_cell(get_string('remove'));
+    $headercell2->attributes['class'] = 'text-center';
+    $headercell3 = new html_table_cell(get_string('move'));
+    $headercell3->attributes['class'] = 'text-center';
+    $table->head = array($headercell1, $headercell2, $headercell3);
+
+    $tabcorpustype = cobra_get_valid_list_type_corpus($cobra->language);
     $ordretypelist = cobra_get_corpus_type_display_order();
+    $selected = array();
+    $position = 1;
+    foreach ($ordretypelist as $corpusorder) {
+        if (cobra_corpus_type_exists($corpusorder->id_type, $cobra->language)) {
+            $selected[] = $corpusorder->id_type;
+            $row = new html_table_row();
+            $row->id = $corpusorder->id_type . '#corpustypeid';
+            $row->attributes['name'] = $position++ . '#pos';
+            $row->attributes['class'] = 'tablerow';
+            $cell = new html_table_cell();
+            $cell->text = $tabcorpustype[$corpusorder->id_type]->name;
+            $cell->attributes['class'] = 'text-left ' . $tabcorpustype[$corpusorder->id_type]->colorclass;
+            $row->cells[] = $cell;
+            $table->data[] = $row;
+
+            $cell = new html_table_cell();
+            $cellcontent = html_writer::tag('i', '', array('class' => 'fa fa-remove'));
+            $cellcontent = html_writer::tag('a', $cellcontent, array(
+                'href' => new moodle_url('/mod/cobra/cobra_settings.php',
+                    array(
+                        'id' => $id,
+                        'cmd' => 'exRemoveCorpus',
+                        'section' => 'corpus',
+                        'corpus' => $corpusorder->id
+                    )
+                )
+            ));
+            $cell->text = $cellcontent;
+            $cell->attributes['class'] = 'text-center';
+            $row->cells[] = $cell;
+
+            $cell = new html_table_cell();
+            $cellcontent = html_writer::tag('i', '', array('class' => 'fa fa-arrow-up'));
+            $cellcontent = html_writer::tag('a', $cellcontent, array('href' => '#', 'class' => 'moveUp'));
+            $extracontent = html_writer::tag('i', '', array('class' => 'fa fa-arrow-down'));
+            $extracontent = html_writer::tag('a', $extracontent, array('href' => '#', 'class' => 'moveDown'));
+            $cell->text = $cellcontent . $extracontent;
+            $cell->attributes['class'] = 'text-center';
+            $row->cells[] = $cell;
+        }
+    }
+
+    $content .= html_writer::start_tag('div', array('class'=>'no-overflow'));
+    $content .= html_writer::table($table);
+    $content .= html_writer::end_tag('div');
+
+    $content .= html_writer::tag('h3', 'corpus non sélectionnés');
+    $table = new html_table();
+    $table->attributes['class'] = 'admintable generaltable';
+    $headercell1 = new html_table_cell('type corpus');
+    $headercell1->style = 'text-align:left;';
+    $headercell2 = new html_table_cell(get_string('add'));
+    $headercell2->attributes['class'] = 'text-center';
+    $table->head = array($headercell1, $headercell2);
+
+    foreach ($tabcorpustype as $corpustype) {
+        if (cobra_corpus_type_exists($corpustype->id, $cobra->language) && !in_array($corpustype->id, $selected)) {
+            $row = new html_table_row();
+            $cell = new html_table_cell();
+            $cell->text = $corpustype->name;
+            $cell->attributes['class'] = 'text-left ' . $corpustype->colorclass;
+            $row->cells[] = $cell;
+
+            $cell = new html_table_cell();
+            $cellcontent = html_writer::tag('i', '', array('class' => 'fa fa-plus'));
+            $cellcontent = html_writer::tag('a', $cellcontent, array(
+                'href' => new moodle_url('/mod/cobra/cobra_settings.php',
+                    array(
+                        'id' => $id,
+                        'cmd' => 'exAddCorpus',
+                        'section' => 'corpus',
+                        'corpus' => $corpustype->id
+                    )
+                )
+            ));
+            $cell->text = $cellcontent;
+            $cell->attributes['class'] = 'text-center';
+            $row->cells[] = $cell;
+            $table->data[] = $row;
+        }
+    }
+
+
+    $content .= html_writer::start_tag('div', array('class'=>'no-overflow'));
+    $content .= html_writer::table($table);
+    $content .= html_writer::end_tag('div');
+    /*$tabcorpustype = cobra_get_valid_list_type_corpus($cobra->language);
+    $ordretypelist = cobra_get_corpus_type_display_order();
+    print_object($ordretypelist);
     $list = '';
     foreach ($tabcorpustype as $corpustypeinfo) {
-        $typeid = (int)$corpustypeinfo['id'];
+        $typeid = (int)$corpustypeinfo->id;
         $couleur = cobra_find_background($typeid);
-        $corpustypename = $corpustypeinfo['name'];
+        $corpustypename = $corpustypeinfo->name;
 
         if (cobra_corpus_type_exists($typeid, $cobra->language)) {
             $typeselected = '';
@@ -426,7 +543,7 @@ if ('collections' == $currentsection) {
             }
             $list .= '<tr><td>';
             $list .= '<input type="checkbox" name="' . $typeid . '" value="true"' . $typeselected . '></td>' .
-                     '<td class="' . $couleur . '"> ' . $corpustypename . '</td>' .
+                     '<td class="' . $corpustypeinfo->colorclass . '"> ' . $corpustypename . '</td>' .
                      '<td> <select name="ordre'. $typeid . '">' .
                      '<option value="" ' . ('' == $typeselected ? ' selected="selected"' : '') .
                      '>&nbsp; </option>';
@@ -456,7 +573,7 @@ if ('collections' == $currentsection) {
             '</table>' .
             '</form>' .
             '</div>';
-    $content .= $form;
+    $content .= $form;*/
 }
 
 echo $OUTPUT->header();
