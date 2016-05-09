@@ -34,6 +34,7 @@ defined('MOODLE_INTERNAL') || die();
 class cobra_collection_wrapper {
     private $id = 0;
     private $language = '';
+    private $remoteid = 0;
     private $remotename = '';
     private $localname = '';
     private $position = 1;
@@ -57,6 +58,14 @@ class cobra_collection_wrapper {
 
     public function get_language() {
         return $this->language;
+    }
+
+    public function set_remote_id($remoteid) {
+        $this->remoteid = (int)$remoteid;
+    }
+
+    public function get_remote_id() {
+        return $this->remoteid;
     }
 
     public function set_remote_name($name) {
@@ -99,39 +108,47 @@ class cobra_collection_wrapper {
 
         $list = $DB->get_records_select('cobra_registered_collections',
                 "course='$course->id' AND id_collection='".(int)$this->get_id()."'");
-
-        if (empty($list)) {
+        $data = $DB->get_record('cobra_registered_collections', array('id' => $this->get_id()), '*', MUST_EXIST);
+        /*if (empty($list)) {
             return false;
-        }
-
-        foreach ($list as $collection) {
+        }*/
+        $this->set_language($data->language);
+        $this->set_remote_id($data->id_collection);
+        $this->set_remote_name($data->label);
+        $this->set_local_name($data->local_label);
+        $this->set_position($data->position);
+        $this->set_visibility($data->visibility ? true : false);
+        /*foreach ($list as $collection) {
             $this->set_language($collection->language);
             $this->set_remote_name($collection->label);
             $this->set_local_name($collection->local_label);
             $this->set_position($collection->position);
             $this->set_visibility($collection->visibility ? true : false);
             return true;
-        }
+        }*/
+        return true;
     }
 
     public function save() {
         global $DB, $course;
-        $list = $DB->get_records_select('cobra_registered_collections',
-                "course='$course->id' AND id_collection='".(int)$this->get_id()."'");
-        if (!empty($list)) {
+        $exists = $DB->record_exists('cobra_registered_collections',
+                array('course' => $course->id, 'id_collection' =>  $this->get_remote_id()));
+        if ($exists) {
             return $this->update();
         }
 
         $visibility = (true === $this->is_visible() ? '1' : '0');
         $dataobject = new stdClass();
         $dataobject->course = $course->id;
-        $dataobject->id_collection = $this->get_id();
+        $dataobject->id_collection = $this->get_remote_id();
         $dataobject->label = $this->get_remote_name();
         $dataobject->local_label = $this->get_local_name();
         $dataobject->position = $this->get_position();
         $dataobject->visibility = $visibility;
 
-        if ($DB->insert_record('cobra_registered_collections', $dataobject)) {
+        $id = $DB->insert_record('cobra_registered_collections', $dataobject);
+        if ($id) {
+            $this->set_id($id);
             return 'saved';
         } else {
             return 'error';
@@ -145,7 +162,7 @@ class cobra_collection_wrapper {
             $dataobject = new stdClass();
             $dataobject->id = $this->get_id();
             $dataobject->course = $course->id;
-            $dataobject->id_collection = $this->get_id();
+            $dataobject->id_collection = $this->get_remote_id();
             $dataobject->label = $this->get_remote_name();
             $dataobject->local_label = $this->get_local_name();
             $dataobject->position = $this->get_position();
@@ -165,7 +182,7 @@ class cobra_collection_wrapper {
         $params = array('id_collection' => (int)$remoteid);
         $remotecollection = cobra_remote_service::call('getCollection', $params);
 
-        $this->set_id($remoteid);
+        $this->set_remote_id($remoteid);
         $this->set_language($remotecollection->language);
         $this->set_remote_name($remotecollection->label);
         $this->set_local_name($remotecollection->label);
@@ -176,7 +193,7 @@ class cobra_collection_wrapper {
     public function remove() {
         global $DB, $course;
         return $DB->delete_records('cobra_registered_collections',
-                array('course' => $course->id, 'id_collection' => $this->get_id()));
+                array('id' => $this->get_id()));
     }
 
     public static function getmaxposition() {
