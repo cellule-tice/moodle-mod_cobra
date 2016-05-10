@@ -251,16 +251,16 @@ function cobra_extend_settings_navigation($settings, $cobranode) {
     }*/
 
     if (has_capability('mod/cobra:settings', $PAGE->cm->context)) {
-        $node = navigation_node::create(get_string('manage_text_collections', 'cobra'),
-            new moodle_url('/mod/cobra/cobra_settings.php', array('id' => $PAGE->cm->id, 'section' => 'collections')),
+        $node = navigation_node::create(get_string('managetextcollections', 'cobra'),
+            new moodle_url('/mod/cobra/collectionmanagement.php', array('id' => $PAGE->cm->id)),
             navigation_node::TYPE_SETTING, null, 'mod_cobra_collections',
             new pix_icon('i/navigationitem', ''));
         $cobranode->add_node($node, $beforekey);
     }
 
     if (has_capability('mod/cobra:settings', $PAGE->cm->context)) {
-        $node = navigation_node::create(get_string('corpus_selection', 'cobra'),
-            new moodle_url('/mod/cobra/cobra_settings.php', array('id' => $PAGE->cm->id, 'section' => 'corpus')),
+        $node = navigation_node::create(get_string('corpusselection', 'cobra'),
+            new moodle_url('/mod/cobra/corpusselection.php', array('id' => $PAGE->cm->id)),
             navigation_node::TYPE_SETTING, null, 'mod_cobra_corpus',
             new pix_icon('i/navigationitem', ''));
         $cobranode->add_node($node, $beforekey);

@@ -144,5 +144,21 @@ function xmldb_cobra_upgrade($oldversion) {
         // Cobra savepoint reached.
         upgrade_mod_savepoint(true, 2016042700, 'cobra');
     }
+
+    if ($oldversion < 2016051000) {
+
+        // Define field position to be added to cobra_ordre_concordances.
+        $table = new xmldb_table('cobra_ordre_concordances');
+        $field = new xmldb_field('position', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'id_type');
+
+        // Conditionally launch add field position.
+        /*if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }*/
+        $updatedata = "TRUNCATE {cobra_ordre_concordances}";
+        $DB->execute($updatedata);
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2016051000, 'cobra');
+    }
     return true;
 }

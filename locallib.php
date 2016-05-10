@@ -198,8 +198,20 @@ function cobra_set_position($resourceid, $position, $resourcetype, $courseid) {
             return true;
         }
         return false;
+    } else if ('corpus' == $resourcetype) {
+        $list = $DB->get_record_select('cobra_ordre_concordances', "course='$courseid' AND id_type='$resourceid'");
+        if (!empty($list)) {
+            // Update record.
+            $dataobject->id = $list->id;
+            $dataobject->position = $position;
+            if (!$DB->update_record('cobra_ordre_concordances', $dataobject)) {
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
-    return true;;
+    return true;
 }
 
 /**
@@ -245,16 +257,8 @@ function cobra_get_registered_collections($loadmode = 'all') {
     global $DB,  $course;
     $collectionslist = array();
     $params = null;
-    $list = $DB->get_records_select('cobra_registered_collections', "course='$course->id'", null, 'position');
-    return $list;
-    foreach ($list as $collectioninfo) {
-        $collectionslist[$collectioninfo->id_collection] = array(
-            'id_collection' => $collectioninfo->id_collection,
-            'label' => $collectioninfo->label,
-            'local_label' => $collectioninfo->local_label,
-            'visibility' => $collectioninfo->visibility
-        );
-    }
+    $collectionslist = $DB->get_records_select('cobra_registered_collections', "course='$course->id'", null, 'position');
+
     return $collectionslist;
 }
 
@@ -446,7 +450,8 @@ function cobra_get_valid_list_type_corpus($language) {
     foreach ($remotelistofcorpustype as $corpusobject) {
         $corpus['id'] = $corpusobject->id;
         $corpus['name'] = $corpusobject->name;
-        $listofcorpustype[] = $corpus;
+        $corpusobject->colorclass = cobra_remote_service::call('findBackGround', array('typeId' => $corpusobject->id));
+        $listofcorpustype[$corpusobject->id] = $corpusobject;
     }
     return $listofcorpustype;
 }
@@ -457,14 +462,40 @@ function cobra_get_valid_list_type_corpus($language) {
  */
 function cobra_get_corpus_type_display_order() {
     global $DB, $course;
-    $list = $DB->get_records_select('cobra_ordre_concordances', "course='$course->id'", null, 'id');
-    $typelist = array();
+    $list = $DB->get_records('cobra_ordre_concordances', array('course' => $course->id), 'position');
+    /*$typelist = array();
     $i = 0;
     foreach ($list as $info) {
         $i++;
         $typelist[$i] = $info->id_type;
     }
-    return $typelist;
+    return $typelist;*/
+    return $list;
+}
+
+function cobra_add_corpus_to_selection($corpustypeid) {
+    global $DB, $COURSE;
+    if($DB->record_exists('cobra_ordre_concordances', array('course' => $COURSE->id, 'id_type' => $corpustypeid)))   {
+        return false;
+    }
+    $records = $DB->get_records_select('cobra_ordre_concordances', "course='$COURSE->id'", null, 'position DESC' );
+    $dataobject = new stdClass();
+    $dataobject->course = $COURSE->id;
+    $dataobject->id_type = $corpustypeid;
+    if (!empty($records)) {
+        foreach ($records as $record) {
+            $dataobject->position = $record->position + 1;
+            break;
+        }
+    } else {
+        $dataobject->position = 1;
+    }
+    return $DB->insert_record('cobra_ordre_concordances', $dataobject, true);
+}
+
+function cobra_remove_corpus_from_selection($selectionid) {
+    global $DB;
+    return $DB->delete_records('cobra_ordre_concordances', array('id' => $selectionid));
 }
 
 /**
@@ -767,6 +798,19 @@ class cobra_clean_statistics_form extends moodleform {
         $options = array('' => '', 'ALL' => get_string('All', 'cobra'), 'BEFORE' => get_string('Before', 'cobra'));
         $mform->addElement('select', 'scope', get_string('Delete', 'cobra'), $options);
         $mform->addElement('date_selector', 'before_date', get_string('Before', 'cobra'));
+        $this->add_action_buttons(true, get_string('OK', 'cobra'));
+    }
+}
+
+class cobra_edit_collection_label_form extends moodleform {
+    public function definition()
+    {
+        $mform = $this->_form;
+        $mform->addElement('header', 'title', get_string('edit_collection', 'cobra'));
+        $mform->addElement('text', 'label', get_string('collection_name', 'cobra'));
+        $mform->setType('label', PARAM_TEXT);
+        $mform->setDefault('label', $this->_customdata['collectionname']);
+        $mform->addRule('label', get_string('Collection_name_cannot_be_empty', 'cobra'), 'required', null, 'client');
         $this->add_action_buttons(true, get_string('OK', 'cobra'));
     }
 }

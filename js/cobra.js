@@ -30,7 +30,7 @@ M.mod_cobra.text_change_type = function() {
     $(document).on('click', 'a.changeType', changeType);
 }
 
-M.mod_cobra.text_move = function() {
+M.mod_cobra.move_resource = function() {
      $(document).on('click', 'a.moveUp', moveUp);
      $(document).on('click', 'a.moveDown', moveDown);
      updateMoveIcons();
@@ -323,8 +323,14 @@ function changeVisibility()
 function moveUp()
 {
     // Retrieve parent <tr> tag.
-    var test = $('.textlist');
-    var resourceType = test.size() != 0 ? 'text' : 'collection';
+    var resourceType = null;
+    if ($('.textlist').size()) {
+        resourceType = 'text';
+    } else if ($('.collectionlist').size()) {
+        resourceType = 'collection';
+    } else if ($('.corpuslist').size()) {
+        resourceType = 'corpus';
+    }
     var componentDiv = $(this.parentNode.parentNode);
     var previousSibling = $(componentDiv).prev();
     var rawId = $(componentDiv).attr('id');
@@ -363,8 +369,15 @@ function moveUp()
 // Move down current text by one row.
 function moveDown() {
     // Retrieve parent <tr> tag.
-    var test = $('.textlist');
-    var resourceType = test.size() != 0 ? 'text' : 'collection';
+    var resourceType = null;
+    if ($('.textlist').size()) {
+        resourceType = 'text';
+    } else if ($('.collectionlist').size()) {
+        resourceType = 'collection';
+    } else if ($('.corpuslist').size()) {
+        resourceType = 'corpus';
+    }
+    //var resourceType = test.size() != 0 ? 'text' : 'collection';
     var componentDiv = $(this.parentNode.parentNode);
     var nextSibling = $(componentDiv).next();
     var rawId = $(componentDiv).attr('id');
@@ -417,6 +430,13 @@ function updateMoveIcons()
     // Hide up command for first component, and down command for the last.
     $('.collectionlist .tablerow:first-child a.moveUp').hide();
     $('.collectionlist .tablerow:last-child a.moveDown').hide();
+
+    $('.corpuslist .tablerow a.moveUp').show();
+    $('.corpuslist .tablerow a.moveDown').show();
+
+    // Hide up command for first component, and down command for the last.
+    $('.corpuslist .tablerow:first-child a.moveUp').hide();
+    $('.corpuslist .tablerow:last-child a.moveDown').hide();
 }
 
 // General purpose functions.
