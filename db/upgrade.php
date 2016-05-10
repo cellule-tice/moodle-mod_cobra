@@ -152,9 +152,9 @@ function xmldb_cobra_upgrade($oldversion) {
         $field = new xmldb_field('position', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'id_type');
 
         // Conditionally launch add field position.
-        /*if (!$dbman->field_exists($table, $field)) {
+        if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
-        }*/
+        }
         $updatedata = "TRUNCATE {cobra_ordre_concordances}";
         $DB->execute($updatedata);
         // Cobra savepoint reached.
