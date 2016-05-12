@@ -460,17 +460,20 @@ function cobra_get_valid_list_type_corpus($language) {
  * Gets the list and order of corpus types that must be taken into account when displaying concordances
  * @return array of corpus types sorted according to the recorded order of display
  */
-function cobra_get_corpus_type_display_order() {
+function cobra_get_corpus_type_display_order($returntype = 'object') {
     global $DB, $course;
     $list = $DB->get_records('cobra_ordre_concordances', array('course' => $course->id), 'position');
-    /*$typelist = array();
-    $i = 0;
-    foreach ($list as $info) {
-        $i++;
-        $typelist[$i] = $info->id_type;
+    if ('object' == $returntype) {
+        return $list;
+    } else if ('stringlist') {
+        $typelist = array();
+        $i = 0;
+        foreach ($list as $info) {
+            $i++;
+            $typelist[$i] = $info->id_type;
+        }
+        return implode(',', $typelist);
     }
-    return $typelist;*/
-    return $list;
 }
 
 function cobra_add_corpus_to_selection($corpustypeid) {

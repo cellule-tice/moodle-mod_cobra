@@ -65,9 +65,8 @@ $content = '';
 $text = new cobra_text_wrapper();
 $text->set_text_id($textid);
 $text->load();
-$ccorder = cobra_get_corpus_type_display_order();
-$order = implode(',', $ccorder);
-$cobra->ccorder = $order;
+
+$cobra->ccorder = cobra_get_corpus_type_display_order('stringlist');
 $encodeclic = 1;
 if (has_capability('mod/cobra:edit', $context) && false) {
     $encodeclic = 0;

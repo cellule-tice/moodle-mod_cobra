@@ -37,7 +37,7 @@ require_login($course, true, $cm);
 require_capability('mod/cobra:edit', $context);
 
 // Print the page header.
-$PAGE->set_url('/mod/cobra/corpus_selection.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/cobra/corpusselection.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
 
@@ -65,16 +65,16 @@ if (!in_array($cmd, $acceptedcmdlist)) {
 
 $heading = get_string('modulename', 'cobra') . ' - ' . get_string('corpusselection', 'cobra');
 
-if ('exAddCorpus' == $cmd) {
+if ('exAdd' == $cmd) {
     $corpustypeid = required_param('corpus', PARAM_INT);
     if(cobra_add_corpus_to_selection($corpustypeid)) {
         $content .= $OUTPUT->notification(get_string('corpusadded', 'cobra'), 'notifysuccess');
     } else {
         $content .= $OUTPUT->notification(get_string('corpusnotadded', 'cobra'), 'notifyerror');
     }
-} else if ('exRemoveCorpus' == $cmd) {
-    $corpustypeid = required_param('corpus', PARAM_INT);
-    if (cobra_remove_corpus_from_selection($corpustypeid)) {
+} else if ('exRemove' == $cmd) {
+    $corpusselectionid = required_param('corpus', PARAM_INT);
+    if (cobra_remove_corpus_from_selection($corpusselectionid)) {
         $content .= $OUTPUT->notification(get_string('corpusremovedfromselection', 'cobra'), 'notifysuccess');
     } else {
         $content .= $OUTPUT->notification(get_string('corpusnotremoved', 'cobra'), 'notifyerror');
@@ -117,8 +117,7 @@ foreach ($ordretypelist as $corpusorder) {
             'href' => new moodle_url('/mod/cobra/corpusselection.php',
                 array(
                     'id' => $id,
-                    'cmd' => 'exRemoveCorpus',
-                    'section' => 'corpus',
+                    'cmd' => 'exRemove',
                     'corpus' => $corpusorder->id
                 )
             )
@@ -165,8 +164,7 @@ foreach ($tabcorpustype as $corpustype) {
             'href' => new moodle_url('/mod/cobra/corpusselection.php',
                 array(
                     'id' => $id,
-                    'cmd' => 'exAddCorpus',
-                    'section' => 'corpus',
+                    'cmd' => 'exAdd',
                     'corpus' => $corpustype->id
                 )
             )

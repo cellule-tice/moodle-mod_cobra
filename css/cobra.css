@@ -299,18 +299,18 @@ h2.titre_lecon {
     margin-bottom:0px;
 }
 
-.usuel_FUNDP {  background-color: #CCFFCC}
-.usuel {    background-color: #99FF99}
-.semi-technique {  background-color: #FFCC99}
-.technique {  background-color: #FF9966}
-.histoire_FUNDP {background-color:#CCFFFF}
-.histoire {background-color: #99CCFF}
-.informatique_FUNDP {background-color: #FFFF99}
-.informatique {background-color: #FFFF66}
-.sciences {background-color: #CCCCFF}
-.sciences_FUNDP {background-color : #CC99CC}
-.eco {background-color: #FF9999}
-.eco_FUNDP {background-color: #FFCCCC}
+.usuel_FUNDP {  background-color: #CCFFCC !important;}
+.usuel {    background-color: #99FF99 !important;}
+.semi-technique {  background-color: #FFCC99 !important;}
+.technique {  background-color: #FF9966 !important;}
+.histoire_FUNDP {background-color:#CCFFFF !important;}
+.histoire {background-color: #99CCFF !important;}
+.informatique_FUNDP {background-color: #FFFF99 !important;}
+.informatique {background-color: #FFFF66 !important;}
+.sciences {background-color: #CCCCFF !important;}
+.sciences_FUNDP {background-color : #CC99CC !important;}
+.eco {background-color: #FF9999 !important;}
+.eco_FUNDP {background-color: #FFCCCC !important;}
 
 .floatContainer
 {
@@ -398,4 +398,8 @@ p{
     background-image: url(../pix/hot.png);
     background-repeat: no-repeat;
     background-position: center left;
+}
+
+.path-mod-cobra .text-center {
+    text-align: center;
 }

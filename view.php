@@ -134,13 +134,13 @@ foreach ($collectionlist as $collection) {
                             (!empty($text->text_type) ? get_string($text->text_type, 'cobra') : '&nbsp;') .
                             '</a></td>';
                 // Change position commands.
-                $content .= '<td align="center">';
+                $content .= '<td class="text-center">';
                 $content .= '<a href="#" class="moveUp"><i class="fa fa-arrow-up"></i></a>&nbsp;';
                 $content .= '<a href="#" class="moveDown"><i class="fa fa-arrow-down"></i></a>&nbsp;';
                 $content .= '</td>';
 
                 // Change visibility commands.
-                $content .= '<td align="center">';
+                $content .= '<td class="text-center">';
                 $content .= '<a href="#" class="setVisible" ' .
                             ($text->visibility ? 'style="display:none"' : '') .
                             '><i class="fa fa-eye-slash"></i></a>';
