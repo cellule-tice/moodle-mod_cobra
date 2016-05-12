@@ -46,7 +46,6 @@ $PAGE->set_url('/mod/cobra/myglossary.php', array('id' => $cm->id));
 
 $PAGE->set_title(format_string($cobra->name));
 
-$PAGE->add_body_class('noblocks');
 $PAGE->navbar->add(get_string('myglossary', 'cobra'));
 
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
