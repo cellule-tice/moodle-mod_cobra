@@ -89,6 +89,7 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 // Add link for Ajax commands.
 $PAGE->requires->jquery();
 $PAGE->requires->js('/mod/cobra/js/cobra.js');
+$PAGE->requires->js_init_call('M.mod_cobra.change_resource_visibility');
 $PAGE->requires->js_init_call('M.mod_cobra.move_resource');
 
 // Buffer output

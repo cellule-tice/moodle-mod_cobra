@@ -30,7 +30,6 @@ $context = context_module::instance($cm->id);
 
 require_login($course, true, $cm);
 require_capability('mod/cobra:view', $context);
-
 // Add event management here.
 
 $PAGE->set_url('/mod/cobra/view.php', array('id' => $cm->id));

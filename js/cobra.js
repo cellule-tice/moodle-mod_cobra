@@ -36,7 +36,7 @@ M.mod_cobra.move_resource = function() {
      updateMoveIcons();
 };
 
-M.mod_cobra.text_visibility = function() {
+M.mod_cobra.change_resource_visibility = function() {
      $(document).on('click', 'a.setVisible', changeVisibility);
      $(document).on('click', 'a.setInvisible', changeVisibility);
 };

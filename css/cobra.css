@@ -403,3 +403,15 @@ p{
 .path-mod-cobra .text-center {
     text-align: center;
 }
+
+.noblocks .block-region {
+    display:none;
+}
+
+.noblocks #region-main-box, .noblocks #region-main-box .row-fluid .span8 {
+    width: 100% !important;
+}
+
+.noblocks #region-main-box #glossary {
+    width: 32%;
+}
