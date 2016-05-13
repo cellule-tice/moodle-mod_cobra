@@ -26,8 +26,8 @@ function cobra_export_glossary($glossary) {
     $csvexport->set_filename($filename);
     $records = array();
     // Get the title of the columns.
-    $records[0] = array(get_string('Lemma_form', 'cobra'), get_string('Category', 'cobra'),
-        get_string('info', 'cobra'), get_string('Translation', 'cobra'), get_string('Text', 'cobra'));
+    $records[0] = array(get_string('Lemma_form', 'cobra'), get_string('category', 'cobra'),
+        get_string('info', 'cobra'), get_string('translation', 'cobra'), get_string('Text', 'cobra'));
     list($lemmaglossary, $expglossary) = cobra_explode_glossary_into_lemmas_and_expression($glossary);
     $entry = array();
     $category = array();
@@ -408,8 +408,8 @@ function cobra_export_myglossary($data) {
     $csvexport = new csv_export_writer('semicolon');
     $csvexport->set_filename($filename);
     $records = array();
-    $records[0] = array(get_string('Lemma_form', 'cobra'), get_string('Category', 'cobra'),
-        'Autres formes', get_string('Translation', 'cobra'), 'Texte source', utf8_encode('Cliqué dans ...'));
+    $records[0] = array(get_string('Lemma_form', 'cobra'), get_string('category', 'cobra'),
+        'Autres formes', get_string('translation', 'cobra'), 'Texte source', utf8_encode('Cliqué dans ...'));
     $csvexport->add_data($records[0]);
     foreach ($data as $entry) {
         $record = array(

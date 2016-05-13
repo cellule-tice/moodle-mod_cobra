@@ -97,6 +97,15 @@ h2.titre_lecon {
     color: #333;
 }
 
+.glossaryExport:hover {
+    text-decoration: none !important;
+
+}
+
+.glossaryExport:hover:before {
+    color: #55ab26;
+}
+
 #text {
     max-height: 350px;
     float:left;

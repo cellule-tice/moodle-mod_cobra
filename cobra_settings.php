@@ -40,7 +40,7 @@ require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/cobra:edit',$context);
 if (!has_capability('mod/cobra:edit', $context)) {
-      redirect('view.php?id=' . $cm->id);
+    redirect('view.php?id=' . $cm->id);
 }
 // Prepare settings menu.
 $sectionlist = array(
