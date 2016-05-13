@@ -150,8 +150,8 @@ if ( !is_null( $view ) ) {
                  .  '<tr class="headerX">'
                  .  '<th> Nombre total de clics </th>'
                  .  '<th>' . get_string( 'Lemma', 'cobra' ) . '</th>'
-                 .  '<th>' . get_string( 'Translation', 'cobra' ) . '</th>'
-                 .  '<th>' . get_string( 'Category', 'cobra' ) . '</th>'
+                 .  '<th>' . get_string( 'translation', 'cobra' ) . '</th>'
+                 .  '<th>' . get_string( 'category', 'cobra' ) . '</th>'
                  .  '</tr>'
                  .  '</thead>';
 
@@ -183,8 +183,8 @@ if ( !is_null( $view ) ) {
                      .  '<th> Texte </th>'
                      .  '<th> Nombre de clics </th>'
                      .  '<th>' . get_string( 'Lemma', 'cobra' ) . '</th>'
-                     .  '<th>' . get_string( 'Translation', 'cobra' ) . '</th>'
-                     .  '<th>' . get_string( 'Category', 'cobra' ) . '</th>'
+                     .  '<th>' . get_string( 'translation', 'cobra' ) . '</th>'
+                     .  '<th>' . get_string( 'category', 'cobra' ) . '</th>'
                      .  '</tr>'
                      .  '</thead>';
 

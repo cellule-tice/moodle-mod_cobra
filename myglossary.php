@@ -55,27 +55,30 @@ $PAGE->requires->jquery();
 $PAGE->requires->js('/mod/cobra/js/cobra.js');
 $PAGE->requires->js_init_call('M.mod_cobra.remove_from_global_glossary');
 
-
-
-$content = '<div id="courseid" class="hidden" name="' . $course->id .'">' . $course->id . '</div>';
-
-$preferences = cobra_get_preferences();
-if ('HIDE' == $preferences['show_glossary']) {
-    die('not allowed');
+if ($cobra->userglossary) {
+    redirect(new moodle_url('/mod/cobra/view.php', array('id' => $cm->id)), 'CoBRA' . ': ' . get_string('myglossaryunavailable', 'cobra', $CFG->cobra_serverhost), 5);
 }
 
-$content .= '<table class="table table-condensed table-hover table-striped" id="myglossary">' .
-            '<thead>' .
-            '<tr>' .
-            '<th>' . get_string('entry', 'cobra') . '</th>' .
-            '<th>' . get_string('Translation', 'cobra') . '</th>' .
-            '<th>' . get_string('Category', 'cobra') . '</th>' .
-            '<th>' . get_string('otherforms', 'cobra') . '</th>' .
-            '<th>' . get_string('sourcetext', 'cobra') . '</th>' .
-            '<th>' . get_string('clickedin', 'cobra') . '</th>' .
-            '<th>&nbsp;</th>' .
-            '</tr>' .
-            '</thead>';
+$table = new html_table();
+$table->attributes['class'] = 'admintable generaltable';
+$table->id = 'myglossary';
+$headercell1 = new html_table_cell(get_string('entry', 'cobra'));
+$headercell1->style = 'text-align:left;';
+$headercell2 = new html_table_cell(get_string('translation', 'cobra'));
+$headercell3 = new html_table_cell(get_string('category', 'cobra'));
+$headercell4 = new html_table_cell(get_string('otherforms', 'cobra'));
+$headercell5 = new html_table_cell(get_string('sourcetext', 'cobra'));
+$headercell6 = new html_table_cell(get_string('clickedin', 'cobra'));
+$headercell7 = new html_table_cell('');
+$table->head = array(
+    $headercell1,
+    $headercell2,
+    $headercell3,
+    $headercell4,
+    $headercell5,
+    $headercell6,
+    $headercell7
+);
 
 $data = cobra_get_remote_glossary_info_for_student();
 $entries = array();
@@ -114,47 +117,79 @@ if (!empty($data)) {
         }
         $entry->texttitles = $texttitles;
         $removeiconurl = $OUTPUT->pix_url('glossaryremove', 'cobra');
-        $content .= '<tr>' .
-            '<td>' . $entry->entry . '</td>' .
-            '<td>' . $entry->translations . '</td>' .
-            '<td>' . $entry->category . '</td>' .
-            '<td>' . $entry->extra_info . '</td>' .
-            '<td>' . $sourcetexttitle . '</td>' .
-            '<td>' .
-            '<span title="' . implode("\n", $texttitles) . '">' .
-            count($texttitles) . '&nbsp;' . get_string('texts', 'cobra') .
-            '</span></td>' .
-            '<td class="glossaryIcon">' .
-            '<span id="currentLingEntity" class="hidden">' . $entry->ling_entity . '</span>' .
-            '<img alt="' . get_string('myglossaryremove', 'cobra') .
-            '" title="' . get_string('myglossaryremove', 'cobra') .
-            '" class="gGlossaryRemove inDisplay" src="' . $removeiconurl . '">' .
-            '</td>' .
-            '</tr>';
+
+        $row = new html_table_row();
+        $cell = new html_table_cell();
+        $cell->text = $entry->entry;
+        $row->cells[] = $cell;
+
+        $cell = new html_table_cell();
+        $cell->text = $entry->translations;
+        $row->cells[] = $cell;
+
+        $cell = new html_table_cell();
+        $cell->text = $entry->category;
+        $row->cells[] = $cell;
+
+        $cell = new html_table_cell();
+        $cell->text = $entry->extra_info;
+        $row->cells[] = $cell;
+
+        $cell = new html_table_cell();
+        $cell->text = $sourcetexttitle;
+        $row->cells[] = $cell;
+
+        $cell = new html_table_cell();
+        $cell->text = html_writer::tag('span',
+                count($texttitles) . '&nbsp;' . get_string('texts', 'cobra'),
+                array('title' => implode("\n", $texttitles)));
+        $row->cells[] = $cell;
+
+        $cell = new html_table_cell();
+        $cell->attributes['class'] = 'glossaryIcon';
+        $cellcontent = html_writer::tag('span', $entry->ling_entity, array('id' => 'currentLingEntity', 'class' => 'hidden'));
+        $cellcontent .= html_writer::img($removeiconurl,
+                get_string('myglossaryremove', 'cobra'),
+                array('title' => get_string('myglossaryremove', 'cobra'), 'class' => 'gGlossaryRemove inDisplay'));
+        $cell->text = $cellcontent;
+        $row->cells[] = $cell;
+
+        $table->data[] = $row;
+
         $entries[] = $entry;
     }
     if ('export' == $cmd) {
         cobra_export_myglossary($entries);
     }
 } else {
-    $content .= '<tr>'
-        . '<td colspan="7" style="text-align:center;">' . get_string('emptyglossary', 'cobra') . '</td>'
-        . '</tr>';
+    $row = new html_table_row();
+    $cell = new html_table_cell();
+    $cell->colspan = 7;
+    $cell->attributes['class'] = 'text-center';
+    $cell->text = get_string('emptyglossary', 'cobra');
+    $row->cells[] = $cell;
+    $table->data[] = $row;
 }
 
-$content .= '</table>';
-
+$content = html_writer::start_tag('div', array('class' => 'no-overflow'));
+$content .= html_writer::table($table);
+$content .= html_writer::end_tag('div');
 // Output starts here.
 echo $OUTPUT->header();
 
 // Replace the following lines with you own code.
-$exportbutton = '<a href="' . $_SERVER['PHP_SELF'] .
-    '?id=' . $id .
-    '&cmd=export" ' .
-    'class="glossaryExport" ' .
-    'title="' .
-    get_string('exportmyglossary', 'cobra') . '">   ' .
-    '</a>';
+$exportbutton = html_writer::link(new moodle_url(
+                    '/mod/cobra/myglossary.php',
+                    array(
+                        'id' => $id,
+                        'cmd' => 'export',
+                    )),
+            '',
+            array(
+                'class' => 'glossaryExport',
+                'title' => get_string('exportmyglossary', 'cobra')
+            ));
+
 echo $OUTPUT->heading(get_string('myglossary', 'cobra') . '&nbsp;&nbsp;&nbsp;' . $exportbutton);
 
 echo $OUTPUT->box_start('generalbox box-content');
