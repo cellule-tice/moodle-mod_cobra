@@ -55,7 +55,7 @@ $PAGE->requires->jquery();
 $PAGE->requires->js('/mod/cobra/js/cobra.js');
 $PAGE->requires->js_init_call('M.mod_cobra.remove_from_global_glossary');
 
-if ($cobra->userglossary) {
+if (!$cobra->userglossary) {
     redirect(new moodle_url('/mod/cobra/view.php', array('id' => $cm->id)), 'CoBRA' . ': ' . get_string('myglossaryunavailable', 'cobra', $CFG->cobra_serverhost), 5);
 }
 
