@@ -32,8 +32,7 @@ require_login($course, true, $cm);
 require_capability('mod/cobra:view', $context);
 // Add event management here.
 
-$PAGE->set_url('/mod/cobra/view.php', array('id' => $cm->id));
-
+$PAGE->set_url('/mod/cobra/text.php', array('id' => $cm->id, 'id_text' => $textid . '#/1'));
 $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->add_body_class('noblocks');
@@ -71,23 +70,22 @@ if (has_capability('mod/cobra:edit', $context) && false) {
     $encodeclic = 0;
 }
 
-$content .= '<div id="encode_clic" name="' . $encodeclic . '" class="hidden"></div>';
-$content .= '<div id="id_text" class="hidden" name="' . $textid . '">' . $textid . '</div>';
-$content .= '<div id="courseLabel" class="hidden" name="' . $course->id . '">&nbsp;</div>';
-$content .= '<div id="showglossary" class="hidden">' . $cobra->userglossary . '</div>';
-$content .= '<div id="userId" class="hidden" name="' . $USER->id . '">&nbsp;</div>';
-$content .= '<div id="courseid" class="hidden" name="' . $course->id .'">' . $course->id . '</div>';
+$content .= html_writer::div('', 'hidden', array('id' => 'encode_clic', 'name' => $encodeclic));
+$content .= html_writer::div($textid, 'hidden', array('id' => 'id_text', 'name' => $textid));
+$content .= html_writer::div('', 'hidden', array('id' => 'courseLabel', 'name' => $course->id));
+$content .= html_writer::div($cobra->userglossary, 'hidden', array('id' => 'showglossary'));
+$content .= html_writer::div('', 'hidden', array('id' => 'userId', 'name' => $USER->id));
+$content .= html_writer::div($course->id, 'hidden', array('id' => 'courseid', 'name' => $course->id));
 
 $i = 0;
 foreach ($cobra as $key => $info) {
-    $content .= '<div id="preferences_' . $i . '_key" class="hidden" name="' . $key . '">' . $key . '</div>';
-        $content .= '<div id="preferences_' . $i . '_value" class="hidden" name="' . strtolower($info) . '">' . $info . '</div>';
-
+    $content .= html_writer::div($key, 'hidden', array('id' => 'preferences_' . $i . '_key', 'name' => $key));
+    $content .= html_writer::div($info, 'hidden', array('id' => 'preferences_' . $i . '_value', 'name' => strtolower($info)));
     $i++;
 }
 
-
 $content .= '<div id="preferencesNb" class="hidden" name="' . $i . '">' . $i . '</div>';
+$content .= html_writer::div($i, 'hidden', array('id' => 'prefrencesNb', 'name' => $i));
 
 $clearfix = false;
 
@@ -95,43 +93,48 @@ if ($cobra->audioplayer) {
     $audiofileurl = $text->get_audio_file_url();
     if (!empty($audiofileurl)) {
         $clearfix = true;
-        $content .= '<div id="audioplayer"> <audio controls="controls">' .
-            '<source src="' . $audiofileurl . '" />' .
-            '</audio></div>';
+        $content .= html_writer::start_div('', array('id' => 'audioplayer'));
+        $sourcetag = html_writer::tag('source', '', array('src' => $audiofileurl));
+        $content .= html_writer::tag('audio', $sourcetag, array('controls' => 'controls'));
+        $content .= html_writer::end_div();
     }
 }
 
 if ($cobra->nextprevbuttons) {
     $clearfix = true;
-    $content .= '<div class="textnavbuttons">';
+    //$content .= '<div class="textnavbuttons">';
+    $content .= html_writer::start_div('textnavbuttons');
     $nextid = cobra_get_next_textid($text);
     $previousid = cobra_get_previous_textid($text);
     if ($previousid) {
-        $content .= '<a href="' .
-                    $_SERVER['PHP_SELF'] .
-                    '?id=' . $id .
-                    '&id_text=' . $previousid .
-                    '#/' . $previousid .
-                    '" class="btn btn-default" role="button">' . get_string('previous_text', 'cobra') . '</a>';
+        $content .= html_writer::tag('a', get_string('previoustext', 'cobra'), array(
+                'href' => 'text.php?' . 'id=' . $id . '&id_text=' . $previousid . '#/' . $previousid,
+                'class' => 'btn btn-default',
+                'role' => 'button'
+            )
+        );
     }
     if ($nextid) {
-        $content .= '<a href="' .
-                    $_SERVER['PHP_SELF'] .
-                    '?id=' . $id .
-                    '&id_text=' . $nextid .
-                    '#/' . $nextid .
-                    '" class="btn btn-default" role="button">' . get_string('next_text', 'cobra') . '</a>';
+        $content .= html_writer::tag('a', get_string('nexttext', 'cobra'), array(
+                'href' => 'text.php?' . 'id=' . $id . '&id_text=' . $nextid . '#/' . $nextid,
+                'class' => 'btn btn-default',
+                'role' => 'button'
+            )
+        );
     }
-    $content .= '</div>';
+    $content .= html_writer::end_div();
 }
 
 if ($clearfix) {
-    $content .= '<div class="clearfix"></div>';
+    $content .= html_writer::div('', 'clearfix');
 }
 // Add angularjs container.
 $content .= '<div ng-app="cobra" id="angContainer" >';
 $content .= '<div id="angView" ui-view></div>';
 $content .= '</div>';
+$content .= html_writer::start_div('', array('ng-app' => 'cobra', 'id' => 'angContainer'));
+$content .= html_writer::div('', '', array('id' => 'angView', 'ui-view' => ''));
+$content .= html_writer::end_div();
 
 echo $content;
 
