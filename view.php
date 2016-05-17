@@ -30,21 +30,11 @@
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/locallib.php');
 
-$id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
-$n  = optional_param('n', 0, PARAM_INT);  // ... cobra instance ID - it should be named as the first character of the module.
+$id = required_param('id', PARAM_INT);
+$cmd = optional_param('cmd', null, PARAM_ALPHA);
 
-if ($id) {
-    $cm         = get_coursemodule_from_id('cobra', $id, 0, false, MUST_EXIST);
-    $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $cobra  = $DB->get_record('cobra', array('id' => $cm->instance), '*', MUST_EXIST);
-} else if ($n) {
-    $cobra  = $DB->get_record('cobra', array('id' => $n), '*', MUST_EXIST);
-    $course     = $DB->get_record('course', array('id' => $cobra->course), '*', MUST_EXIST);
-    $cm         = get_coursemodule_from_instance('cobra', $cobra->id, $course->id, false, MUST_EXIST);
-} else {
-    error('You must specify a course_module ID or an instance ID');
-}
-
+list($course, $cm) = get_course_and_cm_from_cmid($id, 'cobra');
+$cobra = $DB->get_record('cobra', array('id' => $cm->instance), '*', MUST_EXIST);
 $context = context_module::instance($cm->id);
 
 require_login($course, true, $cm);
@@ -59,19 +49,13 @@ $event->add_record_snapshot($PAGE->cm->modname, $cobra);
 $event->trigger();
 
 // Print the page header.
-
 $PAGE->set_url('/mod/cobra/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
 
-/*
- * Other things you may want to set - remove if not needed.
- * $PAGE->set_cacheable(false);
- * $PAGE->set_focuscontrol('some-html-id');
- * $PAGE->add_body_class('cobra-'.$somevar);
- */
+// Load CoBRA css file.
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
-// Add the ajaxcommand for the form.
+// Load javascript.
 $PAGE->requires->jquery();
 $PAGE->requires->js('/mod/cobra/js/cobra.js');
 $PAGE->requires->js_init_call('M.mod_cobra.change_resource_visibility');
@@ -88,20 +72,23 @@ if ($isallowedtoedit) {
     $collectionlist = cobra_get_registered_collections('visible');
 }
 foreach ($collectionlist as $collection) {
-    $content .= '<h3>' . $collection->local_label . '</h3>';
-    $content .= '<table class="table table-condensed table-hover table-striped textlist">' .
-                '<thead>' .
-                '<tr align="center">' .
-                '<th>' . get_string('text', 'cobra') . '</th>' .
-                '<th>' . get_string('source', 'cobra') . '</th>';
-
+    $content .= html_writer::tag('h3', $collection->local_label);
+    $table = new html_table();
+    $table->attributes['class'] = 'admintable generaltable textlist';
+    $headercell1 = new html_table_cell(get_string('text', 'cobra'));
+    $headercell1->style = 'text-align:left;';
+    $headercell2 = new html_table_cell(get_string('source', 'cobra'));
     if ($isallowedtoedit) {
-        $content .= '<th>' . get_string('type', 'cobra') . '</th>' .
-                    '<th>' . get_string('move') . '</th>' .
-                    '<th>' . get_string('visibility', 'cobra') . '</th>';
+        $headercell3 = new html_table_cell(get_string('move'));
+        $headercell4 = new html_table_cell(get_string('visibility', 'cobra'));
     }
-    $content .= '</tr>' .
-                '</thead>';
+
+    $table->head = array(
+        $headercell1,
+        $headercell2,
+        $headercell3,
+        $headercell4
+    );
 
     if ($isallowedtoedit) {
         // Load all texts to display for course admin.
@@ -110,58 +97,69 @@ foreach ($collectionlist as $collection) {
         // Load only visible texts to display for students.
         $textlist = cobra_load_text_list($collection->id_collection, 'visible');
     }
+
     if (!empty($textlist) && is_array($textlist)) {
-        $content .= '<tbody>';
         $position = 1;
         foreach ($textlist as $text) {
             // Display title.
             $rowcssclass = $text->visibility ? 'tablerow' : 'tablerow dimmed_text';
-            $content .= '<tr id="' . $text->id_text . '#textId" class="' . $rowcssclass . '" name="' . $position++ .
-                        '#pos"><td style="min-width:50%;">' .
-                        '<a href="text.php?id=' . $id . '&id_text=' . $text->id_text . '#/' . $text->id_text . '">' .
-                        '<i class="fa fa-file-text"></i> ' .
-                        trim(strip_tags($text->title)) .
-                        '</a>' .
-                        '</td>' .
-                        // Display source.
-                        '<td style="width: 350px;" title="' . $text->source . '">' .
-                        substr($text->source, 0, 30) . '...' .
-                        '</td>';
+            $row = new html_table_row();
+            $row->id = $text->id_text . '#textId';
+            $row->attributes['class'] = $rowcssclass;
+            $row->attributes['name'] = $position++ . '#pos';
+            $cell = new html_table_cell();
+            $cellcontent = html_writer::tag('i', '', array('class' => 'fa fa-file-text')) .
+                           trim(strip_tags($text->title));
+            $cellcontent = html_writer::tag('a', $cellcontent, array(
+                'href' => 'text.php?' .
+                          'id=' . $id .
+                          '&id_text=' . $text->id_text . '#/' . $text->id_text
+                )
+            );
+            $cell->text = $cellcontent;
+            $row->cells[] = $cell;
+
+            $cell = new html_table_cell();
+            $cell->style = 'width:350px';
+            $cell->attributes['title'] = $text->source;
+            $cell->text = substr($text->source, 0, 30) . '...';
+            $row->cells[] = $cell;
 
             if ($isallowedtoedit) {
-                // Display text type.
-                $content .= '<td align="center">' . "\n" . '<a href="#" class="changeType">' .
-                            (!empty($text->text_type) ? get_string($text->text_type, 'cobra') : '&nbsp;') .
-                            '</a></td>';
                 // Change position commands.
-                $content .= '<td class="text-center">';
-                $content .= '<a href="#" class="moveUp"><i class="fa fa-arrow-up"></i></a>&nbsp;';
-                $content .= '<a href="#" class="moveDown"><i class="fa fa-arrow-down"></i></a>&nbsp;';
-                $content .= '</td>';
+                $cell = new html_table_cell();
+                $cell->attributes['class'] = 'text-center';
+                $upicon = html_writer::tag('i', '', array('class' => 'fa fa-arrow-up'));
+                $downicon = html_writer::tag('i', '', array('class' => 'fa fa-arrow-down'));
+                $uplink = html_writer::link('#', $upicon . '&nbsp;', array('class' => 'moveUp'));
+                $downlink = html_writer::link('#', $downicon, array('class' => 'moveDown'));
+                $cell->text = $uplink . $downlink;
+                $row->cells[] = $cell;
 
                 // Change visibility commands.
-                $content .= '<td class="text-center">';
-                $content .= '<a href="#" class="setVisible" ' .
-                            ($text->visibility ? 'style="display:none"' : '') .
-                            '><i class="fa fa-eye-slash"></i></a>';
-
-                $content .= '<a href="#" class="setInvisible" ' .
-                            (!$text->visibility ? 'style="display:none"' : '') .
-                            '><i class="fa fa-eye"></i></a>';
-
-                $content .= '</td>';
+                $cell = new html_table_cell();
+                $cell->attributes['class'] = 'text-center';
+                $hideicon = html_writer::tag('i', '', array('class' => 'fa fa-eye'));
+                $showicon = html_writer::tag('i', '', array('class' => 'fa fa-eye-slash'));
+                $hidelinkstyle = $text->visibility ? '' : 'display:none;';
+                $showlinkstyle = $text->visibility ? 'display:none;' : '';
+                $hidelink = html_writer::link('#', $hideicon, array('class' => 'setVisible', 'style' => $hidelinkstyle));
+                $showlink = html_writer::link('#', $showicon, array('class' => 'setInvisible', 'style' => $showlinkstyle));
+                $cell->text = $hidelink . $showlink;
+                $row->cells[] = $cell;
             }
-            $content .= '</tr>';
+            $table->data[] = $row;
         }
-        $content .= '</tbody>';
     } else {
-        $content .= '<tfoot>' .
-                    '<tr>' .
-                    '<td align="center" colspan="' . ($isallowedtoedit ? '4' : '2') . '">' . get_lang('No text') . '</td>' .
-                    '</tr>' .
-                    '</tfoot>';
+        $row = new html_table_row();
+        $cell = new html_table_cell('no text');
+        $cell->colspan = $isallowedtoedit ? '4' : '2';
+        $cell->attributes['class'] = 'text-center';
+        $table->data[]= $row;
     }
-    $content .= '</table>';
+    $content .= html_writer::start_tag('div', array('class' => 'no-overflow'));
+    $content .= html_writer::table($table);
+    $content .= html_writer::end_tag('div');
 }
 
 // Output starts here.
