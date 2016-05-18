@@ -420,7 +420,7 @@ function cobra_clic($textid, $lingentityid, $DB, $courseid, $userid) {
  */
 function cobra_get_translations($conceptid, $entrytype) {
     $params = array('id_concept' => (int)$conceptid, 'entry_type' => $entrytype);
-    $translations = cobra_remote_service::call('get_translations', $params);
+    $translations = cobra_remote_service::call('getTranslations', $params);
     return $translations;
 }
 
@@ -432,7 +432,9 @@ function cobra_get_translations($conceptid, $entrytype) {
  */
 function cobra_get_concept_info_from_ling_entity($lingentityid) {
     $params = array('ling_entity_id' => (int)$lingentityid);
-    $conceptinfo = cobra_remote_service::call('get_concept_info_from_ling_entity', $params);
+   // print_object($params);die();
+    $conceptinfo = cobra_remote_service::call('getConceptInfoFromLingEntity', $params);
+
     return array($conceptinfo->id_concept, $conceptinfo->construction , $conceptinfo->entry_type,
         $conceptinfo->entry_category, $conceptinfo->entry, $conceptinfo->entry_id);
 }
@@ -742,9 +744,9 @@ class cobra_clean_statistics_form extends moodleform {
      */
     public function definition() {
         $mform = $this->_form;
-        $options = array('' => '', 'ALL' => get_string('All', 'cobra'), 'BEFORE' => get_string('Before', 'cobra'));
-        $mform->addElement('select', 'scope', get_string('Delete', 'cobra'), $options);
-        $mform->addElement('date_selector', 'before_date', get_string('Before', 'cobra'));
+        $options = array('' => '', 'ALL' => get_string('all'), 'BEFORE' => get_string('before', 'cobra'));
+        $mform->addElement('select', 'scope', get_string('delete'), $options);
+        $mform->addElement('date_selector', 'before_date', get_string('before', 'cobra'));
         $this->add_action_buttons(true, get_string('OK', 'cobra'));
     }
 }
@@ -753,11 +755,11 @@ class cobra_edit_collection_label_form extends moodleform {
     public function definition()
     {
         $mform = $this->_form;
-        $mform->addElement('header', 'title', get_string('edit_collection', 'cobra'));
-        $mform->addElement('text', 'label', get_string('collection_name', 'cobra'));
+        $mform->addElement('header', 'title', get_string('editcollection', 'cobra'));
+        $mform->addElement('text', 'label', get_string('collectionname', 'cobra'));
         $mform->setType('label', PARAM_TEXT);
         $mform->setDefault('label', $this->_customdata['collectionname']);
-        $mform->addRule('label', get_string('Collection_name_cannot_be_empty', 'cobra'), 'required', null, 'client');
+        $mform->addRule('label', get_string('collectionnamecannotbeempty', 'cobra'), 'required', null, 'client');
         $this->add_action_buttons(true, get_string('OK', 'cobra'));
     }
 }

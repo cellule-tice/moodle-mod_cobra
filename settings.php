@@ -17,14 +17,13 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
-    $settings->add(new admin_setting_heading('cobra_method_heading', get_string('generalconfig', 'cobra'),
-                       get_string('explaingeneralconfig', 'cobra')));
+    $settings->add(new admin_setting_heading('cobra_method_heading', get_string('generalconfig', 'cobra'), ''));
 
     $options = array();
 
     $settings->add(new admin_setting_configtext('cobra_serverhost', get_string('cobraserverhost', 'cobra'),
                        get_string('cobraserverhost', 'cobra'), get_host_from_url($CFG->wwwroot)));
 
-    $settings->add(new admin_setting_configtext('cobra_mail_receiver', get_string('mail_receiver', 'cobra'),
-                       get_string('mail_receiver', 'cobra'), '1'));
+    $settings->add(new admin_setting_configtext('cobra_mail_recipient', get_string('mailrecipient', 'cobra'),
+                       get_string('mailrecipient', 'cobra'), '1'));
 }

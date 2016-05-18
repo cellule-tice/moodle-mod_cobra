@@ -73,8 +73,8 @@ $out = '';
 if (!is_null($cmd)) {
     if ($cmd == 'cleanstats') {
         // Clean Stats.
-         $out .= get_string('Clean_Clic_Stats', 'cobra');
-         $out .= '<span class="warning"> ' . get_string('Delete_is_definitive._No_way_to_rollback', 'cobra') . '</span>';
+         $out .= get_string('cleanclickstats', 'cobra');
+         $out .= '<span class="warning"> ' . get_string('warningdeletepermanent', 'cobra') . '</span>';
          $thisform = new cobra_clean_statistics_form($_SERVER['PHP_SELF'].'?id=' .$id . '&cmd=exDelete');
          $out = $thisform->display();
     } else if ($cmd == 'exDelete') {
@@ -123,35 +123,19 @@ if (!is_null($cmd)) {
             }
         }
     } // End of exDelete.
-} else {
-
-    /*$out .= '<ul>';
-    $out .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&view=1">'
-            . get_string( 'Display_entries_clicked_at_least_20_times' , 'cobra') . '</a></li>';
-    $out .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&view=2">'
-            . get_string( 'Display_the_10_most_frequently_clicked_entries_per_text', 'cobra' ) . '</a></li>';
-    $out .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&view=3">'
-            . get_string( 'Display_the_most_frequently_analysed_texts', 'cobra' ) . '</a></li>';
-    $out .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&view=4">'
-            . get_string( 'Display_statistics_by_text' , 'cobra') . '</a></li>';
-    $out .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&view=5">'
-            . get_string( 'Display_statistics_by_user', 'cobra' ) . '</a></li>';
-    $out .= '<li><a href="' . $_SERVER['PHP_SELF'] . '?id='.$id.'&cmd=cleanstats">'
-            . get_string('Clean_Clic_Stats', 'cobra') .'</a></li>';
-    $out .= '</ul>';*/
 }
 
 if ( !is_null( $view ) ) {
     switch ($view) {
         case '1' :
-            $out .= '<h3><small>' . get_string( 'Display_entries_clicked_at_least_20_times', 'cobra' ) . '</small></h3>';
+            $out .= '<h3><small>' . get_string( 'topclickedentries', 'cobra' ) . '</small></h3>';
             $out .= '<table class="table table-condensed table-hover table-striped">'
                  .  '<thead>'
                  .  '<tr class="headerX">'
                  .  '<th> Nombre total de clics </th>'
-                 .  '<th>' . get_string( 'Lemma', 'cobra' ) . '</th>'
+                 .  '<th>' . get_string( 'entry', 'cobra' ) . '</th>'
                  .  '<th>' . get_string( 'translation', 'cobra' ) . '</th>'
-                 .  '<th>' . get_string( 'category', 'cobra' ) . '</th>'
+                 .  '<th>' . get_string( 'category' ) . '</th>'
                  .  '</tr>'
                  .  '</thead>';
 
@@ -169,7 +153,7 @@ if ( !is_null( $view ) ) {
             break;
 
         case '2' :
-            $out .= '<h3><small>' . get_string( 'Display_the_10_most_frequently_clicked_entries_per_text', 'cobra' )
+            $out .= '<h3><small>' . get_string( 'topclickedentriespertext', 'cobra' )
                 . '</small></h3>';
             $collectionlist = cobra_get_registered_collections( 'all' );
             foreach ($collectionlist as $collection) {
@@ -177,21 +161,21 @@ if ( !is_null( $view ) ) {
 
                 $out .= '<table>'
                      .  '<thead>'
-                     .  '<tr class="superHeader"><th colspan="5">' . get_string( 'Collection', 'cobra' ) . '&nbsp;:&nbsp;'
-                        . $collection['local_label'] . '</th></tr>'
+                     .  '<tr class="superHeader"><th colspan="5">' . get_string( 'collection', 'cobra' ) . '&nbsp;:&nbsp;'
+                        . $collection->local_label . '</th></tr>'
                      .  '<tr class="headerX">'
                      .  '<th> Texte </th>'
                      .  '<th> Nombre de clics </th>'
-                     .  '<th>' . get_string( 'Lemma', 'cobra' ) . '</th>'
+                     .  '<th>' . get_string( 'entry', 'cobra' ) . '</th>'
                      .  '<th>' . get_string( 'translation', 'cobra' ) . '</th>'
-                     .  '<th>' . get_string( 'category', 'cobra' ) . '</th>'
+                     .  '<th>' . get_string( 'category' ) . '</th>'
                      .  '</tr>'
                      .  '</thead>';
 
 
                 foreach ($textlist as $textinfo) {
                     $textid = $textinfo->id_text;
-                    $texttitle = $textinfo->title;
+                    $texttitle = strip_tags($textinfo->title);
                     $cliclist = $DB->get_records_select('cobra_clic',
                             "course='$course->id' AND id_text='$textid' AND nbclicsstats >= 10",  array(),
                             'nbclicsstats DESC LIMIT 10', 'id_entite_ling, nbclicsstats');
@@ -222,7 +206,7 @@ if ( !is_null( $view ) ) {
             break;
 
         case '3' :
-            $out .= '<h3><small>' . get_string( 'Display_the_most_frequently_analysed_texts', 'cobra' ) . '</small></h3>';
+            $out .= '<h3><small>' . get_string( 'topclickedtexts', 'cobra' ) . '</small></h3>';
             $collectionlist = cobra_get_registered_collections( 'all' );
             foreach ($collectionlist as $collection) {
                 $textlist = cobra_load_text_list( $collection->id_collection, 'all' );
@@ -233,8 +217,8 @@ if ( !is_null( $view ) ) {
 
                 $out .= '<table class="claroTable emphaseLine">'
                      .  '<thead>'
-                     .  '<tr class="superHeader"><th colspan="2">' . get_string( 'Collection', 'cobra' ) . '&nbsp;:&nbsp;'
-                        . $collection['local_label'] . '</th></tr>'
+                     .  '<tr class="superHeader"><th colspan="2">' . get_string( 'collection', 'cobra' ) . '&nbsp;:&nbsp;'
+                        . $collection->local_label . '</th></tr>'
                      .  '<tr class="headerX">'
                      .  '<th> Nombre total de clics </th>'
                      .  '<th> Texte </th>'
@@ -259,13 +243,13 @@ if ( !is_null( $view ) ) {
                         'cellspacing="2" style="margin-bottom:20px;">'
                       . "\n"
                 .  '<thead>' . "\n"
-                .  '<tr class="superHeader" align="center" valign="top"><th colspan="4">' . $collection['local_label']
+                .  '<tr class="superHeader" align="center" valign="top"><th colspan="4">' . $collection->local_label
                 . '</th></tr>' . "\n"
                 .  '<tr class="headerX" align="center" valign="top">' . "\n"
-                .  '<th>' . get_string( 'Text', 'cobra' ) . '</th>' . "\n"
-                .  '<th>' . get_string( 'Nb_of_clickable_words', 'cobra' ) . '</th>' . "\n"
-                .  '<th>' . get_string( 'Different_users', 'cobra' ) . '</th>' . "\n"
-                .  '<th>' . get_string( 'Total_clic', 'cobra' ) . '</th>' . "\n";
+                .  '<th>' . get_string( 'text', 'cobra' ) . '</th>' . "\n"
+                .  '<th>' . get_string( 'clickablewordscount', 'cobra' ) . '</th>' . "\n"
+                .  '<th>' . get_string( 'uniqueusers', 'cobra' ) . '</th>' . "\n"
+                .  '<th>' . get_string( 'clickcount', 'cobra' ) . '</th>' . "\n";
                 $textlist = cobra_load_text_list( $collection->id_collection, 'all' );
                 foreach ($textlist as $text) {
                     $out .= '<tr> <td>' . $text->title. '</td>' . "\n"
@@ -283,9 +267,9 @@ if ( !is_null( $view ) ) {
                       . 'cellspacing="2" style="margin-bottom:20px;">' . "\n"
                 .  '<thead>' . "\n"
                 .  '<tr class="headerX" align="center" valign="top">' . "\n"
-                .  '<th>' . get_string( 'User', 'cobra' ) . '</th>' . "\n"
-                .  '<th>' . get_string( 'Nb_Texts', 'cobra' ) . '</th>' . "\n"
-                .  '<th>' . get_string( 'Total_clic', 'cobra' ) . '</th>' . "\n";
+                .  '<th>' . get_string( 'user' ) . '</th>' . "\n"
+                .  '<th>' . get_string( 'textcount', 'cobra' ) . '</th>' . "\n"
+                .  '<th>' . get_string( 'clickcount', 'cobra' ) . '</th>' . "\n";
 
                 foreach ($usercliclist as $userinfo) {
                     $out .= '<tr> <td> '. $userinfo['lastName'] . ' ' . $userinfo['firstName'] . '</td>' . "\n"

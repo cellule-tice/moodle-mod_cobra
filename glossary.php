@@ -107,17 +107,14 @@ $language = $cobra->language;
 $display = '';
 $out = '';
 
-/*$out .= '<a href="?cmd=rqexport&id='.$id. '">'. get_string('ExportGlossary', 'cobra') . '</a> &nbsp; '. "\n"
-               .'<a href="?cmd=rqcompare&id='.$id. '">'. get_string('Compare_text_with_glossary', 'cobra') . '</a> &nbsp; '. "\n";*/
-
 if ($cmd == 'rqexport') {
     // Show checkbox foreach text of this course.
     $display = '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">' . "\n";
     $display .= '<table>';
     $display .= '<tr> <td><input type="checkbox" class="selectall" id="selectall"  >'
-            .get_string('checkall_uncheckall', 'cobra') .'</td></tr>';
+            .get_string('checkuncheckall', 'cobra') .'</td></tr>';
     foreach ($collectionlist as $collection) {
-        $textlist = cobra_load_text_list( $collection['id_collection'], 'visible' );
+        $textlist = cobra_load_text_list( $collection->id_collection, 'visible' );
         foreach ($textlist as $text) {
             // Display Title.
             $display  .= '<tr><td style="min-width:33%;">' . "\n"
@@ -139,10 +136,10 @@ if ($cmd == 'rqexport') {
     $display .= '<input type="hidden" name="id" value="'.$id. '" >';
     $display .= '<table>';
     $display .= '<tr> <td colspan="2"><input type="checkbox" class="selectall" id="selectall"  >'
-        . get_string('checkall_uncheckall', 'cobra') .'</td></tr>';
+        . get_string('checkuncheckall', 'cobra') .'</td></tr>';
 
     foreach ($collectionlist as $collection) {
-        $textlist = cobra_load_text_list( $collection['id_collection'], 'visible' );
+        $textlist = cobra_load_text_list( $collection->id_collection, 'visible' );
         foreach ($textlist as $text) {
             // Display checkbox foreach text.
             $display  .= '<tr><td style="min-width:33%;">' . "\n"
@@ -153,7 +150,7 @@ if ($cmd == 'rqexport') {
         }
     }
 
-    $display .= get_string('Text', 'cobra');
+    $display .= get_string('text', 'cobra');
     $display .= '<tr><td><textarea name="myText" id="myText" cols="80" rows="20" style="border-width:1px;vertical-align:middle;">'
             . '</textarea></td></tr>'
             . '<tr><td align="center"><input value="' . get_string ( 'ok' )
@@ -193,15 +190,15 @@ if ($cmd == 'rqexport') {
                     $trouve = true;
                     $info = $glossarylemmaid[$lemmaid]['entry'] . ' ('.$glossarylemmaid[$lemmaid]['category'].') - '
                             . $glossarylemmaid[$lemmaid]['traduction'];
-                    $otherwords .= '<li> ' . get_string('possible_translation', 'cobra') . ' : '. $word . ' : '
+                    $otherwords .= '<li> ' . get_string('possibletranslations', 'cobra') . ' : '. $word . ' : '
                             . utf8_encode($info) . '</li>';
                 }
             }
             if (!$trouve) {
-                $newwords .= '<li> ' . get_string('new_word', 'cobra') . ' : '. $word . '</li>';
+                $newwords .= '<li> ' . get_string('newwords', 'cobra') . ' : '. $word . '</li>';
             }
         } else {
-            $newwords .= '<li> ' . get_string('new_word', 'cobra')  . ' : '. $word . '</li>';
+            $newwords .= '<li> ' . get_string('newwords', 'cobra')  . ' : '. $word . '</li>';
         }
     }
     $out .= '<ul>';

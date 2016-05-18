@@ -62,6 +62,7 @@ $PAGE->requires->js_init_call('M.mod_cobra.change_resource_visibility');
 $PAGE->requires->js_init_call('M.mod_cobra.move_resource');
 
 $content = '';
+
 $isallowedtoedit = has_capability('mod/cobra:edit', $context);
 
 // For all chosen collections display text in selected order.
