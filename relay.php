@@ -135,15 +135,6 @@ if (!empty($call)) {
             $response = 'error';
             break;
 
-        case 'changeType':
-            $newtype = cobra_change_text_type($resource, $course->id);
-            if ($newtype) {
-                echo get_string($newtype, 'cobra');
-                return true;
-            }
-            $response = 'error';
-            break;
-
         case 'removeFromGlossary':
             $lingentity = optional_param('lingentity', 0, PARAM_INT);
             if (cobra_remove_from_glossary($lingentity, $course->id)) {

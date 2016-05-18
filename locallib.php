@@ -579,62 +579,6 @@ function cobra_curl_request($url) {
     return $content;
 }
 
-/**
- * Changes the type of the text with id given in args
- * Possible modes are 'Lesson', 'Reading' and 'Exercise'
- * @param int $textid
- * @return boolean true on success, false otherwise
- */
-function cobra_change_text_type($textid, $courseid) {
-    global $DB;
-    $list = $DB->get_record_select('cobra_texts_config', "course='$courseid' AND id_text='$textid'");
-    if (!empty($list)) {
-        $texttype = $list->text_type;
-        $newtype = cobra_get_next_text_type($texttype);
-        $dataobject = new stdClass();
-        $dataobject->id = $list->id;
-        $dataobject->text_type = $newtype;
-        if (!$DB->update_record('cobra_texts_config', $dataobject)) {
-            return false;
-        }
-        return $newtype;
-    }
-    return false;
-}
-
-/**
- * Gives the type of the text with id given in args
- * @param int $textid
- * @return string the type of the text
- */
-function cobra_get_text_type($textid, $courseid) {
-    global $DB;
-    $list = $DB->get_record_select('cobra_texts_config', "course='$courseid' AND id_text='$textid'");
-    if (!empty($list)) {
-        return $list->text_type;
-    }
-    return false;
-}
-
-/**
- * Gives the "next" type of text according to a definite order : Lesson -> Reading -> Exercise
- * @param string $textType the current text type
- * @return string the "next" text type according to the current one
- */
-function cobra_get_next_text_type($texttype) {
-    switch($texttype)
-    {
-        case 'Lesson' : $newtype = 'Reading';
-            break;
-        case 'Reading' : $newtype = 'Exercise';
-            break;
-        case 'Exercise' : $newtype = 'Lesson';
-            break;
-        default : $newtype = 'Lesson';
-    }
-    return $newtype;
-}
-
 function cobra_get_distinct_access_for_text($textid) {
     global $DB, $course;
     $userlist = array();

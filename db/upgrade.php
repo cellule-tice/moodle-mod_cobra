@@ -160,5 +160,21 @@ function xmldb_cobra_upgrade($oldversion) {
         // Cobra savepoint reached.
         upgrade_mod_savepoint(true, 2016051000, 'cobra');
     }
+
+    if ($oldversion < 2016051800) {
+
+        // Define field id_text to be dropped from cobra_texts_config.
+        $table = new xmldb_table('cobra_texts_config');
+        $field = new xmldb_field('text_type');
+
+        // Conditionally launch drop field id_text.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2016051800, 'cobra');
+    }
+
     return true;
 }

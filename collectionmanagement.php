@@ -205,7 +205,6 @@ if ('rqEditLabel' == $cmd) {
         $text = new cobra_text_wrapper();
         $text->set_text_id($remotetext['id']);
         $text->set_collection_id($localcollection->get_remote_id());
-        $text->set_type('Lesson');
         $text->set_position(cobra_text_wrapper::getmaxposition() + 1);
         if ($text->save()) {
             $addedtextcount++;
@@ -214,13 +213,7 @@ if ('rqEditLabel' == $cmd) {
     if ($newtextcount != 0) {
 
         if ($newtextcount != $addedtextcount) {
-            /*$content .= '' .
-                $newtextcount - $addedtextcount .
-                ' ' .
-                get_string('textcouldnotbeadded', 'cobra') .
-                '<br/> ';*/
             $messages[] = get_string('textnotadded', 'cobra', $newtextcount - $addedtextcount);
-
         } else {
             $messages[] = get_string('textsadded', 'cobra', $newtextcount);
         }

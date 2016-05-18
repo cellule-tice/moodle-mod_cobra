@@ -39,8 +39,6 @@ class cobra_text_wrapper {
     private $position = 1;
     private $visibility = true;
 
-    // Previously remotely stored data (CoBRA system).
-    private $type = 'Lesson';
     // Remotely stored data (CoBRA system).
     private $title = '';
     private $content = array();
@@ -90,14 +88,6 @@ class cobra_text_wrapper {
         return true === $this->visibility ? true : false;
     }
 
-    public function set_type($type) {
-        $this->type = '' != $type ? $type : 'Lesson';
-    }
-
-    public function get_type() {
-        return $this->type;
-    }
-
     public function set_title($title) {
         $this->title = $title;
     }
@@ -132,7 +122,6 @@ class cobra_text_wrapper {
         $this->set_id($text->id);
         $this->set_text_id($text->id_text);
         $this->set_collection_id($text->id_collection);
-        $this->set_type($text->text_type);
         $this->set_position($text->position);
         $this->set_visibility($text->visibility ? true : false);
         return true;
@@ -173,7 +162,6 @@ class cobra_text_wrapper {
             $dataobject->course = $course->id;
             $dataobject->id_text = $this->get_text_id();
             $dataobject->id_collection = $this->get_collection_id();
-            $dataobject->text_type = $this->get_type();
             $dataobject->position = $this->get_position();
             $dataobject->visibility = $visibility;
             return  $DB->update_record('cobra_texts_config', $dataobject);
@@ -183,7 +171,6 @@ class cobra_text_wrapper {
             $dataobject->course = $course->id;
             $dataobject->id_text = $this->get_text_id();
             $dataobject->id_collection = $this->get_collection_id();
-            $dataobject->text_type = $this->get_type();
             $dataobject->position = $this->get_position();
             $dataobject->visibility = $visibility;
             return  $DB->insert_record('cobra_texts_config', $dataobject);
