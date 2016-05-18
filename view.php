@@ -77,19 +77,16 @@ foreach ($collectionlist as $collection) {
     $headercell1 = new html_table_cell(get_string('text', 'cobra'));
     $headercell1->style = 'text-align:left;';
     $headercell2 = new html_table_cell(get_string('source', 'cobra'));
+
+    $table->head = array($headercell1, $headercell2);
+
     if ($isallowedtoedit) {
+        // Add teacher only columns
         $headercell3 = new html_table_cell(get_string('move'));
         $headercell4 = new html_table_cell(get_string('visibility', 'cobra'));
-    }
+        $table->head[] = $headercell3;
+        $table->head[] = $headercell4;
 
-    $table->head = array(
-        $headercell1,
-        $headercell2,
-        $headercell3,
-        $headercell4
-    );
-
-    if ($isallowedtoedit) {
         // Load all texts to display for course admin.
         $textlist = cobra_load_text_list($collection->id_collection, 'all');
     } else {
