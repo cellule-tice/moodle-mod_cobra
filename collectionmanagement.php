@@ -48,6 +48,7 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 $PAGE->requires->jquery();
 $PAGE->requires->js('/mod/cobra/js/cobra.js');
 $PAGE->requires->js_init_call('M.mod_cobra.move_resource');
+$PAGE->requires->js_init_call('M.mod_cobra.change_resource_visibility');
 
 // Buffer output
 $content = '';
@@ -77,20 +78,6 @@ if (!in_array($cmd, $acceptedcmdlist)) {
 $collectionid = optional_param('collection', 0, PARAM_INT);
 $remotecollection = optional_param('remote_collection', null, PARAM_INT);
 
-// Print the page header.
-
-$PAGE->set_url('/mod/cobra/collectionmanagement.php', array('id' => $cm->id));
-$PAGE->set_title(format_string($cobra->name));
-$PAGE->set_heading(format_string($course->fullname));
-
-// Load CoBRA css file.
-$PAGE->requires->css('/mod/cobra/css/cobra.css');
-
-// Add link for Ajax commands.
-$PAGE->requires->jquery();
-$PAGE->requires->js('/mod/cobra/js/cobra.js');
-$PAGE->requires->js_init_call('M.mod_cobra.change_resource_visibility');
-$PAGE->requires->js_init_call('M.mod_cobra.move_resource');
 
 // Buffer output
 $content = '';
