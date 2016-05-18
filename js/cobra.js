@@ -12,7 +12,6 @@ M.mod_cobra.init = function() {
     init();
     function init() {
         $('small').hide();
-        $(document).on('click', 'a.changeType', changeType);
         updateMoveIcons();
     }
 }
@@ -24,10 +23,6 @@ M.mod_cobra.init_no_blocks = function() {
         $('.hbl').hide();
         $('.sbl').hide();
     }
-}
-
-M.mod_cobra.text_change_type = function() {
-    $(document).on('click', 'a.changeType', changeType);
 }
 
 M.mod_cobra.move_resource = function() {
@@ -446,26 +441,6 @@ function getUrlParam(param, url)
     var reg = new RegExp('(\\?|&|^)' + param + '=(.*?)(&|$)');
     matches = u.match(reg);
     return matches[2] != undefined ? decodeURIComponent(matches[2]).replace(/\+/g,' ') : '';
-}
-
-function changeType()
-{
-    var tableRow = $(this.parentNode.parentNode);
-    var rawId = tableRow.attr('id');
-    var resourceId = rawId.substring(0, rawId.indexOf('#', 0));
-    var moduleId = getUrlParam('id', document.location.href);
-    moduleId = parseInt(moduleId.replace('#',''));
-
-    $.post('relay.php',
-        {
-            call: 'changeType',
-            resourceid: resourceId,
-            id: moduleId
-        },
-        function(response) {
-            $('.changeType', tableRow).text(response);
-        }
-    );
 }
 
 // Convert array to object.
