@@ -131,7 +131,7 @@ if ('rqEditLabel' == $cmd) {
     $textlist = cobra_load_remote_text_list($collection->get_remote_id());
     $savemode = $collection->save();
     if ('error' == $savemode) {
-        $content .= $OUTPUT->notification(get_string('unableregistercollection', 'cobra'));
+        $content .= $OUTPUT->notification(get_string('registercollectionfailed', 'cobra'));
     } else if ('saved' == $savemode) {
         $position = 1;
         foreach ($textlist as $remotetext) {
@@ -150,7 +150,7 @@ if ('rqEditLabel' == $cmd) {
             $content .= $OUTPUT->notification(get_string('unableunregistercollection', 'cobra'));
         }
     } else {
-        $content .= $OUTPUT->notification(get_string('unableremovetextscollection', 'cobra'));
+        $content .= $OUTPUT->notification(get_string('removecollectionfailed', 'cobra'));
     }
 } else if ('exRefresh' == $cmd) {
     $localcollection = new cobra_collection_wrapper($collectionid);

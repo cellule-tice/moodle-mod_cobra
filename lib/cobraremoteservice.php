@@ -69,7 +69,7 @@ class cobra_remote_service {
                 redirect(new moodle_url('/course/view.php', array('id' => $COURSE->id)), 'CoBRA' . ': ' . get_string('platformnotallowed', 'cobra'), 5);
             }
         } else if ('paramerror' == $response->responseType) {
-                print_error('missingparam', '', '', $response->content);
+            print_error('missingparam', '', '', $response->content);
         } else if ('html' == $response->responseType) {
             return utf8_decode($response->content);
         } else {

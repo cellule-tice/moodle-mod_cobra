@@ -133,18 +133,18 @@ class mod_cobra_mod_form extends moodleform_mod {
 
             // Add select box for translations display mode.
             $options = array(
-                COBRA_TRANSLATIONS_ALWAYS => get_string('always', 'cobra'),
+                COBRA_TRANSLATIONS_ALWAYS => get_string('always'),
                 COBRA_TRANSLATIONS_CONDITIONAL => get_string('conditional', 'cobra'),
-                COBRA_TRANSLATIONS_NEVER => get_string('never', 'cobra')
+                COBRA_TRANSLATIONS_NEVER => get_string('never')
             );
             $mform->addElement('select', 'translations', get_string('translationsdisplaymode', 'cobra'), $options);
             $mform->setDefault('translations', COBRA_TRANSLATIONS_CONDITIONAL);
 
             // Add select box for descriptions display mode.
             $options = array(
-                COBRA_TRANSLATIONS_ALWAYS => get_string('always', 'cobra'),
+                COBRA_TRANSLATIONS_ALWAYS => get_string('always'),
                 COBRA_TRANSLATIONS_CONDITIONAL => get_string('conditional', 'cobra'),
-                COBRA_TRANSLATIONS_NEVER => get_string('never', 'cobra')
+                COBRA_TRANSLATIONS_NEVER => get_string('never')
             );
             $mform->addElement('select', 'annotations', get_string('annotationsdisplaymode', 'cobra'), $options);
             //$mform->addHelpButton('descriptions', 'descriptions', 'cobra');

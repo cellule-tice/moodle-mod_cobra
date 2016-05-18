@@ -272,12 +272,12 @@ function cobra_extend_settings_navigation($settings, $cobranode) {
         $glossarynode = $cobranode->add_node($node, $beforekey);
         $url = new moodle_url('/mod/cobra/glossary.php',
             array('id' => $PAGE->cm->id, 'cmd' => 'rqexport'));
-        $glossarynode->add_node(navigation_node::create(get_string('ExportGlossary', 'cobra'), $url,
+        $glossarynode->add_node(navigation_node::create(get_string('exportglossary', 'cobra'), $url,
             navigation_node::TYPE_SETTING,
             null, null, new pix_icon('i/item', '')));
         $url = new moodle_url('/mod/cobra/glossary.php',
             array('id' => $PAGE->cm->id, 'cmd' => 'rqcompare'));
-        $glossarynode->add_node(navigation_node::create(get_string('Compare_text_with_glossary', 'cobra'), $url,
+        $glossarynode->add_node(navigation_node::create(get_string('comparetextwithglossary', 'cobra'), $url,
             navigation_node::TYPE_SETTING,
             null, null, new pix_icon('i/item', '')));
     }
@@ -313,7 +313,7 @@ function cobra_extend_settings_navigation($settings, $cobranode) {
             null, null, new pix_icon('i/item', '')));
         $url = new moodle_url('/mod/cobra/statistics.php',
             array('id' => $PAGE->cm->id, 'cmd' => 'cleanstats'));
-        $statisticsnode->add_node(navigation_node::create(get_string('cleanclicstats', 'cobra'), $url,
+        $statisticsnode->add_node(navigation_node::create(get_string('cleanclickstats', 'cobra'), $url,
             navigation_node::TYPE_SETTING,
             null, null, new pix_icon('i/item', '')));
     }
