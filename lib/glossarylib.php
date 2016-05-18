@@ -427,3 +427,27 @@ function cobra_export_myglossary($data) {
     $csvexport->download_file();
     die;
 }
+
+class cobra_edit_glossary_form extends moodleform {
+    public function definition()
+    {
+        $mform = $this->_form;
+        $this->add_checkbox_controller(1, null, null, 1); // 1st argument is group name, 2nd is link text, 3rd is attributes and 4th is original value
+        $collectionlist =  $this->_customdata['collectionlist'];
+        $compare = $this->_customdata['compare'];
+
+        foreach ($collectionlist as $collection) {
+            $textlist = cobra_load_text_list( $collection->id_collection, 'visible' );
+            foreach ($textlist as $text) {
+                
+                $mform->addElement('advcheckbox', 'text_'.$text->id, '',  htmlspecialchars( strip_tags( $text->title)), array('group'=>1));
+                $mform->setDefault('text_'.$text->id, 1);
+
+            }
+        }
+        if ($compare) {
+            $mform->addElement('textarea', 'mytext', get_string('mytext', 'cobra'), array('rows' => 10));
+        }
+        $this->add_action_buttons(true, get_string('OK', 'cobra'));
+    }
+}
