@@ -53,25 +53,30 @@ require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 
 if (!has_capability('mod/cobra:edit', $context)) {
-      redirect('view.php?id='.$cm->id);
+    redirect('view.php?id='.$cm->id);
 }
 
 /*
  * Init request vars.
  */
 
-$acceptedcmdlist = array(  'rqexport', 'exexport', 'rqcompare', 'excompare' );
+$cmd = optional_param('cmd', '', PARAM_ALPHANUM);
+$acceptedcmdlist = array('rqexport', 'exexport', 'rqcompare', 'excompare');
+if (!in_array($cmd, $acceptedcmdlist)) {
+    $cmd = 'rqexport';
+}
 
-$cmd = isset( $_REQUEST['cmd'] ) && in_array( $_REQUEST['cmd'], $acceptedcmdlist ) ? $_REQUEST['cmd'] : null;
+
 
 $collectionlist = cobra_get_registered_collections('visible');
+$out = '';
 
 if ($cmd == 'exexport') {
     $glossary = array();
     foreach ($collectionlist as $collection) {
         $textlist = cobra_load_text_list( $collection->id_collection, 'visible' );
         foreach ($textlist as $num => $text) {
-            if (array_key_exists($text->id, $_REQUEST)) {
+            if ($_REQUEST['text_'.$text->id]) {
                 $textid = $text->id_text;
                 $glossary2 = cobra_get_glossary_for_text ( $textid );
                 if (array_key_exists( $text->id_text, $glossary2 )) {
@@ -85,84 +90,52 @@ if ($cmd == 'exexport') {
 }
 
 // Print the page header.
-
 $PAGE->set_url('/mod/cobra/view.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/cobra/glossary.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
+
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
-$PAGE->requires->jquery();
-$PAGE->requires->js('/mod/cobra/js/cobra.js');
-$PAGE->requires->js_init_call('M.mod_cobra.select_all');
+print $OUTPUT->header();
 
-echo $OUTPUT->header();
+switch ($cmd) {
+    case 'rqexport' : $heading = get_string('modulename', 'cobra') . ' - ' . get_string('exportglossary', 'cobra');;
+        break;
+    case 'rqcompare' : $heading = get_string('modulename', 'cobra') . ' - ' . get_string('comparetextwithglossary', 'cobra');
+        break;
+    case 'excompare' : $heading = get_string('modulename', 'cobra') . ' - ' . get_string('comparetextwithglossary', 'cobra');
+        break;
+}
+echo $OUTPUT->heading($heading);
 
-// Replace the following lines with you own code.
-echo $OUTPUT->heading(get_string('textreading', 'cobra'));
-
-echo $OUTPUT->box_start('Glossaire');
+echo $OUTPUT->box_start('Glossary generalbox box-content');
 
 $language = $cobra->language;
 
-$display = '';
-$out = '';
-
 if ($cmd == 'rqexport') {
-    // Show checkbox foreach text of this course.
-    $display = '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">' . "\n";
-    $display .= '<table>';
-    $display .= '<tr> <td><input type="checkbox" class="selectall" id="selectall"  >'
-            .get_string('checkuncheckall', 'cobra') .'</td></tr>';
-    foreach ($collectionlist as $collection) {
-        $textlist = cobra_load_text_list( $collection->id_collection, 'visible' );
-        foreach ($textlist as $text) {
-            // Display Title.
-            $display  .= '<tr><td style="min-width:33%;">' . "\n"
-            .    '<input class="checkbox" type="checkbox" value="true" id="textId' . $text->id . '" name="' . $text->id . '" />'
-            .    htmlspecialchars( strip_tags( $text->title) )
-            .    '</td>' . "\n"
-            .    '</tr>';
-        }
-    }
-    $display .= '<tr><td align="center"><input type="submit" value="' . get_string( 'ok' ) . '" />&nbsp; </td></tr>';
-    $display  .= '</table>';
-    $display .= '<input type="hidden" name="cmd" value="exexport" >';
-    $display .= '<input type="hidden" name="id" value="'.$id. '" >';
-    $display .= '</form>';
-    $out .= $display;
+    $url = new moodle_url('/mod/cobra/glossary.php',
+        array(
+            'id' => $id,
+            'cmd' => 'exexport'
+        )
+    );
+    $thisform = new cobra_edit_glossary_form ($url, array('collectionlist' => $collectionlist, 'compare' => false));
 } else if ($cmd == 'rqcompare') {
-    $display = '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">' . "\n";
-    $display .= '<input type="hidden" name="cmd" value="excompare" >';
-    $display .= '<input type="hidden" name="id" value="'.$id. '" >';
-    $display .= '<table>';
-    $display .= '<tr> <td colspan="2"><input type="checkbox" class="selectall" id="selectall"  >'
-        . get_string('checkuncheckall', 'cobra') .'</td></tr>';
-
-    foreach ($collectionlist as $collection) {
-        $textlist = cobra_load_text_list( $collection->id_collection, 'visible' );
-        foreach ($textlist as $text) {
-            // Display checkbox foreach text.
-            $display  .= '<tr><td style="min-width:33%;">' . "\n"
-            .    '<input type="checkbox" value="true" name="' . $text->id . '" id="textId' . $text->id . '"/>'
-            .    htmlspecialchars( strip_tags( $text->title ) )
-            .    '</td>' . "\n"
-            .    '</tr>';
-        }
-    }
-
-    $display .= get_string('text', 'cobra');
-    $display .= '<tr><td><textarea name="myText" id="myText" cols="80" rows="20" style="border-width:1px;vertical-align:middle;">'
-            . '</textarea></td></tr>'
-            . '<tr><td align="center"><input value="' . get_string ( 'ok' )
-            . '" type="submit" name="submit" />&nbsp;</td></tr>' . "\n" . '</table> </form>' . "\n";
-    $out .= $display;
+    $url = new moodle_url('/mod/cobra/glossary.php',
+        array(
+            'id' => $id,
+            'cmd' => 'excompare'
+        )
+    );
+    $thisform = new cobra_edit_glossary_form ($url, array('collectionlist' => $collectionlist, 'compare' => true));
 } else if ( $cmd == 'excompare') {
     cobra_increase_script_time();
     $glossary = array();
     foreach ($collectionlist as $collection) {
-        $textlist = cobra_load_text_list( $collection['id_collection'], 'visible' );
+        $textlist = cobra_load_text_list( $collection->id_collection, 'visible' );
         foreach ($textlist as $num => $text) {
-            if (array_key_exists($text->id, $_REQUEST)) {
+            if ($_REQUEST['text_'.$text->id]) {
                 $textid = $text->id_text;
                 $glossary2 = cobra_get_glossary_for_text ( $textid );
                 if (array_key_exists( $textid, $glossary2 )) {
@@ -175,7 +148,7 @@ if ($cmd == 'rqexport') {
 
     list( $lemmaglossary, $expglossary ) = cobra_explode_glossary_into_lemmas_and_expression( $glossary );
     $glossarylemmaid = cobra_explode_array_on_key ( $lemmaglossary, 'id' );
-    $mytext = $_REQUEST['myText'];
+    $mytext = isset($_REQUEST['mytext']) ? $_REQUEST['mytext'] : '';
     $newwords = '';
     $otherwords = '';
     $words = cobra_get_list_of_words_in_text ( $mytext, $language );
@@ -189,9 +162,9 @@ if ($cmd == 'rqexport') {
                 if (array_key_exists($lemmaid, $glossarylemmaid)) {
                     $trouve = true;
                     $info = $glossarylemmaid[$lemmaid]['entry'] . ' ('.$glossarylemmaid[$lemmaid]['category'].') - '
-                            . $glossarylemmaid[$lemmaid]['traduction'];
+                        . $glossarylemmaid[$lemmaid]['traduction'];
                     $otherwords .= '<li> ' . get_string('possibletranslations', 'cobra') . ' : '. $word . ' : '
-                            . utf8_encode($info) . '</li>';
+                        . utf8_encode($info) . '</li>';
                 }
             }
             if (!$trouve) {
@@ -207,6 +180,7 @@ if ($cmd == 'rqexport') {
     $out .= '</ul>';
 }
 
+if(!empty($thisform)) echo $thisform->display();
 echo $out;
 
 echo $OUTPUT->box_end();
