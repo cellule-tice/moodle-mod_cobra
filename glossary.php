@@ -90,7 +90,6 @@ if ($cmd == 'exexport') {
 }
 
 // Print the page header.
-$PAGE->set_url('/mod/cobra/view.php', array('id' => $cm->id));
 $PAGE->set_url('/mod/cobra/glossary.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
