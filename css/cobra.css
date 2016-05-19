@@ -412,14 +412,20 @@ p{
     text-align: center;
 }
 
-.noblocks .block-region {
+.noblocks .block-region, .noblocks .sklt-container .four.columns.leftsidebar {
     display:none;
 }
 
-.noblocks #region-main-box, .noblocks #region-main-box .row-fluid .span8 {
+.noblocks #region-main-box, .noblocks #region-main-box .row-fluid .span8,
+.noblocks .sklt-container .twelve.columns {
     width: 100% !important;
 }
 
 .noblocks #region-main-box #glossary {
     width: 32%;
+}
+
+#page-mod-cobra-statistics fieldset.hidden, #page-mod-cobra-glossary fieldset.hidden {
+    display: inherit !important;
+    visibility: inherit !important;
 }
