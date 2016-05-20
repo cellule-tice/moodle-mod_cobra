@@ -71,6 +71,9 @@ if ($isallowedtoedit) {
 } else {
     $collectionlist = cobra_get_registered_collections('visible');
 }
+if (empty($collectionlist)) {
+    $content .= $OUTPUT->notification(get_string('nocollectionsmessage', 'cobra'), 'notifywarning');
+}
 foreach ($collectionlist as $collection) {
     $content .= html_writer::tag('h3', $collection->local_label);
     $table = new html_table();
@@ -149,7 +152,7 @@ foreach ($collectionlist as $collection) {
         }
     } else {
         $row = new html_table_row();
-        $cell = new html_table_cell('no text');
+        $cell = new html_table_cell(get_string('notexts', 'cobra'));
         $cell->colspan = $isallowedtoedit ? '4' : '2';
         $cell->attributes['class'] = 'text-center';
         $table->data[]= $row;
