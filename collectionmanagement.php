@@ -324,7 +324,7 @@ foreach ($registeredcollectionslist as $collection) {
 }
 if (!count($registeredcollectionslist)) {
     $row = new html_table_row();
-    $cell = new html_table_cell('no collection registered');
+    $cell = new html_table_cell(get_string('nocollections', 'cobra'));
     $cell->colspan = '6';
     $cell->style = 'text-align:center;';
     $row->cells[] = $cell;
