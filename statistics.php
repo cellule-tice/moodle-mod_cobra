@@ -48,7 +48,7 @@ $cmd = optional_param('cmd', null, PARAM_ALPHANUM);
 
 // Print the page header.
 
-$PAGE->set_url('/mod/cobra/statistics.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/cobra/statistics.php', array('id' => $cm->id, 'view' => $view));
 $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
