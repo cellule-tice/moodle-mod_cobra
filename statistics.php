@@ -120,50 +120,37 @@ if (!is_null($cmd)) {
 if ( !is_null( $view ) ) {
     switch ($view) {
         case '1' :
-            $out .= '<h3><small>' . get_string( 'topclickedentries', 'cobra' ) . '</small></h3>';
-            $out .= '<table class="table table-condensed table-hover table-striped">'
-                 .  '<thead>'
-                 .  '<tr class="headerX">'
-                 .  '<th> Nombre total de clics </th>'
-                 .  '<th>' . get_string( 'entry', 'cobra' ) . '</th>'
-                 .  '<th>' . get_string( 'translation', 'cobra' ) . '</th>'
-                 .  '<th>' . get_string( 'category' ) . '</th>'
-                 .  '</tr>'
-                 .  '</thead>';
-
+            $out .= html_writer::label(get_string('topclickedentries', 'cobra'), 'topclickedentries');
+            $mytable = new html_table();
+            $mytable->attributes = array('class' =>' table table-condensed table-hover table-striped');
+            $mytable->head = array(get_string('totalclicnumber', 'cobra'), get_string('entry', 'cobra'), get_string ('translation', 'cobra'),
+                get_string( 'category' ));
             $list = cobra_get_clicked_entries ($course->id, 20);
             foreach ($list as $lingentityid => $nb) {
                 list( $conceptid, $construction, $entrytype, $category ) = cobra_get_concept_info_from_ling_entity($lingentityid);
-                $out .= '<tr>'
-                     .  '<td>' . $nb . '</td>'
-                     .  '<td>' . $construction . '</td>'
-                     .  '<td>' . cobra_get_translations( $conceptid, $entrytype ) . '</td>'
-                     .  '<td>' . $category . '</td>'
-                     .  '</tr>';
+                $row = new html_table_row();
+                $row->cells[] = $nb;
+                $row->cells[] = $construction;
+                $row->cells[] = cobra_get_translations( $conceptid, $entrytype );
+                $row->cells[] = $category;
+                $mytable->data[] = $row;
             }
-            $out .= '</table>';
+            $out .= html_writer::table($mytable);
             break;
 
         case '2' :
-            $out .= '<h3><small>' . get_string( 'topclickedentriespertext', 'cobra' )
-                . '</small></h3>';
+            $out .= html_writer::label( get_string( 'topclickedentriespertext', 'cobra'), 'topclickedentriespertext');
             $collectionlist = cobra_get_registered_collections( 'all' );
             foreach ($collectionlist as $collection) {
                 $textlist = cobra_load_text_list( $collection->id_collection, 'all' );
-
-                $out .= '<table>'
-                     .  '<thead>'
-                     .  '<tr class="superHeader"><th colspan="5">' . get_string( 'collection', 'cobra' ) . '&nbsp;:&nbsp;'
-                        . $collection->local_label . '</th></tr>'
-                     .  '<tr class="headerX">'
-                     .  '<th> Texte </th>'
-                     .  '<th> Nombre de clics </th>'
-                     .  '<th>' . get_string( 'entry', 'cobra' ) . '</th>'
-                     .  '<th>' . get_string( 'translation', 'cobra' ) . '</th>'
-                     .  '<th>' . get_string( 'category' ) . '</th>'
-                     .  '</tr>'
-                     .  '</thead>';
-
+                $out .= html_writer::start_div();
+                $out .= html_writer::label(get_string( 'collection', 'cobra' ) . ' ' . $collection->local_label, $collection->local_label,
+                        true, array('class' => 'cobralabel'));
+                $table = new html_table();
+                $table->attributes = array('style' => 'width:100%');
+                $table->head = array(get_string('text', 'cobra'), get_string('clicnumber', 'cobra'),get_string( 'entry', 'cobra' ),
+                    get_string( 'translation', 'cobra' ), get_string( 'category' ));
+                $table->headspan = array(1,1,1,1,1);
 
                 foreach ($textlist as $textinfo) {
                     $textid = $textinfo->id_text;
@@ -177,28 +164,29 @@ if ( !is_null( $view ) ) {
                         $lingentityid = $info2->id_entite_ling;
                         $nbclics  = $info2->nbclicsstats;
                         $nbmots++;
-                        $out .= '<tr><td>';
+                        $row = new html_table_row();
                         if ($nbmots == 1) {
-                            $out .= $texttitle;
+                            $row->cells[] = $texttitle;
+                        } else {
+                            $row->cells[] = '&nbsp;';
                         }
-                        $out .= '&nbsp; </td>';
 
                         list($conceptid, $construction, $entrytype, $category)
                                 = cobra_get_concept_info_from_ling_entity($lingentityid);
-
-                        $out .= '<td>' . $nbclics  . '</td>'
-                             .  '<td>' . $construction . '</td>'
-                             .  '<td>' . cobra_get_translations($conceptid, $entrytype) . '</td>'
-                             .  '<td>' . $category . '</td>'
-                             .  '</tr>';
+                        $row->cells[] = $nbclics;
+                        $row->cells[] = $construction;
+                        $row->cells[] = cobra_get_translations($conceptid, $entrytype);
+                        $row->cells[] = $category;
+                        $table->data[] = $row;
                     }
                 }
-                $out .= '</table>';
+                $out .= html_writer::table($table);
+                 $out .= html_writer::end_div();
             }
             break;
 
         case '3' :
-            $out .= '<h3><small>' . get_string( 'topclickedtexts', 'cobra' ) . '</small></h3>';
+            $out .= html_writer::label(get_string( 'topclickedtexts', 'cobra' ), 'topclickedtexts');
             $collectionlist = cobra_get_registered_collections( 'all' );
             foreach ($collectionlist as $collection) {
                 $textlist = cobra_load_text_list( $collection->id_collection, 'all' );
@@ -206,74 +194,75 @@ if ( !is_null( $view ) ) {
                 foreach ($textlist as $text) {
                     $textinfo[$text->id_text] = $text->title;
                 }
-
-                $out .= '<table class="claroTable emphaseLine">'
-                     .  '<thead>'
-                     .  '<tr class="superHeader"><th colspan="2">' . get_string( 'collection', 'cobra' ) . '&nbsp;:&nbsp;'
-                        . $collection->local_label . '</th></tr>'
-                     .  '<tr class="headerX">'
-                     .  '<th> Nombre total de clics </th>'
-                     .  '<th> Texte </th>'
-                     .  '</tr>'
-                     .  '</thead>';
+                $out .= html_writer::start_div();
+                $out .= html_writer::label(get_string( 'collection', 'cobra' ) . ' ' . $collection->local_label, $collection->local_label,
+                        true, array('class' => 'cobralabel'));
+                $table = new html_table();
+                $table->attributes = array('class' => 'emphaseLine');
+                $table->head = array(get_string('totalclicnumber', 'cobra'), get_string('text', 'cobra'));
                 $nbclicslist = cobra_get_clicked_texts_frequency($course->id);
                 foreach ($nbclicslist as $textid => $nbtotalclics) {
                     if ( isset( $textinfo[$textid] ) ) {
-                        $out .= '<tr>'
-                             .  '<td>' . $nbtotalclics . '</td>'
-                             .  '<td>' . $textinfo[$textid] . '</td>'
-                             .  '</tr>';
+                        $row = new html_table_row();
+                        $cell = new html_table_cell();
+                        $cell->text = $nbtotalclics;
+                        $cell->style = "text-align:center";
+                        $row->cells[] = $cell;
+                        $row->cells[] = strip_tags($textinfo[$textid]);
+                        $table->data[] = $row;
                     }
                 }
-                $out .= '</table>';
+                $out .= html_writer::table($table);
+                $out .= html_writer::end_div();
             }
             break;
         case '4' :
+            $out .= html_writer::label(get_string( 'statisticspertext', 'cobra' ), 'statisticspertext');
             $collectionlist = cobra_get_registered_collections( 'all' );
             foreach ($collectionlist as $collection) {
-                $out .= '<table class="claroTable emphaseLine textList" width="100%" border="0" '.
-                        'cellspacing="2" style="margin-bottom:20px;">'
-                      . "\n"
-                .  '<thead>' . "\n"
-                .  '<tr class="superHeader" align="center" valign="top"><th colspan="4">' . $collection->local_label
-                . '</th></tr>' . "\n"
-                .  '<tr class="headerX" align="center" valign="top">' . "\n"
-                .  '<th>' . get_string( 'text', 'cobra' ) . '</th>' . "\n"
-                .  '<th>' . get_string( 'clickablewordscount', 'cobra' ) . '</th>' . "\n"
-                .  '<th>' . get_string( 'uniqueusers', 'cobra' ) . '</th>' . "\n"
-                .  '<th>' . get_string( 'clickcount', 'cobra' ) . '</th>' . "\n";
+                $out .= html_writer::start_div();
+                $out .= html_writer::label(get_string( 'collection', 'cobra' ) . ' ' . $collection->local_label, $collection->local_label,
+                        true, array('class' => 'cobralabel'));
+                $table = new html_table();
+                $table->head = array( get_string( 'text', 'cobra'), get_string( 'clickablewordscount', 'cobra'),
+                    get_string( 'uniqueusers', 'cobra'),  get_string( 'clickcount', 'cobra'));
+
                 $textlist = cobra_load_text_list( $collection->id_collection, 'all' );
                 foreach ($textlist as $text) {
-                    $out .= '<tr> <td>' . $text->title. '</td>' . "\n"
-                            . '<td>' . cobra_get_nb_tags_in_text ($text->id_text) . '</td>' . "\n"
-                            . '<td> ' . count(cobra_get_distinct_access_for_text($text->id_text)).' </td>' . "\n"
-                            . '<td> ' . cobra_get_nb_clics_for_text($text->id_text). '</td> </tr>' . "\n";
+                    $row = new html_table_row();
+                    $row->cells[] = strip_tags( $text->title);
+                    $row->cells[] = cobra_get_nb_tags_in_text ($text->id_text);
+                    $row->cells[] = count(cobra_get_distinct_access_for_text($text->id_text));
+                    $row->cells[] = cobra_get_nb_clics_for_text($text->id_text);
+                    $table->data[] = $row;
                 }
-                $out .= '</table>';
+                $out .= html_writer::table($table);
+                $out .= html_writer::end_div();
             }
             break;
         case '5' :
+             $out .= html_writer::label(get_string( 'statisticsperuser', 'cobra' ), 'statisticsperuse');
             $usercliclist = cobra_get_user_list_for_clic ();
             if (!empty($usercliclist)) {
-                $out .= '<table class="claroTable emphaseLine textList" width="100%" border="0" '
-                      . 'cellspacing="2" style="margin-bottom:20px;">' . "\n"
-                .  '<thead>' . "\n"
-                .  '<tr class="headerX" align="center" valign="top">' . "\n"
-                .  '<th>' . get_string( 'user' ) . '</th>' . "\n"
-                .  '<th>' . get_string( 'textcount', 'cobra' ) . '</th>' . "\n"
-                .  '<th>' . get_string( 'clickcount', 'cobra' ) . '</th>' . "\n";
+                $table = new html_table();
+                $table->attributes = array('class' => 'emphaseLine textList');
+                $table->head = array(get_string( 'user' ), get_string( 'textcount', 'cobra' ), get_string( 'clickcount', 'cobra' ));
 
                 foreach ($usercliclist as $userinfo) {
-                    $out .= '<tr> <td> '. $userinfo['lastName'] . ' ' . $userinfo['firstName'] . '</td>' . "\n"
-                         . '<td> ' . cobra_get_nb_texts_for_user($userinfo['userId']) . '</td>' . "\n"
-                         . '<td> ' . cobra_get_nb_clic_for_user ($userinfo['userId']) . '</td></tr>'  . "\n";
+                    $row = new html_table_row();
+                    $row->style = 'text-align:center';
+                    $row->cells[] = $userinfo['lastName'] . ' ' . $userinfo['firstName'];
+                    $row->cells[] = cobra_get_nb_texts_for_user($userinfo['userId']);
+                    $row->cells[] = cobra_get_nb_clic_for_user ($userinfo['userId']);
+                    $table->data[] = $row;
                 }
                 if (cobra_has_anonymous_clic()) {
-                    $out .= '<tr> <td> '. get_string('Anonymous', 'cobra') . '</td>' . "\n"
-                         . '<td> ' . cobra_get_nb_texts_for_user('0') . '</td>' . "\n"
-                         . '<td> ' . cobra_get_nb_clic_for_user ('0') . '</td></tr>'  . "\n";
+                    $row = new html_table_row();
+                    $row->cells[] = get_string('Anonymous', 'cobra');
+                    $row->cells[] = cobra_get_nb_texts_for_user('0');
+                    $row->cells[] = cobra_get_nb_clic_for_user ('0');
                 }
-                $out .= '</table>';
+                $out .= html_writer::table($table);
             }
             break;
     }

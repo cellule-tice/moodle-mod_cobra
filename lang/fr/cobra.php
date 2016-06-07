@@ -137,3 +137,5 @@ $string['userglossary'] = 'Glossaire personnalisé';
 $string['userglossary_help'] = 'Permet aux étudiants de construire leur propre glossaire au fur et à mesure de la lecture des textes';
 $string['visibility'] = 'Visibilité';
 $string['warningdeletepermanent'] = 'La suppression est définitive, impossible de revenir en arrière';
+$string['clicnumber'] = 'Nombre de clics';
+$string['totalclicnumber'] = 'Nombre total de clics';

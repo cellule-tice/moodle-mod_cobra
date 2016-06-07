@@ -137,3 +137,5 @@ $string['userglossary'] = 'User glossary';
 $string['userglossary_help'] = 'Allows students to build their own personal glossary dynamically while reading texts';
 $string['visibility'] = 'Visibility';
 $string['warningdeletepermanent'] = 'Delete is permanent! There is no way to rollback';
+$string['clicnumber'] = 'Clic number';
+$string['totalclicnumber'] = 'Total clic number';
