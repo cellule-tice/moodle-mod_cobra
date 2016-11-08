@@ -220,7 +220,7 @@ function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $
  * context when this is called
  *
  * @param settings_navigation $settings
- * @param navigation_node $quiznode
+ * @param navigation_node $cobranode
  * @return void
  */
 function cobra_extend_settings_navigation($settings, $cobranode) {
