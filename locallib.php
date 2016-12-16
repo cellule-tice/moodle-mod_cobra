@@ -637,12 +637,13 @@ function cobra_get_user_list_for_clic() {
     $userlist = array();
     foreach ($list as $info) {
         $user = $DB->get_record_select('user', "id='$info->user_id'");
-        $userlist[] = array(
+        $userlist[$user->lastname . '_' . $user->firstname] = array(
             'userId' => $info->user_id,
             'lastName' => $user->lastname,
             'firstName' => $user->firstname
         );
     }
+    ksort($userlist);
     return $userlist;
 }
 
@@ -723,8 +724,11 @@ function cobra_get_clicked_entries($courseid, $nb = 20) {
     $list = $DB->get_records_select('cobra_clic', "course='$courseid' GROUP BY id_entite_ling HAVING nb >=' $nb' ",
             $params, 'id_entite_ling ASC LIMIT 100', 'id_entite_ling, SUM(nbclicsstats) AS nb');
     foreach ($list as $info) {
-        $nbtotalclics = $info->nb;
-        $nbcliclist[$info->id_entite_ling] = $nbtotalclics;
+        if ($info->id_entite_ling > 0)
+        {
+            $nbtotalclics = $info->nb;
+            $nbcliclist[$info->id_entite_ling] = $nbtotalclics;
+        }
     }
     return $nbcliclist;
 }

@@ -127,13 +127,16 @@ if ( !is_null( $view ) ) {
                 get_string( 'category' ));
             $list = cobra_get_clicked_entries ($course->id, 20);
             foreach ($list as $lingentityid => $nb) {
-                list( $conceptid, $construction, $entrytype, $category ) = cobra_get_concept_info_from_ling_entity($lingentityid);
-                $row = new html_table_row();
-                $row->cells[] = $nb;
-                $row->cells[] = $construction;
-                $row->cells[] = cobra_get_translations( $conceptid, $entrytype );
-                $row->cells[] = $category;
-                $mytable->data[] = $row;
+                if ($lingentityid > 0)
+                {
+                    list( $conceptid, $construction, $entrytype, $category ) = cobra_get_concept_info_from_ling_entity($lingentityid);
+                    $row = new html_table_row();
+                    $row->cells[] = $nb;
+                    $row->cells[] = $construction;
+                    $row->cells[] = cobra_get_translations( $conceptid, $entrytype );
+                    $row->cells[] = $category;
+                    $mytable->data[] = $row;
+                }
             }
             $out .= html_writer::table($mytable);
             break;
@@ -250,10 +253,18 @@ if ( !is_null( $view ) ) {
 
                 foreach ($usercliclist as $userinfo) {
                     $row = new html_table_row();
-                    $row->style = 'text-align:center';
-                    $row->cells[] = $userinfo['lastName'] . ' ' . $userinfo['firstName'];
-                    $row->cells[] = cobra_get_nb_texts_for_user($userinfo['userId']);
-                    $row->cells[] = cobra_get_nb_clic_for_user ($userinfo['userId']);
+                    $cell = new html_table_cell();
+                    $cell->text = $userinfo['lastName'] . ' ' . $userinfo['firstName'];
+                    $cell->attributes = array('align' => 'left');
+                    $row->cells[] = $cell;
+                    $cell = new html_table_cell();
+                    $cell->text = cobra_get_nb_texts_for_user($userinfo['userId']);
+                    $cell->attributes = array('align' => 'center');
+                    $row->cells[] = $cell;
+                    $cell = new html_table_cell();
+                    $cell->text = cobra_get_nb_clic_for_user ($userinfo['userId']);
+                    $cell->attributes = array('align' => 'center');
+                    $row->cells[] = $cell;
                     $table->data[] = $row;
                 }
                 if (cobra_has_anonymous_clic()) {
