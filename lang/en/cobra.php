@@ -139,3 +139,4 @@ $string['visibility'] = 'Visibility';
 $string['warningdeletepermanent'] = 'Delete is permanent! There is no way to rollback';
 $string['clicnumber'] = 'Clic number';
 $string['totalclicnumber'] = 'Total clic number';
+$string['CECR_level'] = 'CECR';

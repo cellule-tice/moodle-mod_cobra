@@ -139,3 +139,4 @@ $string['visibility'] = 'Visibilité';
 $string['warningdeletepermanent'] = 'La suppression est définitive, impossible de revenir en arrière';
 $string['clicnumber'] = 'Nombre de clics';
 $string['totalclicnumber'] = 'Nombre total de clics';
+$string['CECR_level'] = 'CECR';
