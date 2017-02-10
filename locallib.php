@@ -86,6 +86,7 @@ function cobra_load_text_list($collection, $loadmode = 'all') {
             if ($text->id_text == $textojbect->id) {
                 $text->title = $textojbect->title;
                 $text->source = $textojbect->source;
+                $text->level = $textojbect->level;
             }
         }
         $textlist[] = $text;

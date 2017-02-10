@@ -86,6 +86,8 @@ foreach ($collectionlist as $collection) {
 
     if ($isallowedtoedit) {
         // Add teacher only columns
+        $headercell5 = new html_table_cell(get_string('CECR_level', 'mod_cobra'));
+         $table->head[] = $headercell5;
         $headercell3 = new html_table_cell(get_string('move'));
         $headercell4 = new html_table_cell(get_string('visibility', 'cobra'));
         $table->head[] = $headercell3;
@@ -120,12 +122,18 @@ foreach ($collectionlist as $collection) {
             $row->cells[] = $cell;
 
             $cell = new html_table_cell();
-            $cell->style = 'width:350px';
+            $cell->style = 'width:300px';
             $cell->attributes['title'] = $text->source;
             $cell->text = substr($text->source, 0, 30) . '...';
             $row->cells[] = $cell;
 
             if ($isallowedtoedit) {
+                $cell = new html_table_cell();
+                $cell->style = 'width:50px';
+                $cell->attributes['title'] = $text->level;
+                $cell->attributes['class'] = 'text-center';
+                $cell->text = $text->level;
+                $row->cells[] = $cell;
                 // Change position commands.
                 $cell = new html_table_cell();
                 $cell->attributes['class'] = 'text-center';
