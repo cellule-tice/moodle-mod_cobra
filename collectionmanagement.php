@@ -132,6 +132,7 @@ if ('rqEditLabel' == $cmd) {
     }
 } else if ('exRemove' == $cmd) {
     $collection = new cobra_collection_wrapper($collectionid);
+    $collection->load();
     if (cobra_remove_text_list($collection->get_remote_id())) {
         if (!$collection->remove()) {
             $content .= $OUTPUT->notification(get_string('unableunregistercollection', 'cobra'));
