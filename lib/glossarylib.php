@@ -112,9 +112,12 @@ function cobra_get_glossary_for_text($textid) {
         foreach ($conceptidlist as $conceptid) {
             if (!in_array($conceptid, $oldconceptlist)) {
                 $params = array('conceptId' => $conceptid, 'entryType' => $entrytype);
-                $entitylingid = cobra_remote_service::call('getEntityLingIdFromConcept', $params);
-                $glossary[$textid][] = $entitylingid;
-                $oldconceptlist[] = $conceptid;
+                $entitylingid = cobra_remote_service::call('getEntityLingIdFromConcept', $params);   
+                // Permet d'éviter d'avoir un message d'erreur de cobra
+                if ($entitylingid != '-1') {
+                    $glossary[$textid][] = $entitylingid;
+                    $oldconceptlist[] = $conceptid;
+                } 
             }
         }
     }
