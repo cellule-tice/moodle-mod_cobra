@@ -679,7 +679,7 @@ function cobra_get_next_textid($text) {
     $textcollectionid = $text->get_collection_id();
     $textposition = $text->get_position();
     $list = $DB->get_records_select('cobra_texts_config',
-            "course='$course->id' AND id_collection='$textcollectionid' AND position > '$textposition'",
+            "course='$course->id' AND id_collection='$textcollectionid' AND position > '$textposition' AND visibility=1",
             array(), 'position ASC', 'id_text', 0, 1);
     if (empty($list)) {
         return false;
@@ -693,7 +693,7 @@ function cobra_get_previous_textid($text) {
     $textcollectionid = $text->get_collection_id();
     $textposition = $text->get_position();
     $list = $DB->get_records_select('cobra_texts_config',
-            "course='$course->id' AND id_collection='$textcollectionid' AND position < '$textposition'", array(), 'position ASC',
+            "course='$course->id' AND id_collection='$textcollectionid' AND position < '$textposition' AND visibility=1", array(), 'position ASC',
             'id_text', 0, 1);
     if (empty($list)) {
         return false;
