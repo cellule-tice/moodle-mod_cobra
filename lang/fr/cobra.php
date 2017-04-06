@@ -140,3 +140,4 @@ $string['warningdeletepermanent'] = 'La suppression est définitive, impossible 
 $string['clicnumber'] = 'Nombre de clics';
 $string['totalclicnumber'] = 'Nombre total de clics';
 $string['CECR_level'] = 'CECR';
+$string['mytext'] = 'Mon texte';

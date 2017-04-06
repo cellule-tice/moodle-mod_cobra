@@ -140,3 +140,4 @@ $string['warningdeletepermanent'] = 'Delete is permanent! There is no way to rol
 $string['clicnumber'] = 'Clic number';
 $string['totalclicnumber'] = 'Total clic number';
 $string['CECR_level'] = 'CECR';
+$string['mytext'] = 'My text';
