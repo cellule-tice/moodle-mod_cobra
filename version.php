@@ -21,14 +21,14 @@
  * See https://docs.moodle.org/dev/version.php for more info.
  *
  * @package    mod_cobra
- * @copyright  2015 Your Name <your@email.address>
+ * @copyright  2016 - Cellule TICE - Unversite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_cobra';
-$plugin->version = 2017020902;
+$plugin->version = 2017020903;
 $plugin->release = 'v1.0-stable';
 $plugin->requires = 2014051200;
 $plugin->maturity = MATURITY_STABLE;
