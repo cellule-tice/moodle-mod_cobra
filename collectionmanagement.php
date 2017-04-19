@@ -339,15 +339,22 @@ $content .= html_writer::end_tag('div');
 $content .= html_writer::tag('h3', get_string('collectionsavailable', 'cobra'));
 $table = new html_table();
 $table->attributes['class'] = 'admintable generaltable';
+$headercell0 = new html_table_cell(get_string('institutionname', 'cobra'));
+$headercell0->style = 'text-align:left;';
 $headercell1 = new html_table_cell(get_string('collectionname', 'cobra'));
 $headercell1->style = 'text-align:left;';
 $headercell2 = new html_table_cell(get_string('add'));
 $headercell2->attributes['class'] = 'text-center';
-$table->head = array($headercell1, $headercell2);
+$table->head = array($headercell0, $headercell1, $headercell2);
 
 $availablecollectionslist = cobra_get_filtered_collections($cobra->language, $idlist);
 foreach ($availablecollectionslist as $collection) {
     $row = new html_table_row();
+    $cell = new html_table_cell();
+    $cell->text = $collection['institution'];
+    $cell->attributes['class'] = 'text-left';
+    $row->cells[] = $cell;
+    
     $cell = new html_table_cell();
     $cell->text = html_writer::tag('i', '', array('class' => 'fa fa-list')) . $collection['label'];
     $cell->attributes['class'] = 'text-left';

@@ -141,3 +141,4 @@ $string['clicnumber'] = 'Nombre de clics';
 $string['totalclicnumber'] = 'Nombre total de clics';
 $string['CECR_level'] = 'CECR';
 $string['mytext'] = 'Mon texte';
+$string['institutionname'] = 'Institution';

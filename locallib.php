@@ -242,7 +242,8 @@ function cobra_get_filtered_collections($language, $exclusionlist = array()) {
         }
         $collections[] = array(
             'remoteid' => $remotecollection->id,
-            'label' => $remotecollection->label
+            'label' => $remotecollection->label, 
+            'institution' => $remotecollection->institution
         );
     }
     return $collections;
@@ -551,7 +552,7 @@ function cobra_http_request($url) {
         }
     } else if (function_exists('curl_init')) {
         if (!$response = cobra_curl_request($url)) {
-            return false;
+           return false;
         } else {
             return $response;
         }
