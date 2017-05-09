@@ -48,7 +48,7 @@ class cobra_remote_service {
         );
         $response = new stdClass();
         $site = get_site();
-        $url = $CFG->cobra_serverhost;
+        $url = get_config('mod_cobra', 'serviceurl');
 
         $params['caller'] = $site->shortname;
         $params['from'] = 'moodle';

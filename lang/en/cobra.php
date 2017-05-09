@@ -48,7 +48,7 @@ $string['cobra:view'] = 'Voir';
 $string['cobraname'] = 'Name';
 $string['cobraname_help'] = 'Name given to this resource inside your course.
 Default is "Reading assistant"';
-$string['cobraserverhost'] = 'URL of webservices';
+$string['cobraserviceurl'] = 'URL of webservices';
 $string['collection'] = 'Collection';
 $string['collectionname'] = 'Collection name';
 $string['collectionnamechanged'] = 'Collection name changed';
@@ -142,3 +142,42 @@ $string['totalclicnumber'] = 'Total clic number';
 $string['CECR_level'] = 'CECR';
 $string['mytext'] = 'My text';
 $string['institutionname'] = 'Institution';
+$string['defaultcorpusselection'] = 'Default corpus selection';
+$string['forenglish'] = 'For English';
+$string['forenglish_desc'] = 'Default selection and order of corpus types you want to collect examples from (comma separated list). <br/>Available types are :<br/>
+<ul style="width:50%;">
+<li style="background-color: #CCFFCC">1 : everyday speech edited by UNamur</li>
+<li style="background-color: #99FF99">11 : everyday speech</li>
+<li style="background-color: #FFCC99">21 : politics</li>
+<li style="background-color: #99CCFF">32 : arts and history</li>
+<li style="background-color: #FFFF66">42 : computer science</li>
+<li style="background-color: #CC99CC">51 : science edited by UNamur</li>
+<li style="background-color: #CCCCFF">52 : science</li>
+<li style="background-color: #FFCCCC">62 : economics</li>
+</ul>';
+$string['fordutch'] = 'For Dutch';
+$string['fordutch_desc'] = 'Default selection and order of corpus types you want to collect examples from (comma separated list). <br/>Available types are :<br/>
+<ul style="width:50%;">
+<li style="background-color: #CCFFCC">1 : everyday speech edited by UNamur</li>
+<li style="background-color: #99FF99">11 : everyday speech</li>
+<li style="background-color: #FFCC99">21 : politics</li>
+<li style="background-color: #FF9966">22 : law</li>
+<li style="background-color: #99CCFF">32 : arts and history</li>
+<li style="background-color: #FFFF66">42 : computer science</li>
+<li style="background-color: #CCCCFF">52 : science</li>
+<li style="background-color: #FFCCCC">62 : economics</li>
+</ul>';
+$string['defaultflag'] = 'Keep as default';
+$string['defaultflag_help'] = 'Keep these settings as default for future texts';
+$string['corpusselection_help'] = 'Default selection and order of corpus types you want to collect examples from (comma separated list). <br/>Available types are :<br/>
+<ul>
+<li class="usuel_FUNDP">1 : everyday speech edited by UNamur</li>
+<li class="usuel">11 : everyday speech</li>
+<li class="semi-technique">21 : politics</li>
+<li class="technique">22 : law (Dutch only)</li>
+<li class="histoire">32 : arts and history</li>
+<li class="informatique">42 : computer science</li>
+<li class="sciences_FUNDP">51 : science edited by UNamur (English only)</li>
+<li class="sciences">52 : science</li>
+<li class="eco">62 : economics</li>
+</ul>';
