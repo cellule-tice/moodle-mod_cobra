@@ -20,9 +20,10 @@
  * It uses the standard core Moodle formslib. For more info about them, please
  * visit: http://docs.moodle.org/en/Development:lib/formslib.php
  *
- * @package    mod_cobra
+ *147 @package    mod_cobra
  * @author     Jean-Roch Meurisse
- * @copyright  2016 - Cellule TICE - Unversite de Namur
+ * @author     Laurence Dumortier
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -244,7 +245,7 @@ class mod_cobra_mod_form extends moodleform_mod {
         if ($mform->elementExists('collection')) {
             $collectionset = $mform->getElementValue('collection');
             if (is_array($collectionset) && !empty($collectionset[0])) {
-                $texts = cobra_get_text_optionlist($collectionset[0]);
+                $texts = cobra_get_text_optionslist($collectionset[0]);
                 $texts = array('0' => '-') + $texts;
                 $mform->addElement('select', 'text', get_string('text', 'cobra'), $texts);
                 //$mform->addHelpButton('collection', '', '');
