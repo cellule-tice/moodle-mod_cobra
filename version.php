@@ -28,9 +28,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_cobra';
-$plugin->version = 2017020904;
-$plugin->release = 'v1.0-stable';
-$plugin->requires = 2014051200;
-$plugin->maturity = MATURITY_STABLE;
+$plugin->version = 2017050800;
+$plugin->release = 'v2.0-DEV';
+$plugin->requires = 2016120503;
+$plugin->maturity = MATURITY_ALPHA;
 $plugin->cron = 0;
 $plugin->dependencies = array();
