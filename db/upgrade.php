@@ -176,5 +176,51 @@ function xmldb_cobra_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016051800, 'cobra');
     }
 
+    if ($oldversion < 2017050800) {
+
+        // Define field collection to be added to cobra.
+        $table = new xmldb_table('cobra');
+        $field = new xmldb_field('collection', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, '0', 'course');
+
+        // Conditionally launch add field collection.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field text to be added to cobra.
+        $field = new xmldb_field('text', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, '0', 'collection');
+
+        // Conditionally launch add field text.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('isdefaultdisplayprefs', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'annotations');
+
+        // Conditionally launch add field isdefaultcorpusorder.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field corpusorder to be added to cobra.
+        $field = new xmldb_field('corpusorder', XMLDB_TYPE_CHAR, '64', null, XMLDB_NOTNULL, null, null, 'annotations');
+
+        // Conditionally launch add field corpusorder.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('isdefaultcorpusorder', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'corpusorder');
+
+        // Conditionally launch add field isdefaultcorpusorder.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2017042401, 'cobra');
+    }
+
+
+
     return true;
 }
