@@ -20,7 +20,7 @@
  * It uses the standard core Moodle formslib. For more info about them, please
  * visit: http://docs.moodle.org/en/Development:lib/formslib.php
  *
- *147 @package    mod_cobra
+ * @package    mod_cobra
  * @author     Jean-Roch Meurisse
  * @author     Laurence Dumortier
  * @copyright  2016 onwards - Cellule TICE - Universite de Namur
@@ -44,7 +44,8 @@ class mod_cobra_mod_form extends moodleform_mod {
         $jsparams['en'] = cobra_get_default_corpus_order($COURSE->id, 'EN');
         $jsparams['nl'] = cobra_get_default_corpus_order($COURSE->id, 'NL');
         $PAGE->requires->css('/mod/cobra/css/cobra.css');
-        $PAGE->requires->js_call_amd('mod_cobra/cobra', 'mod_form_triggers', array(json_encode($jsparams)));
+        $PAGE->requires->js_call_amd('mod_cobra/cobra', 'init', array(json_encode($jsparams)));
+        $PAGE->requires->js_call_amd('mod_cobra/cobra', 'mod_form_triggers');
 
         // Are we adding or updating a CoBRA resource
         $mode = optional_param('add', null, PARAM_ALPHA);
@@ -269,6 +270,5 @@ class mod_cobra_mod_form extends moodleform_mod {
                            WHERE course = :courseid',
                 array('courseid' => $COURSE->id));
         };
-
     }
 }
