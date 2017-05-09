@@ -227,7 +227,7 @@ class mod_cobra_mod_form extends moodleform_mod {
         $mform = $this->_form;
         parent::definition_after_data();
 
-        // Get collections for selected language;
+        // Get collections for selected language.
         $languageset = $mform->getElementValue('language');
 
         // Add collection select and default corpus selection and order box when language is set
@@ -261,7 +261,6 @@ class mod_cobra_mod_form extends moodleform_mod {
                              SET isdefaultdisplayprefs = 0
                            WHERE course = :courseid',
                 array('courseid' => $COURSE->id));
-            $mform->removeElement('scrolltodisplay');
         };
         if ($mform->getElementValue('isdefaultcorpusorder')) {
 
