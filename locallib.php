@@ -21,7 +21,9 @@
  * logic, should go here. Never include this file from your lib.php!
  *
  * @package    mod_cobra
- * @copyright  2015 Your Name
+ * @author     Jean-Roch Meurisse
+ * @author     Laurence Dumortier
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -91,6 +93,21 @@ function cobra_load_text_list($collection, $loadmode = 'all') {
         }
         $textlist[] = $text;
     }
+    return $textlist;
+}
+
+function cobra_get_text_optionslist($collection, $loadmode = 'all') {
+    global $DB, $course;
+
+    $textlist = array();
+
+    $params = array('collection' => (int)$collection);
+    $remotetextobjectlist = cobra_remote_service::call('getTexts', $params);
+
+    foreach ($remotetextobjectlist as $textobject) {
+        $textlist[$textobject->id] = $textobject->title;
+    }
+    //print_object($textlist);
     return $textlist;
 }
 
@@ -246,6 +263,24 @@ function cobra_get_filtered_collections($language, $exclusionlist = array()) {
             'institution' => $remotecollection->institution
         );
     }
+    return $collections;
+}
+
+function cobra_get_filtered_collections_optionslist($language, $exclusionlist = array()) {
+    $collections = array();
+    $params = array('language' => $language);
+    $collectionsobjectlist = cobra_remote_service::call('getFilteredCollections', $params);
+    foreach ($collectionsobjectlist as $remotecollection) {
+        if (in_array($remotecollection->id, $exclusionlist)) {
+            continue;
+        }
+        /*$collections[] = array(
+            'remoteid' => $remotecollection->id,
+            'label' => $remotecollection->label
+        );*/
+        $collections[$remotecollection->id] = $remotecollection->label;
+    }
+
     return $collections;
 }
 
@@ -478,6 +513,21 @@ function cobra_get_corpus_type_display_order($returntype = 'object') {
         }
         return implode(',', $typelist);
     }
+}
+
+function cobra_get_default_corpus_order($course, $language) {
+    global $DB;
+    $corpusorder = $DB->get_field('cobra', 'corpusorder', array('course' => $course, 'language' => $language, 'isdefaultcorpusorder' => 1));
+    if (empty($corpusorder)) {
+        if ($language == 'EN') {
+            $corpusorder = get_config('mod_cobra', 'defaultcorpusorderen');
+        } else if ($language == 'NL') {
+            $corpusorder = get_config('mod_cobra', 'defaultcorpusordernl');
+        } else {
+            $corpusorder = '';
+        }
+    }
+    return $corpusorder;
 }
 
 function cobra_add_corpus_to_selection($corpustypeid) {

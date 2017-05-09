@@ -21,7 +21,9 @@
  * if you like, and it can span multiple lines.
  *
  * @package    mod_cobra
- * @copyright  2016 - Cellule TICE - Unversite de Namur
+ * @author     Jean-Roch Meurisse
+ * @author     Laurence Dumortier
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

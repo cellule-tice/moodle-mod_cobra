@@ -25,7 +25,9 @@
  * here will all be database-neutral, using the functions defined in DLL libraries.
  *
  * @package    mod_cobra
- * @copyright  2016 - Cellule TICE - Unversite de Namur
+ * @author     Jean-Roch Meurisse
+ * @author     Laurence Dumortier
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -176,7 +178,7 @@ function xmldb_cobra_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016051800, 'cobra');
     }
 
-    if ($oldversion < 2017050800) {
+    if ($oldversion < 2017050801) {
 
         // Define field collection to be added to cobra.
         $table = new xmldb_table('cobra');
@@ -217,7 +219,7 @@ function xmldb_cobra_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
         // Cobra savepoint reached.
-        upgrade_mod_savepoint(true, 2017042401, 'cobra');
+        upgrade_mod_savepoint(true, 2017050801, 'cobra');
     }
 
 
