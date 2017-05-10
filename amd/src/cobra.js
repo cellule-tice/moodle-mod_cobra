@@ -131,7 +131,7 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                     .attr('title', 'Pr&eacute;sent dans mon glossaire');
                 /* eslint-disable */
                 //angular.element('#bottom').scope().addEntry(lingEntity);
-
+//
                 /* eslint-enable */
                // require(['core/ajax'], function(ajax) {
                     var promises = ajax.call([{
@@ -149,10 +149,10 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                             // Add new entry to user personal glossary and sort glossary.
                             glossaryentries.push(response);
                             glossaryentries.sort(function(a, b) {
-                                if (a.entry < b.entry) {
+                                if (a.entry.toLowerCase() < b.entry.toLowerCase()) {
                                     return -1;
                                 }
-                                if (a.entry > b.entry) {
+                                if (a.entry.toLowerCase() > b.entry.toLowerCase()) {
                                     return 1;
                                 }
                                 return 0;
