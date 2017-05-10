@@ -1,9 +1,10 @@
 /* jshint ignore:start */
-define(['jquery', 'core/log'], function($, log) {
+define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'], function($, log, templates, ajax, notification) {
 
     //"use strict";
     var jsonparams;
     var objparams;
+    var glossaryentries;
     return {
         init: function(args) {
             // Gather display and corpus params
@@ -13,8 +14,21 @@ define(['jquery', 'core/log'], function($, log) {
             $('small').hide();
             $('.hbl').hide();
             $('.sbl').hide();
+            //console.log(objparams);
+            //Load personal glossary entries.
+            $.post('relay.php', {
+                    verb: 'loadGlossary',
+                    id: objparams.cmid,
+                    textid: objparams.text,
+                    courseid: objparams.course,
+                },
+                function(data) {
+                    glossaryentries = JSON.parse(data);
+                }
+            );
             log.debug('CoBRA module init');
         },
+
         mod_form_triggers: function() {
             var langbutton = $('#id_updatelanguage');
             var langselect = $('#id_language');
@@ -57,11 +71,11 @@ define(['jquery', 'core/log'], function($, log) {
             });
 
             defaultdisplaycheckbox.on('change', function() {
-                defaultdisplaybutton.trigger('click');
+               defaultdisplaybutton.trigger('click');
             });
 
             defaultcorpuscheckbox.on('change', function() {
-                defaultcorpusbutton.trigger('click');
+               defaultcorpusbutton.trigger('click');
             });
         },
         entry_on_click: function() {
@@ -116,19 +130,85 @@ define(['jquery', 'core/log'], function($, log) {
                     .attr('src', 'pix/inglossary.png')
                     .attr('title', 'Pr&eacute;sent dans mon glossaire');
                 /* eslint-disable */
-                angular.element('#bottom').scope().addEntry(lingEntity);
+                //angular.element('#bottom').scope().addEntry(lingEntity);
+
                 /* eslint-enable */
+               // require(['core/ajax'], function(ajax) {
+                    var promises = ajax.call([{
+                        methodname: 'mod_cobra_add_to_glossary',
+                        args: {
+                            lingentity: lingEntity,
+                            textid: objparams.text,
+                            courseid: objparams.course,
+                            userid: objparams.user
+                        }
+                    }]);
+
+                    promises[0]
+                        .done(function(response) {
+                            // Add new entry to user personal glossary and sort glossary.
+                            glossaryentries.push(response);
+                            glossaryentries.sort(function(a, b) {
+                                if (a.entry < b.entry) {
+                                    return -1;
+                                }
+                                if (a.entry > b.entry) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+
+                            // Resend data to glossary template.
+                            var datafortpl = new Array;
+                            datafortpl['entries'] = glossaryentries;
+                            templates.render('mod_cobra/intextglossary', datafortpl).done(function(html) {
+                                $('#glossary').replaceWith(html);
+                            }).fail(notification.exception);
+                        }).fail(notification.exception);
+               // });
             });
 
-            $('#glossary').on('click', '.glossaryRemove', function() {
+            $('#myglossary').on('click', '.glossaryRemove', function() {
                 var lingEntity = $(this).prev().text();
+
                 $('.inGlossary').removeClass('inGlossary')
                     .addClass('glossaryAdd')
                     .attr('src', 'pix/glossaryadd.png')
                     .attr('title', 'Ajouter &agrave; mon glossaire');
                 /* eslint-disable */
-                angular.element('#bottom').scope().removeEntry(lingEntity);
+                //angular.element('#bottom').scope().removeEntry(lingEntity);
                 /* eslint-enable */
+                //console.log('coucou');
+                //console.log(lingEntity);
+                var promises = ajax.call([{
+                    methodname: 'mod_cobra_remove_from_glossary',
+                    args: {
+                        lingentity: lingEntity,
+                        courseid: objparams.course,
+                        userid: objparams.user
+                    }
+                }]);
+
+                promises[0]
+                    .done(function(response) {
+                        //console.log(response);
+                        // Remove entry from displayed glossary and refresh view.
+                        glossaryentries.forEach(function(result, index) {
+                            //console.log(response.lingentity);
+                            //console.log(result.ling_entity);
+                            if (parseInt(result.ling_entity) === response.lingentity) {
+                              //  console.log('found it');
+                                glossaryentries.splice(index, 1);
+                            }
+                        });
+
+                        // Resend data to glossary template.
+                        var datafortpl = new Array;
+                        datafortpl['entries'] = glossaryentries;
+                        templates.render('mod_cobra/intextglossary', datafortpl).done(function(html) {
+                            $('#glossary').replaceWith(html);
+                        }).fail(notification.exception);
+                    }).fail(notification.exception);
             });
         },
     };
@@ -162,6 +242,7 @@ define(['jquery', 'core/log'], function($, log) {
             function(data) {
 
                 var response = JSON.parse(data);
+                //console.log(response);
                 if (response.error) {
                     detailsDiv.html(response.error);
                 } else {

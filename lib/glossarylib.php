@@ -348,8 +348,23 @@ function cobra_remove_from_glossary($lingentity, $courseid) {
     return $courseid;
 }
 
-function cobra_get_remote_glossary_info_for_student($textid = 0, $courseid = 0) {
+function cobra_get_remote_glossary_info_for_student($textid = 0, $courseid = 0, $lingentity = 0) {
     global $DB, $COURSE, $USER;
+
+    //JRM test load single entry (temp before implementing local glossary cache)
+    if ($lingentity) {
+
+        $params = array('entity_list' => $lingentity);
+        $glossaryentries = cobra_remote_service::call('getGlossaryInfoForStudent', $params);
+        $singleentry = $glossaryentries[0];
+        $singleentry->new = true;
+        $singleentry->fromThisText = true;
+        $singleentry->lingentity = $singleentry->ling_entity;
+        return $singleentry;
+    }
+    //
+
+
     if (!$courseid) {
         $courseid = $COURSE->id;
     }

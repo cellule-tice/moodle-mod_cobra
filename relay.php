@@ -85,7 +85,9 @@ if (!empty($call)) {
         'moveDown',
         'moveUp',
         'changeType',
-        'removeFromGlossary'
+        'removeFromGlossary',
+        'loadGlossary',
+        'addToGlossary'
     );
     // Init $call variable if called from jQuery.
     $call = optional_param('verb', null, PARAM_ALPHA);
@@ -106,8 +108,21 @@ if (!empty($call)) {
     $resource = optional_param('resourceid', null, PARAM_ALPHANUM);
     $resourcetype = optional_param('resourcetype', null, PARAM_ALPHANUM);
     $sibling = optional_param('siblingid', null, PARAM_ALPHANUM);
+    $textid = optional_param('textid', 0, PARAM_INT);
+    $lingentity = optional_param('lingentity', 0, PARAM_INT);
+    $courseid = optional_param('courseid', 0, PARAM_INT);
+    //$userid = optional_param('user', 0, PARAM_INT);
 
     switch ($call) {
+        case 'loadGlossary' :
+            $data = cobra_get_remote_glossary_info_for_student($textid, $course->id);
+            $response = json_encode($data);
+            break;
+        case 'addToGlossary' :
+            //$lingentity = $call->lingentity;
+            $response = cobra_add_to_glossary($lingentity, $textid, $courseid);
+
+            break;
         case 'changeVisibility':
             if (cobra_change_visibility($resource, $resourcetype, $course->id)) {
                 echo 'true';
@@ -116,7 +131,7 @@ if (!empty($call)) {
             $response = 'error';
             break;
 
-        case 'moveDown':
+        /*case 'moveDown':
             if ($position && cobra_set_position($sibling, $position++, $resourcetype, $course->id)
                 && cobra_set_position($resource, $position, $resourcetype, $course->id)) {
                 echo 'true';
@@ -132,7 +147,7 @@ if (!empty($call)) {
                 return true;
             }
             $response = 'error';
-            break;
+            break;*/
 
         case 'removeFromGlossary':
             $lingentity = optional_param('lingentity', 0, PARAM_INT);

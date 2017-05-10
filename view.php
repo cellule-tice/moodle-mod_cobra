@@ -29,6 +29,8 @@ require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/lib/cobraremoteservice.php');
 require_once(__DIR__ . '/lib/cobracollectionwrapper.php');
 require_once(__DIR__ . '/lib/glossarylib.php');
+require_once(__DIR__ . '/classes/output/intextglossary.php');
+require_once(__DIR__ . '/classes/output/cobratext.php');
 
 $id = required_param('id', PARAM_INT);
 $textid = optional_param('id_text', 0, PARAM_INT);
@@ -37,6 +39,12 @@ list($course, $cm) = get_course_and_cm_from_cmid($id, 'cobra');
 $cobra = $DB->get_record('cobra', array('id' => $cm->instance), '*', MUST_EXIST);
 //Backwards compatibility with cobrapi.
 $cobra->ccorder = $cobra->corpusorder;
+
+//Keep user id and cmid for ajax calls
+global $USER;
+$cobra->user = $USER->id;
+$cobra->cmid = $id;
+
 $context = context_module::instance($cm->id);
 
 require_login($course, true, $cm);
@@ -66,13 +74,13 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
 $PAGE->requires->jquery();
 
-$PAGE->requires->js('/mod/cobra/js/angular.js');
+/*$PAGE->requires->js('/mod/cobra/js/angular.js');
 $PAGE->requires->js('/mod/cobra/js/angular-route.js');
 $PAGE->requires->js('/mod/cobra/js/ui-router.js');
 $PAGE->requires->js('/mod/cobra/js/app.js');
 $PAGE->requires->js('/mod/cobra/js/components/controllers.js');
 $PAGE->requires->js('/mod/cobra/js/components/services.js');
-$PAGE->requires->js('/mod/cobra/js/components/filters.js');
+$PAGE->requires->js('/mod/cobra/js/components/filters.js');*/
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'init', array(json_encode($cobra)));
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'entry_on_click');
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'concordance_on_click');
@@ -87,7 +95,7 @@ $PAGE->requires->js_call_amd('mod_cobra/cobra', 'glossary_actions');
 //echo $OUTPUT->header();
 
 $content = '';
-// Load content to display.
+// Load content to display. Still needed?
 $text = new cobra_text_wrapper($cm);
 $text->set_text_id($textid);
 $text->load_remote_data();
@@ -100,6 +108,7 @@ $encodeclic = 1;
 if (has_capability('mod/cobra:edit', $context) && false) {
     $encodeclic = 0;
 }
+$cobra->encodeclic = $encodeclic;
 
 $content .= html_writer::div('', 'hidden', array('id' => 'encode_clic', 'name' => $encodeclic));
 $content .= html_writer::div($textid, 'hidden', array('id' => 'id_text', 'name' => $textid));
@@ -107,13 +116,14 @@ $content .= html_writer::div('', 'hidden', array('id' => 'courseLabel', 'name' =
 $content .= html_writer::div($cobra->userglossary, 'hidden', array('id' => 'showglossary'));
 $content .= html_writer::div('', 'hidden', array('id' => 'userId', 'name' => $USER->id));
 $content .= html_writer::div($course->id, 'hidden', array('id' => 'courseid', 'name' => $course->id));
+$content .= html_writer::div($cm->id, 'hidden', array('id' => 'cmid', 'name' => $cm->id));
 
 $content .= '<div id="preferencesNb" class="hidden" name="' . $i . '">' . $i . '</div>';
 $content .= html_writer::div($i, 'hidden', array('id' => 'prefrencesNb', 'name' => $i));
 
 $clearfix = false;
 
-if ($cobra->audioplayer) {
+/*if ($cobra->audioplayer) {
     $audiofileurl = $text->get_audio_file_url();
     if (!empty($audiofileurl)) {
         $clearfix = true;
@@ -122,7 +132,7 @@ if ($cobra->audioplayer) {
         $content .= html_writer::tag('audio', $sourcetag, array('controls' => 'controls'));
         $content .= html_writer::end_div();
     }
-}
+}*/
 
 if ($cobra->nextprevbuttons) {
     $clearfix = true;
@@ -153,17 +163,25 @@ if ($clearfix) {
     $content .= html_writer::div('', 'clearfix');
 }
 // Add angularjs container.
-$content .= '<div ng-app="cobra" id="angContainer" >';
+/*$content .= '<div ng-app="cobra" id="angContainer" >';
 $content .= '<div id="angView" ui-view></div>';
 $content .= '</div>';
 $content .= html_writer::start_div('', array('ng-app' => 'cobra', 'id' => 'angContainer'));
 $content .= html_writer::div('', '', array('id' => 'angView', 'ui-view' => ''));
-$content .= html_writer::end_div();
+$content .= html_writer::end_div();*/
 
-echo $OUTPUT->header();
+$output = $PAGE->get_renderer('mod_cobra');
+echo $output->header();
+
+//echo $OUTPUT->header();
 //echo $OUTPUT->heading(get_string('textreading', 'cobra'));
-echo $OUTPUT->heading(get_string('textreading', 'cobra') . ' : ' . $cobra->name);
+echo $output->heading(get_string('textreading', 'cobra') . ' : ' . $cobra->name);
 //echo $OUTPUT->box_start('generalbox box-content');
+$cobratext = new cobratext($cobra);
+echo $output->render($cobratext);
+//$intextglossary = new \mod_cobra\output\intextglossary($cm->id, $textid);
+//echo $output->render($intextglossary);
+
 echo $content;
 //echo $OUTPUT->box_end();
 
