@@ -222,7 +222,7 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
     function displayDetails(conceptId, isExpression) {
         $('#full_concordance').hide();
         var detailsDiv = $('#details');
-        var textId = getUrlParam('id_text', document.location.href);
+        //var textId = getUrlParam('id_text', document.location.href);
         var encodeClic = $('#encode_clic').attr('name');
         var userId = $('#userId').attr('name');
 
@@ -232,7 +232,7 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
         $.post('relay.php', {
                 verb: 'displayEntry',
                 conceptid: conceptId,
-                resourceid: textId,
+                resourceid: objparams.text,
                 isexpression: isExpression,
                 encodeclic : encodeClic,
                 userid : userId,
