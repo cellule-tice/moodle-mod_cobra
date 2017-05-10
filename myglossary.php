@@ -45,7 +45,9 @@ require_capability('mod/cobra:view', $context);
 $PAGE->set_url('/mod/cobra/myglossary.php', array('id' => $cm->id));
 
 $PAGE->set_title(format_string($cobra->name));
-
+$PAGE->navbar->ignore_active();
+$PAGE->navbar->add(get_string('mycourses'));
+$PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
 $PAGE->navbar->add(get_string('myglossary', 'cobra'));
 
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
@@ -116,7 +118,7 @@ if (!empty($data)) {
             $texttitles[] = cobra_get_text_title_from_id($textid);
         }
         $entry->texttitles = $texttitles;
-        $removeiconurl = $OUTPUT->pix_url('glossaryremove', 'cobra');
+        $removeiconurl = $OUTPUT->image_url('glossaryremove', 'mod_cobra');
 
         $row = new html_table_row();
         $cell = new html_table_cell();

@@ -1,0 +1,66 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_hackfest/index_page
+
+    Starting point for an awesome template.
+
+}}
+<div id="glossary" >
+    <a href="myglossary.php?id={{cmid}}">Afficher mon glossaire complet <i class="icon buttonicon fa fa-sort-alpha-asc"></i></a>
+    <table class="table table-condensed" width="100%">
+        <thead>
+
+        <tr class="headerX">
+            <th>&nbsp;</th>
+            <th>Entrée</th>
+
+            <th>Cat.</th>
+
+            <th>Traduction</th>
+
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {{#entries}}
+            <tr {{^fromThisText}}class="discreet"{{/fromThisText}}>
+                <td class="{{#new}}hot{{/new}}">
+                    &nbsp;
+                </td>
+                <td>{{entry}}</td>
+                <td>{{category}}</td>
+                <td>{{translations}}</td>
+                <td class="glossaryIcon inTextGlossary">
+                    <span id="currentLingEntity" class="hidden">{{ling_entity}}</span>
+                    <img class=
+                                                                                                                      "glossaryRemove" src="pix/glossaryremove.png" title=
+                                                                                                                      "Supprimer de mon glossaire"></td>
+            </tr>
+        {{/entries}}
+        {{^entries}}
+            <td colspan="5" style="text-align:center;">Glossaire
+                vide pour ce texte</td>
+        {{/entries}}
+        </tbody>
+    </table>
+    <p>* Les entrées grisées ont été rajoutées via un autre texte
+
+    </p>
+</div>
+
