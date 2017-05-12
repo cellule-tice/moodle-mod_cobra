@@ -38,6 +38,14 @@ $functions = array(
         'description' => 'Remove entry from personal glossary',
         'type' => 'write',
         'ajax' => true
+    ),
+    'mod_cobra_load_glossary' => array(
+        'classname' => 'mod_cobra_external',
+        'methodname' => 'load_glossary',
+        'classpath' => 'mod/cobra/externallib.php',
+        'description' => 'Load glossary entries for current text',
+        'type' => 'read',
+        'ajax' => true
     )
 );
 
@@ -46,7 +54,8 @@ $services = array(
         'shortname' => 'cobra',
         'functions' => array(
             'mod_cobra_add_to_glossary',
-            'mod_cobra_remove_from_glossary'
+            'mod_cobra_remove_from_glossary',
+            'mod_cobra_load_glossary'
         ),
         'requiredcapability' => '',
         'restrictedusers' => 0,

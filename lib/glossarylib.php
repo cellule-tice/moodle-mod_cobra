@@ -348,9 +348,9 @@ function cobra_remove_from_glossary($lingentity, $courseid) {
     return $courseid;
 }
 
-function cobra_get_remote_glossary_info_for_student($textid = 0, $courseid = 0, $lingentity = 0) {
+function cobra_get_remote_glossary_info_for_student($textid = 0, $courseid = 0, $userid = 0, $lingentity = 0) {
     global $DB, $COURSE, $USER;
-
+    $userid = !empty($userid) ? $userid : $USER->id;
     //JRM test load single entry (temp before implementing local glossary cache)
     if ($lingentity) {
 
@@ -362,8 +362,6 @@ function cobra_get_remote_glossary_info_for_student($textid = 0, $courseid = 0, 
         $singleentry->lingentity = $singleentry->ling_entity;
         return $singleentry;
     }
-    //
-
 
     if (!$courseid) {
         $courseid = $COURSE->id;
@@ -373,7 +371,7 @@ function cobra_get_remote_glossary_info_for_student($textid = 0, $courseid = 0, 
                    WHERE course = :courseid
                          AND user_id = :userid
                          AND in_glossary = 1";
-    $fullglossaryresult = $DB->get_records_sql($fullquery, array('courseid' => $courseid, 'userid' => $USER->id));
+    $fullglossaryresult = $DB->get_records_sql($fullquery, array('courseid' => $courseid, 'userid' => $userid));
 
     $fullglossarylist = array_keys($fullglossaryresult);
 
@@ -388,7 +386,7 @@ function cobra_get_remote_glossary_info_for_student($textid = 0, $courseid = 0, 
                              AND in_glossary = 1
                              AND id_text = :textid";
 
-        $textresult = $DB->get_records_sql($textquery, array('courseid' => $courseid, 'userid' => $USER->id, 'textid' => $textid));
+        $textresult = $DB->get_records_sql($textquery, array('courseid' => $courseid, 'userid' => $userid, 'textid' => $textid));
         $textglossarylist = array_keys($textresult);
         $listtoload = array_intersect($fullglossarylist, $entitiesintext);
     } else {

@@ -29,6 +29,42 @@ require_once(__DIR__ . '/lib/glossarylib.php');
 //print_object(__DIR__);
 class mod_cobra_external extends external_api
 {
+    public static function load_glossary_parameters() {
+        return new external_function_parameters(
+            array(
+                //'lingentity' => new external_value(PARAM_INT, 'Id of lingentity'),
+                'textid' => new external_value(PARAM_INT, 'Id of current text'),
+                'courseid' => new external_value(PARAM_INT, 'Id of current course'),
+                'userid' => new external_value(PARAM_INT, 'Id of current user'),
+            )
+        );
+    }
+
+    public static function load_glossary_returns() {
+        return new external_multiple_structure(
+                new external_single_structure(
+                array(
+                    'ling_entity' => new external_value(PARAM_INT, 'lingentity id'),
+                    'entry' => new external_value(PARAM_RAW, 'word/expression'),
+                    'type' => new external_value(PARAM_RAW, 'lemma or expression'),
+                    'translations' => new external_value(PARAM_RAW, 'list of translations'),
+                    'category' => new external_value(PARAM_RAW, 'category'),
+                    'extra_info' => new external_value(PARAM_RAW, 'additional info'),
+                    'new' => new external_value(PARAM_BOOL, 'added during this session or not'),
+                    'fromThisText' => new external_value(PARAM_BOOL, 'clicked and added in this text')
+                )
+            )
+        );
+    }
+
+    public static function load_glossary($textid, $courseid, $userid) {
+        $params = self::validate_parameters(self::load_glossary_parameters(), array('textid' => $textid, 'courseid' => $courseid, 'userid' => $userid));
+        $data = cobra_get_remote_glossary_info_for_student($textid, $courseid, $userid);
+        return $data;
+    }
+
+
+
     public static function add_to_glossary_parameters() {
         return new external_function_parameters(
             array(
@@ -73,7 +109,7 @@ class mod_cobra_external extends external_api
         );
 
         if ($result) {
-            return cobra_get_remote_glossary_info_for_student($textid, $courseid, $lingentity);
+            return cobra_get_remote_glossary_info_for_student($textid, $courseid, $userid, $lingentity);
         } else {
             throw Exception('error');
         }
