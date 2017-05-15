@@ -183,3 +183,8 @@ $string['corpusselection_help'] = 'Default selection and order of corpus types y
 <li class="sciences">52 : science</li>
 <li class="eco">62 : economics</li>
 </ul>';
+$string['addtomyglossary'] = 'Add to my glossary';
+$string['inmyglossary'] = 'Already in my glossary';
+$string['showfullglossary'] = 'Display full glossary';
+$string['deletesure'] = 'Do you really want to empty your personal glossary for this course?';
+$string['emptymyglossary'] = 'Empty my glossary';

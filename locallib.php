@@ -423,7 +423,8 @@ function cobra_clear_corpus_selection() {
  * @param int $textid the text within which a word was clicked
  * @param int $lingentityid identifier of the linguistic entity that was clicked
  */
-function cobra_clic($textid, $lingentityid, $DB, $courseid, $userid) {
+function cobra_clic($textid, $lingentityid, /*$DB,*/ $courseid, $userid) {
+    global $DB;
     $info = $DB->get_record_select('cobra_clic',
             "course='$courseid' AND user_id='$userid' AND id_text='$textid' AND id_entite_ling='$lingentityid'");
     if (!$info) {

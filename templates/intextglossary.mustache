@@ -21,7 +21,7 @@
 
 }}
 <div id="glossary" >
-    <a href="myglossary.php?id={{cmid}}">Afficher mon glossaire complet <i class="icon buttonicon fa fa-sort-alpha-asc"></i></a>
+    <a class="righty" title="{{#str}}showfullglossary, mod_cobra{{/str}}" href="myglossary.php?id={{cmid}}">{{#str}}myglossary, mod_cobra{{/str}}</a>
     <table class="table table-condensed" width="100%">
         <thead>
 
@@ -48,9 +48,7 @@
                 <td>{{translations}}</td>
                 <td class="glossaryIcon inTextGlossary">
                     <span id="currentLingEntity" class="hidden">{{ling_entity}}</span>
-                    <img class=
-                                                                                                                      "glossaryRemove" src="pix/glossaryremove.png" title=
-                                                                                                                      "Supprimer de mon glossaire"></td>
+                    <img class=                                                                                   "glossaryremove" src="pix/glossaryremove.png" title="Supprimer de mon glossaire"></td>
             </tr>
         {{/entries}}
         {{^entries}}

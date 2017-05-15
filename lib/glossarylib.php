@@ -307,12 +307,17 @@ function cobra_explode_glossary_into_lemmas_and_expression($glossary) {
 }
 
 // Functions dedicated to student personal glossary.
-function cobra_is_in_glossary($lingentity, $courseid) {
+function cobra_is_in_glossary($lingentity, $courseid, $userid = 0) {
     global $DB, $USER;
+    if (!empty($userid)) {
+        $user = $userid;
+    } else {
+        $user = $USER->id;
+    }
     return (int)$DB->record_exists('cobra_clic', array(
                 'course' => $courseid,
                 'id_entite_ling' => (int)$lingentity,
-                'user_id' => $USER->id,
+                'user_id' => $user,
                 'in_glossary' => 1)
             );
 }
@@ -346,6 +351,18 @@ function cobra_remove_from_glossary($lingentity, $courseid) {
         )
     );
     return $courseid;
+}
+
+function cobra_empty_glossary($course, $user) {
+    global $DB;
+    return $DB->set_field('cobra_clic',
+        'in_glossary',
+        '0',
+        array(
+            'course' => $course,
+            'user_id' => $user,
+        )
+    );
 }
 
 function cobra_get_remote_glossary_info_for_student($textid = 0, $courseid = 0, $userid = 0, $lingentity = 0) {

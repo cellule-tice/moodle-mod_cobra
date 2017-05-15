@@ -37,6 +37,11 @@ $id = required_param('id', PARAM_INT);
 list($course, $cm) = get_course_and_cm_from_cmid($id, 'cobra');
 $cobra = $DB->get_record('cobra', array('id' => $cm->instance), '*', MUST_EXIST);
 
+$context = context_module::instance($cm->id);
+
+require_login($course, true, $cm);
+require_capability('mod/cobra:view', $context);
+
 // Backwards compatibility with cobrapi.
 $cobra->ccorder = $cobra->corpusorder;
 
@@ -45,10 +50,10 @@ global $USER;
 $cobra->user = $USER->id;
 $cobra->cmid = $id;
 
-$context = context_module::instance($cm->id);
-
-require_login($course, true, $cm);
-require_capability('mod/cobra:view', $context);
+$cobra->encodeclic = 1;
+if (has_capability('mod/cobra:edit', $context) && false) {
+    $cobra->encodeclic = 0;
+}
 
 // Add event management here.
 
@@ -66,7 +71,10 @@ $PAGE->requires->jquery();
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'init', array(json_encode($cobra)));
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'entry_on_click');
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'concordance_on_click');
-$PAGE->requires->js_call_amd('mod_cobra/cobra', 'glossary_actions');
+
+if ((int)$cobra->userglossary) {
+    $PAGE->requires->js_call_amd('mod_cobra/cobra', 'text_glossary_actions');
+}
 
 $content = '';
 // Load content to display. Still needed?
@@ -74,15 +82,7 @@ $text = new cobra_text_wrapper($cm);
 $text->set_text_id($cobra->text);
 $text->load_remote_data();
 
-$cobra->ccorder = $cobra->corpusorder;
-
-$encodeclic = 1;
-if (has_capability('mod/cobra:edit', $context) && false) {
-    $encodeclic = 0;
-}
-$cobra->encodeclic = $encodeclic;
-
-$content .= html_writer::div('', 'hidden', array('id' => 'encode_clic', 'name' => $encodeclic));
+//$content .= html_writer::div('', 'hidden', array('id' => 'encode_clic', 'name' => $encodeclic));
 $content .= html_writer::div('', 'hidden', array('id' => 'courseLabel', 'name' => $course->id));
 $content .= html_writer::div($cobra->userglossary, 'hidden', array('id' => 'showglossary'));
 $content .= html_writer::div('', 'hidden', array('id' => 'userId', 'name' => $USER->id));

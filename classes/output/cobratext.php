@@ -50,8 +50,6 @@ class cobratext implements renderable, templatable {
     private $cobra;
 
     public function __construct($cobra) {
-        //parent::__construct();
-        //$this->cmid = $cmid;
         $this->cobra = $cobra;
     }
 
@@ -67,7 +65,7 @@ class cobratext implements renderable, templatable {
 
         $text = cobra_remote_service::call('getFormattedText', $params, 'json', true);
         $data['text'] = utf8_encode($text);
-        $data['userglossary'] = $this->cobra->userglossary;
+        $data['userglossary'] = (int)$this->cobra->userglossary;
         $data['entries'] = cobra_get_remote_glossary_info_for_student($this->cobra->text, $this->cobra->course);
         $data['cmid'] = $this->cobra->cmid;
 

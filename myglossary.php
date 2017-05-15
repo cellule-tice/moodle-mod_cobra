@@ -33,9 +33,16 @@ require_once(__DIR__ . '/lib/glossarylib.php');
 
 $id = required_param('id', PARAM_INT);
 $cmd = optional_param('cmd', null, PARAM_ALPHA);
+$confirm = optional_param('confirm', 0, PARAM_INT);
 
 list($course, $cm) = get_course_and_cm_from_cmid($id, 'cobra');
 $cobra = $DB->get_record('cobra', array('id' => $cm->instance), '*', MUST_EXIST);
+
+// Keep user id and cmid for ajax calls
+global $USER, $OUTPUT;
+$cobra->user = $USER->id;
+$cobra->cmid = $id;
+
 $context = context_module::instance($cm->id);
 
 require_login($course, true, $cm);
@@ -44,21 +51,48 @@ require_capability('mod/cobra:view', $context);
 // Print the page header.
 $PAGE->set_url('/mod/cobra/myglossary.php', array('id' => $cm->id));
 
-$PAGE->set_title(format_string($cobra->name));
+$PAGE->set_title(format_string($course->fullname));
+$PAGE->set_heading(format_string($course->fullname));
 $PAGE->navbar->ignore_active();
 $PAGE->navbar->add(get_string('mycourses'));
 $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
-$PAGE->navbar->add(get_string('myglossary', 'cobra'));
+$PAGE->navbar->add(get_string('myglossary', 'cobra'), new moodle_url('/mod/cobra/myglossary.php', array('id' => $id)));
 
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
 // Add the ajaxcommand for the form.
-$PAGE->requires->jquery();
-$PAGE->requires->js('/mod/cobra/js/cobra.js');
-$PAGE->requires->js_init_call('M.mod_cobra.remove_from_global_glossary');
+$PAGE->requires->js_call_amd('mod_cobra/cobra', 'init', array(json_encode($cobra)));
+$PAGE->requires->js_call_amd('mod_cobra/cobra', 'global_glossary_actions');
+
+echo $OUTPUT->header();
+// Add buttons for export and trash.
+$exportbutton = html_writer::link(new moodle_url(
+    '/mod/cobra/myglossary.php',
+    array(
+        'id' => $id,
+        'cmd' => 'export',
+    )),
+    '',
+    array(
+        'class' => 'glossaryexport',
+        'title' => get_string('exportmyglossary', 'cobra')
+    ));
+$emptybutton = html_writer::link(new moodle_url(
+    '/mod/cobra/myglossary.php',
+    array(
+        'id' => $id,
+        'cmd' => 'empty',
+    )),
+    '',
+    array(
+        'class' => 'emptyglossary',
+        'title' => get_string('emptymyglossary', 'cobra')
+    ));
+
+echo $OUTPUT->heading(get_string('myglossary', 'cobra') . '&nbsp;&nbsp;&nbsp;' . $exportbutton. '&nbsp;&nbsp;&nbsp;' . $emptybutton);
 
 if (!$cobra->userglossary) {
-    redirect(new moodle_url('/mod/cobra/view.php', array('id' => $cm->id)), 'CoBRA' . ': ' . get_string('myglossaryunavailable', 'cobra', $CFG->cobra_serverhost), 5);
+    redirect(new moodle_url('/mod/cobra/view.php', array('id' => $cm->id)), 'CoBRA' . ': ' . get_string('myglossaryunavailable', 'cobra', $CFG->cobra_serviceurl), 5);
 }
 
 $table = new html_table();
@@ -81,6 +115,27 @@ $table->head = array(
     $headercell6,
     $headercell7
 );
+
+if ('export' == $cmd) {
+    cobra_export_myglossary($entries);
+}
+if ('empty' == $cmd) {
+    //echo $OUTPUT->heading(get_string('myglossary', 'mod_cobra'));
+    if (!empty($confirm) && confirm_sesskey()) {
+        cobra_empty_glossary($cobra->course, $cobra->user);
+    } else {
+        $PAGE->navbar->add(get_string('delete'));
+        $PAGE->set_title($course->shortname);
+        $PAGE->set_heading($course->fullname);
+
+        echo $OUTPUT->confirm(get_string('deletesure', 'mod_cobra'),
+            "myglossary.php?cmd=empty&confirm=$course->id&id=$cobra->cmid",
+            $CFG->wwwroot.'/mod/cobra/myglossary.php?id='.$cobra->cmid);
+        echo $OUTPUT->footer();
+        die;
+    }
+
+}
 
 $data = cobra_get_remote_glossary_info_for_student();
 $entries = array();
@@ -152,7 +207,7 @@ if (!empty($data)) {
         $cellcontent = html_writer::tag('span', $entry->ling_entity, array('id' => 'currentLingEntity', 'class' => 'hidden'));
         $cellcontent .= html_writer::img($removeiconurl,
                 get_string('myglossaryremove', 'cobra'),
-                array('title' => get_string('myglossaryremove', 'cobra'), 'class' => 'gGlossaryRemove inDisplay'));
+                array('title' => get_string('myglossaryremove', 'cobra'), 'class' => 'glossaryremove inDisplay'));
         $cell->text = $cellcontent;
         $row->cells[] = $cell;
 
@@ -160,9 +215,7 @@ if (!empty($data)) {
 
         $entries[] = $entry;
     }
-    if ('export' == $cmd) {
-        cobra_export_myglossary($entries);
-    }
+
 } else {
     $row = new html_table_row();
     $cell = new html_table_cell();
@@ -177,22 +230,9 @@ $content = html_writer::start_tag('div', array('class' => 'no-overflow'));
 $content .= html_writer::table($table);
 $content .= html_writer::end_tag('div');
 // Output starts here.
-echo $OUTPUT->header();
+//echo $OUTPUT->header();
 
-// Replace the following lines with you own code.
-$exportbutton = html_writer::link(new moodle_url(
-                    '/mod/cobra/myglossary.php',
-                    array(
-                        'id' => $id,
-                        'cmd' => 'export',
-                    )),
-            '',
-            array(
-                'class' => 'glossaryExport',
-                'title' => get_string('exportmyglossary', 'cobra')
-            ));
 
-echo $OUTPUT->heading(get_string('myglossary', 'cobra') . '&nbsp;&nbsp;&nbsp;' . $exportbutton);
 
 echo $OUTPUT->box_start('generalbox box-content');
 echo $content;
