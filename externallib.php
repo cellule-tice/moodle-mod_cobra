@@ -29,6 +29,72 @@ require_once(__DIR__ . '/lib/glossarylib.php');
 //print_object(__DIR__);
 class mod_cobra_external extends external_api
 {
+    public static function display_entry_parameters() {
+        return new external_function_parameters(
+            array(
+                'concept_id' => new external_value(PARAM_INT, 'Id of concept to display'),
+                'is_expr' => new external_value(PARAM_BOOL, 'Whether entry is expression or lemma'),
+                'params' => new external_value(PARAM_RAW, 'Display parameters')
+            )
+        );
+    }
+
+    public static function display_entry_returns() {
+        return new external_single_structure(
+            array(
+                'html' => new external_value(PARAM_RAW, 'Entry details and examples in HTML format'),
+                'inglossary' => new external_value(PARAM_BOOL, 'Whether this entry is present in user glossary'),
+                'lingentity' => new external_value(PARAM_INT, 'Id of displayed lingentity')
+            )
+        );
+    }
+
+    public static function display_entry($concept, $isexpression, $json) {
+        $args = self::validate_parameters(self::display_entry_parameters(), array('concept_id' => $concept, 'is_expr' => $isexpression, 'params' => $json));
+        $jsonobj = json_decode($json);
+
+        $html = cobra_remote_service::call('displayEntry', $args, 'json');
+        $entrytype = $isexpression ? 'expression' : 'lemma';
+        $params = array('conceptId' => $concept, 'entryType' => $entrytype);
+        $lingentity = cobra_remote_service::call('getEntityLingIdFromConcept', $params, 'html');
+        $lingentity = str_replace("\"", "", $lingentity);
+        if ($jsonobj->encodeclic) {
+            cobra_clic($jsonobj->text, $lingentity, $jsonobj->course, $jsonobj->user);
+        }
+
+        $glossarystatus = cobra_is_in_glossary($lingentity, $jsonobj->course, $jsonobj->user);
+        $response = array(
+            'html' => utf8_encode($html),
+            'inglossary' => $glossarystatus,
+            'lingentity' => $lingentity,
+        );
+
+        return $response;
+    }
+
+    public static function get_full_concordance_parameters() {
+        return new external_function_parameters(
+            array(
+                'id_cc' => new external_value(PARAM_INT, 'Id of concordance to display'),
+                'params' => new external_value(PARAM_RAW, 'Display parameters')
+            )
+        );
+    }
+
+    public static function get_full_concordance_returns() {
+        return new external_single_structure(
+            array(
+                'concordance' => new external_value(PARAM_RAW, 'Formatted concordance')
+            )
+        );
+    }
+
+    public static function get_full_concordance($ccid, $json) {
+        $args = self::validate_parameters(self::get_full_concordance_parameters(), array('id_cc' => $ccid, 'params' => $json));
+        $cc = utf8_encode(cobra_remote_service::call('displayCC', $args, 'html'));
+        return array('concordance' => $cc);
+    }
+
     public static function load_glossary_parameters() {
         return new external_function_parameters(
             array(
@@ -42,7 +108,7 @@ class mod_cobra_external extends external_api
 
     public static function load_glossary_returns() {
         return new external_multiple_structure(
-                new external_single_structure(
+            new external_single_structure(
                 array(
                     'ling_entity' => new external_value(PARAM_INT, 'lingentity id'),
                     'entry' => new external_value(PARAM_RAW, 'word/expression'),
@@ -80,7 +146,7 @@ class mod_cobra_external extends external_api
 
         return new external_single_structure(
             array(
-                'lingentity' => new external_value(PARAM_INT, 'lingentity id'),
+                'ling_entity' => new external_value(PARAM_INT, 'lingentity id'),
                 'entry' => new external_value(PARAM_RAW, 'word/expression'),
                 'type' => new external_value(PARAM_RAW, 'lemma or expression'),
                 'translations' => new external_value(PARAM_RAW, 'list of translations'),

@@ -14,20 +14,7 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
             $('small').hide();
             $('.hbl').hide();
             $('.sbl').hide();
-            //console.log(objparams);
-            //Load personal glossary entries.
-            var promises = ajax.call([{
-                methodname: 'mod_cobra_load_glossary',
-                args: {
-                    textid: objparams.text,
-                    courseid: objparams.course,
-                    userid: objparams.user
-                }
-            }]);
-            promises[0]
-                .done(function(response) {
-                    glossaryentries = response;
-                }).fail(notification.exception);
+
             log.debug('CoBRA module init');
         },
 
@@ -124,13 +111,23 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                 displayFullConcordance($(this));
             });
         },
-        glossary_actions: function() {
-            $('#details').on('click', '.glossaryAdd', function() {
+        text_glossary_actions: function() {
+            //Load personal glossary entries.
+            var promises = ajax.call([{
+                methodname: 'mod_cobra_load_glossary',
+                args: {
+                    textid: objparams.text,
+                    courseid: objparams.course,
+                    userid: objparams.user
+                }
+            }]);
+            promises[0]
+                .done(function(response) {
+                    glossaryentries = response;
+                }).fail(notification.exception);
+
+            $('#details').on('click', '.glossaryadd', function() {
                 var lingEntity = $(this).prev().text();
-                $('.glossaryAdd').removeClass('glossaryAdd')
-                    .addClass('inGlossary')
-                    .attr('src', 'pix/inglossary.png')
-                    .attr('title', 'Pr&eacute;sent dans mon glossaire');
 
                 var promises = ajax.call([{
                     methodname: 'mod_cobra_add_to_glossary',
@@ -156,22 +153,29 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                             return 0;
                         });
 
+                        // Change icon in digest row
+                        var datafortpl = new Array;
+                        datafortpl['lingentity'] = lingEntity;
+                        datafortpl['iconclass'] = 'inglossary';
+                        datafortpl['add'] = false;
+
+                        templates.render('mod_cobra/glossaryiconcell', datafortpl).done(function(html) {
+                            $('#displayOnClic').find('tr:first th:first').replaceWith(html);
+                        }).fail(notification.exception);
+
                         // Resend data to glossary template.
                         var datafortpl = new Array;
                         datafortpl['entries'] = glossaryentries;
+                        datafortpl['cmid'] = objparams.cmid;
                         templates.render('mod_cobra/intextglossary', datafortpl).done(function(html) {
                             $('#glossary').replaceWith(html);
                         }).fail(notification.exception);
                     }).fail(notification.exception);
             });
 
-            $('#myglossary').on('click', '.glossaryRemove', function() {
+            $('#myglossary').on('click', '.glossaryremove', function() {
                 var lingEntity = $(this).prev().text();
 
-                $('.inGlossary').removeClass('inGlossary')
-                    .addClass('glossaryAdd')
-                    .attr('src', 'pix/glossaryadd.png')
-                    .attr('title', 'Ajouter &agrave; mon glossaire');
                 var promises = ajax.call([{
                     methodname: 'mod_cobra_remove_from_glossary',
                     args: {
@@ -190,81 +194,89 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                             }
                         });
 
+                        // Change icon in digest row
+                        var datafortpl = new Array;
+                        datafortpl['lingentity'] = lingEntity;
+                        datafortpl['iconclass'] = 'glossaryadd';
+                        datafortpl['add'] = true;
+
+                        templates.render('mod_cobra/glossaryiconcell', datafortpl).done(function(html) {
+                            $('#displayOnClic').find('tr:first th:first').replaceWith(html);
+                        }).fail(notification.exception);
+
                         // Resend data to glossary template.
                         var datafortpl = new Array;
                         datafortpl['entries'] = glossaryentries;
+                        datafortpl['cmid'] = objparams.cmid;
                         templates.render('mod_cobra/intextglossary', datafortpl).done(function(html) {
                             $('#glossary').replaceWith(html);
                         }).fail(notification.exception);
                     }).fail(notification.exception);
             });
         },
+        global_glossary_actions : function() {
+            $('#myglossary').on('click', '.glossaryremove', function () {
+                var lingEntity = $(this).prev().text();
+                var currentElement = $(this);
+                var promises = ajax.call([{
+                    methodname: 'mod_cobra_remove_from_glossary',
+                    args: {
+                        lingentity: lingEntity,
+                        courseid: objparams.course,
+                        userid: objparams.user
+                    }
+                }]);
+                promises[0]
+                    .done(function(response) {
+                        // Remove entry from displayed glossary and refresh view.
+                        if (response.lingentity == lingEntity) {
+                            if ($(currentElement).hasClass('inDisplay')) {
+                                $(currentElement.parent().parent().remove());
+                            }
+                        }
+                    }).fail(notification.exception);
+            });
+        }
     };
-    function getUrlParam(param, url)
-    {
-        var u = url == undefined ? document.location.href : url;
-        var reg = new RegExp('(\\?|&|^)' + param + '=(.*?)(&|$)');
-        var matches = u.match(reg);
-        return matches[2] != undefined ? decodeURIComponent(matches[2]).replace(/\+/g,' ') : '';
-    }
+
     function displayDetails(conceptId, isExpression) {
         $('#full_concordance').hide();
         var detailsDiv = $('#details');
-        //var textId = getUrlParam('id_text', document.location.href);
-        var encodeClic = $('#encode_clic').attr('name');
-        var userId = $('#userId').attr('name');
 
-        var moduleId = getUrlParam('id', document.location.href);
-        moduleId = parseInt(moduleId.replace('#',''));
-
-        $.post('relay.php', {
-                verb: 'displayEntry',
-                conceptid: conceptId,
-                resourceid: objparams.text,
-                isexpression: isExpression,
-                encodeclic : encodeClic,
-                userid : userId,
-                params : jsonparams,
-                id: moduleId
-            },
-            function(data) {
-
-                var response = JSON.parse(data);
-                //console.log(response);
-                if (response.error) {
-                    detailsDiv.html(response.error);
-                } else {
-                    var str = response.html.replace(/class="label"/g, 'class="cobratextlabel"')
-                        .replace(/img\//g, 'pix\/');
-                    //console.log(str);
-                    detailsDiv.html(str);
-                    if(objparams.userglossary == 1) {
-                        var lingEntitySpan = '<span id="currentlingentity" class="hidden">' +
-                            response.lingentity +
-                            '</span>';
-                        var glossaryIcon = '';
-                        var angularClick = '';
-                        if ('1' == response.inglossary) {
-                            glossaryIcon = '<img height="20px" ' +
-                                'class="inGlossary" ' +
-                                'src="pix/inglossary.png" ' +
-                                'title="Pr&eacute;sent dans mon glossaire"/>';
-                            angularClick = 'ng-click="addEntry(' + response.lingentity + ')"';
-                        } else {
-                            glossaryIcon = '<img height="20px" ' +
-                                'class="glossaryAdd" ' +
-                                'src="pix/glossaryadd.png" ' +
-                                'title="Ajouter &agrave; mon glossaire"/>';
-                        }
-                        $('#displayOnClic').find('tr:first')
-                            .prepend('<th ' + angularClick + ' class="glossaryIcon">' + lingEntitySpan + glossaryIcon + '</th>')
-                            .addClass('digestRow');
-                    } else {
-                        $('#glossary').remove();
-                    }
-                }
+        var promises = ajax.call([{
+            methodname: 'mod_cobra_display_entry',
+            args: {
+                concept_id: conceptId,
+                is_expr: isExpression,
+                params: jsonparams
             }
-        );
+        }]);
+
+        promises[0]
+            .done(function(response) {
+                var content = response.html.replace(/class="label"/g, 'class="cobralabel"')
+                        .replace(/img\//g, 'pix\/')
+                        .replace(/#FFFFCC/, '');
+                detailsDiv.html(content);
+                if(objparams.userglossary == 1) {
+                    var datafortpl = new Array;
+                    datafortpl['lingentity'] = response.lingentity;
+                    if (true == response.inglossary) {
+                        datafortpl['iconclass'] = 'inglossary';
+                        datafortpl['add'] = false;
+                    } else {
+                        datafortpl['iconclass'] = 'glossaryadd';
+                        datafortpl['add'] = true;
+                    }
+                    templates.render('mod_cobra/glossaryiconcell', datafortpl).done(function(html) {
+                        $('#displayOnClic').find('tr:first')
+                            .prepend(html)
+                            .addClass('digestRow');
+                    }).fail(notification.exception);
+                } else {
+                    $('#glossary').remove();
+                }
+            }).fail(notification.exception);
     }
     // Display full text of clicked concordance.
     function displayFullConcordance(quickindexitem)
@@ -272,22 +284,22 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
         var fullConcordanceDiv = $('#full_concordance');
         var idConcordance = quickindexitem.attr('name');
         var backgroundColor = quickindexitem.parent().parent().css('background-color');
-        var moduleId = getUrlParam('id', document.location.href);
-        moduleId = parseInt(moduleId.replace('#',''));
 
-        $.post('relay.php',
-            {
-                verb: 'displayCC',
-                concordanceid: idConcordance,
-                params : jsonparams,
-                id: moduleId
-            },
-            function(data) {
-                fullConcordanceDiv.html(data);
+        var promises = ajax.call([{
+            methodname: 'mod_cobra_get_full_concordance',
+            args: {
+                id_cc: idConcordance,
+                params: jsonparams
+            }
+        }]);
+
+        promises[0]
+            .done(function(response) {
+                // Remove entry from displayed glossary and refresh view.
+                fullConcordanceDiv.html(response.concordance);
                 fullConcordanceDiv.css('background-color', backgroundColor);
                 fullConcordanceDiv.show();
-            }
-        );
+            }).fail(notification.exception);
     }
 
 });

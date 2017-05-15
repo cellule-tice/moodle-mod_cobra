@@ -23,6 +23,22 @@
 
 
 $functions = array(
+    'mod_cobra_display_entry' => array(
+        'classname' => 'mod_cobra_external',
+        'methodname' => 'display_entry',
+        'classpath' => 'mod/cobra/externallib.php',
+        'description' => 'Display entry details and concordances',
+        'type' => 'write',
+        'ajax' => true
+    ),
+    'mod_cobra_get_full_concordance' => array(
+        'classname' => 'mod_cobra_external',
+        'methodname' => 'get_full_concordance',
+        'classpath' => 'mod/cobra/externallib.php',
+        'description' => 'Get full text of clicked concordance',
+        'type' => 'read',
+        'ajax' => true
+    ),
     'mod_cobra_add_to_glossary' => array(
         'classname' => 'mod_cobra_external',
         'methodname' => 'add_to_glossary',
@@ -53,6 +69,8 @@ $services = array(
     'cobraservices' => array(
         'shortname' => 'cobra',
         'functions' => array(
+            'mod_cobra_display_entry',
+            'mod_cobra_get_full_concordance',
             'mod_cobra_add_to_glossary',
             'mod_cobra_remove_from_glossary',
             'mod_cobra_load_glossary'
