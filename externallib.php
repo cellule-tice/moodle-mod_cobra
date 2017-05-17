@@ -59,7 +59,7 @@ class mod_cobra_external extends external_api
         $lingentity = cobra_remote_service::call('getEntityLingIdFromConcept', $params, 'html');
         $lingentity = str_replace("\"", "", $lingentity);
         if ($jsonobj->encodeclic) {
-            cobra_clic($jsonobj->text, $lingentity, $jsonobj->course, $jsonobj->user);
+            cobra_clic($jsonobj->text, $lingentity, $jsonobj->course, $jsonobj->user, $jsonobj->cmid);
         }
 
         $glossarystatus = cobra_is_in_glossary($lingentity, $jsonobj->course, $jsonobj->user);

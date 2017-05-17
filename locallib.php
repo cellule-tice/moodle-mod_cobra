@@ -423,7 +423,7 @@ function cobra_clear_corpus_selection() {
  * @param int $textid the text within which a word was clicked
  * @param int $lingentityid identifier of the linguistic entity that was clicked
  */
-function cobra_clic($textid, $lingentityid, /*$DB,*/ $courseid, $userid) {
+function cobra_clic($textid, $lingentityid, $courseid, $userid, $cmid) {
     global $DB;
     $info = $DB->get_record_select('cobra_clic',
             "course='$courseid' AND user_id='$userid' AND id_text='$textid' AND id_entite_ling='$lingentityid'");
@@ -438,7 +438,7 @@ function cobra_clic($textid, $lingentityid, /*$DB,*/ $courseid, $userid) {
         $dataobject->nbclicsglossary = 1;
         $dataobject->datecreate = time();
         $dataobject->datemodif = time();
-        return  $DB->insert_record('cobra_clic', $dataobject);
+        $result = $DB->insert_record('cobra_clic', $dataobject);
     } else {
         // Update record.
         $dataobject = new  stdClass();
@@ -446,8 +446,25 @@ function cobra_clic($textid, $lingentityid, /*$DB,*/ $courseid, $userid) {
         $dataobject->nbclicsstats = ($info->nbclicsstats + 1);
         $dataobject->nbclicsglossary = ($info->nbclicsglossary + 1);
         $dataobject->datemodif = time();
-        return  $DB->update_record('cobra_clic', $dataobject);
+        $result = $DB->update_record('cobra_clic', $dataobject);
     }
+    if ($info) {
+        $objectid = $info->id;
+    } else {
+        $objectid = $result;
+    }
+    $event = \mod_cobra\event\entry_viewed::create(array(
+        'objectid' => $objectid,
+        'context' => context_module::instance($cmid),
+        'other' => array(
+            'lingentity' => $info->id_entite_ling
+        )
+    ));
+    if (!$info) {
+        $event->changecrud('c');
+    }
+    $event->trigger();
+    return $result;
 }
 
 /**

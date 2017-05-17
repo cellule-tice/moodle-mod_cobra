@@ -54,6 +54,8 @@ function cobra_supports($feature) {
             return false;
         case FEATURE_SHOW_DESCRIPTION:
             return true;
+        case FEATURE_COMPLETION_TRACKS_VIEWS:
+            return true;
         default:
             return null;
     }

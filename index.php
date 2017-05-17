@@ -38,7 +38,6 @@ require_course_login($course);
 
 $params = array('context' => context_course::instance($course->id));
 $event = \mod_cobra\event\course_module_instance_list_viewed::create($params);
-$event->add_record_snapshot('course', $course);
 $event->trigger();
 
 $strname = get_string('modulenameplural', 'mod_cobra');

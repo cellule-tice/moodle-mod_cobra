@@ -185,3 +185,4 @@ $string['inmyglossary'] = 'Présent dans mon glossaire';
 $string['showfullglossary'] = 'Afficher tout mon glossaire';
 $string['deletesure'] = 'Voulez-vous vraiment vider votre glossaire personnel pour ce cours?';
 $string['emptymyglossary'] = 'Vider mon glossaire';
+$string['entry_viewed'] = 'Entrée cliquée';

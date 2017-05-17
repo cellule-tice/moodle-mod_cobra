@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    
+ * @package    mod_cobra
  * @author     Jean-Roch Meurisse
  * @copyright  2016 - Cellule TICE - Unversite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

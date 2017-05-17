@@ -188,3 +188,4 @@ $string['inmyglossary'] = 'Already in my glossary';
 $string['showfullglossary'] = 'Display full glossary';
 $string['deletesure'] = 'Do you really want to empty your personal glossary for this course?';
 $string['emptymyglossary'] = 'Empty my glossary';
+$string['entry_viewed'] = 'Entry clicked';

@@ -56,6 +56,16 @@ if (has_capability('mod/cobra:edit', $context) && false) {
 }
 
 // Add event management here.
+$event = \mod_cobra\event\course_module_viewed::create(array(
+    'objectid' => $PAGE->cm->instance,
+    'context' => $PAGE->context,
+));
+$event->add_record_snapshot('course', $PAGE->course);
+$event->trigger();
+
+// Completion.
+$completion = new completion_info($course);
+$completion->set_module_viewed($cm);
 
 $PAGE->set_url('/mod/cobra/view.php', array('id' => $cm->id));
 
