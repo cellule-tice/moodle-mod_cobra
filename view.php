@@ -50,6 +50,9 @@ global $USER;
 $cobra->user = $USER->id;
 $cobra->cmid = $id;
 
+// Unset intro for ajax params
+$cobra->intro = null;
+
 $cobra->encodeclic = 1;
 if (has_capability('mod/cobra:edit', $context) && false) {
     $cobra->encodeclic = 0;

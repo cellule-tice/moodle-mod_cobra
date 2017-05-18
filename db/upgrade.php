@@ -222,6 +222,34 @@ function xmldb_cobra_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2017050801, 'cobra');
     }
 
+    if ($oldversion < 2017050807) {
+
+        // Define table cobra_glossary_cache to be created.
+        $table = new xmldb_table('cobra_glossary_cache');
+
+        // Adding fields to table cobra_glossary_cache.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('lingentity', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('entry', XMLDB_TYPE_CHAR, '128', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('type', XMLDB_TYPE_CHAR, '12', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('translations', XMLDB_TYPE_CHAR, '512', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('category', XMLDB_TYPE_CHAR, '32', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('extrainfo', XMLDB_TYPE_CHAR, '128', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table cobra_glossary_cache.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('secondary', XMLDB_KEY_UNIQUE, array('lingentity'));
+
+        // Conditionally launch create table for cobra_glossary_cache.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2017050807, 'cobra');
+    }
+
+
 
 
     return true;

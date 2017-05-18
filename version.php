@@ -32,5 +32,4 @@ $plugin->version = 2017050807;
 $plugin->release = 'v2.0-dev';
 $plugin->requires = 2016120503;
 $plugin->maturity = MATURITY_ALPHA;
-$plugin->cron = 0;
 $plugin->dependencies = array();
