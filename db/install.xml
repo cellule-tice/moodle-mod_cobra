@@ -151,5 +151,17 @@
         <KEY NAME="secondary" TYPE="unique" FIELDS="lingentity"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="cobra_text_info_cache" COMMENT="Local copy of text info (title, collection, cecrl level)">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="collection" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="cecrl" TYPE="char" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="CERCL level"/>
+        <FIELD NAME="entities" TYPE="text" SEQUENCE="false" COMMENT="List of entities used in this text"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
   </TABLES>
 </XMLDB>

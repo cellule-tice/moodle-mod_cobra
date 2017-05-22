@@ -249,8 +249,52 @@ function xmldb_cobra_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2017050807, 'cobra');
     }
 
+    if ($oldversion < 2017050809) {
 
+        set_config('lastglossaryupdate', 0, 'mod_cobra');
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2017050809, 'cobra');
+    }
 
+    if ($oldversion < 2017050811) {
+
+        // Define table cobra_text_info_cache to be created.
+        $table = new xmldb_table('cobra_text_info_cache');
+
+        // Adding fields to table cobra_text_info_cache.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('title', XMLDB_TYPE_CHAR, '256', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('collection', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('cecrl', XMLDB_TYPE_CHAR, '3', null, null, null, null);
+
+        // Adding keys to table cobra_text_info_cache.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for cobra_text_info_cache.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        set_config('lasttextinfoupdate', 0, 'mod_cobra');
+
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2017050811, 'cobra');
+    }
+
+    if ($oldversion < 2017050812) {
+
+        // Define field entities to be added to cobra_text_info_cache.
+        $table = new xmldb_table('cobra_text_info_cache');
+        $field = new xmldb_field('entities', XMLDB_TYPE_TEXT, null, null, null, null, null, 'cecrl');
+
+        // Conditionally launch add field entities.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2017050812, 'cobra');
+    }
 
     return true;
 }
