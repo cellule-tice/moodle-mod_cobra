@@ -43,10 +43,6 @@ class renderer extends plugin_renderer_base {
      *
      * @return string html for the page
      */
-    public function render_intextglossary($page) {
-        $data = $page->export_for_template($this);
-        return parent::render_from_template('mod_cobra/intextglossary', $data);
-    }
 
     public function render_cobratext($page) {
         $data = $page->export_for_template($this);

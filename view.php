@@ -29,7 +29,6 @@ require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/lib/cobraremoteservice.php');
 require_once(__DIR__ . '/lib/cobracollectionwrapper.php');
 require_once(__DIR__ . '/lib/glossarylib.php');
-require_once(__DIR__ . '/classes/output/intextglossary.php');
 require_once(__DIR__ . '/classes/output/cobratext.php');
 
 $id = required_param('id', PARAM_INT);
