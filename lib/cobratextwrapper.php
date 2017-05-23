@@ -150,7 +150,8 @@ class cobra_text_wrapper {
     public function get_audio_file_url() {
         $params = array('id_text' => (int)$this->get_text_id());
         $url = cobra_remote_service::call('getAudioFileUrl', $params);
-        return str_replace('http://', 'https://', utf8_decode($url));
+        $url = str_replace('http://', 'https://', utf8_decode($url));
+        return $url;
     }
 
     public function save() {

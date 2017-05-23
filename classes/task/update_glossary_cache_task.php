@@ -15,21 +15,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the version and other meta-info about the plugin
- *
- * Setting the $plugin->version to 0 prevents the plugin from being installed.
- * See https://docs.moodle.org/dev/version.php for more info.
- *
  * @package    mod_cobra
- * @copyright  2016 - Cellule TICE - Unversite de Namur
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Unversite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace mod_cobra\task;
 
-$plugin->component = 'mod_cobra';
-$plugin->version = 2017050812;
-$plugin->release = 'v2.0-dev';
-$plugin->requires = 2016120503;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->dependencies = array();
+require_once($CFG->dirroot . '/mod/cobra/locallib.php');
+
+class update_glossary_cache_task extends \core\task\scheduled_task {
+
+    public function get_name() {
+        return get_string('updateglossarycache', 'mod_cobra');
+    }
+
+    public function execute() {
+        mtrace('Load dirty entries from remote CoBRA server');
+        list($new, $updated) = cobra_update_text_info_cache();
+        mtrace($new . ' entries inserted');
+        mtrace($updated . ' entries updated');
+        set_config('lastglossaryupdate', time(), 'mod_cobra');
+    }
+}

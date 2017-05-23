@@ -808,8 +808,131 @@ function cobra_get_text_title_from_id($textid) {
     return strip_tags($texttitle);
 }
 
+function cobra_get_cached_text_title($textid) {
+    global $DB;
+    return $DB->get_field('cobra_text_info_cache', 'title', array('id' => $textid));
+}
+
+function cobra_update_glossary_cache() {
+    global $DB;
+    //$entries = cobra_remote_service::call('getGlossaryEntries', array('lastupdate' => get_config('mod_cobra', 'lastglossaryupdate')));
+    $entries = cobra_remote_service::call('getGlossaryEntries', array('lastupdate' => 1494527040));
+    $new = 0;
+    $updated = 0;
+    foreach ($entries as $entry) {
+        try {
+            $DB->insert_record_raw('cobra_glossary_cache', $entry, false, false, true);
+            $new++;
+        } catch (dml_write_exception $ex) {
+            if (0 === strpos($ex->debuginfo, 'Duplicate entry')) {
+                try {
+                    $DB->update_record('cobra_glossary_cache', $entry);
+                    $updated++;
+                } catch (Exception $ex) {
+                    return $ex;
+                }
+            }
+        }
+    }
+    return array($new, $updated);
+}
+
+function cobra_update_text_info_cache() {
+    global $DB;
+    $textlist = cobra_remote_service::call('getTextsInfo', array('lastupdate' => get_config('mod_cobra', 'lasttextinfoupdate')));
+    //$textlist = cobra_remote_service::call('getTextsInfo', array('lastupdate' => 0));
+    $new = 0;
+    $updated = 0;
+    foreach ($textlist as $text) {
+        try {
+            //$text->entities = $text->list;
+            $DB->insert_record_raw('cobra_text_info_cache', $text, false, false, true);
+            $new++;
+        } catch (dml_write_exception $ex) {
+            if (0 === strpos($ex->debuginfo, 'Duplicate entry')) {
+                try {
+                    //$text->entities = 'coucou';
+                    $DB->update_record('cobra_text_info_cache', $text);
+                    $updated++;
+                } catch (Exception $ex) {
+                    return $ex;
+                }
+            }
+        }
+    }
+    return array($new, $updated);
+}
+
 function cobra_get_foreign_languages() {
     return array('EN' => 'EN', 'NL' => 'NL');
+}
+
+function cobra_get_glossary_entry($lingentity) {
+    global $DB;
+    $entry = $DB->get_record('cobra_glossary_cache', array('lingentity' => $lingentity));
+    return $entry;
+}
+
+function cobra_get_student_cached_glossary($userid = 0, $courseid = 0, $textid = 0, $page = 0, $perpage = 0) {
+    global $DB;
+
+    $dataquery = "SELECT DISTINCT(id_entite_ling) AS lingentity, id_text, entry, type, translations, category, extrainfo
+                    FROM {cobra_clic} ug
+                    JOIN {cobra_glossary_cache} gc
+                      ON ug.id_entite_ling = gc.lingentity
+                   WHERE course = :courseid
+                         AND user_id = :userid
+                         AND in_glossary = 1
+                ORDER BY entry";
+
+    $fullglossaryresult = $DB->get_records_sql($dataquery, array('courseid' => $courseid, 'userid' => $userid), $page * $perpage, $perpage);
+
+    if (empty($textid)) {
+        $result = $DB->get_records_sql($dataquery, array('courseid' => $courseid, 'userid' => $userid));
+        return array(count($result), $fullglossaryresult);
+    }
+
+    $fullglossarylist = array_keys($fullglossaryresult);
+
+    $entitiesintext = array();
+    $listtoload = array();
+    if ($textid) {
+
+        $entitiesintext = unserialize($DB->get_field('cobra_text_info_cache', 'entities', array('id' => $textid)));
+
+        $textquery = "SELECT DISTINCT(id_entite_ling) AS id_entite_ling
+                        FROM {cobra_clic}
+                       WHERE course = :courseid
+                             AND user_id = :userid
+                             AND in_glossary = 1
+                             AND id_text = :textid";
+
+        $textresult = $DB->get_records_sql($textquery, array('courseid' => $courseid, 'userid' => $userid, 'textid' => $textid));
+        $textglossarylist = array_keys($textresult);
+        $listtoload = array_intersect($fullglossarylist, $entitiesintext);
+    } else {
+        $listtoload = $fullglossarylist;
+    }
+
+    if (!count($listtoload)) {
+        return array();
+    }
+
+    $query = "SELECT id, lingentity, entry, type, translations, category, extrainfo
+                FROM {cobra_glossary_cache}
+               WHERE lingentity IN (" . implode(',', $listtoload) . ")
+               ORDER BY entry";
+    $glossaryentries = $DB->get_records_sql($query);
+    $glossaryentries = array_values($glossaryentries);
+
+    if ($textid) {
+        foreach ($glossaryentries as &$entry) {
+            if (in_array($entry->lingentity, $textglossarylist)) {
+                $entry->fromThisText = true;
+            }
+        }
+    }
+    return $glossaryentries;
 }
 
 class cobra_clean_statistics_form extends moodleform {

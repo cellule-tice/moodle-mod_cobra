@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -14,22 +15,34 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Defines the version and other meta-info about the plugin
- *
- * Setting the $plugin->version to 0 prevents the plugin from being installed.
- * See https://docs.moodle.org/dev/version.php for more info.
+/*
+ * Definition of Cobra scheduled tasks.
  *
  * @package    mod_cobra
- * @copyright  2016 - Cellule TICE - Unversite de Namur
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_cobra';
-$plugin->version = 2017050812;
-$plugin->release = 'v2.0-dev';
-$plugin->requires = 2016120503;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->dependencies = array();
+$tasks = array(
+    array(
+        'classname' => 'mod_cobra\task\update_glossary_cache_task',
+        'blocking' => 0,
+        'minute' => 'R',
+        'hour' => '3',
+        'day' => '*',
+        'dayofweek' => '2',
+        'month' => '*',
+    ),
+    array(
+        'classname' => 'mod_cobra\task\update_text_info_cache_task',
+        'blocking' => 0,
+        'minute' => 'R',
+        'hour' => '3',
+        'day' => '*',
+        'dayofweek' => '2',
+        'month' => '*',
+    ),
+);
