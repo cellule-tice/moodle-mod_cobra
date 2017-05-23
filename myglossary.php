@@ -34,6 +34,8 @@ require_once(__DIR__ . '/lib/glossarylib.php');
 $id = required_param('id', PARAM_INT);
 $cmd = optional_param('cmd', null, PARAM_ALPHA);
 $confirm = optional_param('confirm', 0, PARAM_INT);
+$page = optional_param('page', 0, PARAM_INT);
+$perpage = 25;
 
 list($course, $cm) = get_course_and_cm_from_cmid($id, 'cobra');
 $cobra = $DB->get_record('cobra', array('id' => $cm->instance), '*', MUST_EXIST);
@@ -63,6 +65,42 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 // Add the ajaxcommand for the form.
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'init', array(json_encode($cobra)));
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'global_glossary_actions');
+
+list($totalcount, $data) = cobra_get_student_cached_glossary($cobra->user, $cobra->course, 0, $page, $perpage);
+
+$entries = array();
+if (!empty($data)) {
+
+    foreach ($data as $entry) {
+        $sourcetexttitle = cobra_get_cached_text_title($entry->id_text);
+        $entry->sourcetexttitle = $sourcetexttitle;
+
+        $query = "SELECT GROUP_CONCAT(CAST(id_text AS CHAR)) AS texts
+                    FROM {cobra_clic}
+                   WHERE user_id = :userid
+                         AND id_entite_ling = :lingentity
+                         AND course = :course
+                   GROUP BY id_entite_ling";
+        $result = $DB->get_field_sql($query, array(
+                'userid' => $USER->id,
+                'lingentity' => $entry->lingentity,
+                'course' => $course->id
+            )
+        );
+        $textidlist = explode(',', $result);
+        asort($textidlist);
+
+        $texttitles = array();
+        foreach ($textidlist as $textid) {
+            $texttitles[] = cobra_get_cached_text_title($textid);
+        }
+        $entry->texttitles = $texttitles;
+        $entries[] = $entry;
+    }
+}
+if ('export' == $cmd) {
+    cobra_export_myglossary($entries);
+}
 
 echo $OUTPUT->header();
 // Add buttons for export and trash.
@@ -94,6 +132,9 @@ echo $OUTPUT->heading(get_string('myglossary', 'cobra') . '&nbsp;&nbsp;&nbsp;' .
 if (!$cobra->userglossary) {
     redirect(new moodle_url('/mod/cobra/view.php', array('id' => $cm->id)), 'CoBRA' . ': ' . get_string('myglossaryunavailable', 'cobra', $CFG->cobra_serviceurl), 5);
 }
+if ($perpage) {
+    echo $OUTPUT->paging_bar($totalcount, $page, $perpage, '/mod/cobra/myglossary.php?id='.$cm->id );
+}
 
 $table = new html_table();
 $table->attributes['class'] = 'admintable generaltable';
@@ -116,9 +157,7 @@ $table->head = array(
     $headercell7
 );
 
-if ('export' == $cmd) {
-    cobra_export_myglossary($entries);
-}
+
 if ('empty' == $cmd) {
     //echo $OUTPUT->heading(get_string('myglossary', 'mod_cobra'));
     if (!empty($confirm) && confirm_sesskey()) {
@@ -137,21 +176,24 @@ if ('empty' == $cmd) {
 
 }
 
-$data = cobra_get_remote_glossary_info_for_student();
-$entries = array();
 if (!empty($data)) {
+
     foreach ($data as $entry) {
-        $sourcetextid = $DB->get_field('cobra_clic',
+       // print_object($course->id);print_object($entry->lingentity);print_object($USER->id);die();
+        /*$sourcetextid = $DB->get_field('cobra_clic',
                 'id_text',
                 array(
                     'course' => $course->id,
-                    'id_entite_ling' => $entry->ling_entity,
+                    'id_entite_ling' => $entry->lingentity,
                     'user_id' => $USER->id,
                     'in_glossary' => 1
                 )
-        );
-        $sourcetexttitle = cobra_get_text_title_from_id($sourcetextid);
-        $entry->sourcetexttitle = $sourcetexttitle;
+        );*/
+
+        //$sourcetexttitle = cobra_get_text_title_from_id($entry->id_text);
+        //$sourcetexttitle = cobra_get_cached_text_title($entry->id_text);
+
+        /*$entry->sourcetexttitle = $sourcetexttitle;
 
         $query = "SELECT GROUP_CONCAT(CAST(id_text AS CHAR)) AS texts
                     FROM {cobra_clic}
@@ -161,7 +203,7 @@ if (!empty($data)) {
                    GROUP BY id_entite_ling";
         $result = $DB->get_field_sql($query, array(
                 'userid' => $USER->id,
-                'lingentity' => $entry->ling_entity,
+                'lingentity' => $entry->lingentity,
                 'course' => $course->id
             )
         );
@@ -170,9 +212,10 @@ if (!empty($data)) {
 
         $texttitles = array();
         foreach ($textidlist as $textid) {
-            $texttitles[] = cobra_get_text_title_from_id($textid);
+            //$texttitles[] = cobra_get_text_title_from_id($textid);
+            $texttitles[] = cobra_get_cached_text_title($textid);
         }
-        $entry->texttitles = $texttitles;
+        $entry->texttitles = $texttitles;*/
         $removeiconurl = $OUTPUT->image_url('glossaryremove', 'mod_cobra');
 
         $row = new html_table_row();
@@ -189,7 +232,7 @@ if (!empty($data)) {
         $row->cells[] = $cell;
 
         $cell = new html_table_cell();
-        $cell->text = $entry->extra_info;
+        $cell->text = $entry->extrainfo;
         $row->cells[] = $cell;
 
         $cell = new html_table_cell();
@@ -204,7 +247,7 @@ if (!empty($data)) {
 
         $cell = new html_table_cell();
         $cell->attributes['class'] = 'glossaryIcon';
-        $cellcontent = html_writer::tag('span', $entry->ling_entity, array('id' => 'currentLingEntity', 'class' => 'hidden'));
+        $cellcontent = html_writer::tag('span', $entry->lingentity, array('id' => 'currentLingEntity', 'class' => 'hidden'));
         $cellcontent .= html_writer::img($removeiconurl,
                 get_string('myglossaryremove', 'cobra'),
                 array('title' => get_string('myglossaryremove', 'cobra'), 'class' => 'glossaryremove inDisplay'));
@@ -213,7 +256,7 @@ if (!empty($data)) {
 
         $table->data[] = $row;
 
-        $entries[] = $entry;
+        //$entries[] = $entry;
     }
 
 } else {
@@ -225,6 +268,8 @@ if (!empty($data)) {
     $row->cells[] = $cell;
     $table->data[] = $row;
 }
+
+
 
 $content = html_writer::start_tag('div', array('class' => 'no-overflow'));
 $content .= html_writer::table($table);
