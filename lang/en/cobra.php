@@ -189,3 +189,5 @@ $string['showfullglossary'] = 'Display full glossary';
 $string['deletesure'] = 'Do you really want to empty your personal glossary for this course?';
 $string['emptymyglossary'] = 'Empty my glossary';
 $string['entry_viewed'] = 'Entry clicked';
+$string['updateglossarycache'] = 'Update glossary cache';
+$string['updatetextinfocache'] = 'Update cobra texts info cache';

@@ -110,14 +110,14 @@ class mod_cobra_external extends external_api
         return new external_multiple_structure(
             new external_single_structure(
                 array(
-                    'ling_entity' => new external_value(PARAM_INT, 'lingentity id'),
+                    'lingentity' => new external_value(PARAM_INT, 'lingentity id'),
                     'entry' => new external_value(PARAM_RAW, 'word/expression'),
                     'type' => new external_value(PARAM_RAW, 'lemma or expression'),
                     'translations' => new external_value(PARAM_RAW, 'list of translations'),
                     'category' => new external_value(PARAM_RAW, 'category'),
-                    'extra_info' => new external_value(PARAM_RAW, 'additional info'),
-                    'new' => new external_value(PARAM_BOOL, 'added during this session or not'),
-                    'fromThisText' => new external_value(PARAM_BOOL, 'clicked and added in this text')
+                    'extrainfo' => new external_value(PARAM_RAW, 'additional info'),
+                    'new' => new external_value(PARAM_BOOL, 'added during this session or not', false),
+                    'fromThisText' => new external_value(PARAM_BOOL, 'clicked and added in this text', false)
                 )
             )
         );
@@ -125,7 +125,7 @@ class mod_cobra_external extends external_api
 
     public static function load_glossary($textid, $courseid, $userid) {
         $params = self::validate_parameters(self::load_glossary_parameters(), array('textid' => $textid, 'courseid' => $courseid, 'userid' => $userid));
-        $data = cobra_get_remote_glossary_info_for_student($textid, $courseid, $userid);
+        $data = cobra_get_student_cached_glossary($userid, $courseid, $textid);
         return $data;
     }
 
@@ -146,12 +146,12 @@ class mod_cobra_external extends external_api
 
         return new external_single_structure(
             array(
-                'ling_entity' => new external_value(PARAM_INT, 'lingentity id'),
+                'lingentity' => new external_value(PARAM_INT, 'lingentity id'),
                 'entry' => new external_value(PARAM_RAW, 'word/expression'),
                 'type' => new external_value(PARAM_RAW, 'lemma or expression'),
                 'translations' => new external_value(PARAM_RAW, 'list of translations'),
                 'category' => new external_value(PARAM_RAW, 'category'),
-                'extra_info' => new external_value(PARAM_RAW, 'additional info'),
+                'extrainfo' => new external_value(PARAM_RAW, 'additional info'),
                 'new' => new external_value(PARAM_BOOL, 'added during this session or not'),
                 'fromThisText' => new external_value(PARAM_BOOL, 'clicked and added in this text')
             )
@@ -175,7 +175,11 @@ class mod_cobra_external extends external_api
         );
 
         if ($result) {
-            return cobra_get_remote_glossary_info_for_student($textid, $courseid, $userid, $lingentity);
+            //return cobra_get_remote_glossary_info_for_student($textid, $courseid, $userid, $lingentity);
+            $entry = cobra_get_glossary_entry($lingentity);
+            $entry->new = true;
+            $entry->fromThisText = true;
+            return $entry;
         } else {
             throw Exception('error');
         }

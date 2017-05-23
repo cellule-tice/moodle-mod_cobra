@@ -186,3 +186,5 @@ $string['showfullglossary'] = 'Afficher tout mon glossaire';
 $string['deletesure'] = 'Voulez-vous vraiment vider votre glossaire personnel pour ce cours?';
 $string['emptymyglossary'] = 'Vider mon glossaire';
 $string['entry_viewed'] = 'Entrée cliquée';
+$string['updateglossarycache'] = 'Mise à jour du cache du glossaire';
+$string['updatetextinfocache'] = 'Mise à jour du cache des informations sur les textes';

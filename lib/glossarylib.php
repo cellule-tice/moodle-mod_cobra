@@ -415,6 +415,7 @@ function cobra_get_remote_glossary_info_for_student($textid = 0, $courseid = 0, 
     }
     $chunks = array_chunk($listtoload, 200, true);
     $flatlisttoload = '';
+
     $glossaryentries = array();
     foreach ($chunks as $chunk) {
         $flatlisttoload = implode(',', $chunk);
@@ -422,11 +423,14 @@ function cobra_get_remote_glossary_info_for_student($textid = 0, $courseid = 0, 
         $glossaryentries = array_merge($glossaryentries, cobra_remote_service::call('getGlossaryInfoForStudent', $params));
     }
 
+
     if ($textid) {
         foreach ($glossaryentries as &$entry) {
             if (in_array($entry->ling_entity, $textglossarylist)) {
                 $entry->fromThisText = true;
             }
+            $entry->lingentity = $entry->ling_entity;
+            $entry->extrainfo = $entry->extra_info;
         }
     }
     return $glossaryentries;
@@ -448,7 +452,7 @@ function cobra_export_myglossary($data) {
         $record = array(
             $entry->entry,
             $entry->category,
-            $entry->extra_info,
+            $entry->extrainfo,
             utf8_decode($entry->translations),
             $entry->sourcetexttitle,
             '' . count($entry->texttitles) . ' texte(s)');

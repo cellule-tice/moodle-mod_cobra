@@ -189,7 +189,7 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                     .done(function(response) {
                         // Remove entry from displayed glossary and refresh view.
                         glossaryentries.forEach(function(result, index) {
-                            if (parseInt(result.ling_entity) === response.lingentity) {
+                            if (parseInt(result.lingentity) === response.lingentity) {
                                 glossaryentries.splice(index, 1);
                             }
                         });
