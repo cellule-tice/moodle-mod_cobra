@@ -33,9 +33,18 @@ require_once(__DIR__ . '/lib/glossarylib.php');
 
 $id = required_param('id', PARAM_INT);
 $cmd = optional_param('cmd', null, PARAM_ALPHA);
+$confirm = optional_param('confirm', 0, PARAM_INT);
+$page = optional_param('page', 0, PARAM_INT);
+$perpage = 25;
 
 list($course, $cm) = get_course_and_cm_from_cmid($id, 'cobra');
 $cobra = $DB->get_record('cobra', array('id' => $cm->instance), '*', MUST_EXIST);
+
+// Keep user id and cmid for ajax calls
+global $USER, $OUTPUT;
+$cobra->user = $USER->id;
+$cobra->cmid = $id;
+
 $context = context_module::instance($cm->id);
 
 require_login($course, true, $cm);
@@ -44,19 +53,87 @@ require_capability('mod/cobra:view', $context);
 // Print the page header.
 $PAGE->set_url('/mod/cobra/myglossary.php', array('id' => $cm->id));
 
-$PAGE->set_title(format_string($cobra->name));
-
-$PAGE->navbar->add(get_string('myglossary', 'cobra'));
+$PAGE->set_title(format_string($course->fullname));
+$PAGE->set_heading(format_string($course->fullname));
+$PAGE->navbar->ignore_active();
+$PAGE->navbar->add(get_string('mycourses'));
+$PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
+$PAGE->navbar->add(get_string('myglossary', 'cobra'), new moodle_url('/mod/cobra/myglossary.php', array('id' => $id)));
 
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
 // Add the ajaxcommand for the form.
-$PAGE->requires->jquery();
-$PAGE->requires->js('/mod/cobra/js/cobra.js');
-$PAGE->requires->js_init_call('M.mod_cobra.remove_from_global_glossary');
+$PAGE->requires->js_call_amd('mod_cobra/cobra', 'init', array(json_encode($cobra)));
+$PAGE->requires->js_call_amd('mod_cobra/cobra', 'global_glossary_actions');
+
+list($totalcount, $data) = cobra_get_student_cached_glossary($cobra->user, $cobra->course, 0, $page, $perpage);
+
+$entries = array();
+if (!empty($data)) {
+
+    foreach ($data as $entry) {
+        $sourcetexttitle = cobra_get_cached_text_title($entry->id_text);
+        $entry->sourcetexttitle = $sourcetexttitle;
+
+        $query = "SELECT GROUP_CONCAT(CAST(id_text AS CHAR)) AS texts
+                    FROM {cobra_clic}
+                   WHERE user_id = :userid
+                         AND id_entite_ling = :lingentity
+                         AND course = :course
+                   GROUP BY id_entite_ling";
+        $result = $DB->get_field_sql($query, array(
+                'userid' => $USER->id,
+                'lingentity' => $entry->lingentity,
+                'course' => $course->id
+            )
+        );
+        $textidlist = explode(',', $result);
+        asort($textidlist);
+
+        $texttitles = array();
+        foreach ($textidlist as $textid) {
+            $texttitles[] = cobra_get_cached_text_title($textid);
+        }
+        $entry->texttitles = $texttitles;
+        $entries[] = $entry;
+    }
+}
+if ('export' == $cmd) {
+    cobra_export_myglossary($entries);
+}
+
+echo $OUTPUT->header();
+// Add buttons for export and trash.
+$exportbutton = html_writer::link(new moodle_url(
+    '/mod/cobra/myglossary.php',
+    array(
+        'id' => $id,
+        'cmd' => 'export',
+    )),
+    '',
+    array(
+        'class' => 'glossaryexport',
+        'title' => get_string('exportmyglossary', 'cobra')
+    ));
+$emptybutton = html_writer::link(new moodle_url(
+    '/mod/cobra/myglossary.php',
+    array(
+        'id' => $id,
+        'cmd' => 'empty',
+    )),
+    '',
+    array(
+        'class' => 'emptyglossary',
+        'title' => get_string('emptymyglossary', 'cobra')
+    ));
+
+echo $OUTPUT->heading(get_string('myglossary', 'cobra') . '&nbsp;&nbsp;&nbsp;' . $exportbutton. '&nbsp;&nbsp;&nbsp;' . $emptybutton);
 
 if (!$cobra->userglossary) {
-    redirect(new moodle_url('/mod/cobra/view.php', array('id' => $cm->id)), 'CoBRA' . ': ' . get_string('myglossaryunavailable', 'cobra', $CFG->cobra_serverhost), 5);
+    redirect(new moodle_url('/mod/cobra/view.php', array('id' => $cm->id)), 'CoBRA' . ': ' . get_string('myglossaryunavailable', 'cobra', $CFG->cobra_serviceurl), 5);
+}
+if ($perpage) {
+    echo $OUTPUT->paging_bar($totalcount, $page, $perpage, '/mod/cobra/myglossary.php?id='.$cm->id );
 }
 
 $table = new html_table();
@@ -80,21 +157,43 @@ $table->head = array(
     $headercell7
 );
 
-$data = cobra_get_remote_glossary_info_for_student();
-$entries = array();
+
+if ('empty' == $cmd) {
+    //echo $OUTPUT->heading(get_string('myglossary', 'mod_cobra'));
+    if (!empty($confirm) && confirm_sesskey()) {
+        cobra_empty_glossary($cobra->course, $cobra->user);
+    } else {
+        $PAGE->navbar->add(get_string('delete'));
+        $PAGE->set_title($course->shortname);
+        $PAGE->set_heading($course->fullname);
+
+        echo $OUTPUT->confirm(get_string('deletesure', 'mod_cobra'),
+            "myglossary.php?cmd=empty&confirm=$course->id&id=$cobra->cmid",
+            $CFG->wwwroot.'/mod/cobra/myglossary.php?id='.$cobra->cmid);
+        echo $OUTPUT->footer();
+        die;
+    }
+
+}
+
 if (!empty($data)) {
+
     foreach ($data as $entry) {
-        $sourcetextid = $DB->get_field('cobra_clic',
+       // print_object($course->id);print_object($entry->lingentity);print_object($USER->id);die();
+        /*$sourcetextid = $DB->get_field('cobra_clic',
                 'id_text',
                 array(
                     'course' => $course->id,
-                    'id_entite_ling' => $entry->ling_entity,
+                    'id_entite_ling' => $entry->lingentity,
                     'user_id' => $USER->id,
                     'in_glossary' => 1
                 )
-        );
-        $sourcetexttitle = cobra_get_text_title_from_id($sourcetextid);
-        $entry->sourcetexttitle = $sourcetexttitle;
+        );*/
+
+        //$sourcetexttitle = cobra_get_text_title_from_id($entry->id_text);
+        //$sourcetexttitle = cobra_get_cached_text_title($entry->id_text);
+
+        /*$entry->sourcetexttitle = $sourcetexttitle;
 
         $query = "SELECT GROUP_CONCAT(CAST(id_text AS CHAR)) AS texts
                     FROM {cobra_clic}
@@ -104,7 +203,7 @@ if (!empty($data)) {
                    GROUP BY id_entite_ling";
         $result = $DB->get_field_sql($query, array(
                 'userid' => $USER->id,
-                'lingentity' => $entry->ling_entity,
+                'lingentity' => $entry->lingentity,
                 'course' => $course->id
             )
         );
@@ -113,10 +212,11 @@ if (!empty($data)) {
 
         $texttitles = array();
         foreach ($textidlist as $textid) {
-            $texttitles[] = cobra_get_text_title_from_id($textid);
+            //$texttitles[] = cobra_get_text_title_from_id($textid);
+            $texttitles[] = cobra_get_cached_text_title($textid);
         }
-        $entry->texttitles = $texttitles;
-        $removeiconurl = $OUTPUT->pix_url('glossaryremove', 'cobra');
+        $entry->texttitles = $texttitles;*/
+        $removeiconurl = $OUTPUT->image_url('glossaryremove', 'mod_cobra');
 
         $row = new html_table_row();
         $cell = new html_table_cell();
@@ -132,7 +232,7 @@ if (!empty($data)) {
         $row->cells[] = $cell;
 
         $cell = new html_table_cell();
-        $cell->text = $entry->extra_info;
+        $cell->text = $entry->extrainfo;
         $row->cells[] = $cell;
 
         $cell = new html_table_cell();
@@ -147,20 +247,18 @@ if (!empty($data)) {
 
         $cell = new html_table_cell();
         $cell->attributes['class'] = 'glossaryIcon';
-        $cellcontent = html_writer::tag('span', $entry->ling_entity, array('id' => 'currentLingEntity', 'class' => 'hidden'));
+        $cellcontent = html_writer::tag('span', $entry->lingentity, array('id' => 'currentLingEntity', 'class' => 'hidden'));
         $cellcontent .= html_writer::img($removeiconurl,
                 get_string('myglossaryremove', 'cobra'),
-                array('title' => get_string('myglossaryremove', 'cobra'), 'class' => 'gGlossaryRemove inDisplay'));
+                array('title' => get_string('myglossaryremove', 'cobra'), 'class' => 'glossaryremove inDisplay'));
         $cell->text = $cellcontent;
         $row->cells[] = $cell;
 
         $table->data[] = $row;
 
-        $entries[] = $entry;
+        //$entries[] = $entry;
     }
-    if ('export' == $cmd) {
-        cobra_export_myglossary($entries);
-    }
+
 } else {
     $row = new html_table_row();
     $cell = new html_table_cell();
@@ -171,26 +269,15 @@ if (!empty($data)) {
     $table->data[] = $row;
 }
 
+
+
 $content = html_writer::start_tag('div', array('class' => 'no-overflow'));
 $content .= html_writer::table($table);
 $content .= html_writer::end_tag('div');
 // Output starts here.
-echo $OUTPUT->header();
+//echo $OUTPUT->header();
 
-// Replace the following lines with you own code.
-$exportbutton = html_writer::link(new moodle_url(
-                    '/mod/cobra/myglossary.php',
-                    array(
-                        'id' => $id,
-                        'cmd' => 'export',
-                    )),
-            '',
-            array(
-                'class' => 'glossaryExport',
-                'title' => get_string('exportmyglossary', 'cobra')
-            ));
 
-echo $OUTPUT->heading(get_string('myglossary', 'cobra') . '&nbsp;&nbsp;&nbsp;' . $exportbutton);
 
 echo $OUTPUT->box_start('generalbox box-content');
 echo $content;

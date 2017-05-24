@@ -15,21 +15,37 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the version and other meta-info about the plugin
+ * Renderer class for local hackfest.
  *
- * Setting the $plugin->version to 0 prevents the plugin from being installed.
- * See https://docs.moodle.org/dev/version.php for more info.
- *
- * @package    mod_cobra
- * @copyright  2016 - Cellule TICE - Unversite de Namur
+ * @package    local_hackfest
+ * @copyright  2015 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace mod_cobra\output;
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
-$plugin->component = 'mod_cobra';
-$plugin->version = 2017050812;
-$plugin->release = 'v2.0-dev';
-$plugin->requires = 2016120503;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->dependencies = array();
+use plugin_renderer_base;
+
+/**
+ * Renderer class for local hackfest.
+ *
+ * @package    local_hackfest
+ * @copyright  2015 Damyon Wiese
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class renderer extends plugin_renderer_base {
+
+    /**
+     * Defer to template.
+     *
+     * @param index_page $page
+     *
+     * @return string html for the page
+     */
+
+    public function render_cobratext($page) {
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('mod_cobra/cobratext', $data);
+    }
+}

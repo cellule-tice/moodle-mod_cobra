@@ -25,7 +25,9 @@
  * Moodle is performing actions across all modules.
  *
  * @package    mod_cobra
- * @copyright  2016 - Cellule TICE - Unversite de Namur
+ * @author     Jean-Roch Meurisse
+ * @author     Laurence Dumortier
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -48,7 +50,7 @@ class cobra_remote_service {
         );
         $response = new stdClass();
         $site = get_site();
-        $url = $CFG->cobra_serverhost;
+        $url = get_config('mod_cobra', 'serviceurl');
 
         $params['caller'] = $site->shortname;
         $params['from'] = 'moodle';

@@ -25,7 +25,9 @@
  * here will all be database-neutral, using the functions defined in DLL libraries.
  *
  * @package    mod_cobra
- * @copyright  2016 - Cellule TICE - Unversite de Namur
+ * @author     Jean-Roch Meurisse
+ * @author     Laurence Dumortier
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -174,6 +176,124 @@ function xmldb_cobra_upgrade($oldversion) {
 
         // Cobra savepoint reached.
         upgrade_mod_savepoint(true, 2016051800, 'cobra');
+    }
+
+    if ($oldversion < 2017050801) {
+
+        // Define field collection to be added to cobra.
+        $table = new xmldb_table('cobra');
+        $field = new xmldb_field('collection', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, '0', 'course');
+
+        // Conditionally launch add field collection.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field text to be added to cobra.
+        $field = new xmldb_field('text', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, '0', 'collection');
+
+        // Conditionally launch add field text.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('isdefaultdisplayprefs', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'annotations');
+
+        // Conditionally launch add field isdefaultcorpusorder.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field corpusorder to be added to cobra.
+        $field = new xmldb_field('corpusorder', XMLDB_TYPE_CHAR, '64', null, XMLDB_NOTNULL, null, null, 'annotations');
+
+        // Conditionally launch add field corpusorder.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('isdefaultcorpusorder', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'corpusorder');
+
+        // Conditionally launch add field isdefaultcorpusorder.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2017050801, 'cobra');
+    }
+
+    if ($oldversion < 2017050807) {
+
+        // Define table cobra_glossary_cache to be created.
+        $table = new xmldb_table('cobra_glossary_cache');
+
+        // Adding fields to table cobra_glossary_cache.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('lingentity', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('entry', XMLDB_TYPE_CHAR, '128', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('type', XMLDB_TYPE_CHAR, '12', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('translations', XMLDB_TYPE_CHAR, '512', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('category', XMLDB_TYPE_CHAR, '32', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('extrainfo', XMLDB_TYPE_CHAR, '128', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table cobra_glossary_cache.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('secondary', XMLDB_KEY_UNIQUE, array('lingentity'));
+
+        // Conditionally launch create table for cobra_glossary_cache.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2017050807, 'cobra');
+    }
+
+    if ($oldversion < 2017050809) {
+
+        set_config('lastglossaryupdate', 0, 'mod_cobra');
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2017050809, 'cobra');
+    }
+
+    if ($oldversion < 2017050811) {
+
+        // Define table cobra_text_info_cache to be created.
+        $table = new xmldb_table('cobra_text_info_cache');
+
+        // Adding fields to table cobra_text_info_cache.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('title', XMLDB_TYPE_CHAR, '256', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('collection', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('cecrl', XMLDB_TYPE_CHAR, '3', null, null, null, null);
+
+        // Adding keys to table cobra_text_info_cache.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for cobra_text_info_cache.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        set_config('lasttextinfoupdate', 0, 'mod_cobra');
+
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2017050811, 'cobra');
+    }
+
+    if ($oldversion < 2017050812) {
+
+        // Define field entities to be added to cobra_text_info_cache.
+        $table = new xmldb_table('cobra_text_info_cache');
+        $field = new xmldb_field('entities', XMLDB_TYPE_TEXT, null, null, null, null, null, 'cecrl');
+
+        // Conditionally launch add field entities.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2017050812, 'cobra');
     }
 
     return true;

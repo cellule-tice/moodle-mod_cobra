@@ -21,7 +21,9 @@
  * if you like, and it can span multiple lines.
  *
  * @package    mod_cobra
- * @copyright  2016 - Cellule TICE - Unversite de Namur
+ * @author     Jean-Roch Meurisse
+ * @author     Laurence Dumortier
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -48,7 +50,7 @@ $string['cobra:view'] = 'Voir';
 $string['cobraname'] = 'Nom';
 $string['cobraname_help'] = 'Nom attribué à la ressource CoBRA dans votre cours.
 La valeur par défaut est "Lecture de textes"';
-$string['cobraserverhost'] = 'URL des webservices';
+$string['cobraserviceurl'] = 'URL des webservices';
 $string['collection'] = 'Collection';
 $string['collectionname'] = 'Nom de la collection';
 $string['collectionnamecannotbeempty'] = 'Le nom de la collection ne peut être vide';
@@ -142,3 +144,47 @@ $string['totalclicnumber'] = 'Nombre total de clics';
 $string['CECR_level'] = 'CECR';
 $string['mytext'] = 'Mon texte';
 $string['institutionname'] = 'Institution';
+$string['defaultcorpusselection'] = 'Sélection par défaut des corpus';
+$string['forenglish'] = 'Pour l\'anglais';
+$string['forenglish_desc'] = 'Sélection et ordre d\'affichage par défaut des exemples tirés des corpus (liste séparée par des virgules)<br/>Types disponibles :<br/>
+<ul style="width:50%;">
+<li style="background-color: #CCFFCC">1 : langue usuelle (édités à l\'UNamur)</li>
+<li style="background-color: #99FF99">11 : langue usuelle</li>
+<li style="background-color: #FFCC99">21 : politique</li>
+<li style="background-color: #99CCFF">32 : art et histoire</li>
+<li style="background-color: #FFFF66">42 : informatique</li>
+<li style="background-color: #CC99CC">51 : sciences (édités à l\'UNamur)</li>
+<li style="background-color: #CCCCFF">52 : sciences</li>
+<li style="background-color: #FFCCCC">62 : économie</li></ul>';
+$string['fordutch'] = 'Pour le néerlandais';
+$string['fordutch_desc'] = 'Sélection et ordre d\'affichage par défaut des exemples tirés des corpus (liste séparée par des virgules)<br/>Types disponibles :<br/>
+<ul style="width:50%;">
+<li style="background-color: #CCFFCC">1 : langue usuelle (édités à l\'UNamur)</li>
+<li style="background-color: #99FF99">11 : langue usuelle</li>
+<li style="background-color: #FFCC99">21 : politique</li>
+<li style="background-color: #FF9966">22 : droit</li>
+<li style="background-color: #99CCFF">32 : art et histoire</li>
+<li style="background-color: #FFFF66">42 : informatique</li>
+<li style="background-color: #CCCCFF">52 : sciences </li>
+<li style="background-color: #FFCCCC">62 : économie </li></ul>';
+$string['defaultflag'] = 'Conserver par défaut';
+$string['defaultflag_help'] = 'Utiliser par défaut ces paramètres pour les prochains textes';
+$string['corpusselection_help'] = 'Sélection et ordre d\'affichage par défaut des exemples tirés des corpus (liste séparée par des virgules)<br/>Types disponibles :<br/>
+<ul>
+<li class="usuel_FUNDP">1 : langue usuelle (édités à l\'UNamur)</li>
+<li class="usuel">11 : langue usuelle</li>
+<li class="semi-technique">21 : politique</li>
+<li class="technique">22 : droit (uniquement néerlandais)</li>
+<li class="histoire">32 : art et histoire</li>
+<li class="informatique">42 : informatique</li>
+<li class="sciences">52 : sciences </li>
+<li class="sciences_FUNDP">51 : sciences (édités à l\'UNamur) (uniquement anglais)</li>
+<li class="eco">62 : économie </li></ul>';
+$string['addtomyglossary'] = 'Ajouter à mon glossaire';
+$string['inmyglossary'] = 'Présent dans mon glossaire';
+$string['showfullglossary'] = 'Afficher tout mon glossaire';
+$string['deletesure'] = 'Voulez-vous vraiment vider votre glossaire personnel pour ce cours?';
+$string['emptymyglossary'] = 'Vider mon glossaire';
+$string['entry_viewed'] = 'Entrée cliquée';
+$string['updateglossarycache'] = 'Mise à jour du cache du glossaire';
+$string['updatetextinfocache'] = 'Mise à jour du cache des informations sur les textes';

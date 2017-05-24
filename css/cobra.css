@@ -6,13 +6,13 @@
 .titre_lecon {
     font-family : Verdana, Arial, Helvetica, sans-serif;
     color : #000000;
-    padding : 5px;
+    padding : 1rem;
     margin: 0px;
     font-size: 24px;
 }
 
 h2.titre_lecon {
-    box-shadow: none;
+    /*box-shadow: none;*/
 }
 
 .sous-titre {
@@ -66,7 +66,9 @@ h2.titre_lecon {
     padding-left: 0;
     padding-right: 0;
     width: 65%;
-    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
+    background-color: #eceeef;
+    filter: sepia(15%);
+    /*box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);*/
 }
 
 #audioplayer {
@@ -91,18 +93,26 @@ h2.titre_lecon {
     color: #fff;
 }
 
-.glossaryExport:before {
+.glossaryexport:before {
     font-family: FontAwesome;
     content: " \f019";
-    color: #333;
+    color: #3a3a3a;
 }
 
-.glossaryExport:hover {
+.emptyglossary:before {
+    font-family: FontAwesome;
+    content: " \f1f8";
+    color: #3a3a3a;
+}
+
+.glossaryexport:hover,
+.emptyglossary:hover {
     text-decoration: none !important;
 
 }
 
-.glossaryExport:hover:before {
+.glossaryexport:hover:before,
+.emptyglossary:hover:before {
     color: #55ab26;
 }
 
@@ -111,13 +121,21 @@ h2.titre_lecon {
     float:left;
     text-align:justify;
     color:#333;
-    background-color: #FFFFFF;
+    /*background-color: #f1f1f1;*/
     padding: 15px;
     overflow:auto;
 }
 
+#text:after {
+    content: "";
+    display: block;
+    height: 50px;
+    width: 100%;
+}
+
 #card, #glossary {
-    background-color : #fff;
+    background-color : #eceeef;
+    filter: sepia(15%);
     font-size: 0.9em;
     color: #333;
     padding:5px;
@@ -125,15 +143,18 @@ h2.titre_lecon {
     width:33%;
     margin: 0 0 10px 20px;
     overflow: auto;
-    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
+    /*box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);*/
 }
 
-.glossaryAdd, .glossaryRemove, .gGlossaryRemove {
-    cursor: help;
+.glossaryadd, .glossaryremove, .gglossaryremove {
+    cursor: pointer;
     height: 20px;
 }
 
-
+.righty {
+    float:right;
+    padding: .5rem;
+}
 
 #details{
     margin-top: 10px;
@@ -141,6 +162,8 @@ h2.titre_lecon {
     float:left;
     overflow:auto;
     padding:0;
+    background-color: #eceeef;
+    filter: sepia(15%);
 }
 
 #full_concordance {
@@ -162,7 +185,7 @@ h2.titre_lecon {
 }
 
 .lemma, .expression {
-    cursor:help;
+    cursor:pointer;
 }
 
 .entryDisplay {
@@ -191,11 +214,11 @@ h2.titre_lecon {
     display: none;
 }
 
-.digestRow
+/*.digestRow
 {
     background-color: #FFF;
 
-}
+}*/
 
 .glossaryIcon {
     padding: 4px 1px 1px 4px;
@@ -209,7 +232,7 @@ h2.titre_lecon {
 .entryTable .superHeader th, .entryTable th.superHeader, .entryTable td.superHeader
 {
     color: #333;
-    background-color: #FFF;
+    /*background-color: #FFF;*/
     font-weight: normal;
     text-align: center;
 }
@@ -241,12 +264,12 @@ h2.titre_lecon {
 .cc_source
 {
     font-weight: bold;
-    cursor: help;
+    cursor: pointer;
     color: #333;
 }
 
 .box-content {
-    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
+    /*box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);*/
     padding: 15px;
     background-color: #fff;
 }
@@ -340,7 +363,7 @@ h2.titre_lecon {
 .description
 {
     color: #333;
-    background-color: #FFF;
+    /*background-color: #FFF;*/
     font-weight: normal;
     text-align: left;
 }
@@ -428,4 +451,11 @@ p{
 #page-mod-cobra-statistics fieldset.hidden, #page-mod-cobra-glossary fieldset.hidden {
     display: inherit !important;
     visibility: inherit !important;
+}
+
+.showglossary {
+    background-color: #494949;
+    padding: 3px;
+    border-radius: 3px;
+    color: white;
 }

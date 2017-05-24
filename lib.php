@@ -47,12 +47,16 @@ function cobra_supports($feature) {
         case FEATURE_MOD_ARCHETYPE :
             return MOD_ARCHETYPE_RESOURCE;
         case FEATURE_MOD_INTRO :
-            return false;
+            return true;
         case FEATURE_GROUPS:
             return false;
         case FEATURE_GROUPINGS:
             return false;
         case FEATURE_SHOW_DESCRIPTION:
+            return true;
+        case FEATURE_COMPLETION_TRACKS_VIEWS:
+            return true;
+        case FEATURE_BACKUP_MOODLE2:
             return true;
         default:
             return null;
