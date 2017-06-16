@@ -251,19 +251,6 @@ function cobra_extend_settings_navigation($settings, $cobranode) {
         $beforekey = $keys[$i + 1];
     }
 
-    /*if (has_capability('mod/quiz:manageoverrides', $PAGE->cm->context)) {
-        $url = new moodle_url('/mod/quiz/overrides.php', array('cmid'=>$PAGE->cm->id));
-        $node = navigation_node::create(get_string('groupoverrides', 'quiz'),
-            new moodle_url($url, array('mode'=>'group')),
-            navigation_node::TYPE_SETTING, null, 'mod_quiz_groupoverrides');
-        $quiznode->add_node($node, $beforekey);
-
-        $node = navigation_node::create(get_string('useroverrides', 'quiz'),
-            new moodle_url($url, array('mode'=>'user')),
-            navigation_node::TYPE_SETTING, null, 'mod_quiz_useroverrides');
-        $quiznode->add_node($node, $beforekey);
-    }*/
-
     if (has_capability('mod/cobra:settings', $PAGE->cm->context)) {
         $node = navigation_node::create(get_string('managetextcollections', 'cobra'),
             new moodle_url('/mod/cobra/collectionmanagement.php', array('id' => $PAGE->cm->id)),
