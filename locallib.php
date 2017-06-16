@@ -535,6 +535,9 @@ function cobra_get_corpus_type_display_order($returntype = 'object') {
 
 function cobra_get_default_corpus_order($course, $language) {
     global $DB;
+    if (is_array($language)) {
+        $language = $language[0];
+    }
     $corpusorder = $DB->get_field('cobra', 'corpusorder', array('course' => $course, 'language' => $language, 'isdefaultcorpusorder' => 1));
     if (empty($corpusorder)) {
         if ($language == 'EN') {

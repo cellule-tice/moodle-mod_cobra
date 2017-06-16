@@ -7,10 +7,12 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
     var glossaryentries;
     return {
         init: function(args) {
+            // Adapt glossary height to text height.
+            $("#glossary").css('height', $("#cobratext").css('height'));
             // Gather display and corpus params
             jsonparams = args;
             objparams = JSON.parse(jsonparams);
-            // Disable blocks toggle (hidden by default in Cobra context.
+            // Disable blocks toggle (hidden by default in Cobra context).
             $('small').hide();
             $('.hbl').hide();
             $('.sbl').hide();
@@ -19,6 +21,20 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
         },
 
         mod_form_triggers: function() {
+            var scrolltop = 0;
+            var scrollvalue = $(document.createElement('input'))
+                .attr('type', 'hidden')
+                .attr('name', 'scrolltop')
+                .attr('value', 0);
+            scrollvalue.appendTo('#id_language');
+
+            if ($('input[name="scrolltop"]').length) {
+                scrolltop = $('input[name="scrolltop"]').val();
+            }
+            $('html, body').animate({
+                scrollTop: scrolltop,
+            }, 100);
+
             var langbutton = $('#id_updatelanguage');
             var langselect = $('#id_language');
             var corpusorder = $('#id_corpusorder');
@@ -46,11 +62,14 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                 } else if (lang == 'NL') {
                     corpusorder.val(objparams.nl);
                 }
+                scrollvalue.attr('value', $(window).scrollTop());
                 langbutton.trigger('click');
             });
 
             collselect.on('change', function() {
+                scrollvalue.attr('value', $(window).scrollTop());
                 collbutton.trigger('click');
+                //scrolltop = 100;
             });
 
             textselect.on('change', function() {
@@ -60,12 +79,21 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
             });
 
             defaultdisplaycheckbox.on('change', function() {
+                /*var scrollvalue = $(document.createElement('input'))
+                    .attr('type', 'hidden')
+                    .attr('name', 'scrolltop')
+                    .attr('id', 'id_scrolltop')
+                    .attr('value', $(window).scrollTop());
+                scrollvalue.appendTo('#id_language');*/
+                scrollvalue.attr('value', $(window).scrollTop());
                defaultdisplaybutton.trigger('click');
             });
 
             defaultcorpuscheckbox.on('change', function() {
+                scrollvalue.attr('value', $(window).scrollTop());
                defaultcorpusbutton.trigger('click');
             });
+
         },
         entry_on_click: function() {
             $('.lemma').on('click', function() {
@@ -76,6 +104,9 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                 $(this).removeClass('emphasize');
                 $(this).addClass('clicked');
                 displayDetails(conceptId, false);
+                $('html, body').animate({
+                    scrollTop: $('#details').offset().top,
+                }, 1000);
 
             });
             $('.expression').on('click', function() {
@@ -103,6 +134,9 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                 $(this).removeClass('emphasize');
                 $(this).addClass('clicked');
                 displayDetails(conceptId, true);
+                $('html, body').animate({
+                    scrollTop: $('#details').offset().top,
+                }, 1000);
             });
 
         },
@@ -216,7 +250,7 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
         },
         global_glossary_actions : function() {
             $('#myglossary').on('click', '.glossaryremove', function () {
-                var lingEntity = $(this).prev().text();
+                var lingEntity = $(this).find('span:first').text();
                 var currentElement = $(this);
                 var promises = ajax.call([{
                     methodname: 'mod_cobra_remove_from_glossary',
@@ -231,7 +265,7 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                         // Remove entry from displayed glossary and refresh view.
                         if (response.lingentity == lingEntity) {
                             if ($(currentElement).hasClass('inDisplay')) {
-                                $(currentElement.parent().parent().remove());
+                                $(currentElement.parent().remove());
                             }
                         }
                     }).fail(notification.exception);

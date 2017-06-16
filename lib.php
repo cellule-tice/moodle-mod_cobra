@@ -84,6 +84,9 @@ function cobra_add_instance(stdClass $cobra, mod_cobra_mod_form $mform = null) {
 
     $cobra->id = $DB->insert_record('cobra', $cobra);
 
+    $completiontimeexpected = !empty($cobra->completionexpected) ? $cobra->completionexpected : null;
+    \core_completion\api::update_completion_date_event($cobra->coursemodule, 'url', $cobra->id, $completiontimeexpected);
+
     return $cobra->id;
 }
 
@@ -104,6 +107,10 @@ function cobra_update_instance(stdClass $cobra, mod_cobra_mod_form $mform = null
     $cobra->timemodified = time();
     $cobra->id = $cobra->instance;
     $result = $DB->update_record('cobra', $cobra);
+
+    $completiontimeexpected = !empty($cobra->completionexpected) ? $cobra->completionexpected : null;
+    \core_completion\api::update_completion_date_event($cobra->coursemodule, 'cobra', $cobra->id, $completiontimeexpected);
+
     return $result;
 }
 
@@ -123,6 +130,9 @@ function cobra_delete_instance($id) {
     if (!$cobra = $DB->get_record('cobra', array('id' => $id))) {
         return false;
     }
+
+    $cm = get_coursemodule_from_instance('cobra', $id);
+    \core_completion\api::update_completion_date_event($cm->id, 'cobra', $id, null);
 
     // Delete any dependent records here.
     $DB->delete_records('cobra_clic', array('course' => $cobra->course));
@@ -321,4 +331,34 @@ function cobra_extend_settings_navigation($settings, $cobranode) {
             navigation_node::TYPE_SETTING,
             null, null, new pix_icon('i/item', '')));
     }
+}
+
+/**
+ * This function receives a calendar event and returns the action associated with it, or null if there is none.
+ *
+ * This is used by block_myoverview in order to display the event appropriately. If null is returned then the event
+ * is not displayed on the block.
+ *
+ * @param calendar_event $event
+ * @param \core_calendar\action_factory $factory
+ * @return \core_calendar\local\event\entities\action_interface|null
+ */
+function mod_cobra_core_calendar_provide_event_action(calendar_event $event,
+                                                    \core_calendar\action_factory $factory) {
+    $cm = get_fast_modinfo($event->courseid)->instances['cobra'][$event->instance];
+
+    $completion = new \completion_info($cm->get_course());
+
+    $completiondata = $completion->get_data($cm, false);
+
+    if ($completiondata->completionstate != COMPLETION_INCOMPLETE) {
+        return null;
+    }
+
+    return $factory->create_instance(
+        get_string('view'),
+        new \moodle_url('/mod/cobra/view.php', ['id' => $cm->id]),
+        1,
+        true
+    );
 }

@@ -1,0 +1,49 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    placeholder for template description. Ex: Page header.
+}}
+
+<table class="generaltable m-y-1" id="myglossary">
+    <thead>
+    <tr>
+        <th class="header c0" style="text-align:left;" scope="col">Entrée</th>
+        <th class="header c1" style="" scope="col">Traduction</th>
+        <th class="header c2" style="" scope="col">Catégorie</th>
+        <th class="header c3" style="" scope="col">Autres formes</th>
+        <th class="header c4" style="" scope="col">Texte source</th>
+        <th class="header c5" style="" scope="col">Cliqué dans ...</th>
+        <th class="header c6 lastcol" style="" scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#entries}}
+        <tr>
+            <td>{{entry}}</td>
+            <td>{{translations}}</td>
+            <td>{{category}}</td>
+            <td>{{extrainfo}}</td>
+            <td>{{sourcetexttitle}}</td>
+            <td><span title="{{texttitles}}">{{textcount}} {{#str}}texts, mod_cobra{{/str}}</span></td>
+            <td class="glossaryIcon glossaryremove inDisplay">
+                <span id="currentLingEntity" class="hidden">{{lingentity}}</span>
+                {{#pix}}glossaryremove, mod_cobra, Supprimer de mon glossaire{{/pix}}
+            </td>
+        </tr>
+    {{/entries}}
+    </tbody>
+    </table>

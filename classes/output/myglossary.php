@@ -15,21 +15,31 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the version and other meta-info about the plugin
- *
- * Setting the $plugin->version to 0 prevents the plugin from being installed.
- * See https://docs.moodle.org/dev/version.php for more info.
- *
  * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
  * @copyright  2016 - Cellule TICE - Unversite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+class myglossary implements renderable, templatable {
 
-$plugin->component = 'mod_cobra';
-$plugin->version = 2017050813;
-$plugin->release = 'v2.0-dev';
-$plugin->requires = 2016120503;
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->dependencies = array();
+    /**
+     * Export this data so it can be used as the context for a mustache template.
+     *
+     * @return stdClass
+     */
+
+    private $entries;
+
+    public function __construct($entries) {
+        $this->entries = $entries;
+    }
+
+    public function export_for_template(renderer_base $output) {
+
+        $data = array();
+        $data['entries'] = $this->entries;
+
+        return $data;
+    }
+}

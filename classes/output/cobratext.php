@@ -31,12 +31,6 @@ require_once("$CFG->dirroot/mod/cobra/lib/cobraremoteservice.php");
 //use renderer_base;
 //use mod_cobra\lib\cobra_remote_service;
 
-/**
- * Class containing data for index page
- *
- * @copyright  2015 Damyon Wiese
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 class cobratext implements renderable, templatable {
 
     /**

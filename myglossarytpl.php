@@ -30,12 +30,13 @@
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/lib/glossarylib.php');
+require_once(__DIR__ . '/classes/output/myglossary.php');
 
 $id = required_param('id', PARAM_INT);
 $cmd = optional_param('cmd', null, PARAM_ALPHA);
 $confirm = optional_param('confirm', 0, PARAM_INT);
 $page = optional_param('page', 0, PARAM_INT);
-$perpage = 0;
+$perpage = 25;
 
 list($course, $cm) = get_course_and_cm_from_cmid($id, 'cobra');
 $cobra = $DB->get_record('cobra', array('id' => $cm->instance), '*', MUST_EXIST);
@@ -94,7 +95,9 @@ if (!empty($data)) {
         foreach ($textidlist as $textid) {
             $texttitles[] = cobra_get_cached_text_title($textid);
         }
-        $entry->texttitles = $texttitles;
+
+        $entry->textcount = count($texttitles);
+        $entry->texttitles = implode("\n", $texttitles);
         $entries[] = $entry;
     }
 }
@@ -277,12 +280,14 @@ $content .= html_writer::end_tag('div');
 // Output starts here.
 //echo $OUTPUT->header();
 
+$output = $PAGE->get_renderer('mod_cobra');
+$myglossaryview = new myglossary($entries);
+echo $output->render($myglossaryview);
 
-
-echo $OUTPUT->box_start('generalbox box-content');
+/*echo $OUTPUT->box_start('generalbox box-content');
 echo $content;
 
-echo $OUTPUT->box_end();
+echo $OUTPUT->box_end();*/
 
 // Finish the page.
-echo $OUTPUT->footer();
+echo $output->footer();

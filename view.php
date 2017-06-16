@@ -32,7 +32,6 @@ require_once(__DIR__ . '/lib/glossarylib.php');
 require_once(__DIR__ . '/classes/output/cobratext.php');
 
 $id = required_param('id', PARAM_INT);
-
 list($course, $cm) = get_course_and_cm_from_cmid($id, 'cobra');
 $cobra = $DB->get_record('cobra', array('id' => $cm->instance), '*', MUST_EXIST);
 

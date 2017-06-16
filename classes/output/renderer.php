@@ -48,4 +48,9 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('mod_cobra/cobratext', $data);
     }
+
+    public function render_myglossary($page) {
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('mod_cobra/myglossary', $data);
+    }
 }
