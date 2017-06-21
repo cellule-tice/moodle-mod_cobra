@@ -85,7 +85,7 @@ function cobra_add_instance(stdClass $cobra, mod_cobra_mod_form $mform = null) {
     $cobra->id = $DB->insert_record('cobra', $cobra);
 
     $completiontimeexpected = !empty($cobra->completionexpected) ? $cobra->completionexpected : null;
-    \core_completion\api::update_completion_date_event($cobra->coursemodule, 'url', $cobra->id, $completiontimeexpected);
+    \core_completion\api::update_completion_date_event($cobra->coursemodule, 'cobra', $cobra->id, $completiontimeexpected);
 
     return $cobra->id;
 }
@@ -135,12 +135,8 @@ function cobra_delete_instance($id) {
     \core_completion\api::update_completion_date_event($cm->id, 'cobra', $id, null);
 
     // Delete any dependent records here.
-    $DB->delete_records('cobra_clic', array('course' => $cobra->course));
-    $DB->delete_records('cobra_glossaire', array('course' => $cobra->course));
-    $DB->delete_records('cobra_ordre_concordances', array('course' => $cobra->course));
-    $DB->delete_records('cobra_prefs', array('course' => $cobra->course));
-    $DB->delete_records('cobra_registered_collections', array('course' => $cobra->course));
-    $DB->delete_records('cobra_texts_config', array('course' => $cobra->course));
+    //$DB->delete_records('cobra_clic', array('course' => $cobra->course, 'id_text' => $cobra->text));
+    //$DB->delete_records('cobra_glossaire', array('course' => $cobra->course));
     $DB->delete_records('cobra', array('id' => $cobra->id));
 
     return true;

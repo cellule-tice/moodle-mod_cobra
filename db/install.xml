@@ -33,25 +33,6 @@
         <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="cobra_registered_collections" COMMENT="Registered collections">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course cobra activity belongs to"/>
-        <FIELD NAME="id_collection" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Collection id"/>
-        <FIELD NAME="language" TYPE="char" LENGTH="2" NOTNULL="true" DEFAULT="EN" SEQUENCE="false"/>
-        <FIELD NAME="label" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="local_label" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="position" TYPE="int" LENGTH="2" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="visibility" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
-        <INDEX NAME="id_collection" UNIQUE="false" FIELDS="id_collection"/>
-      </INDEXES>
-    </TABLE>
     <TABLE NAME="cobra_clic" COMMENT="cobra clics details per user">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
@@ -75,37 +56,6 @@
         <INDEX NAME="user_id" UNIQUE="false" FIELDS="user_id"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="cobra_prefs" COMMENT="cobra preferences">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course cobra activity belongs to"/>
-        <FIELD NAME="param" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="value" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="cobra_texts_config" COMMENT="Configuration for texts">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course cobra activity belongs to"/>
-        <FIELD NAME="id_text" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="id_collection" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="position" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="visibility" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
-        <INDEX NAME="id_text" UNIQUE="false" FIELDS="id_text"/>
-      </INDEXES>
-    </TABLE>
     <TABLE NAME="cobra_glossaire" COMMENT="cobra teacher glossary">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
@@ -120,20 +70,6 @@
         <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
         <INDEX NAME="id_text" UNIQUE="false" FIELDS="id_text"/>
         <INDEX NAME="id_entite_ling" UNIQUE="false" FIELDS="id_entite_ling"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="cobra_ordre_concordances" COMMENT="ordre concorncordances">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course cobra activity belongs to"/>
-        <FIELD NAME="id_type" TYPE="int" LENGTH="11" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="position" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="cobra_glossary_cache" COMMENT="Default comment for the table, please edit me">
@@ -157,7 +93,7 @@
         <FIELD NAME="title" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="collection" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="cecrl" TYPE="char" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="CERCL level"/>
-        <FIELD NAME="entities" TYPE="text" SEQUENCE="false" COMMENT="List of entities used in this text"/>
+        <FIELD NAME="entities" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="List of entities used in this text"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
