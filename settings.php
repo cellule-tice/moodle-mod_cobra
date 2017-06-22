@@ -29,7 +29,7 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('cobra_settings_general', get_string('generalconfig', 'cobra'), ''));
 
     $settings->add(new admin_setting_configtext('mod_cobra/serviceurl', get_string('cobraserviceurl', 'cobra'),
-        '', '', PARAM_URL, 60));
+        '', 'https://webapps.unamur.be/elv/nederlex/services/cobrapi_new.php', PARAM_URL, 60));
 
     $settings->add(new admin_setting_heading('cobra_settings_display', get_string('displaysettings', 'cobra'), ''));
 

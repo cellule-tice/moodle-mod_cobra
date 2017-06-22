@@ -17,7 +17,7 @@
 /**
  * @package    mod_cobra
  * @author     Jean-Roch Meurisse
- * @copyright  2016 onwards - Cellule TICE - Unversite de Namur
+ * @copyright  2016 - Cellule TICE - Unversite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -25,17 +25,12 @@ namespace mod_cobra\task;
 
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
 
-class update_glossary_cache_task extends \core\task\scheduled_task {
-
-    public function get_name() {
-        return get_string('updateglossarycache', 'mod_cobra');
-    }
+class fill_cache_tables_task extends \core\task\adhoc_task {
 
     public function execute() {
-        mtrace('Load dirty entries from remote CoBRA server');
-        list($new, $updated) = cobra_update_glossary_cache(get_config('mod_cobra', 'lastglossaryupdate'));
-        mtrace($new . ' entries inserted');
-        mtrace($updated . ' entries updated');
+        cobra_update_glossary_cache(get_config('mod_cobra', 'lastglossaryupdate'));
+        cobra_update_text_info_cache(get_config('mod_cobra', 'lasttextinfoupdate'));
         set_config('lastglossaryupdate', time(), 'mod_cobra');
+        set_config('lasttextinfoupdate', time(), 'mod_cobra');
     }
 }

@@ -45,5 +45,10 @@
             </td>
         </tr>
     {{/entries}}
+    {{^entries}}
+        <tr>
+            <td colspan="7" class="text-center">{{#str}}emptyglossary, mod_cobra{{/str}}</td>
+        </tr>
+    {{/entries}}
     </tbody>
     </table>

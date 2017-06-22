@@ -816,10 +816,9 @@ function cobra_get_cached_text_title($textid) {
     return $DB->get_field('cobra_text_info_cache', 'title', array('id' => $textid));
 }
 
-function cobra_update_glossary_cache() {
+function cobra_update_glossary_cache($timestamp) {
     global $DB;
-    //$entries = cobra_remote_service::call('getGlossaryEntries', array('lastupdate' => get_config('mod_cobra', 'lastglossaryupdate')));
-    $entries = cobra_remote_service::call('getGlossaryEntries', array('lastupdate' => 1494527040));
+    $entries = cobra_remote_service::call('getGlossaryEntries', array('lastupdate' => $timestamp));
     $new = 0;
     $updated = 0;
     foreach ($entries as $entry) {
@@ -840,21 +839,18 @@ function cobra_update_glossary_cache() {
     return array($new, $updated);
 }
 
-function cobra_update_text_info_cache() {
+function cobra_update_text_info_cache($timestamp) {
     global $DB;
-    $textlist = cobra_remote_service::call('getTextsInfo', array('lastupdate' => get_config('mod_cobra', 'lasttextinfoupdate')));
-    //$textlist = cobra_remote_service::call('getTextsInfo', array('lastupdate' => 0));
+    $textlist = cobra_remote_service::call('getTextsInfo', array('lastupdate' => $timestamp));
     $new = 0;
     $updated = 0;
     foreach ($textlist as $text) {
         try {
-            //$text->entities = $text->list;
             $DB->insert_record_raw('cobra_text_info_cache', $text, false, false, true);
             $new++;
         } catch (dml_write_exception $ex) {
             if (0 === strpos($ex->debuginfo, 'Duplicate entry')) {
                 try {
-                    //$text->entities = 'coucou';
                     $DB->update_record('cobra_text_info_cache', $text);
                     $updated++;
                 } catch (Exception $ex) {

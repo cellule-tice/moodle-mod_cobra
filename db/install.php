@@ -26,6 +26,9 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->dirroot . '/mod/cobra/locallib.php');
+
 /**
  * Post installation procedure
  *
@@ -33,6 +36,9 @@ defined('MOODLE_INTERNAL') || die();
  */
 function xmldb_cobra_install() {
 
+    // Init config variables to allow cron tasks to run the first time.
+    set_config('lastglossaryupdate', 0, 'mod_cobra');
+    set_config('lasttextinfoupdate', 0, 'mod_cobra');
 }
 
 /**

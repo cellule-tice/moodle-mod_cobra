@@ -1,7 +1,6 @@
 /* jshint ignore:start */
 define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'], function($, log, templates, ajax, notification) {
 
-    //"use strict";
     var jsonparams;
     var objparams;
     var glossaryentries;
@@ -9,7 +8,7 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
         init: function(args) {
             // Adapt glossary height to text height.
             $("#glossary").css('height', $("#cobratext").css('height'));
-            // Gather display and corpus params
+            // Gather display and corpus params.
             jsonparams = args;
             objparams = JSON.parse(jsonparams);
             // Disable blocks toggle (hidden by default in Cobra context).
@@ -69,7 +68,6 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
             collselect.on('change', function() {
                 scrollvalue.attr('value', $(window).scrollTop());
                 collbutton.trigger('click');
-                //scrolltop = 100;
             });
 
             textselect.on('change', function() {
@@ -79,19 +77,13 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
             });
 
             defaultdisplaycheckbox.on('change', function() {
-                /*var scrollvalue = $(document.createElement('input'))
-                    .attr('type', 'hidden')
-                    .attr('name', 'scrolltop')
-                    .attr('id', 'id_scrolltop')
-                    .attr('value', $(window).scrollTop());
-                scrollvalue.appendTo('#id_language');*/
                 scrollvalue.attr('value', $(window).scrollTop());
-               defaultdisplaybutton.trigger('click');
+                defaultdisplaybutton.trigger('click');
             });
 
             defaultcorpuscheckbox.on('change', function() {
                 scrollvalue.attr('value', $(window).scrollTop());
-               defaultcorpusbutton.trigger('click');
+                defaultcorpusbutton.trigger('click');
             });
 
         },
@@ -146,7 +138,7 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
             });
         },
         text_glossary_actions: function() {
-            //Load personal glossary entries.
+            // Load personal glossary entries.
             var promises = ajax.call([{
                 methodname: 'mod_cobra_load_glossary',
                 args: {
@@ -187,7 +179,7 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                             return 0;
                         });
 
-                        // Change icon in digest row
+                        // Change icon in digest row.
                         var datafortpl = new Array;
                         datafortpl['lingentity'] = lingEntity;
                         datafortpl['iconclass'] = 'inglossary';
@@ -228,7 +220,7 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                             }
                         });
 
-                        // Change icon in digest row
+                        // Change icon in digest row.
                         var datafortpl = new Array;
                         datafortpl['lingentity'] = lingEntity;
                         datafortpl['iconclass'] = 'glossaryadd';

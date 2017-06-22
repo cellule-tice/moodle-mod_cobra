@@ -31,6 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
 require_once(__DIR__ . '/locallib.php');
+require_once($CFG->dirroot . '/mod/cobra/classes/task/fill_cache_tables_task.php');
 
 class mod_cobra_mod_form extends moodleform_mod {
 
@@ -40,6 +41,13 @@ class mod_cobra_mod_form extends moodleform_mod {
     public function definition() {
 
         global $DB, $CFG, $PAGE, $COURSE;
+        if (get_config('mod_cobra', 'lastglossaryupdate') === '0') {
+            set_config('lastglossaryupdate', 1, 'mod_cobra');
+            $fillcachetablestask = new \mod_cobra\task\fill_cache_tables_task();
+            $fillcachetablestask->set_next_run_time(time() + 10);
+            \core\task\manager::queue_adhoc_task($fillcachetablestask);
+        }
+
         $jsparams = array();
         $jsparams['en'] = cobra_get_default_corpus_order($COURSE->id, 'EN');
         $jsparams['nl'] = cobra_get_default_corpus_order($COURSE->id, 'NL');
@@ -273,7 +281,8 @@ class mod_cobra_mod_form extends moodleform_mod {
             $collections = cobra_get_filtered_collections_optionslist($languageset[0]);
             $collections = array('0' => '-') + $collections;
             $colselect = $mform->addElement('select', 'collection', get_string('collection', 'cobra'), $collections);
-            if ($mform->getElementValue('lastcollection')) {
+
+            if ($mform->elementExists('lastcollection')) {
                 $colselect->setSelected($mform->getElementValue('lastcollection'));
             }
             //$mform->addHelpButton('collection', '', '');

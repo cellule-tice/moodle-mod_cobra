@@ -33,7 +33,7 @@ class update_text_info_cache_task extends \core\task\scheduled_task {
 
     public function execute() {
         mtrace('Update basic information for texts (title, cecrl)');
-        list($new, $updated) = cobra_update_text_info_cache();
+        list($new, $updated) = cobra_update_text_info_cache(get_config('mod_cobra', 'lasttextinfoupdate'));
         mtrace($new . ' entries inserted');
         mtrace($updated . ' entries updated');
         set_config('lasttextinfoupdate', time(), 'mod_cobra');
