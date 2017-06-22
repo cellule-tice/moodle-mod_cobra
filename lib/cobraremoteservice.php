@@ -58,7 +58,9 @@ class cobra_remote_service {
             $querystring = http_build_query($params, '', '&');
         }
         if (!$data = cobra_http_request($url . '?verb=' . $servicename . '&' . $querystring)) {
-            redirect(new moodle_url('/course/view.php', array('id' => $COURSE->id)), 'CoBRA' . ': ' . get_string('serviceunavailable', 'cobra', $CFG->cobra_serverhost), 5);
+            redirect(new moodle_url('/course/view.php',
+                    array('id' => $COURSE->id)),
+                    'CoBRA' . ': ' . get_string('serviceunavailable', 'cobra', $CFG->cobra_serverhost), 5);
         } else {
             $response = json_decode($data);
         }
@@ -68,7 +70,9 @@ class cobra_remote_service {
         }
         if ('accesserror' == $response->responseType) {
             if ($response->content == COBRA_ERROR_UNTRUSTED_USER) {
-                redirect(new moodle_url('/course/view.php', array('id' => $COURSE->id)), 'CoBRA' . ': ' . get_string('platformnotallowed', 'cobra'), 5);
+                redirect(new moodle_url('/course/view.php',
+                        array('id' => $COURSE->id)),
+                        'CoBRA' . ': ' . get_string('platformnotallowed', 'cobra'), 5);
             }
         } else if ('paramerror' == $response->responseType) {
             print_error('missingparam', '', '', $response->content);

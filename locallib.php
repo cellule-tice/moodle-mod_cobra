@@ -46,12 +46,12 @@ define('COBRA_TRANSLATIONS_ALWAYS', 'always');
 define('COBRA_TRANSLATIONS_CONDITIONAL', 'conditional');
 define('COBRA_TRANSLATIONS_NEVER', 'never');
 
-// Display mode for descriptions
+// Display mode for descriptions.
 define('COBRA_ANNOTATIONS_ALWAYS', 'always');
 define('COBRA_ANNOTATIONS_CONDITIONAL', 'conditional');
 define('COBRA_ANNOTATIONS_NEVER', 'never');
 
-// Web service error types
+// Web service error types.
 define('COBRA_ERROR_RETURNTYPE', 'unhandledreturntype');
 define('COBRA_ERROR_SERVICE_UNAVAILABLE', 'serviceunavailable');
 define('COBRA_ERROR_UNTRUSTED_USER', 'platformnotallowed');
@@ -107,7 +107,6 @@ function cobra_get_text_optionslist($collection, $loadmode = 'all') {
     foreach ($remotetextobjectlist as $textobject) {
         $textlist[$textobject->id] = $textobject->title;
     }
-    //print_object($textlist);
     return $textlist;
 }
 
@@ -259,7 +258,7 @@ function cobra_get_filtered_collections($language, $exclusionlist = array()) {
         }
         $collections[] = array(
             'remoteid' => $remotecollection->id,
-            'label' => $remotecollection->label, 
+            'label' => $remotecollection->label,
             'institution' => $remotecollection->institution
         );
     }
@@ -274,10 +273,6 @@ function cobra_get_filtered_collections_optionslist($language, $exclusionlist = 
         if (in_array($remotecollection->id, $exclusionlist)) {
             continue;
         }
-        /*$collections[] = array(
-            'remoteid' => $remotecollection->id,
-            'label' => $remotecollection->label
-        );*/
         $collections[$remotecollection->id] = $remotecollection->label;
     }
 
@@ -487,7 +482,6 @@ function cobra_get_translations($conceptid, $entrytype) {
  */
 function cobra_get_concept_info_from_ling_entity($lingentityid) {
     $params = array('ling_entity_id' => (int)$lingentityid);
-   // print_object($params);die();
     $conceptinfo = cobra_remote_service::call('getConceptInfoFromLingEntity', $params);
 
     return array($conceptinfo->id_concept, $conceptinfo->construction , $conceptinfo->entry_type,
@@ -538,7 +532,12 @@ function cobra_get_default_corpus_order($course, $language) {
     if (is_array($language)) {
         $language = $language[0];
     }
-    $corpusorder = $DB->get_field('cobra', 'corpusorder', array('course' => $course, 'language' => $language, 'isdefaultcorpusorder' => 1));
+    $corpusorder = $DB->get_field('cobra', 'corpusorder', array(
+            'course' => $course,
+            'language' => $language,
+            'isdefaultcorpusorder' => 1
+        )
+    );
     if (empty($corpusorder)) {
         if ($language == 'EN') {
             $corpusorder = get_config('mod_cobra', 'defaultcorpusorderen');
@@ -553,7 +552,7 @@ function cobra_get_default_corpus_order($course, $language) {
 
 function cobra_add_corpus_to_selection($corpustypeid) {
     global $DB, $COURSE;
-    if($DB->record_exists('cobra_ordre_concordances', array('course' => $COURSE->id, 'id_type' => $corpustypeid)))   {
+    if ($DB->record_exists('cobra_ordre_concordances', array('course' => $COURSE->id, 'id_type' => $corpustypeid))) {
         return false;
     }
     $records = $DB->get_records_select('cobra_ordre_concordances', "course='$COURSE->id'", null, 'position DESC' );
@@ -623,7 +622,7 @@ function cobra_http_request($url) {
         }
     } else if (function_exists('curl_init')) {
         if (!$response = cobra_curl_request($url)) {
-           return false;
+            return false;
         } else {
             return $response;
         }
@@ -766,9 +765,11 @@ function cobra_get_previous_textid($text) {
     global $DB, $course;
     $textcollectionid = $text->get_collection_id();
     $textposition = $text->get_position();
-    $list = $DB->get_records_select('cobra_texts_config',
-            "course='$course->id' AND id_collection='$textcollectionid' AND position < '$textposition' AND visibility=1", array(), 'position ASC',
-            'id_text', 0, 1);
+    $where = "course='" . $course->id . "'
+            AND id_collection='" . $textcollectionid . "'
+            AND position < '" . $textposition . "'
+            AND visibility=1";
+    $list = $DB->get_records_select('cobra_texts_config', $where, array(), 'position ASC', 'id_text', 0, 1);
     if (empty($list)) {
         return false;
     }
@@ -797,8 +798,7 @@ function cobra_get_clicked_entries($courseid, $nb = 20) {
     $list = $DB->get_records_select('cobra_clic', "course='$courseid' GROUP BY id_entite_ling HAVING nb >=' $nb' ",
             $params, 'id_entite_ling ASC LIMIT 100', 'id_entite_ling, SUM(nbclicsstats) AS nb');
     foreach ($list as $info) {
-        if ($info->id_entite_ling > 0)
-        {
+        if ($info->id_entite_ling > 0) {
             $nbtotalclics = $info->nb;
             $nbcliclist[$info->id_entite_ling] = $nbtotalclics;
         }
@@ -884,7 +884,9 @@ function cobra_get_student_cached_glossary($userid = 0, $courseid = 0, $textid =
                          AND in_glossary = 1
                 ORDER BY entry";
 
-    $fullglossaryresult = $DB->get_records_sql($dataquery, array('courseid' => $courseid, 'userid' => $userid), $page * $perpage, $perpage);
+    $fullglossaryresult = $DB->get_records_sql($dataquery,
+            array('courseid' => $courseid, 'userid' => $userid),
+            $page * $perpage, $perpage);
 
     if (empty($textid)) {
         $result = $DB->get_records_sql($dataquery, array('courseid' => $courseid, 'userid' => $userid));
@@ -948,8 +950,7 @@ class cobra_clean_statistics_form extends moodleform {
 }
 
 class cobra_edit_collection_label_form extends moodleform {
-    public function definition()
-    {
+    public function definition() {
         $mform = $this->_form;
         $mform->addElement('header', 'title', get_string('editcollection', 'cobra'));
         $mform->addElement('text', 'label', get_string('collectionname', 'cobra'));

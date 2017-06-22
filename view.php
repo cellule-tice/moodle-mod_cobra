@@ -43,12 +43,12 @@ require_capability('mod/cobra:view', $context);
 // Backwards compatibility with cobrapi.
 $cobra->ccorder = $cobra->corpusorder;
 
-// Keep user id and cmid for ajax calls
+// Keep user id and cmid for ajax calls.
 global $USER;
 $cobra->user = $USER->id;
 $cobra->cmid = $id;
 
-// Unset intro for ajax params
+// Unset intro for ajax params.
 $cobra->intro = null;
 
 $cobra->encodeclic = 1;
@@ -93,7 +93,6 @@ $text = new cobra_text_wrapper($cm);
 $text->set_text_id($cobra->text);
 $text->load_remote_data();
 
-//$content .= html_writer::div('', 'hidden', array('id' => 'encode_clic', 'name' => $encodeclic));
 $content .= html_writer::div('', 'hidden', array('id' => 'courseLabel', 'name' => $course->id));
 $content .= html_writer::div($cobra->userglossary, 'hidden', array('id' => 'showglossary'));
 $content .= html_writer::div('', 'hidden', array('id' => 'userId', 'name' => $USER->id));

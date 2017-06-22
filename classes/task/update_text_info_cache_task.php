@@ -23,6 +23,8 @@
 
 namespace mod_cobra\task;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
 
 class update_text_info_cache_task extends \core\task\scheduled_task {

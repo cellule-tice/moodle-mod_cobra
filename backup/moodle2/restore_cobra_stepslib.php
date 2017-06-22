@@ -21,6 +21,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 class restore_cobra_activity_structure_step extends restore_activity_structure_step {
 
     protected function define_structure() {

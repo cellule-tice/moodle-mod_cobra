@@ -22,11 +22,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/lib/cobraremoteservice.php');
 require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/lib/glossarylib.php');
-//print_object(__DIR__);
+
 class mod_cobra_external extends external_api
 {
     public static function display_entry_parameters() {
@@ -50,7 +51,13 @@ class mod_cobra_external extends external_api
     }
 
     public static function display_entry($concept, $isexpression, $json) {
-        $args = self::validate_parameters(self::display_entry_parameters(), array('concept_id' => $concept, 'is_expr' => $isexpression, 'params' => $json));
+        $args = self::validate_parameters(self::display_entry_parameters(),
+                array(
+                    'concept_id' => $concept,
+                    'is_expr' => $isexpression,
+                    'params' => $json
+                )
+        );
         $jsonobj = json_decode($json);
 
         $html = cobra_remote_service::call('displayEntry', $args, 'json');
@@ -90,7 +97,12 @@ class mod_cobra_external extends external_api
     }
 
     public static function get_full_concordance($ccid, $json) {
-        $args = self::validate_parameters(self::get_full_concordance_parameters(), array('id_cc' => $ccid, 'params' => $json));
+        $args = self::validate_parameters(self::get_full_concordance_parameters(),
+                array(
+                    'id_cc' => $ccid,
+                    'params' => $json
+                )
+        );
         $cc = utf8_encode(cobra_remote_service::call('displayCC', $args, 'html'));
         return array('concordance' => $cc);
     }
@@ -98,7 +110,6 @@ class mod_cobra_external extends external_api
     public static function load_glossary_parameters() {
         return new external_function_parameters(
             array(
-                //'lingentity' => new external_value(PARAM_INT, 'Id of lingentity'),
                 'textid' => new external_value(PARAM_INT, 'Id of current text'),
                 'courseid' => new external_value(PARAM_INT, 'Id of current course'),
                 'userid' => new external_value(PARAM_INT, 'Id of current user'),
@@ -124,7 +135,13 @@ class mod_cobra_external extends external_api
     }
 
     public static function load_glossary($textid, $courseid, $userid) {
-        $params = self::validate_parameters(self::load_glossary_parameters(), array('textid' => $textid, 'courseid' => $courseid, 'userid' => $userid));
+        $params = self::validate_parameters(self::load_glossary_parameters(),
+                array(
+                    'textid' => $textid,
+                    'courseid' => $courseid,
+                    'userid' => $userid
+                )
+        );
         $data = cobra_get_student_cached_glossary($userid, $courseid, $textid);
         return $data;
     }
@@ -162,7 +179,14 @@ class mod_cobra_external extends external_api
 
         global $DB;
 
-        $params = self::validate_parameters(self::add_to_glossary_parameters(), array('lingentity' => $lingentity, 'textid' => $textid, 'courseid' => $courseid, 'userid' => $userid));
+        $params = self::validate_parameters(self::add_to_glossary_parameters(),
+                array(
+                    'lingentity' => $lingentity,
+                    'textid' => $textid,
+                    'courseid' => $courseid,
+                    'userid' => $userid
+                )
+        );
         $result = (int)$DB->set_field('cobra_clic',
             'in_glossary',
             '1',
@@ -175,7 +199,6 @@ class mod_cobra_external extends external_api
         );
 
         if ($result) {
-            //return cobra_get_remote_glossary_info_for_student($textid, $courseid, $userid, $lingentity);
             $entry = cobra_get_glossary_entry($lingentity);
             $entry->new = true;
             $entry->fromThisText = true;
@@ -198,7 +221,13 @@ class mod_cobra_external extends external_api
     public static function remove_from_glossary($lingentity, $courseid, $userid) {
         global $DB;
 
-        $params = self::validate_parameters(self::remove_from_glossary_parameters(), array('lingentity' => $lingentity, 'courseid' => $courseid, 'userid' => $userid));
+        $params = self::validate_parameters(self::remove_from_glossary_parameters(),
+                array(
+                    'lingentity' => $lingentity,
+                    'courseid' => $courseid,
+                    'userid' => $userid
+                )
+        );
         $result = (int)$DB->set_field('cobra_clic',
             'in_glossary',
             '0',

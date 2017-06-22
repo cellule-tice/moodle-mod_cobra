@@ -23,6 +23,8 @@
 
 namespace mod_cobra\task;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
 
 class fill_cache_tables_task extends \core\task\adhoc_task {

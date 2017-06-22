@@ -1,5 +1,4 @@
-.dico
-{
+.dico {
     font-size: 100%;
 }
 
@@ -9,10 +8,6 @@
     padding : 1rem;
     margin: 0px;
     font-size: 24px;
-}
-
-h2.titre_lecon {
-    /*box-shadow: none;*/
 }
 
 .sous-titre {
@@ -68,7 +63,6 @@ h2.titre_lecon {
     width: 65%;
     background-color: #eceeef;
     filter: sepia(15%);
-    /*box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);*/
 }
 
 #audioplayer {
@@ -121,7 +115,6 @@ h2.titre_lecon {
     float:left;
     text-align:justify;
     color:#333;
-    /*background-color: #f1f1f1;*/
     padding: 15px;
     overflow:auto;
 }
@@ -143,7 +136,6 @@ h2.titre_lecon {
     width:33%;
     margin: 0 0 10px 20px;
     overflow: auto;
-    /*box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);*/
 }
 
 .glossaryadd, .glossaryremove, .gglossaryremove, .glossaryremove img.icon {
@@ -201,8 +193,7 @@ h2.titre_lecon {
     font-weight: normal;
 }
 
-.cobralabel
-{
+.cobralabel {
     font-style: italic;
 }
 
@@ -215,62 +206,48 @@ h2.titre_lecon {
     display: none;
 }
 
-/*.digestRow
-{
-    background-color: #FFF;
-
-}*/
-
 .glossaryIcon {
     padding: 4px 1px 1px 4px;
 }
 
-.hidden
-{
+.hidden {
     display:none;
 }
 
-.entryTable .superHeader th, .entryTable th.superHeader, .entryTable td.superHeader
-{
+.entryTable .superHeader th, .entryTable th.superHeader, .entryTable td.superHeader {
     color: #333;
-    /*background-color: #FFF;*/
     font-weight: normal;
     text-align: center;
 }
-.entryTable
-{
+
+.entryTable {
     width: 100%;
     border-color:white;
     border-spacing:3px;
     border-collapse : separate;
 }
 
-.lexTable
-{
+.lexTable {
     width: 100%;
 }
 
-.lexTable tbody td
-{
+.lexTable tbody td {
     border-bottom: solid #DDDEBC 1px ;
 }
 
-.lexTable td, th
-{
+.lexTable td, th {
     margin:  1px;
     padding: 4px 10px;
     border: none;
 }
 
-.cc_source
-{
+.cc_source {
     font-weight: bold;
     cursor: pointer;
     color: #333;
 }
 
 .box-content {
-    /*box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);*/
     padding: 15px;
     background-color: #fff;
 }
@@ -279,80 +256,104 @@ h2.titre_lecon {
     background-color: #fff;
 }
 
-.lexTable .superHeader a
-{
+.lexTable .superHeader a {
     color: white;
 }
 
 .lexTable th.headerY, .lexTable .headerY th,
-.lexTable th.headerX, .lexTable .headerX th
-{
+.lexTable th.headerX, .lexTable .headerX th {
     font-weight: normal;
 }
 
-.lexTable .headerX th,  .lexTable th.headerX
-{
+.lexTable .headerX th,  .lexTable th.headerX {
     background-color: #DDDEBC;
 }
 
-.lexTable tr th.toolbar
-{
+.lexTable tr th.toolbar {
     background: white;
     font-weight: normal;
 }
 
-.lexTable tr.toolbar th.prev
-{
+.lexTable tr.toolbar th.prev {
     text-align:left;
     font-weight: normal;
 }
 
-.lexTable tr.toolbar th.title
-{
+.lexTable tr.toolbar th.title {
     font-weight:bold;
     text-align:center;
 }
 
-.lexTable tr.toolbar th.next
-{
+.lexTable tr.toolbar th.next {
     text-align:right;
     font-weight: normal;
 }
 
-.lexTable .listCell
-{
+.lexTable .listCell {
     margin-top:-2px;
     margin-left:12px;
 }
 
-.lexTable li
-{
+.lexTable li {
     margin-top:0px;
     margin-bottom:0px;
 }
 
-.usuel_FUNDP {  background-color: #CCFFCC !important;}
-.usuel {    background-color: #99FF99 !important;}
-.semi-technique {  background-color: #FFCC99 !important;}
-.technique {  background-color: #FF9966 !important;}
-.histoire_FUNDP {background-color:#CCFFFF !important;}
-.histoire {background-color: #99CCFF !important;}
-.informatique_FUNDP {background-color: #FFFF99 !important;}
-.informatique {background-color: #FFFF66 !important;}
-.sciences {background-color: #CCCCFF !important;}
-.sciences_FUNDP {background-color : #CC99CC !important;}
-.eco {background-color: #FF9999 !important;}
-.eco_FUNDP {background-color: #FFCCCC !important;}
+.usuel_FUNDP {
+    background-color: #CCFFCC !important;
+}
 
-.floatContainer
-{
+.usuel {
+    background-color: #99FF99 !important;
+}
+
+.semi-technique {
+    background-color: #FFCC99 !important;
+}
+
+.technique {
+    background-color: #FF9966 !important;
+}
+
+.histoire_FUNDP {
+    background-color:#CCFFFF !important;
+}
+
+.histoire {
+    background-color: #99CCFF !important;
+}
+
+.informatique_FUNDP {
+    background-color: #FFFF99 !important;
+}
+
+.informatique {
+    background-color: #FFFF66 !important;
+}
+
+.sciences {
+    background-color: #CCCCFF !important;
+}
+
+.sciences_FUNDP {
+    background-color : #CC99CC !important;
+}
+
+.eco {
+    background-color: #FF9999 !important;
+}
+
+.eco_FUNDP {
+    background-color: #FFCCCC !important;
+}
+
+.floatContainer {
     float:left;
     background-color:#FFF;
     width:95%;
 }
 
-.iconDiv
-{
+.iconDiv {
     background-color:#FFF;
     float:left;
     width:3%;
@@ -361,34 +362,28 @@ h2.titre_lecon {
     margin-top:25px;
 }
 
-.description
-{
+.description {
     color: #333;
-    /*background-color: #FFF;*/
     font-weight: normal;
     text-align: left;
 }
 
-.descList
-{
+.descList {
     list-style-type: disc;
     margin : 5px;
 }
 
-.singletonList
-{
+.singletonList {
     list-style-type: none;
     margin-top: 8px;
     margin-bottom: 8px;
 }
 
-.clicked
-{
+.clicked {
     background-color: yellow;
 }
 
-.emphasize
-{
+.emphasize {
     background-color: LightGrey;
 }
 
@@ -396,17 +391,15 @@ h2.titre_lecon {
     color: #55ab26;
 }
 
-a img
-{
+a img {
     border:none;
     text-decoration: none;
 }
 
-p{
+p {
     line-height: 1.4em;
 }
-.commands > li
-{
+.commands > li {
     color:#ffffff;
     background-color: LightGrey;
     display:inline;

@@ -179,7 +179,9 @@ if ($cmd == 'rqexport') {
     $out .= '</ul>';
 }
 
-if(!empty($thisform)) echo $thisform->display();
+if (!empty($thisform)) {
+    echo $thisform->display();
+}
 echo $out;
 
 echo $OUTPUT->box_end();

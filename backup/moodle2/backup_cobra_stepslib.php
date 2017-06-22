@@ -21,27 +21,29 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 class backup_cobra_activity_structure_step extends backup_activity_structure_step {
 
     protected function define_structure() {
 
-        // Define each element separated
+        // Define each element separated.
         $cobra = new backup_nested_element('cobra', array('id'), array(
             'collection', 'text', 'name', 'intro', 'introformat', 'timecreated', 'timemodified',
             'language', 'userglossary', 'audioplayer', 'examples', 'translations', 'annotations',
             'corpusorder', 'isdefaultcorpusorder', 'isdefaultdisplayprefs'));
 
-        // Build the tree
+        // Build the tree.
 
-        // Define sources
+        // Define sources.
         $cobra->set_source_table('cobra', array('id' => backup::VAR_ACTIVITYID));
 
-        // Define id annotations
+        // Define id annotations.
 
-        // Define file annotations
+        // Define file annotations.
         $cobra->annotate_files('mod_cobra', 'intro', null, $contextid = null);
 
-        // Return the root element (choice), wrapped into standard activity structure
+        // Return the root element (choice), wrapped into standard activity structure.
 
         return $this->prepare_activity_structure($cobra);
     }

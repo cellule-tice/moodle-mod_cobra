@@ -15,32 +15,29 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Prints a particular instance of cobra
- *
- * You can have a rather longer description of the file as well,
- * if you like, and it can span multiple lines.
+ * Cobra myglossary viewer.
  *
  * @package    mod_cobra
- * @copyright  2015 Your Name
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-// Replace cobra with the name of your module and remove this line.
 
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/lib/glossarylib.php');
+require_once(__DIR__ . '/classes/output/myglossary.php');
 
 $id = required_param('id', PARAM_INT);
 $cmd = optional_param('cmd', null, PARAM_ALPHA);
 $confirm = optional_param('confirm', 0, PARAM_INT);
 $page = optional_param('page', 0, PARAM_INT);
-$perpage = 0;
+$perpage = 25;
 
 list($course, $cm) = get_course_and_cm_from_cmid($id, 'cobra');
 $cobra = $DB->get_record('cobra', array('id' => $cm->instance), '*', MUST_EXIST);
 
-// Keep user id and cmid for ajax calls
+// Keep user id and cmid for ajax calls.
 global $USER, $OUTPUT;
 $cobra->user = $USER->id;
 $cobra->cmid = $id;
@@ -94,7 +91,9 @@ if (!empty($data)) {
         foreach ($textidlist as $textid) {
             $texttitles[] = cobra_get_cached_text_title($textid);
         }
-        $entry->texttitles = $texttitles;
+
+        $entry->textcount = count($texttitles);
+        $entry->texttitles = implode("\n", $texttitles);
         $entries[] = $entry;
     }
 }
@@ -127,10 +126,15 @@ $emptybutton = html_writer::link(new moodle_url(
         'title' => get_string('emptymyglossary', 'cobra')
     ));
 
-echo $OUTPUT->heading(get_string('myglossary', 'cobra') . '&nbsp;&nbsp;&nbsp;' . $exportbutton. '&nbsp;&nbsp;&nbsp;' . $emptybutton);
+echo $OUTPUT->heading(get_string('myglossary', 'cobra') .
+        '&nbsp;&nbsp;&nbsp;' .
+        $exportbutton .
+        '&nbsp;&nbsp;&nbsp;' .
+        $emptybutton);
 
 if (!$cobra->userglossary) {
-    redirect(new moodle_url('/mod/cobra/view.php', array('id' => $cm->id)), 'CoBRA' . ': ' . get_string('myglossaryunavailable', 'cobra', $CFG->cobra_serviceurl), 5);
+    redirect(new moodle_url('/mod/cobra/view.php', array('id' => $cm->id)),
+            'CoBRA' . ': ' . get_string('myglossaryunavailable', 'cobra', $CFG->cobra_serviceurl), 5);
 }
 if ($perpage) {
     echo $OUTPUT->paging_bar($totalcount, $page, $perpage, '/mod/cobra/myglossary.php?id='.$cm->id );
@@ -157,9 +161,7 @@ $table->head = array(
     $headercell7
 );
 
-
 if ('empty' == $cmd) {
-    //echo $OUTPUT->heading(get_string('myglossary', 'mod_cobra'));
     if (!empty($confirm) && confirm_sesskey()) {
         cobra_empty_glossary($cobra->course, $cobra->user);
     } else {
@@ -173,49 +175,11 @@ if ('empty' == $cmd) {
         echo $OUTPUT->footer();
         die;
     }
-
 }
 
 if (!empty($data)) {
 
     foreach ($data as $entry) {
-       // print_object($course->id);print_object($entry->lingentity);print_object($USER->id);die();
-        /*$sourcetextid = $DB->get_field('cobra_clic',
-                'id_text',
-                array(
-                    'course' => $course->id,
-                    'id_entite_ling' => $entry->lingentity,
-                    'user_id' => $USER->id,
-                    'in_glossary' => 1
-                )
-        );*/
-
-        //$sourcetexttitle = cobra_get_text_title_from_id($entry->id_text);
-        //$sourcetexttitle = cobra_get_cached_text_title($entry->id_text);
-
-        /*$entry->sourcetexttitle = $sourcetexttitle;
-
-        $query = "SELECT GROUP_CONCAT(CAST(id_text AS CHAR)) AS texts
-                    FROM {cobra_clic}
-                   WHERE user_id = :userid
-                         AND id_entite_ling = :lingentity
-                         AND course = :course
-                   GROUP BY id_entite_ling";
-        $result = $DB->get_field_sql($query, array(
-                'userid' => $USER->id,
-                'lingentity' => $entry->lingentity,
-                'course' => $course->id
-            )
-        );
-        $textidlist = explode(',', $result);
-        asort($textidlist);
-
-        $texttitles = array();
-        foreach ($textidlist as $textid) {
-            //$texttitles[] = cobra_get_text_title_from_id($textid);
-            $texttitles[] = cobra_get_cached_text_title($textid);
-        }
-        $entry->texttitles = $texttitles;*/
         $removeiconurl = $OUTPUT->image_url('glossaryremove', 'mod_cobra');
 
         $row = new html_table_row();
@@ -241,22 +205,20 @@ if (!empty($data)) {
 
         $cell = new html_table_cell();
         $cell->text = html_writer::tag('span',
-                count($texttitles) . '&nbsp;' . get_string('texts', 'cobra'),
-                array('title' => implode("\n", $texttitles)));
+            count($texttitles) . '&nbsp;' . get_string('texts', 'cobra'),
+            array('title' => implode("\n", $texttitles)));
         $row->cells[] = $cell;
 
         $cell = new html_table_cell();
         $cell->attributes['class'] = 'glossaryIcon';
         $cellcontent = html_writer::tag('span', $entry->lingentity, array('id' => 'currentLingEntity', 'class' => 'hidden'));
         $cellcontent .= html_writer::img($removeiconurl,
-                get_string('myglossaryremove', 'cobra'),
-                array('title' => get_string('myglossaryremove', 'cobra'), 'class' => 'glossaryremove inDisplay'));
+            get_string('myglossaryremove', 'cobra'),
+            array('title' => get_string('myglossaryremove', 'cobra'), 'class' => 'glossaryremove inDisplay'));
         $cell->text = $cellcontent;
         $row->cells[] = $cell;
 
         $table->data[] = $row;
-
-        //$entries[] = $entry;
     }
 
 } else {
@@ -269,20 +231,13 @@ if (!empty($data)) {
     $table->data[] = $row;
 }
 
-
-
 $content = html_writer::start_tag('div', array('class' => 'no-overflow'));
 $content .= html_writer::table($table);
 $content .= html_writer::end_tag('div');
-// Output starts here.
-//echo $OUTPUT->header();
 
-
-
-echo $OUTPUT->box_start('generalbox box-content');
-echo $content;
-
-echo $OUTPUT->box_end();
+$output = $PAGE->get_renderer('mod_cobra');
+$myglossaryview = new myglossary($entries);
+echo $output->render($myglossaryview);
 
 // Finish the page.
-echo $OUTPUT->footer();
+echo $output->footer();

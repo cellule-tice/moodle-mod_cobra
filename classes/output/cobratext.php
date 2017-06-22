@@ -21,15 +21,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-//namespace mod_cobra\output;
+defined('MOODLE_INTERNAL') || die();
 
 require_once("$CFG->dirroot/webservice/externallib.php");
 require_once("$CFG->dirroot/mod/cobra/lib/cobraremoteservice.php");
-
-//use renderable;
-//use templatable;
-//use renderer_base;
-//use mod_cobra\lib\cobra_remote_service;
 
 class cobratext implements renderable, templatable {
 
@@ -38,7 +33,7 @@ class cobratext implements renderable, templatable {
      *
      * @return stdClass
      */
-    
+
     private $cobra;
 
     public function __construct($cobra) {

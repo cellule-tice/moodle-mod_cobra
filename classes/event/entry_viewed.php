@@ -15,14 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    
- * @author     Jean-Roch Meurisse
- * @copyright  2016 - Cellule TICE - Unversite de Namur
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- * Entry viewed event.
+ * Entry viewed event class.
  *
  * @package    mod_cobra
  * @author     Jean-Roch Meurisse
@@ -30,24 +23,14 @@
  * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace mod_cobra\event;
+
 defined('MOODLE_INTERNAL') || die();
-/**
- * The EVENTNAME event class.
- *
- * @property-read array $other {
- *      Extra information about event.
- *
- *      - PUT INFO HERE
- * }
- *
- * @since     Moodle MOODLEVERSION
- * @copyright 2014 YOUR NAME
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- **/
+
 class entry_viewed extends \core\event\base {
     protected function init() {
-        $this->data['crud'] = 'u'; // c(reate), r(ead), u(pdate), d(elete)
+        $this->data['crud'] = 'u';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
         $this->data['objecttable'] = 'cobra_clic';
     }

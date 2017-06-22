@@ -55,7 +55,7 @@ class mod_cobra_mod_form extends moodleform_mod {
         $PAGE->requires->js_call_amd('mod_cobra/cobra', 'init', array(json_encode($jsparams)));
         $PAGE->requires->js_call_amd('mod_cobra/cobra', 'mod_form_triggers');
 
-        // Are we adding or updating a CoBRA resource
+        // Are we adding or updating a CoBRA resource.
         $mode = optional_param('add', null, PARAM_ALPHA);
         if (empty($mode)) {
             $mode = 'edit';
@@ -116,7 +116,6 @@ class mod_cobra_mod_form extends moodleform_mod {
         $mform->addRule('language', 'You must select a language', 'lettersonly');
         $mform->disabledIf('language', 'firstinstance', 'eq', 0);
         if ($lastinstance) {
-            //print_object($lastinstance->language);
             $langselect->setSelected($lastinstance->language);
         }
 
@@ -124,15 +123,6 @@ class mod_cobra_mod_form extends moodleform_mod {
         $mform->registerNoSubmitButton('updatelanguage');
         $mform->addElement('submit', 'updatelanguage', 'languageudpate', array('class' => 'hidden'));
 
-        // Preset collection if course already has cobra ressources.
-        /*if (!$firstinstance) {
-            $collections = cobra_get_filtered_collections_optionslist($lastinstance->language);
-            $collections = array('0' => '-') + $collections;
-            $select = $mform->addElement('select', 'collection', get_string('collection', 'cobra'), $collections);
-            //$mform->addHelpButton('collection', '', '');
-            $select->setSelected($lastinstance->collection);
-            $mform->addRule('collection', 'You must select a collection', 'nonzero');
-        }*/
         // Just a placeholder for inserting collection select after language change.
         $mform->addElement('hidden', 'addcollectionshere');
         $mform->setType('addcollectionshere', PARAM_BOOL);
@@ -159,10 +149,10 @@ class mod_cobra_mod_form extends moodleform_mod {
         // Introduction.
         $this->standard_intro_elements();
 
-        // Add display preferences elements
+        // Add display preferences elements.
         $mform->addElement('header', 'displaysettings', get_string('displaysettings', 'cobra'));
 
-        // Add checkbox for next and previous buttons
+        // Add checkbox for next and previous buttons.
         $mform->addElement('advcheckbox',
             'nextprevbuttons',
             get_string('nextprevbuttons', 'cobra'),
@@ -172,7 +162,7 @@ class mod_cobra_mod_form extends moodleform_mod {
         );
         $mform->addHelpButton('nextprevbuttons', 'nextprevbuttons', 'cobra');
 
-        // Add checkbox to enable/disable user glossary
+        // Add checkbox to enable/disable user glossary.
         $mform->addElement('advcheckbox',
             'userglossary',
             get_string('userglossary', 'cobra'),
@@ -183,7 +173,7 @@ class mod_cobra_mod_form extends moodleform_mod {
         $mform->addHelpButton('userglossary', 'userglossary', 'cobra');
         $mform->setDefault('userglossary', $defaultsettings->userglossary);
 
-        // Add checkbox to enable/disable audio player display
+        // Add checkbox to enable/disable audio player display.
         $mform->addElement('advcheckbox',
             'audioplayer',
             get_string('audioplayer', 'cobra'),
@@ -219,10 +209,9 @@ class mod_cobra_mod_form extends moodleform_mod {
             COBRA_TRANSLATIONS_NEVER => get_string('never')
         );
         $mform->addElement('select', 'annotations', get_string('annotationsdisplaymode', 'cobra'), $options);
-        //$mform->addHelpButton('descriptions', 'descriptions', 'cobra');
         $mform->setDefault('annotations', $defaultsettings->annotations);
 
-        // Add checkbox to flag display settings as default for future instances
+        // Add checkbox to flag display settings as default for future instances.
         $mform->addElement('advcheckbox',
             'isdefaultdisplayprefs',
             get_string('defaultflag', 'cobra'),
@@ -230,7 +219,6 @@ class mod_cobra_mod_form extends moodleform_mod {
             null,
             array(0, 1)
         );
-        //$mform->addHelpButton('isdef', 'userglossary', 'cobra');
         $mform->setDefault('isdefaultdisplayprefs', 0);
         $mform->addHelpButton('isdefaultdisplayprefs', 'defaultflag', 'cobra');
 
@@ -243,7 +231,7 @@ class mod_cobra_mod_form extends moodleform_mod {
         $mform->setDefault('corpusorder', cobra_get_default_corpus_order($COURSE->id, $mform->getElementValue('language')));
         $mform->addHelpButton('corpusorder', 'corpusselection', 'cobra');
 
-        // Add checkbox to flag corpus selection as default for future instances
+        // Add checkbox to flag corpus selection as default for future instances.
         $mform->addElement('advcheckbox',
             'isdefaultcorpusorder',
             get_string('defaultflag', 'cobra'),
@@ -251,7 +239,6 @@ class mod_cobra_mod_form extends moodleform_mod {
             null,
             array(0, 1)
         );
-        //$mform->addHelpButton('isdef', 'userglossary', 'cobra');
         $mform->setDefault('isdefaultcorpusorder', 0);
         $mform->addHelpButton('isdefaultcorpusorder', 'defaultflag', 'cobra');
 
@@ -265,18 +252,16 @@ class mod_cobra_mod_form extends moodleform_mod {
         $this->add_action_buttons();
     }
 
-    function definition_after_data() {
+    public function definition_after_data() {
         global $DB, $COURSE;
 
         $mform = $this->_form;
         parent::definition_after_data();
-        // Get scroll position.
-        //$scrollposition = $mform->getElementValue('scrolltop');
 
         // Get collections for selected language.
         $languageset = $mform->getElementValue('language');
 
-        // Add collection select and default corpus selection and order box when language is set
+        // Add collection select and default corpus selection and order box when language is set.
         if (is_array($languageset) && !empty($languageset[0])) {
             $collections = cobra_get_filtered_collections_optionslist($languageset[0]);
             $collections = array('0' => '-') + $collections;
@@ -285,9 +270,7 @@ class mod_cobra_mod_form extends moodleform_mod {
             if ($mform->elementExists('lastcollection')) {
                 $colselect->setSelected($mform->getElementValue('lastcollection'));
             }
-            //$mform->addHelpButton('collection', '', '');
             $mform->addRule('collection', 'You must select a collection', 'nonzero');
-
 
             $mform->insertElementBefore($mform->removeElement('collection', false),
                 'addcollectionshere');
@@ -299,7 +282,6 @@ class mod_cobra_mod_form extends moodleform_mod {
                 $texts = cobra_get_text_optionslist($collectionset[0]);
                 $texts = array('0' => '-') + $texts;
                 $mform->addElement('select', 'text', get_string('text', 'cobra'), $texts);
-                //$mform->addHelpButton('collection', '', '');
                 $mform->addRule('text', 'You must select a text', 'nonzero');
                 $mform->insertElementBefore($mform->removeElement('text', false),
                     'addtextshere');

@@ -112,12 +112,12 @@ function cobra_get_glossary_for_text($textid) {
         foreach ($conceptidlist as $conceptid) {
             if (!in_array($conceptid, $oldconceptlist)) {
                 $params = array('conceptId' => $conceptid, 'entryType' => $entrytype);
-                $entitylingid = cobra_remote_service::call('getEntityLingIdFromConcept', $params);   
-                // Permet d'éviter d'avoir un message d'erreur de cobra
+                $entitylingid = cobra_remote_service::call('getEntityLingIdFromConcept', $params);
+                // Permet d'éviter d'avoir un message d'erreur de cobra.
                 if ($entitylingid != '-1') {
                     $glossary[$textid][] = $entitylingid;
                     $oldconceptlist[] = $conceptid;
-                } 
+                }
             }
         }
     }
@@ -368,7 +368,7 @@ function cobra_empty_glossary($course, $user) {
 function cobra_get_remote_glossary_info_for_student($textid = 0, $courseid = 0, $userid = 0, $lingentity = 0) {
     global $DB, $COURSE, $USER;
     $userid = !empty($userid) ? $userid : $USER->id;
-    //JRM test load single entry (temp before implementing local glossary cache)
+    // JRM test load single entry (temp before implementing local glossary cache).
     if ($lingentity) {
 
         $params = array('entity_list' => $lingentity);
@@ -423,7 +423,6 @@ function cobra_get_remote_glossary_info_for_student($textid = 0, $courseid = 0, 
         $glossaryentries = array_merge($glossaryentries, cobra_remote_service::call('getGlossaryInfoForStudent', $params));
     }
 
-
     if ($textid) {
         foreach ($glossaryentries as &$entry) {
             if (in_array($entry->ling_entity, $textglossarylist)) {
@@ -466,19 +465,19 @@ function cobra_export_myglossary($data) {
 }
 
 class cobra_edit_glossary_form extends moodleform {
-    public function definition()
-    {
+    public function definition() {
         $mform = $this->_form;
-        $this->add_checkbox_controller(1, null, null, 1); // 1st argument is group name, 2nd is link text, 3rd is attributes and 4th is original value
-        $collectionlist =  $this->_customdata['collectionlist'];
+        // 1st argument is group name, 2nd is link text, 3rd is attributes and 4th is original value.
+        $this->add_checkbox_controller(1, null, null, 1);
+        $collectionlist = $this->_customdata['collectionlist'];
         $compare = $this->_customdata['compare'];
 
         foreach ($collectionlist as $collection) {
             $textlist = cobra_load_text_list( $collection->id_collection, 'visible' );
             foreach ($textlist as $text) {
-                
-                $mform->addElement('advcheckbox', 'text_'.$text->id, '',  htmlspecialchars( strip_tags( $text->title)), array('group'=>1));
-                $mform->setDefault('text_'.$text->id, 1);
+                $mform->addElement('advcheckbox', 'text_' . $text->id, '',
+                        htmlspecialchars(strip_tags($text->title)), array('group' => 1));
+                $mform->setDefault('text_' . $text->id, 1);
 
             }
         }

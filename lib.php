@@ -135,8 +135,7 @@ function cobra_delete_instance($id) {
     \core_completion\api::update_completion_date_event($cm->id, 'cobra', $id, null);
 
     // Delete any dependent records here.
-    //$DB->delete_records('cobra_clic', array('course' => $cobra->course, 'id_text' => $cobra->text));
-    //$DB->delete_records('cobra_glossaire', array('course' => $cobra->course));
+
     $DB->delete_records('cobra', array('id' => $cobra->id));
 
     return true;

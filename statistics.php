@@ -122,14 +122,17 @@ if ( !is_null( $view ) ) {
         case '1' :
             $out .= html_writer::label(get_string('topclickedentries', 'cobra'), 'topclickedentries');
             $mytable = new html_table();
-            $mytable->attributes = array('class' =>' table table-condensed table-hover table-striped');
-            $mytable->head = array(get_string('totalclicnumber', 'cobra'), get_string('entry', 'cobra'), get_string ('translation', 'cobra'),
-                get_string( 'category' ));
+            $mytable->attributes = array('class' => ' table table-condensed table-hover table-striped');
+            $mytable->head = array(
+                get_string('totalclicnumber', 'cobra'),
+                get_string('entry', 'cobra'),
+                get_string('translation', 'cobra'),
+                get_string('category')
+            );
             $list = cobra_get_clicked_entries ($course->id, 20);
             foreach ($list as $lingentityid => $nb) {
-                if ($lingentityid > 0)
-                {
-                    list( $conceptid, $construction, $entrytype, $category ) = cobra_get_concept_info_from_ling_entity($lingentityid);
+                if ($lingentityid > 0) {
+                    list($conceptid, $construction, $entrytype, $category) = cobra_get_concept_info_from_ling_entity($lingentityid);
                     $row = new html_table_row();
                     $row->cells[] = $nb;
                     $row->cells[] = $construction;
@@ -147,13 +150,18 @@ if ( !is_null( $view ) ) {
             foreach ($collectionlist as $collection) {
                 $textlist = cobra_load_text_list( $collection->id_collection, 'all' );
                 $out .= html_writer::start_div();
-                $out .= html_writer::label(get_string( 'collection', 'cobra' ) . ' ' . $collection->local_label, $collection->local_label,
-                        true, array('class' => 'cobralabel'));
+                $out .= html_writer::label(get_string( 'collection', 'cobra' ) . ' ' . $collection->local_label,
+                        $collection->local_label, true, array('class' => 'cobralabel'));
                 $table = new html_table();
                 $table->attributes = array('style' => 'width:100%');
-                $table->head = array(get_string('text', 'cobra'), get_string('clicnumber', 'cobra'),get_string( 'entry', 'cobra' ),
-                    get_string( 'translation', 'cobra' ), get_string( 'category' ));
-                $table->headspan = array(1,1,1,1,1);
+                $table->head = array(
+                    get_string('text', 'cobra'),
+                    get_string('clicnumber', 'cobra'),
+                    get_string('entry', 'cobra'),
+                    get_string('translation', 'cobra'),
+                    get_string('category')
+                );
+                $table->headspan = array(1, 1, 1, 1, 1);
 
                 foreach ($textlist as $textinfo) {
                     $textid = $textinfo->id_text;
@@ -184,7 +192,7 @@ if ( !is_null( $view ) ) {
                     }
                 }
                 $out .= html_writer::table($table);
-                 $out .= html_writer::end_div();
+                $out .= html_writer::end_div();
             }
             break;
 
@@ -198,8 +206,8 @@ if ( !is_null( $view ) ) {
                     $textinfo[$text->id_text] = $text->title;
                 }
                 $out .= html_writer::start_div();
-                $out .= html_writer::label(get_string( 'collection', 'cobra' ) . ' ' . $collection->local_label, $collection->local_label,
-                        true, array('class' => 'cobralabel'));
+                $out .= html_writer::label(get_string( 'collection', 'cobra' ) . ' ' . $collection->local_label,
+                        $collection->local_label, true, array('class' => 'cobralabel'));
                 $table = new html_table();
                 $table->attributes = array('class' => 'emphaseLine');
                 $table->head = array(get_string('totalclicnumber', 'cobra'), get_string('text', 'cobra'));
@@ -224,8 +232,8 @@ if ( !is_null( $view ) ) {
             $collectionlist = cobra_get_registered_collections( 'all' );
             foreach ($collectionlist as $collection) {
                 $out .= html_writer::start_div();
-                $out .= html_writer::label(get_string( 'collection', 'cobra' ) . ' ' . $collection->local_label, $collection->local_label,
-                        true, array('class' => 'cobralabel'));
+                $out .= html_writer::label(get_string( 'collection', 'cobra' ) . ' ' . $collection->local_label,
+                        $collection->local_label, true, array('class' => 'cobralabel'));
                 $table = new html_table();
                 $table->head = array( get_string( 'text', 'cobra'), get_string( 'clickablewordscount', 'cobra'),
                     get_string( 'uniqueusers', 'cobra'),  get_string( 'clickcount', 'cobra'));

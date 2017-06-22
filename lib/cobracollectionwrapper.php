@@ -109,30 +109,25 @@ class cobra_collection_wrapper {
         $list = $DB->get_records_select('cobra_registered_collections',
                 "course='$course->id' AND id_collection='".(int)$this->get_id()."'");
         $data = $DB->get_record('cobra_registered_collections', array('id' => $this->get_id()), '*', MUST_EXIST);
-        /*if (empty($list)) {
-            return false;
-        }*/
+
         $this->set_language($data->language);
         $this->set_remote_id($data->id_collection);
         $this->set_remote_name($data->label);
         $this->set_local_name($data->local_label);
         $this->set_position($data->position);
         $this->set_visibility($data->visibility ? true : false);
-        /*foreach ($list as $collection) {
-            $this->set_language($collection->language);
-            $this->set_remote_name($collection->label);
-            $this->set_local_name($collection->local_label);
-            $this->set_position($collection->position);
-            $this->set_visibility($collection->visibility ? true : false);
-            return true;
-        }*/
+
         return true;
     }
 
     public function save() {
         global $DB, $course;
         $exists = $DB->record_exists('cobra_registered_collections',
-                array('course' => $course->id, 'id_collection' =>  $this->get_remote_id()));
+                array(
+                    'course' => $course->id,
+                    'id_collection' => $this->get_remote_id()
+                )
+        );
         if ($exists) {
             return $this->update();
         }
