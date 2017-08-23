@@ -88,10 +88,6 @@ if ((int)$cobra->userglossary) {
 }
 
 $content = '';
-// Load content to display. Still needed?
-$text = new cobra_text_wrapper($cm);
-$text->set_text_id($cobra->text);
-$text->load_remote_data();
 
 $content .= html_writer::div('', 'hidden', array('id' => 'courseLabel', 'name' => $course->id));
 $content .= html_writer::div($cobra->userglossary, 'hidden', array('id' => 'showglossary'));
