@@ -110,10 +110,6 @@ echo $output->header();
 
 echo $output->heading(get_string('textreading', 'cobra')/* . ' : ' . $cobra->name*/);
 
-if (empty($cobra->ccorder)) {
-    echo $output->notification(get_string('nocollectionsmessage', 'cobra'), 'info');
-}
-
 $cobratext = new cobratext($cobra);
 echo $output->render($cobratext);
 
