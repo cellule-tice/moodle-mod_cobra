@@ -246,7 +246,7 @@ function cobra_extend_settings_navigation($settings, $cobranode) {
         $beforekey = $keys[$i + 1];
     }
 
-    if (has_capability('mod/cobra:settings', $PAGE->cm->context)) {
+    /*if (has_capability('mod/cobra:settings', $PAGE->cm->context)) {
         $node = navigation_node::create(get_string('managetextcollections', 'cobra'),
             new moodle_url('/mod/cobra/collectionmanagement.php', array('id' => $PAGE->cm->id)),
             navigation_node::TYPE_SETTING, null, 'mod_cobra_collections',
@@ -260,9 +260,9 @@ function cobra_extend_settings_navigation($settings, $cobranode) {
             navigation_node::TYPE_SETTING, null, 'mod_cobra_corpus',
             new pix_icon('i/navigationitem', ''));
         $cobranode->add_node($node, $beforekey);
-    }
+    }*/
 
-    if (has_capability('mod/cobra:glossaryedit', $PAGE->cm->context)) {
+    /*if (has_capability('mod/cobra:glossaryedit', $PAGE->cm->context)) {
         $node = navigation_node::create(get_string('glossary', 'cobra'));
         $node->icon = null;
         $glossarynode = $cobranode->add_node($node, $beforekey);
@@ -276,9 +276,9 @@ function cobra_extend_settings_navigation($settings, $cobranode) {
         $glossarynode->add_node(navigation_node::create(get_string('comparetextwithglossary', 'cobra'), $url,
             navigation_node::TYPE_SETTING,
             null, null, new pix_icon('i/item', '')));
-    }
+    }*/
 
-    if (has_capability('mod/cobra:stat', $PAGE->cm->context)) {
+    /*if (has_capability('mod/cobra:stat', $PAGE->cm->context)) {
         $node = navigation_node::create(get_string('statistics', 'cobra'));
         $node->icon = null;
         $statisticsnode = $cobranode->add_node($node, $beforekey);
@@ -312,7 +312,7 @@ function cobra_extend_settings_navigation($settings, $cobranode) {
         $statisticsnode->add_node(navigation_node::create(get_string('cleanclickstats', 'cobra'), $url,
             navigation_node::TYPE_SETTING,
             null, null, new pix_icon('i/item', '')));
-    }
+    }*/
 }
 
 /**

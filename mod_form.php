@@ -153,13 +153,13 @@ class mod_cobra_mod_form extends moodleform_mod {
         $mform->addElement('header', 'displaysettings', get_string('displaysettings', 'cobra'));
 
         // Add checkbox for next and previous buttons.
-        $mform->addElement('advcheckbox',
+        /*$mform->addElement('advcheckbox',
             'nextprevbuttons',
             get_string('nextprevbuttons', 'cobra'),
             null,
             null,
             array(0, 1)
-        );
+        );*/
         $mform->addHelpButton('nextprevbuttons', 'nextprevbuttons', 'cobra');
 
         // Add checkbox to enable/disable user glossary.
