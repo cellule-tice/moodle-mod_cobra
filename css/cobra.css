@@ -41,6 +41,7 @@
     padding: 5px;
     border-top : 1px solid gray;
     font-size: 85%;
+    line-height: 1.1rem;
 }
 
 .aloneReference{
@@ -165,11 +166,10 @@
     padding:5px;
     display: none;
     float:left;
-    width:33%;
+    width:32%;
     min-width:290px;
-    margin-top: 13px;
-    margin-left: 10px;
-    Line-Height: 15pt;
+    margin-top: 10px;
+    margin-left: 20px;
 }
 
 .cardImage {
