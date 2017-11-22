@@ -85,17 +85,11 @@ $string['language_help'] = 'La langue enseignée dans votre cours.
 $string['mailrecipient'] = 'Destinataire (ID) pour la notification d\'erreur';
 $string['managetextcollections'] = 'Gérer les collections';
 $string['modulename'] = 'CoBRA';
-$string['modulename_help'] = 'Le module de lecture CoBRA propose un texte en anglais ou en néerlandais avec une aide lexicale intégrée.
+$string['modulename_help'] = 'Le module de lecture CoBRA propose un texte en anglais ou en néerlandais avec une aide lexicale donnant accès à la traduction en contexte de chaque mot, en l’illustrant par des exemples bilingues provenant de sources variées.
 
-CoBRA permet à l’enseignant de créer à partir d’une banque de textes préalablement étiquetés, un texte de leçon interactif. Un clic sur chaque mot du texte permet d\'obtenir les informations telles que sa catégorie et ses flexions éventuelles ainsi que sa traduction en français d\'après le contexte de lecture.
+L’enseignant peut paramétrer l’outil en ordonnant et en filtrant les exemples selon leur provenance et le public visé.
 
-La traduction est illustrée à l’aide de phrases bilingues extraites de très grands corpus, qui recouvrent la langue usuelle et différentes domaines de spécialité (droit, politique, économie, sciences et techniques, art et histoire, technologies de l’information).
-
-L’enseignant peut paramétrer l’outil en ordonnant et en filtrant les exemples selon leur provenance et selon le public visé.
-
-L’étudiant peut constituer et exporter un glossaire personnel qui est généré à partir d’un ou de plusieurs texte(s) de leçon.
-
-Les ressources CoBRA peuvent être utilisées en classe, en auto-apprentissage, dans tout type de cours de langues intégrant des ressources textuelles.';
+L’étudiant peut constituer et exporter un glossaire personnel qui est généré à partir d’un ou de plusieurs texte(s) de leçon.';
 $string['modulenameplural'] = 'CoBRA';
 $string['monolingual'] = 'Monolingues';
 $string['mostclickedentries'] = 'Entrées les plus cliquées';
