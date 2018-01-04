@@ -26,7 +26,7 @@ function cobra_export_glossary($glossary) {
     $csvexport->set_filename($filename);
     $records = array();
     // Get the title of the columns.
-    $records[0] = array(get_string('entry', 'cobra'), get_string('category'),
+    $records[0] = array(utf8_decode(get_string('entry', 'cobra')), utf8_decode(get_string('category')),
         get_string('info', 'cobra'), get_string('translation', 'cobra'), get_string('text', 'cobra'));
     list($lemmaglossary, $expglossary) = cobra_explode_glossary_into_lemmas_and_expression($glossary);
     $entry = array();
