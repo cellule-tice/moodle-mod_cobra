@@ -219,7 +219,18 @@ function cobra_pluginfile($course, $cm, $context, $filearea, array $args, $force
 }
 
 function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
-
+    
+    // Show only if assign tool is activated.
+    if (tool_is_used_in_course('cobra', $course->id)) {
+               
+        $cobranode = $parentnode->add(get_string('cobra', 'mod_cobra'));
+        $params = array('id' => $course->id, 'cmd' => 'rqexport');
+        $cobranode->add(get_string('exportglossary', 'mod_cobra'), new moodle_url(
+                    $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_export_glossary');
+        $params = array('id' => $course->id, 'cmd' => 'rqcompare');
+        $cobranode->add(get_string('comparetextwithglossary', 'mod_cobra'), new moodle_url(
+                    $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_compare_glossary');
+    }
 }
 
 /**
@@ -276,7 +287,7 @@ function cobra_extend_settings_navigation($settings, $cobranode) {
         $glossarynode->add_node(navigation_node::create(get_string('comparetextwithglossary', 'cobra'), $url,
             navigation_node::TYPE_SETTING,
             null, null, new pix_icon('i/item', '')));
-    }*/
+    } */
 
     /*if (has_capability('mod/cobra:stat', $PAGE->cm->context)) {
         $node = navigation_node::create(get_string('statistics', 'cobra'));

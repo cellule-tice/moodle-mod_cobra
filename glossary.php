@@ -32,33 +32,31 @@ require_once(__DIR__ . '/lib/cobraremoteservice.php');
 require_once(__DIR__ . '/lib/cobracollectionwrapper.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
+
+
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
-$n  = optional_param('n', 0, PARAM_INT);  // ... cobra instance ID - it should be named as the first character of the module.
 
 if ($id) {
-    $cm         = get_coursemodule_from_id('cobra', $id, 0, false, MUST_EXIST);
-    $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $cobra  = $DB->get_record('cobra', array('id' => $cm->instance), '*', MUST_EXIST);
-} else if ($n) {
-    $cobra  = $DB->get_record('cobra', array('id' => $n), '*', MUST_EXIST);
-    $course     = $DB->get_record('course', array('id' => $cobra->course), '*', MUST_EXIST);
-    $cm         = get_coursemodule_from_instance('cobra', $cobra->id, $course->id, false, MUST_EXIST);
-} else {
-    error('You must specify a course_module ID or an instance ID');
+    $course     = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
+    if (!cobra_is_used()) {
+       // redirect vers la page de cours
+        redirect('../course/view.php?id='.id);
+    }
 }
 
 // Security check.
-require_login($course, true, $cm);
+require_login($course, true);
 
-$context = context_module::instance($cm->id);
+$context = context_course::instance($course->id, MUST_EXIST);
 
 if (!has_capability('mod/cobra:edit', $context)) {
-    redirect('view.php?id='.$cm->id);
+    redirect('../course/view.php?id='.id);
 }
 
 /*
  * Init request vars.
  */
+
 
 $cmd = optional_param('cmd', '', PARAM_ALPHANUM);
 $acceptedcmdlist = array('rqexport', 'exexport', 'rqcompare', 'excompare');
@@ -66,37 +64,35 @@ if (!in_array($cmd, $acceptedcmdlist)) {
     $cmd = 'rqexport';
 }
 
-
-
-$collectionlist = cobra_get_registered_collections('visible');
 $out = '';
+
+$textlist = get_cobra_text_list();
 
 if ($cmd == 'exexport') {
     $glossary = array();
-    foreach ($collectionlist as $collection) {
-        $textlist = cobra_load_text_list( $collection->id_collection, 'visible' );
-        foreach ($textlist as $num => $text) {
-            if ($_REQUEST['text_'.$text->id]) {
-                $textid = $text->id_text;
-                $glossary2 = cobra_get_glossary_for_text ( $textid );
-                if (array_key_exists( $text->id_text, $glossary2 )) {
-                    $glossary2 = cobra_get_glossary_entry_of_text( $glossary2[$text->id_text], $text, $num );
-                    $glossary = array_merge( $glossary, $glossary2 );
-                }
+    foreach ($textlist as $text) {
+        if ($_REQUEST['text_'.$text->id]) {
+            $textid = $text->text;
+            $glossary2 = cobra_get_glossary_for_text ( $textid );
+            
+            if (array_key_exists( $textid, $glossary2 )) {
+                $glossary2 = cobra_get_glossary_entry_of_text( $glossary2[$text->text], $text, $text->id );
+                $glossary = array_merge( $glossary, $glossary2 );
             }
         }
-    }
-    cobra_export_glossary($glossary);
+    } 
+    cobra_export_glossary($glossary);    
 }
 
+
 // Print the page header.
-$PAGE->set_url('/mod/cobra/glossary.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/cobra/glossary.php', array('id' => $context->id));
 $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
 
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
-print $OUTPUT->header();
+echo $OUTPUT->header();
 
 switch ($cmd) {
     case 'rqexport' : $heading = get_string('modulename', 'cobra') . ' - ' . get_string('exportglossary', 'cobra');;
@@ -108,9 +104,7 @@ switch ($cmd) {
 }
 echo $OUTPUT->heading($heading);
 
-echo $OUTPUT->box_start('Glossary generalbox box-content');
-
-$language = $cobra->language;
+echo $OUTPUT->box_start();
 
 if ($cmd == 'rqexport') {
     $url = new moodle_url('/mod/cobra/glossary.php',
@@ -119,7 +113,7 @@ if ($cmd == 'rqexport') {
             'cmd' => 'exexport'
         )
     );
-    $thisform = new cobra_edit_glossary_form ($url, array('collectionlist' => $collectionlist, 'compare' => false));
+    $thisform = new cobra_edit_glossary_form ($url, array('textlist' => $textlist, 'compare' => false));
 } else if ($cmd == 'rqcompare') {
     $url = new moodle_url('/mod/cobra/glossary.php',
         array(
@@ -127,20 +121,21 @@ if ($cmd == 'rqexport') {
             'cmd' => 'excompare'
         )
     );
-    $thisform = new cobra_edit_glossary_form ($url, array('collectionlist' => $collectionlist, 'compare' => true));
+    $thisform = new cobra_edit_glossary_form ($url, array('textlist' => $textlist, 'compare' => true));
 } else if ( $cmd == 'excompare') {
     cobra_increase_script_time();
-    $glossary = array();
-    foreach ($collectionlist as $collection) {
-        $textlist = cobra_load_text_list( $collection->id_collection, 'visible' );
-        foreach ($textlist as $num => $text) {
-            if ($_REQUEST['text_'.$text->id]) {
-                $textid = $text->id_text;
-                $glossary2 = cobra_get_glossary_for_text ( $textid );
-                if (array_key_exists( $textid, $glossary2 )) {
-                    $glossary2 = cobra_get_glossary_entry_of_text( $glossary2[$text->id_text], $text, $num );
-                    $glossary = array_merge( $glossary, $glossary2 );
-                }
+    $glossary = array();   
+    $language = '';
+    foreach ($textlist as $text) {
+        if ($_REQUEST['text_'.$text->id]) {
+            $textid = $text->text;
+            if ($language == '') {
+                $language = $text->language;
+            }
+            $glossary2 = cobra_get_glossary_for_text ( $textid );
+            if (array_key_exists( $textid, $glossary2 )) {
+                $glossary2 = cobra_get_glossary_entry_of_text( $glossary2[$text->text], $text, $text->id );
+                $glossary = array_merge( $glossary, $glossary2 );
             }
         }
     }
@@ -151,6 +146,8 @@ if ($cmd == 'rqexport') {
     $newwords = '';
     $otherwords = '';
     $words = cobra_get_list_of_words_in_text ( $mytext, $language );
+    
+    $newwords = array();
 
     foreach ($words as $word) {
         $listflexions = cobra_word_exists_as_flexion ( $word, $language );
@@ -167,14 +164,23 @@ if ($cmd == 'rqexport') {
                 }
             }
             if (!$trouve) {
-                $newwords .= '<li> ' . get_string('newwords', 'cobra') . ' : '. $word . '</li>';
+                $newwords[] = $word;
+                //$newwords .= '<li> ' . get_string('newwords', 'cobra') . ' : '. $word . '</li>';
+                $mytext = str_replace($word, '<span style="color:red">'. $word. '</span>', $mytext);
             }
         } else {
-            $newwords .= '<li> ' . get_string('newwords', 'cobra')  . ' : '. $word . '</li>';
+             $newwords[] = $word;
+            //$newwords .= '<li> ' . get_string('newwords', 'cobra')  . ' : '. $word . '</li>';
+             $mytext = str_replace($word, '<span style="color:red">'. $word. '</span>', $mytext);
         }
     }
+    
+    $out .= html_writer::tag('div', get_string('text', 'mod_cobra') . ' : ' . $mytext);
+    $out .= html_writer::tag('span', '&nbsp; ');
+    
     $out .= '<ul>';
-    $out .= $newwords;
+    //$out .= $newwords;
+    $out .= '<li>' . get_string('newwords', 'cobra')  . ' : ' . implode(', ', $newwords) . '</li>'; 
     $out .= $otherwords;
     $out .= '</ul>';
 }
@@ -182,6 +188,7 @@ if ($cmd == 'rqexport') {
 if (!empty($thisform)) {
     echo $thisform->display();
 }
+
 echo $out;
 
 echo $OUTPUT->box_end();

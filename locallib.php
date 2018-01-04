@@ -966,3 +966,21 @@ class cobra_edit_collection_label_form extends moodleform {
         $this->add_action_buttons(true, get_string('OK', 'cobra'));
     }
 }
+
+
+function cobra_is_used() {
+    global $DB, $course;
+    // obtenir l'id du module cobra
+   /* $moduleid = get_module_id ('cobra');
+    // verifier si au moins un texte de type cobra est dans ce cours
+    $courseinfo = $DB->get_records('course_modules', array('course' => $course->id, 'module' => $moduleid), 'id');
+    return (!empty($courseinfo));     */   
+    $cobra = $DB->get_records('cobra', array('course' => $course->id));
+    return (!empty($cobra));
+}
+
+function get_cobra_text_list() {
+    global $DB, $course;
+    $cobratexts = $DB->get_records('cobra', array('course' => $course->id), 'id');
+    return $cobratexts;
+}
