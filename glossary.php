@@ -166,12 +166,16 @@ if ($cmd == 'rqexport') {
             if (!$trouve) {
                 $newwords[] = $word;
                 //$newwords .= '<li> ' . get_string('newwords', 'cobra') . ' : '. $word . '</li>';
-                $mytext = str_replace($word, '<span style="color:red">'. $word. '</span>', $mytext);
+                $mytext = str_replace(' ' .$word. ' ', ' <span style="color:red">'. $word. '</span> ', $mytext);
+                $mytext = str_replace(' ' .$word. ',', ' <span style="color:red">'. $word. '</span>,', $mytext);
+                $mytext = str_replace(' ' .$word. '.', ' <span style="color:red">'. $word. '</span>.', $mytext);
             }
         } else {
              $newwords[] = $word;
             //$newwords .= '<li> ' . get_string('newwords', 'cobra')  . ' : '. $word . '</li>';
-             $mytext = str_replace($word, '<span style="color:red">'. $word. '</span>', $mytext);
+             $mytext = str_replace(' ' .$word.' ', ' <span style="color:red">'. $word. '</span> ', $mytext);
+             $mytext = str_replace(' ' .$word. ',', ' <span style="color:red">'. $word. '</span>,', $mytext);
+             $mytext = str_replace(' ' .$word. '.', ' <span style="color:red">'. $word. '</span>.', $mytext);
         }
     }
     
