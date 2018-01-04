@@ -169,6 +169,11 @@ if ($cmd == 'rqexport') {
                 $mytext = str_replace(' ' .$word. ' ', ' <span style="color:red">'. $word. '</span> ', $mytext);
                 $mytext = str_replace(' ' .$word. ',', ' <span style="color:red">'. $word. '</span>,', $mytext);
                 $mytext = str_replace(' ' .$word. '.', ' <span style="color:red">'. $word. '</span>.', $mytext);
+                $mytext = str_replace(' ' .$word. ':', ' <span style="color:red">'. $word. '</span>:', $mytext);
+                $mytext = str_replace(' ' .$word. ';', ' <span style="color:red">'. $word. '</span>;', $mytext);
+                $mytext = str_replace('(' .$word. ')', '(<span style="color:red">'. $word. '</span>)', $mytext);
+                $mytext = str_replace(' ' .$word. ')', ' <span style="color:red">'. $word. '</span>)', $mytext);
+                $mytext = str_replace('(' .$word. ' ', '(<span style="color:red">'. $word. '</span> ', $mytext);
             }
         } else {
              $newwords[] = $word;
@@ -176,6 +181,12 @@ if ($cmd == 'rqexport') {
              $mytext = str_replace(' ' .$word.' ', ' <span style="color:red">'. $word. '</span> ', $mytext);
              $mytext = str_replace(' ' .$word. ',', ' <span style="color:red">'. $word. '</span>,', $mytext);
              $mytext = str_replace(' ' .$word. '.', ' <span style="color:red">'. $word. '</span>.', $mytext);
+             $mytext = str_replace(' ' .$word. ':', ' <span style="color:red">'. $word. '</span>:', $mytext);
+             $mytext = str_replace(' ' .$word. ';', ' <span style="color:red">'. $word. '</span>;', $mytext);
+             $mytext = str_replace('(' .$word. ')', '(<span style="color:red">'. $word. '</span>)', $mytext);
+             $mytext = str_replace(' ' .$word. ')', ' <span style="color:red">'. $word. '</span>)', $mytext);
+             $mytext = str_replace('(' .$word. ' ', '(<span style="color:red">'. $word. '</span> ', $mytext);
+             
         }
     }
     
