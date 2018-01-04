@@ -87,8 +87,8 @@ function cobra_export_glossary($glossary) {
         $csvexport->add_data($record);
     }
     // Export in csv format.
-    $csvexport->download_file();
-    die;
+    $csvexport->download_file();    
+    exit;
 }
 
 /**
@@ -143,7 +143,7 @@ function cobra_list_concepts_in_text($textid, $entrytype) {
         $text->load_remote_data();
         $titre = $text->get_title();
         $content = $text->get_content();
-        $conceptidlist = cobra_get_concept_list_from_para ($titre, $entrytype);
+        $conceptidlist = cobra_get_concept_list_from_para ($titre, $entrytype);        
         foreach ($content as $i => $element) {
             $conceptidlist = cobra_get_concept_list_from_para($element['content'], $entrytype, $conceptidlist);
         }
@@ -192,7 +192,7 @@ function  cobra_get_concept_list_from_para($para, $entrytype, $conceptlist = arr
  * @return @glossary : array
  */
 function cobra_get_glossary_entry_of_text($glossary, $text, $num) {
-    $textid = $text->id_text;
+    $textid = $text->text;
     $tempglossary = array();
     foreach ($glossary as $key => $entitelingid) {
         $params = array('id_entite_ling' => $entitelingid);
@@ -207,7 +207,7 @@ function cobra_get_glossary_entry_of_text($glossary, $text, $num) {
         $glossary[$key]['ss_cat'] = utf8_decode($glossaryentry->ss_cat);
         $glossary[$key]['traduction'] = utf8_decode($glossaryentry->traduction);
         $glossary[$key]['num'] = $num;
-        $glossary[$key]['title'] = strip_tags($text->title);
+        $glossary[$key]['title'] = strip_tags($text->name);
     }
     return $glossary;
 }
@@ -474,17 +474,13 @@ class cobra_edit_glossary_form extends moodleform {
         $mform = $this->_form;
         // 1st argument is group name, 2nd is link text, 3rd is attributes and 4th is original value.
         $this->add_checkbox_controller(1, null, null, 1);
-        $collectionlist = $this->_customdata['collectionlist'];
+        $textlist = $this->_customdata['textlist'];
         $compare = $this->_customdata['compare'];
+        foreach ($textlist as $text) {
+            $mform->addElement('advcheckbox', 'text_' . $text->id, '',
+                    htmlspecialchars(strip_tags($text->name)), array('group' => 1));
+            $mform->setDefault('text_' . $text->id, 1);
 
-        foreach ($collectionlist as $collection) {
-            $textlist = cobra_load_text_list( $collection->id_collection, 'visible' );
-            foreach ($textlist as $text) {
-                $mform->addElement('advcheckbox', 'text_' . $text->id, '',
-                        htmlspecialchars(strip_tags($text->title)), array('group' => 1));
-                $mform->setDefault('text_' . $text->id, 1);
-
-            }
         }
         if ($compare) {
             $mform->addElement('textarea', 'mytext', get_string('mytext', 'cobra'), array('rows' => 10));

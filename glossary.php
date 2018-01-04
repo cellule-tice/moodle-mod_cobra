@@ -67,9 +67,6 @@ if (!in_array($cmd, $acceptedcmdlist)) {
 $out = '';
 
 $textlist = get_cobra_text_list();
-if (is_admin()) {
-    var_dump($textlist);
-}
 
 if ($cmd == 'exexport') {
     $glossary = array();
