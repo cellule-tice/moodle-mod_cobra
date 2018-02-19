@@ -222,7 +222,9 @@ function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $
     
     // Show only if assign tool is activated.
     if (tool_is_used_in_course('cobra', $course->id)) {
-               
+
+        global $CFG;        
+       
         $cobranode = $parentnode->add(get_string('cobra', 'mod_cobra'));
         $params = array('id' => $course->id, 'cmd' => 'rqexport');
         $cobranode->add(get_string('exportglossary', 'mod_cobra'), new moodle_url(
