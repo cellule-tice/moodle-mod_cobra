@@ -219,9 +219,10 @@ function cobra_pluginfile($course, $cm, $context, $filearea, array $args, $force
 }
 
 function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
-    
+    global $DB;
     // Show only if assign tool is activated.
-    if (tool_is_used_in_course('cobra', $course->id)) {
+    //if (tool_is_used_in_course('cobra', $course->id)) {
+    if ($DB->record_exists('cobra', array('course' => $course->id))) {
 
         global $CFG;        
        
