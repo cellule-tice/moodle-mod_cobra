@@ -2,15 +2,14 @@
     font-size: 100%;
 }
 
-.titre_lecon {
-    font-family : Verdana, Arial, Helvetica, sans-serif;
+.text-title {
     color : #000000;
     padding : 1rem;
     margin: 0px;
     font-size: 24px;
 }
 
-.sous-titre {
+.cobra-subtitle {
     font-size: 1.1em;
     font-weight: bold;
     padding: 5px;
@@ -418,11 +417,16 @@ p {
     color: #a9a9a9;
 }
 
-.hot {
-    padding-left: 15px;
+.hotentry {
+    color: crimson;
+    font-size: 10px;
+    margin-right: 5px;
+    float:left;
+    margin-top: 4px;
     background-image: url(../pix/hot.png);
     background-repeat: no-repeat;
-    background-position: center left;
+    background-position: center;
+    margin-top: 1px;
 }
 
 .path-mod-cobra .text-center {
@@ -452,4 +456,27 @@ p {
     padding: 3px;
     border-radius: 3px;
     color: white;
+}
+
+#page-mod-cobra-view #displayOnClic ul.singletonList {
+    padding-left: 0;
+}
+
+.text-source {
+    text-align: right;
+    font-style: italic;
+    font-size: small;
+    margin-top: 3rem;
+}
+
+/*#glossary .table td {
+    vertical-align: middle;
+}*/
+
+.myglossaryform {
+    padding-top: 0;
+}
+
+.myglossaryform .emptyglossary {
+    margin-left: .5rem;
 }

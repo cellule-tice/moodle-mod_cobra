@@ -15,84 +15,73 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This is a one-line short description of the file
+ * Display information about all the mod_cobra modules in the requested course.
  *
- * You can have a rather longer description of the file as well,
- * if you like, and it can span multiple lines.
- *
- * @package    mod_cobra
- * @copyright  2015 Your Name
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_cobra
+ * @copyright   2016 onwards - Cellule TICE - University of Namur
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Replace cobra with the name of your module and remove this line.
+require(__DIR__.'/../../config.php');
 
-require(__DIR__ . '/../../config.php');
-require_once(__DIR__ . '/lib.php');
+require_once(__DIR__.'/lib.php');
 
-$id = required_param('id', PARAM_INT); // Course.
+$id = required_param('id', PARAM_INT);
 
 $course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
-
 require_course_login($course);
 
-$params = array('context' => context_course::instance($course->id));
-$event = \mod_cobra\event\course_module_instance_list_viewed::create($params);
-$event->trigger();
+$coursecontext = context_course::instance($course->id);
 
-$strname = get_string('modulenameplural', 'mod_cobra');
 $PAGE->set_url('/mod/cobra/index.php', array('id' => $id));
-$PAGE->navbar->add($strname);
-$PAGE->set_title($course->shortname . ':' . $strname);
-$PAGE->set_heading($course->fullname);
-$PAGE->set_pagelayout('incourse');
-
-$PAGE->requires->css('/mod/cobra/css/cobra.css');
+$PAGE->set_title(format_string($course->fullname));
+$PAGE->set_heading(format_string($course->fullname));
+$PAGE->set_context($coursecontext);
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading($strname);
 
-if (! $cobras = get_all_instances_in_course('cobra', $course)) {
-    notice(get_string('nocobras', 'cobra'), new moodle_url('/course/view.php', array('id' => $course->id)));
+$modulenameplural = get_string('modulenameplural', 'cobra');
+echo $OUTPUT->heading($modulenameplural);
+
+$cobras = get_all_instances_in_course('cobra', $course);
+
+if (empty($cobras)) {
+    notice(get_string('thereareno', 'moodle', get_string('modulename', 'cobra')),
+            new moodle_url('/course/view.php', array('id' => $course->id)));
 }
-
-$usesections = course_format_uses_sections($course->format);
 
 $table = new html_table();
 $table->attributes['class'] = 'generaltable mod_index';
 
-if ($usesections) {
-    $strsectionname = get_string('sectionname', 'format_'.$course->format);
-    $table->head  = array ($strsectionname, $strname);
-    $table->align = array ('center', 'left');
+if ($course->format == 'weeks') {
+    $table->head  = array(get_string('week'), get_string('name'));
+    $table->align = array('center', 'left');
+} else if ($course->format == 'topics') {
+    $table->head  = array(get_string('topic'), get_string('name'));
+    $table->align = array('center', 'left', 'left', 'left');
 } else {
-    $table->head  = array ($strname);
-    $table->align = array ('left');
+    $table->head  = array(get_string('name'));
+    $table->align = array('left', 'left', 'left');
 }
 
-$modinfo = get_fast_modinfo($course);
-$currentsection = '';
-foreach ($modinfo->instances['cobra'] as $cm) {
-    $row = array();
-    if ($usesections) {
-        if ($cm->sectionnum !== $currentsection) {
-            if ($cm->sectionnum) {
-                $row[] = get_section_name($course, $cm->sectionnum);
-            }
-            if ($currentsection !== '') {
-                $table->data[] = 'hr';
-            }
-            $currentsection = $cm->sectionnum;
-        }
+foreach ($cobras as $cobra) {
+    if (!$cobra->visible) {
+        $link = html_writer::link(
+            new moodle_url('/mod/cobra/view.php', array('id' => $cobra->coursemodule)),
+            format_string($cobra->name, true),
+            array('class' => 'dimmed'));
+    } else {
+        $link = html_writer::link(
+            new moodle_url('/mod/cobra/view.php', array('id' => $cobra->coursemodule)),
+            format_string($cobra->name, true));
     }
 
-    $class = $cm->visible ? null : array('class' => 'dimmed');
-
-    $row[] = html_writer::link(new moodle_url('view.php', array('id' => $cm->id)),
-                $cm->get_formatted_name(), $class);
-    $table->data[] = $row;
+    if ($course->format == 'weeks' or $course->format == 'topics') {
+        $table->data[] = array($cobra->section, $link);
+    } else {
+        $table->data[] = array($link);
+    }
 }
 
 echo html_writer::table($table);
-
 echo $OUTPUT->footer();

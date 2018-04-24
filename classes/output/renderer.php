@@ -15,10 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Renderer class for local hackfest.
+ * Renderer class for cobra activity.
  *
- * @package    local_hackfest
- * @copyright  2015 Damyon Wiese
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 - Cellule TICE - Unversite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace mod_cobra\output;
@@ -28,11 +29,7 @@ defined('MOODLE_INTERNAL') || die;
 use plugin_renderer_base;
 
 /**
- * Renderer class for local hackfest.
- *
- * @package    local_hackfest
- * @copyright  2015 Damyon Wiese
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Renderer class definition.
  */
 class renderer extends plugin_renderer_base {
 
@@ -43,12 +40,18 @@ class renderer extends plugin_renderer_base {
      *
      * @return string html for the page
      */
-
     public function render_cobratext($page) {
         $data = $page->export_for_template($this);
         return parent::render_from_template('mod_cobra/cobratext', $data);
     }
 
+    /**
+     * Defer to template.
+     *
+     * @param page $page
+     * @return bool|string
+     * @throws \moodle_exception
+     */
     public function render_myglossary($page) {
         $data = $page->export_for_template($this);
         return parent::render_from_template('mod_cobra/myglossary', $data);

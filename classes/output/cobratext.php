@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Cobratext renderable definition.
+ *
  * @package    mod_cobra
  * @author     Jean-Roch Meurisse
  * @copyright  2016 - Cellule TICE - Unversite de Namur
@@ -23,9 +25,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once("$CFG->dirroot/webservice/externallib.php");
-require_once("$CFG->dirroot/mod/cobra/lib/cobraremoteservice.php");
-
+/**
+ * Class cobratext
+ */
 class cobratext implements renderable, templatable {
 
     /**
@@ -34,28 +36,47 @@ class cobratext implements renderable, templatable {
      * @return stdClass
      */
 
+    /**
+     * @var stdClass Cobra instance.
+     */
     private $cobra;
 
+    /**
+     * Cobratext constructor.
+     * @param stdClass $cobra
+     */
     public function __construct($cobra) {
         $this->cobra = $cobra;
     }
 
+    /**
+     * Export this class data for rendering in a template.
+     *
+     * @param renderer_base $output
+     * @return mixed
+     * @throws coding_exception
+     * @throws moodle_exception
+     */
     public function export_for_template(renderer_base $output) {
 
         $params = array('id_text' => $this->cobra->text);
-        $data = array();
-        $textobj = new cobra_text_wrapper($this->cobra->text);
-        $textobj->set_text_id($this->cobra->text);
-        if ($this->cobra->audioplayer) {
-            $data['audio'] = $textobj->get_audio_file_url();
+
+        try {
+            $textdata = json_decode(cobra_remote_service::call('get_text', $params));
+        } catch (cobra_remote_access_exception $e) {
+            global $COURSE;
+            redirect(new moodle_url('/course/view.php', array('id' => $COURSE->id)),
+                    'CoBRA' . ': ' . get_string($e->debuginfo, 'cobra') . '<br/>' . get_string('pageshouldredirect'),
+                    5, \core\output\notification::NOTIFY_ERROR);
         }
 
-        $text = cobra_remote_service::call('getFormattedText', $params, 'json', true);
-        $data['text'] = utf8_encode($text);
-        $data['userglossary'] = (int)$this->cobra->userglossary;
-        $data['entries'] = cobra_get_student_cached_glossary($this->cobra->user, $this->cobra->course, $this->cobra->text);
-        $data['cmid'] = $this->cobra->cmid;
+        $textdata->userglossary = (int)$this->cobra->userglossary;
+        if (!(int)$this->cobra->audioplayer) {
+            unset($textdata->audiofile);
+        }
 
-        return $data;
+        $textdata->entries = cobra_get_student_glossary($this->cobra->user, $this->cobra->course, $this->cobra->text);
+
+        return $textdata;
     }
 }

@@ -1,30 +1,25 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/cobra/db" VERSION="20160517" COMMENT="XMLDB file for Moodle mod/cobra"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
->
+<XMLDB xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" PATH="mod/cobra/db" VERSION="20171019" COMMENT="XMLDB file for Moodle mod/cobra" xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
   <TABLES>
-    <TABLE NAME="cobra" COMMENT="Default comment for cobra, please edit me">
+    <TABLE NAME="cobra" COMMENT="Main CoBRA table recording resource instances">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course lectopt activity belongs to"/>
-        <FIELD NAME="collection" TYPE="int" LENGTH="11" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="text" TYPE="int" LENGTH="11" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="collection" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Reference to collection id in Cobra repository"/>
+        <FIELD NAME="text" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Reference to text id in CoBRA central repository"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="name field for moodle instances"/>
         <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="language" TYPE="char" LENGTH="2" NOTNULL="true" SEQUENCE="false" COMMENT="language used for this cours"/>
-        <FIELD NAME="userglossary" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
-        <FIELD NAME="nextprevbuttons" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="audioplayer" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
-        <FIELD NAME="examples" TYPE="char" LENGTH="12" NOTNULL="true" DEFAULT="bilingual" SEQUENCE="false"/>
-        <FIELD NAME="translations" TYPE="char" LENGTH="12" NOTNULL="true" DEFAULT="conditional" SEQUENCE="false"/>
-        <FIELD NAME="annotations" TYPE="char" LENGTH="12" NOTNULL="true" DEFAULT="conditional" SEQUENCE="false"/>
-        <FIELD NAME="isdefaultdisplayprefs" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="corpusorder" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="isdefaultcorpusorder" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="language" TYPE="char" LENGTH="2" NOTNULL="true" DEFAULT="EN" SEQUENCE="false" COMMENT="Source language of this instance (either EN or NL)"/>
+        <FIELD NAME="userglossary" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="flag allowing (or not) students to create their own glossary"/>
+        <FIELD NAME="audioplayer" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Flag stating whether a mp3 reader is added to the page (if audio recording exists) or not"/>
+        <FIELD NAME="examples" TYPE="char" LENGTH="12" NOTNULL="true" DEFAULT="bilingual" SEQUENCE="false" COMMENT="display mode for examples (either monolingual or bilingual)"/>
+        <FIELD NAME="translations" TYPE="char" LENGTH="12" NOTNULL="true" DEFAULT="conditional" SEQUENCE="false" COMMENT="Display mode for translations (conditional, always, never)"/>
+        <FIELD NAME="annotations" TYPE="char" LENGTH="12" NOTNULL="false" DEFAULT="conditional" SEQUENCE="false" COMMENT="Display mode for annotations (conditional, always, never)"/>
+        <FIELD NAME="corpusorder" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" COMMENT="list and order of corpus types to take into account for examples (comma-separated list)"/>
+        <FIELD NAME="isdefaultcorpusorder" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Flag stating whether the corpus order of this instance must be taken as default for future instances in this course"/>
+        <FIELD NAME="isdefaultdisplayprefs" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Flag stating whether the display preferences of this instance must be taken as default for future instances in this course"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -54,22 +49,6 @@
         <INDEX NAME="id_entite_ling" UNIQUE="false" FIELDS="id_entite_ling"/>
         <INDEX NAME="id_text" UNIQUE="false" FIELDS="id_text"/>
         <INDEX NAME="user_id" UNIQUE="false" FIELDS="user_id"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="cobra_glossaire" COMMENT="cobra teacher glossary">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course cobra activity belongs to"/>
-        <FIELD NAME="id_text" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="id_entite_ling" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
-        <INDEX NAME="id_text" UNIQUE="false" FIELDS="id_text"/>
-        <INDEX NAME="id_entite_ling" UNIQUE="false" FIELDS="id_entite_ling"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="cobra_glossary_cache" COMMENT="Default comment for the table, please edit me">

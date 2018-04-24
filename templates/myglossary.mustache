@@ -18,15 +18,27 @@
     placeholder for template description. Ex: Page header.
 }}
 
+<form id="exportglossaryform" autocomplete="off" action="myglossary.php" method="post" accept-charset="utf-8" class="mform myglossaryform m-y-1">
+    <input type="hidden" name="id" value="{{course}}">
+    <select class="custom-select" name="exportformat" id="id_exportformat">
+        <option value="csv">Séparé par des virgules (.csv)</option>
+        <option value="excel" selected>Microsoft Excel (.xlsx)</option>
+        <option value="ods">OpenDocument (.ods)</option>
+    </select>
+    <input type="submit" class="btn btn-secondary" name="download" id="id_download" value="{{#str}}download{{/str}}">
+    <input type="submit" class="btn btn-secondary emptyglossary" name="empty" id="id_empty" value="{{#str}}emptymyglossary, cobra{{/str}}">
+</form>
+
+{{{initialsbar}}}
 <table class="generaltable m-y-1" id="myglossary">
     <thead>
     <tr>
-        <th class="header c0" style="text-align:left;" scope="col">Entrée</th>
-        <th class="header c1" style="" scope="col">Traduction</th>
-        <th class="header c2" style="" scope="col">Catégorie</th>
-        <th class="header c3" style="" scope="col">Autres formes</th>
-        <th class="header c4" style="" scope="col">Texte source</th>
-        <th class="header c5" style="" scope="col">Cliqué dans ...</th>
+        <th class="header c0" style="text-align:left;" scope="col">{{#str}}entry, cobra{{/str}}</th>
+        <th class="header c1" style="" scope="col">{{#str}}translations, cobra{{/str}}</th>
+        <th class="header c2" style="" scope="col">{{#str}}category, cobra{{/str}}</th>
+        <th class="header c3" style="" scope="col">{{#str}}otherforms, cobra{{/str}}</th>
+        <th class="header c4" style="" scope="col">{{#str}}sourcetext, cobra{{/str}}</th>
+        <th class="header c5" style="" scope="col">{{#str}}clickedin, cobra{{/str}}</th>
         <th class="header c6 lastcol" style="" scope="col"></th>
     </tr>
     </thead>
@@ -41,13 +53,20 @@
             <td><span title="{{texttitles}}">{{textcount}} {{#str}}texts, mod_cobra{{/str}}</span></td>
             <td class="glossaryIcon glossaryremove inDisplay">
                 <span id="currentLingEntity" class="hidden">{{lingentity}}</span>
-                {{#pix}}glossaryremove, mod_cobra, Supprimer de mon glossaire{{/pix}}
+                {{#pix}}glossaryremove, mod_cobra, {{#str}}removefrommyglossary, cobra{{/str}}{{/pix}}
             </td>
         </tr>
     {{/entries}}
     {{^entries}}
         <tr>
-            <td colspan="7" class="text-center">{{#str}}emptyglossary, mod_cobra{{/str}}</td>
+            <td colspan="7" class="text-center">
+                {{#all}}
+                    {{#str}}glossaryempty, cobra{{/str}}
+                {{/all}}
+                {{^all}}
+                    {{#str}}noentriesforletter, cobra, {{initial}}{{/str}}
+                {{/all}}
+            </td>
         </tr>
     {{/entries}}
     </tbody>

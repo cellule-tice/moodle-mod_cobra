@@ -15,34 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Library of interface functions and constants for module cobra
+ * Library of interface functions and constants.
  *
- * All the core Moodle functions, neeeded to allow the module to work
- * integrated in Moodle should be placed here.
- *
- * All the cobra specific functions, needed to implement all the module
- * logic, should go to locallib.php. This will help to save some memory when
- * Moodle is performing actions across all modules.
- *
- * @package    mod_cobra
- * @copyright  2016 - Cellule TICE - Unversite de Namur
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_cobra
+ * @copyright   2016 onwards - Cellule TICE - University of Namur
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-/* Moodle core API */
-
 /**
- * Returns the information on whether the module supports a feature
+ * Return if the plugin supports $feature.
  *
- * See {@link plugin_supports()} for more info.
- *
- * @param string $feature FEATURE_xx constant for requested feature
- * @return mixed true if the feature is supported, null if unknown
+ * @param string $feature Constant representing the feature.
+ * @return true | null True if the feature is supported, null otherwise.
  */
 function cobra_supports($feature) {
-
     switch($feature) {
         case FEATURE_MOD_ARCHETYPE :
             return MOD_ARCHETYPE_RESOURCE;
@@ -64,269 +52,149 @@ function cobra_supports($feature) {
 }
 
 /**
- * Saves a new instance of the cobra into the database
+ * Saves a new instance of the mod_cobra into the database.
  *
- * Given an object containing all the necessary data,
- * (defined by the form in mod_form.php) this function
- * will create a new instance and return the id number
- * of the new instance.
+ * Given an object containing all the necessary data, (defined by the form
+ * in mod_form.php) this function will create a new instance and return the id
+ * number of the instance.
  *
- * @param stdClass $cobra Submitted data from the form in mod_form.php
- * @param mod_cobra_mod_form $mform The form instance itself (if needed)
- * @return int The id of the newly inserted cobra record
+ * @param object $moduleinstance An object from the form.
+ * @param mod_cobra_mod_form $mform The form.
+ * @return int The id of the newly inserted record.
  */
-function cobra_add_instance(stdClass $cobra, mod_cobra_mod_form $mform = null) {
+function cobra_add_instance($moduleinstance, $mform = null) {
     global $DB;
 
-    $cobra->timecreated = time();
+    $moduleinstance->timecreated = time();
 
-    // You may have to add extra stuff in here.
+    $id = $DB->insert_record('cobra', $moduleinstance);
 
-    $cobra->id = $DB->insert_record('cobra', $cobra);
-
-    $completiontimeexpected = !empty($cobra->completionexpected) ? $cobra->completionexpected : null;
-    \core_completion\api::update_completion_date_event($cobra->coursemodule, 'cobra', $cobra->id, $completiontimeexpected);
-
-    return $cobra->id;
+    return $id;
 }
 
 /**
- * Updates an instance of the cobra in the database
+ * Updates an instance of the mod_cobra in the database.
  *
- * Given an object containing all the necessary data,
- * (defined by the form in mod_form.php) this function
- * will update an existing instance with new data.
+ * Given an object containing all the necessary data (defined in mod_form.php),
+ * this function will update an existing instance with new data.
  *
- * @param stdClass $cobra An object from the form in mod_form.php
- * @param mod_cobra_mod_form $mform The form instance itself (if needed)
- * @return boolean Success/Fail
+ * @param object $moduleinstance An object from the form in mod_form.php.
+ * @param mod_cobra_mod_form $mform The form.
+ * @return bool True if successful, false otherwise.
  */
-function cobra_update_instance(stdClass $cobra, mod_cobra_mod_form $mform = null) {
+function cobra_update_instance($moduleinstance, $mform = null) {
     global $DB;
 
-    $cobra->timemodified = time();
-    $cobra->id = $cobra->instance;
-    $result = $DB->update_record('cobra', $cobra);
+    $moduleinstance->timemodified = time();
+    $moduleinstance->id = $moduleinstance->instance;
 
-    $completiontimeexpected = !empty($cobra->completionexpected) ? $cobra->completionexpected : null;
-    \core_completion\api::update_completion_date_event($cobra->coursemodule, 'cobra', $cobra->id, $completiontimeexpected);
-
-    return $result;
+    return $DB->update_record('cobra', $moduleinstance);
 }
 
 /**
- * Removes an instance of the cobra from the database
+ * Removes an instance of the mod_cobra from the database.
  *
- * Given an ID of an instance of this module,
- * this function will permanently delete the instance
- * and any data that depends on it.
- *
- * @param int $id Id of the module instance
- * @return boolean Success/Failure
+ * @param int $id Id of the module instance.
+ * @return bool True if successful, false on failure.
  */
 function cobra_delete_instance($id) {
     global $DB;
 
-    if (!$cobra = $DB->get_record('cobra', array('id' => $id))) {
+    $exists = $DB->get_record('cobra', array('id' => $id));
+    if (!$exists) {
         return false;
     }
 
-    $cm = get_coursemodule_from_instance('cobra', $id);
-    \core_completion\api::update_completion_date_event($cm->id, 'cobra', $id, null);
-
-    // Delete any dependent records here.
-
-    $DB->delete_records('cobra', array('id' => $cobra->id));
+    $DB->delete_records('cobra', array('id' => $id));
 
     return true;
 }
 
 /**
- * Returns a small object with summary information about what a
- * user has done with a given particular instance of this module
- * Used for user activity reports.
- *
- * $return->time = the time they did it
- * $return->info = a short text description
- *
- * @param stdClass $course The course record
- * @param stdClass $user The user record
- * @param cm_info|stdClass $mod The course module info object or record
- * @param stdClass $cobra The cobra instance record
- * @return stdClass|null
+ * Extends the global navigation tree by adding mod_cobra nodes if there is a relevant content.
+ * This can be called by an AJAX request so do not rely on $PAGE as it might not be set up properly.
+ * @param navigation_node $cobranode An object representing the navigation tree node
+ * @param stdClass $course
+ * @param stdClass $module
+ * @param cm_info $cm
  */
-function cobra_user_outline($course, $user, $mod, $cobra) {
-
-    $return = new stdClass();
-    $return->time = 0;
-    $return->info = '';
-    return $return;
+function cobra_extend_navigation($cobranode, $course, $module, $cm) {
 }
 
 /**
- * Prints a detailed representation of what a user has done with
- * a given particular instance of this module, for user activity reports.
+ * Extends the settings navigation with the mod_cobra settings.
  *
- * It is supposed to echo directly without returning a value.
+ * This function is called when the context for the page is a mod_cobra module.
+ * This is not called by AJAX so it is safe to rely on the $PAGE.
  *
- * @param stdClass $course the current course record
- * @param stdClass $user the record of the user we are generating report for
- * @param cm_info $mod course module info
- * @param stdClass $cobra the module instance record
+ * @param settings_navigation $settingsnav {@link settings_navigation}
+ * @param navigation_node $cobranode {@link navigation_node}
  */
-function cobra_user_complete($course, $user, $mod, $cobra) {
+function cobra_extend_settings_navigation($settingsnav, $cobranode = null) {
 }
-
-
 
 /**
- * Returns all other caps used in the module
+ * Extends the course navigation with mod_cobra nodes.
  *
- * For example, this could be array('moodle/site:accessallgroups') if the
- * module uses that capability.
- *
- * @return array
+ * @param navigation_node $parentnode main course navigation node
+ * @param stdClass $course
+ * @param context_course $context
  */
-function cobra_get_extra_capabilities() {
-    return array();
-}
-
-
-/**
- * Serves the files from the cobra file areas
- *
- * @package mod_cobra
- * @category files
- *
- * @param stdClass $course the course object
- * @param stdClass $cm the course module object
- * @param stdClass $context the cobra's context
- * @param string $filearea the name of the file area
- * @param array $args extra arguments (itemid, path)
- * @param bool $forcedownload whether or not force download
- * @param array $options additional options affecting the file serving
- */
-function cobra_pluginfile($course, $cm, $context, $filearea, array $args, $forcedownload, array $options=array()) {
-    global $DB, $CFG;
-
-    if ($context->contextlevel != CONTEXT_MODULE) {
-        send_file_not_found();
-    }
-
-    require_login($course, true, $cm);
-
-    send_file_not_found();
-}
-
 function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
     global $DB;
-    // Show only if assign tool is activated.
-    //if (tool_is_used_in_course('cobra', $course->id)) {
+
     if ($DB->record_exists('cobra', array('course' => $course->id))) {
 
-        global $CFG;        
-       
+        global $CFG;
+
         $cobranode = $parentnode->add(get_string('cobra', 'mod_cobra'));
         $params = array('id' => $course->id, 'cmd' => 'rqexport');
         $cobranode->add(get_string('exportglossary', 'mod_cobra'), new moodle_url(
-                    $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_export_glossary');
+            $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_export_glossary');
         $params = array('id' => $course->id, 'cmd' => 'rqcompare');
         $cobranode->add(get_string('comparetextwithglossary', 'mod_cobra'), new moodle_url(
-                    $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_compare_glossary');
+            $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_compare_glossary');
     }
 }
 
 /**
- * This function extends the settings navigation block for the site.
+ * Hook for plugins to take action when a module is created or updated.
+ * Here to keep only one instance as defaut for corpus order and display preferences
  *
- * It is safe to rely on PAGE here as we will only ever be within the module
- * context when this is called
+ * @param stdClass $moduleinfo the module info
+ * @param stdClass $course the course of the module
  *
- * @param settings_navigation $settings
- * @param navigation_node $cobranode
- * @return void
+ * @return stdClass moduleinfo updated by plugins.
  */
-function cobra_extend_settings_navigation($settings, $cobranode) {
-    global $PAGE, $CFG;
+function cobra_coursemodule_edit_post_actions($moduleinfo, $course) {
+    global $DB;
 
-    // We want to add these new nodes after the Edit settings node, and before the
-    // Locally assigned roles node. Of course, both of those are controlled by capabilities.
-    $keys = $cobranode->get_children_key_list();
-    $beforekey = null;
-    $i = array_search('modedit', $keys);
-    if ($i === false and array_key_exists(0, $keys)) {
-        $beforekey = $keys[0];
-    } else if (array_key_exists($i + 1, $keys)) {
-        $beforekey = $keys[$i + 1];
+    if ($moduleinfo->modulename != 'cobra') {
+        return $moduleinfo;
     }
+    if (!PHPUNIT_TEST) {
+        if (empty($moduleinfo->id)) {
+            $cobraid = $DB->get_field_sql('SELECT MAX(id) FROM {cobra} WHERE course = :course', array('course' => $course->id));
+        } else {
+            $cobraid = $moduleinfo->id;
+        }
 
-    /*if (has_capability('mod/cobra:settings', $PAGE->cm->context)) {
-        $node = navigation_node::create(get_string('managetextcollections', 'cobra'),
-            new moodle_url('/mod/cobra/collectionmanagement.php', array('id' => $PAGE->cm->id)),
-            navigation_node::TYPE_SETTING, null, 'mod_cobra_collections',
-            new pix_icon('i/navigationitem', ''));
-        $cobranode->add_node($node, $beforekey);
+        if ($moduleinfo->isdefaultdisplayprefs) {
+            $statement = "UPDATE {cobra}
+                             SET isdefaultdisplayprefs = 0
+                           WHERE course = :course
+                             AND id != :newid";
+            $DB->execute($statement, array('newid' => $cobraid, 'course' => $course->id));
+        }
+        if ($moduleinfo->isdefaultcorpusorder) {
+            $statement = "UPDATE {cobra}
+                             SET isdefaultcorpusorder = 0
+                           WHERE course = :course
+                             AND id != :newid";
+            $DB->execute($statement, array('newid' => $cobraid, 'course' => $course->id));
+        }
     }
-
-    if (has_capability('mod/cobra:settings', $PAGE->cm->context)) {
-        $node = navigation_node::create(get_string('corpusselection', 'cobra'),
-            new moodle_url('/mod/cobra/corpusselection.php', array('id' => $PAGE->cm->id)),
-            navigation_node::TYPE_SETTING, null, 'mod_cobra_corpus',
-            new pix_icon('i/navigationitem', ''));
-        $cobranode->add_node($node, $beforekey);
-    }*/
-
-    /*if (has_capability('mod/cobra:glossaryedit', $PAGE->cm->context)) {
-        $node = navigation_node::create(get_string('glossary', 'cobra'));
-        $node->icon = null;
-        $glossarynode = $cobranode->add_node($node, $beforekey);
-        $url = new moodle_url('/mod/cobra/glossary.php',
-            array('id' => $PAGE->cm->id, 'cmd' => 'rqexport'));
-        $glossarynode->add_node(navigation_node::create(get_string('exportglossary', 'cobra'), $url,
-            navigation_node::TYPE_SETTING,
-            null, null, new pix_icon('i/item', '')));
-        $url = new moodle_url('/mod/cobra/glossary.php',
-            array('id' => $PAGE->cm->id, 'cmd' => 'rqcompare'));
-        $glossarynode->add_node(navigation_node::create(get_string('comparetextwithglossary', 'cobra'), $url,
-            navigation_node::TYPE_SETTING,
-            null, null, new pix_icon('i/item', '')));
-    } */
-
-    /*if (has_capability('mod/cobra:stat', $PAGE->cm->context)) {
-        $node = navigation_node::create(get_string('statistics', 'cobra'));
-        $node->icon = null;
-        $statisticsnode = $cobranode->add_node($node, $beforekey);
-        $url = new moodle_url('/mod/cobra/statistics.php',
-            array('id' => $PAGE->cm->id, 'view' => '1'));
-        $statisticsnode->add_node(navigation_node::create(get_string('mostclickedentries', 'cobra'), $url,
-            navigation_node::TYPE_SETTING,
-            null, null, new pix_icon('i/item', '')));
-        $url = new moodle_url('/mod/cobra/statistics.php',
-            array('id' => $PAGE->cm->id, 'view' => '2'));
-        $statisticsnode->add_node(navigation_node::create(get_string('mostclickedpertext', 'cobra'), $url,
-            navigation_node::TYPE_SETTING,
-            null, null, new pix_icon('i/item', '')));
-        $url = new moodle_url('/mod/cobra/statistics.php',
-            array('id' => $PAGE->cm->id, 'view' => '3'));
-        $statisticsnode->add_node(navigation_node::create(get_string('mostclickedtexts', 'cobra'), $url,
-            navigation_node::TYPE_SETTING,
-            null, null, new pix_icon('i/item', '')));
-        $url = new moodle_url('/mod/cobra/statistics.php',
-            array('id' => $PAGE->cm->id, 'view' => '4'));
-        $statisticsnode->add_node(navigation_node::create(get_string('statisticspertext', 'cobra'), $url,
-            navigation_node::TYPE_SETTING,
-            null, null, new pix_icon('i/item', '')));
-        $url = new moodle_url('/mod/cobra/statistics.php',
-            array('id' => $PAGE->cm->id, 'view' => '5'));
-        $statisticsnode->add_node(navigation_node::create(get_string('statisticsperuser', 'cobra'), $url,
-            navigation_node::TYPE_SETTING,
-            null, null, new pix_icon('i/item', '')));
-        $url = new moodle_url('/mod/cobra/statistics.php',
-            array('id' => $PAGE->cm->id, 'cmd' => 'cleanstats'));
-        $statisticsnode->add_node(navigation_node::create(get_string('cleanclickstats', 'cobra'), $url,
-            navigation_node::TYPE_SETTING,
-            null, null, new pix_icon('i/item', '')));
-    }*/
+    return $moduleinfo;
 }
 
 /**
@@ -340,7 +208,7 @@ function cobra_extend_settings_navigation($settings, $cobranode) {
  * @return \core_calendar\local\event\entities\action_interface|null
  */
 function mod_cobra_core_calendar_provide_event_action(calendar_event $event,
-                                                    \core_calendar\action_factory $factory) {
+                                                      \core_calendar\action_factory $factory) {
     $cm = get_fast_modinfo($event->courseid)->instances['cobra'][$event->instance];
 
     $completion = new \completion_info($cm->get_course());
@@ -356,5 +224,97 @@ function mod_cobra_core_calendar_provide_event_action(calendar_event $event,
         new \moodle_url('/mod/cobra/view.php', ['id' => $cm->id]),
         1,
         true
+    );
+}
+
+/**
+ * Actual implementation of the reset course functionality, clear all
+ * personal glossaries and clear course level default cobra preferences for
+ * course $data->courseid.
+ *
+ * @param object $data the data submitted from the reset course.
+ * @return array status array
+ */
+function cobra_reset_userdata($data) {
+    global $CFG, $DB;
+
+    $componentstr = get_string('modulename', 'cobra');
+    $status = array();
+
+    if (!empty($data->reset_cobra_defaults)) {
+        $sql = "UPDATE {cobra}
+                   SET isdefaultdisplayprefs = 0,
+                       isdefaultcorpusorder = 0
+                 WHERE course=:course";
+
+        $params = array('course' => $data->courseid);
+        $success = $DB->execute($sql, $params);
+
+        $status[] = array(
+            'component' => $componentstr,
+            'item' => get_string('resetdefaults', 'cobra'),
+            'error' => !$success
+        );
+    }
+
+    if (!empty($data->reset_cobra_clic_history) && !empty($data->reset_cobra_personal_glossaries)) {
+
+        $params = array('course' => $data->courseid);
+        $success = $DB->delete_records('cobra_clic', $params);
+
+        $status[] = array(
+            'component' => $componentstr,
+            'item' => get_string('resetglossaries', 'cobra'),
+            'error' => !$success
+        );
+        $status[] = array(
+            'component' => $componentstr,
+            'item' => get_string('resetclichistory', 'cobra'),
+            'error' => !$success
+        );
+    } else if (!empty($data->reset_cobra_personal_glossaries)) {
+        $sql = "UPDATE {cobra_clic}
+                   SET in_glossary = 0
+                 WHERE course=:course";
+
+        $params = array('course' => $data->courseid);
+        $success = $DB->execute($sql, $params);
+
+        $status[] = array(
+            'component' => $componentstr,
+            'item' => get_string('resetglossaries', 'cobra'),
+            'error' => !$success
+        );
+    }
+
+    return $status;
+}
+
+/**
+ * Called by course/reset.php
+ * Module reset form elements.
+ * @param moodleform $mform form passed by reference
+ */
+function cobra_reset_course_form_definition(&$mform) {
+    $mform->addElement('header', 'cobraheader', get_string('modulename', 'cobra'));
+
+    $mform->addElement('checkbox', 'reset_cobra_defaults', get_string('resetdefaults', 'cobra'));
+
+    $mform->addElement('checkbox', 'reset_cobra_personal_glossaries', get_string('resetglossaries', 'cobra'));
+
+    $mform->addElement('checkbox', 'reset_cobra_clic_history', get_string('resetclichistory', 'cobra'));
+    $mform->disabledIf('reset_cobra_clic_history', 'reset_cobra_personal_glossaries', 'notchecked');
+}
+
+/**
+ * Course reset form defaults.
+ * @param stdClass $course
+ * @return array
+ */
+function cobra_reset_course_form_defaults($course) {
+    return array(
+        'reset_cobra_defaults' => 0,
+        'reset_cobra_personal_glossaries' => 1,
+        'reset_cobra_clic_history' => 0
     );
 }

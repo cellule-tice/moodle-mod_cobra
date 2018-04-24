@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Ad-hoc task to fill cobra cache tables.
+ *
  * @package    mod_cobra
  * @author     Jean-Roch Meurisse
  * @copyright  2016 - Cellule TICE - Unversite de Namur
@@ -27,11 +29,18 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
 
+/**
+ * Class fill_cache_tables_task
+ */
 class fill_cache_tables_task extends \core\task\adhoc_task {
 
+    /**
+     * Execute ad-hoc task.
+     * @throws \dml_exception
+     */
     public function execute() {
-        cobra_update_glossary_cache(get_config('mod_cobra', 'lastglossaryupdate'));
-        cobra_update_text_info_cache(get_config('mod_cobra', 'lasttextinfoupdate'));
+        cobra_update_glossary_cache((int)get_config('mod_cobra', 'lastglossaryupdate'));
+        cobra_update_text_info_cache((int)get_config('mod_cobra', 'lasttextinfoupdate'));
         set_config('lastglossaryupdate', time(), 'mod_cobra');
         set_config('lasttextinfoupdate', time(), 'mod_cobra');
     }

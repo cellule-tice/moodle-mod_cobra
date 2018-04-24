@@ -15,25 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * French strings for cobra
- *
- * You can have a rather longer description of the file as well,
- * if you like, and it can span multiple lines.
+ * French strings for cobra.
  *
  * @package    mod_cobra
- * @author     Jean-Roch Meurisse
- * @author     Laurence Dumortier
+ * @category   string
  * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['annotation'] = 'Annotation';
 $string['annotationsdisplaymode'] = 'Afficher les annotations';
 $string['audioplayer'] = 'Lecteur audio';
 $string['audioplayer_help'] = 'Permet d\'afficher un lecteur audio si une version sonore est disponible';
 $string['before'] = 'Avant';
 $string['bilingual'] = 'Bilingues';
+$string['category'] = 'Catégorie';
+$string['categoryshrinked'] = 'Cat.';
 $string['checkuncheckall'] = 'Sélectionner/Déselectionner tout';
 $string['cleanclickstats'] = 'Nettoyer les statistiques';
 $string['clickablewordscount'] = 'Nombre de mots cliquables';
@@ -48,12 +47,11 @@ $string['cobra:settings'] = 'Gérer les parametres';
 $string['cobra:stat'] = 'Statistique';
 $string['cobra:view'] = 'Voir';
 $string['cobraname'] = 'Nom';
-$string['cobraname_help'] = 'Nom attribué à la ressource CoBRA dans votre cours.
-La valeur par défaut est "Lecture de textes"';
+$string['cobraname_help'] = 'Nom attribué à la ressource CoBRA dans votre cours.';
 $string['cobraserviceurl'] = 'URL des webservices';
 $string['collection'] = 'Collection';
 $string['collectionname'] = 'Nom de la collection';
-$string['collectionnamecannotbeempty'] = 'Le nom de la collection ne peut être vide';
+$string['collectionnamecannotbeempty'] = 'Le champ collection ne peut être vide';
 $string['collectionnamechanged'] = 'Nom de la collection modifié';
 $string['collectionnamenotchanged'] = 'Impossible de renommer la collection';
 $string['collectionsavailable'] = 'Collections disponibles';
@@ -67,10 +65,15 @@ $string['corpusremovedfromselection'] = 'Type de corpus enlevé de votre sélect
 $string['corpusselection'] = 'Sélection des corpus';
 $string['corpustype'] = 'Type de corpus';
 $string['currentcorpuselection'] = 'Types de corpus actuellement sélectionnés pour votre cours';
+$string['definition'] = 'Definition';
 $string['displaysettings'] = 'Paramètres d\'affichage';
 $string['editcollection'] = 'Modifier cette collection';
-$string['emptyglossary'] = 'Glossaire vide !';
+$string['glossaryempty'] = 'Glossaire vide !';
+$string['glossaryemptyfortext'] = 'Glossaire vide pour ce texte !';
+$string['emptymyglossary'] = 'Vider mon glossaire';
 $string['entry'] = 'Entrée';
+$string['entries'] = 'Entrées';
+$string['entriesfromothertext'] = '* Les entrées grisées ont été rajoutées via un autre texte';
 $string['examplesdisplaymode'] = 'Mode d\'affichage pour les exemples';
 $string['examplesdisplaymode_help'] = 'Afficher les exemples uniquement dans la langue source (monolingue) ou dans la langue source et en français (bilingue)';
 $string['exportglossary'] = 'Générer un glossaire';
@@ -82,6 +85,7 @@ $string['language'] = 'Langue';
 $string['language_help'] = 'La langue enseignée dans votre cours.
 
 **Attention: ce paramètre ne peut être modifié! **';
+$string['languageismandatory'] = 'La langue est obligatoire';
 $string['mailrecipient'] = 'Destinataire (ID) pour la notification d\'erreur';
 $string['managetextcollections'] = 'Gérer les collections';
 $string['modulename'] = 'CoBRA';
@@ -97,7 +101,6 @@ $string['mostclickedpertext'] = 'Entrées les plus cliquées par texte';
 $string['mostclickedtexts'] = 'Textes les plus cliqués';
 $string['mycollections'] = 'Collections actuellement utilisées dans le cours';
 $string['myglossary'] = 'Mon glossaire';
-$string['myglossaryremove'] = 'Supprimer de mon glossaire';
 $string['myglossaryunavailable'] = 'La fonction \'Mon glossaire\' n\'est pas activée';
 $string['newwords'] = 'Nouveaux mots';
 $string['nextprevbuttons'] = 'Boutons "Précédent" et "Suivant"';
@@ -105,11 +108,14 @@ $string['nextprevbuttons_help'] = 'Afficher les boutons "Précédent" et "Suivan
 $string['nexttext'] = 'Texte suivant';
 $string['nocollections'] = 'Aucune collection enregistrée.';
 $string['nocollectionsmessage'] = 'Vous n\'avez pas encore ajouté de collection de textes. Cliquez sur "Gérer les collections" dans l\'administration de l\'activité pour en ajouter.';
+$string['noconcordances'] = 'Pas de traductions en contexte';
+$string['noentriesforletter'] = 'Aucune entrée commençant par {$a}';
 $string['notexts'] = 'Cette collection ne contient actuellement aucun texte';
 $string['notexttoadd'] = 'Aucun texte à ajouter';
 $string['notexttoremove'] = 'Aucun texte à supprimer';
 $string['OK'] = 'OK';
 $string['otherforms'] = 'Autres formes';
+$string['othertranslations'] = 'Autre(s) traduction(s)';
 $string['platformnotallowed'] = 'Votre plateforme n\'est pas autorisée à accéder au service CoBRA';
 $string['pluginadministration'] = 'Administration CoBRA';
 $string['pluginname'] = 'CoBRA';
@@ -135,7 +141,8 @@ $string['textsremoved'] = '{$a} texte(s) supprimés';
 $string['topclickedentries'] = 'Montrer les entrées cliquées au moins 20 fois';
 $string['topclickedentriespertext'] = 'Montrer les entrées cliquées au moins 10 fois par texte';
 $string['topclickedtexts'] = 'Montrer les textes les plus cliqués';
-$string['translation'] = 'Traduction';
+$string['translation'] = 'Traduction(s)';
+$string['translations'] = 'Traductions';
 $string['translationsdisplaymode'] = 'Afficher les traductions';
 $string['unhandledreturntype'] = 'Type de réponse du service CoBRA non supporté - {$a}';
 $string['uniqueusers'] = 'Utilisateurs différents';
@@ -159,7 +166,8 @@ $string['forenglish_desc'] = 'Sélection et ordre d\'affichage par défaut des e
 <li style="background-color: #FFFF66">42 : informatique</li>
 <li style="background-color: #CC99CC">51 : sciences (édités à l\'UNamur)</li>
 <li style="background-color: #CCCCFF">52 : sciences</li>
-<li style="background-color: #FFCCCC">62 : économie</li></ul>';
+<li style="background-color: #FFCCCC">62 : économie</li>
+</ul>';
 $string['fordutch'] = 'Pour le néerlandais';
 $string['fordutch_desc'] = 'Sélection et ordre d\'affichage par défaut des exemples tirés des corpus (liste séparée par des virgules)<br/>Types disponibles :<br/>
 <ul style="width:50%;">
@@ -170,7 +178,8 @@ $string['fordutch_desc'] = 'Sélection et ordre d\'affichage par défaut des exe
 <li style="background-color: #99CCFF">32 : art et histoire</li>
 <li style="background-color: #FFFF66">42 : informatique</li>
 <li style="background-color: #CCCCFF">52 : sciences </li>
-<li style="background-color: #FFCCCC">62 : économie </li></ul>';
+<li style="background-color: #FFCCCC">62 : économie </li>
+</ul>';
 $string['defaultflag'] = 'Conserver par défaut';
 $string['defaultflag_help'] = 'Utiliser par défaut ces paramètres pour les prochains textes';
 $string['corpusselection_help'] = 'Sélection et ordre d\'affichage par défaut des exemples tirés des corpus (liste séparée par des virgules)<br/>Types disponibles :<br/>
@@ -183,12 +192,16 @@ $string['corpusselection_help'] = 'Sélection et ordre d\'affichage par défaut 
 <li class="informatique">42 : informatique</li>
 <li class="sciences">52 : sciences </li>
 <li class="sciences_FUNDP">51 : sciences (édités à l\'UNamur) (uniquement anglais)</li>
-<li class="eco">62 : économie </li></ul>';
+<li class="eco">62 : économie </li>
+</ul>';
 $string['addtomyglossary'] = 'Ajouter à mon glossaire';
 $string['inmyglossary'] = 'Présent dans mon glossaire';
+$string['removefrommyglossary'] = 'Supprimer de mon glossaire';
 $string['showfullglossary'] = 'Afficher tout mon glossaire';
 $string['deletesure'] = 'Voulez-vous vraiment vider votre glossaire personnel pour ce cours?';
-$string['emptymyglossary'] = 'Vider mon glossaire';
 $string['entry_viewed'] = 'Entrée cliquée';
 $string['updateglossarycache'] = 'Mise à jour du cache du glossaire';
 $string['updatetextinfocache'] = 'Mise à jour du cache des informations sur les textes';
+$string['resetdefaults'] = 'Remettre les valeurs plateforme par défaut pour les paramètres d\'affichage et la sélection des corpus';
+$string['resetglossaries'] = 'Vider tous les glossaires personnels';
+$string['resetclikhistory'] = 'Effacer les statistiques de clics';

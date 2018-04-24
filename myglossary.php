@@ -25,30 +25,35 @@
 
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/locallib.php');
-require_once(__DIR__ . '/lib/glossarylib.php');
 require_once(__DIR__ . '/classes/output/myglossary.php');
+require_once("$CFG->dirroot/lib/dataformatlib.php");
 
 $id = required_param('id', PARAM_INT);
-$cmd = optional_param('cmd', null, PARAM_ALPHA);
 $confirm = optional_param('confirm', 0, PARAM_INT);
 $page = optional_param('page', 0, PARAM_INT);
-$perpage = 25;
+$initial = optional_param('initial', 'all', PARAM_ALPHA);
+$export = optional_param('download', '', PARAM_TEXT);
+$format = optional_param('exportformat', null, PARAM_ALPHA);
+$empty = optional_param('empty', null, PARAM_TEXT);
+$viewall = optional_param('viewall', null, PARAM_INT);
+if ($viewall) {
+    $perpage = 0;
+} else {
+    $perpage = 0;
+}
 
-list($course, $cm) = get_course_and_cm_from_cmid($id, 'cobra');
-$cobra = $DB->get_record('cobra', array('id' => $cm->instance), '*', MUST_EXIST);
+$course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
 
 // Keep user id and cmid for ajax calls.
 global $USER, $OUTPUT;
-$cobra->user = $USER->id;
-$cobra->cmid = $id;
 
-$context = context_module::instance($cm->id);
+$context = context_course::instance($course->id);
 
-require_login($course, true, $cm);
+require_login($course);
 require_capability('mod/cobra:view', $context);
 
 // Print the page header.
-$PAGE->set_url('/mod/cobra/myglossary.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/cobra/myglossary.php', array('id' => $course->id));
 
 $PAGE->set_title(format_string($course->fullname));
 $PAGE->set_heading(format_string($course->fullname));
@@ -60,10 +65,31 @@ $PAGE->navbar->add(get_string('myglossary', 'cobra'), new moodle_url('/mod/cobra
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
 // Add the ajaxcommand for the form.
-$PAGE->requires->js_call_amd('mod_cobra/cobra', 'init', array(json_encode($cobra)));
+$params = new stdClass();
+$params->course = $course->id;
+$params->user = $USER->id;
+$PAGE->requires->js_call_amd('mod_cobra/cobra', 'initdata', array(json_encode($params)));
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'global_glossary_actions');
 
-list($totalcount, $data) = cobra_get_student_cached_glossary($cobra->user, $cobra->course, 0, $page, $perpage, 'export' === $cmd);
+// Handle empty action.
+if ($empty) {
+    if (!empty($confirm) && confirm_sesskey()) {
+        cobra_empty_glossary($course->id, $USER->id);
+    } else {
+        $PAGE->navbar->add(get_string('delete'));
+        $PAGE->set_title($course->shortname);
+        $PAGE->set_heading($course->fullname);
+        echo $OUTPUT->header();
+        echo $OUTPUT->heading(get_string('myglossary', 'cobra'));
+        echo $OUTPUT->confirm(get_string('deletesure', 'mod_cobra'),
+            "myglossary.php?empty=true&confirm=1&id=$course->id",
+            $CFG->wwwroot.'/mod/cobra/myglossary.php?id='.$course->id);
+        echo $OUTPUT->footer();
+        die;
+    }
+}
+
+list($totalcount, $data) = cobra_get_student_glossary($USER->id, $course->id, 0, $page, $perpage, !empty($export), $initial);
 
 $entries = array();
 if (!empty($data)) {
@@ -94,149 +120,53 @@ if (!empty($data)) {
 
         $entry->textcount = count($texttitles);
         $entry->texttitles = implode("\n", $texttitles);
+
+        if ($export) {
+            unset($entry->lingentity);
+            unset($entry->id_text);
+            unset($entry->type);
+            unset($entry->textcount);
+            unset($entry->texttitles);
+        }
         $entries[] = $entry;
     }
 }
-if ('export' == $cmd) {
-    cobra_export_myglossary($entries);
+
+if ($export) {
+    $downloadentries = new ArrayObject($entries);
+    $downloadfields = array(
+        'entry' => get_string('entry', 'cobra'),
+        'translations' => get_string('translations', 'cobra'),
+        'category' => get_string('category', 'cobra'),
+        'extrainfo' => get_string('otherforms', 'cobra'),
+        'sourcetexttitle' => get_string('sourcetext', 'cobra')
+    );
+    $iterator = $downloadentries->getIterator();
+    download_as_dataformat($course->shortname . '-' . get_string('myglossary', 'cobra'),
+        $format,
+        $downloadfields,
+        $iterator
+    );
+    die();
 }
 
 echo $OUTPUT->header();
 // Add buttons for export and trash.
-$exportbutton = html_writer::link(new moodle_url(
-    '/mod/cobra/myglossary.php',
-    array(
-        'id' => $id,
-        'cmd' => 'export',
-    )),
-    '',
-    array(
-        'class' => 'glossaryexport',
-        'title' => get_string('exportmyglossary', 'cobra')
-    ));
-$emptybutton = html_writer::link(new moodle_url(
-    '/mod/cobra/myglossary.php',
-    array(
-        'id' => $id,
-        'cmd' => 'empty',
-    )),
-    '',
-    array(
-        'class' => 'emptyglossary',
-        'title' => get_string('emptymyglossary', 'cobra')
-    ));
 
-echo $OUTPUT->heading(get_string('myglossary', 'cobra') .
-        '&nbsp;&nbsp;&nbsp;' .
-        $exportbutton .
-        '&nbsp;&nbsp;&nbsp;' .
-        $emptybutton);
-
-if (!$cobra->userglossary) {
-    redirect(new moodle_url('/mod/cobra/view.php', array('id' => $cm->id)),
-            'CoBRA' . ': ' . get_string('myglossaryunavailable', 'cobra', $CFG->cobra_serviceurl), 5);
-}
-if ($perpage) {
-    echo $OUTPUT->paging_bar($totalcount, $page, $perpage, '/mod/cobra/myglossary.php?id='.$cm->id );
-}
-
-$table = new html_table();
-$table->attributes['class'] = 'admintable generaltable';
-$table->id = 'myglossary';
-$headercell1 = new html_table_cell(get_string('entry', 'cobra'));
-$headercell1->style = 'text-align:left;';
-$headercell2 = new html_table_cell(get_string('translation', 'cobra'));
-$headercell3 = new html_table_cell(get_string('category'));
-$headercell4 = new html_table_cell(get_string('otherforms', 'cobra'));
-$headercell5 = new html_table_cell(get_string('sourcetext', 'cobra'));
-$headercell6 = new html_table_cell(get_string('clickedin', 'cobra'));
-$headercell7 = new html_table_cell('');
-$table->head = array(
-    $headercell1,
-    $headercell2,
-    $headercell3,
-    $headercell4,
-    $headercell5,
-    $headercell6,
-    $headercell7
+echo $OUTPUT->heading(
+        get_string('myglossary', 'cobra') .
+        ' (' . $totalcount . ' ' .
+        strtolower(get_string('entries', 'cobra')) .
+        ')'
 );
 
-if ('empty' == $cmd) {
-    if (!empty($confirm) && confirm_sesskey()) {
-        cobra_empty_glossary($cobra->course, $cobra->user);
-    } else {
-        $PAGE->navbar->add(get_string('delete'));
-        $PAGE->set_title($course->shortname);
-        $PAGE->set_heading($course->fullname);
+$baseurl = new moodle_url('/mod/cobra/myglossary.php', array('id' => $course->id));
+$records = array();$entities = array();
 
-        echo $OUTPUT->confirm(get_string('deletesure', 'mod_cobra'),
-            "myglossary.php?cmd=empty&confirm=$course->id&id=$cobra->cmid",
-            $CFG->wwwroot.'/mod/cobra/myglossary.php?id='.$cobra->cmid);
-        echo $OUTPUT->footer();
-        die;
-    }
-}
-
-if (!empty($data)) {
-
-    foreach ($data as $entry) {
-        $removeiconurl = $OUTPUT->image_url('glossaryremove', 'mod_cobra');
-
-        $row = new html_table_row();
-        $cell = new html_table_cell();
-        $cell->text = $entry->entry;
-        $row->cells[] = $cell;
-
-        $cell = new html_table_cell();
-        $cell->text = $entry->translations;
-        $row->cells[] = $cell;
-
-        $cell = new html_table_cell();
-        $cell->text = $entry->category;
-        $row->cells[] = $cell;
-
-        $cell = new html_table_cell();
-        $cell->text = $entry->extrainfo;
-        $row->cells[] = $cell;
-
-        $cell = new html_table_cell();
-        $cell->text = $sourcetexttitle;
-        $row->cells[] = $cell;
-
-        $cell = new html_table_cell();
-        $cell->text = html_writer::tag('span',
-            count($texttitles) . '&nbsp;' . get_string('texts', 'cobra'),
-            array('title' => implode("\n", $texttitles)));
-        $row->cells[] = $cell;
-
-        $cell = new html_table_cell();
-        $cell->attributes['class'] = 'glossaryIcon';
-        $cellcontent = html_writer::tag('span', $entry->lingentity, array('id' => 'currentLingEntity', 'class' => 'hidden'));
-        $cellcontent .= html_writer::img($removeiconurl,
-            get_string('myglossaryremove', 'cobra'),
-            array('title' => get_string('myglossaryremove', 'cobra'), 'class' => 'glossaryremove inDisplay'));
-        $cell->text = $cellcontent;
-        $row->cells[] = $cell;
-
-        $table->data[] = $row;
-    }
-
-} else {
-    $row = new html_table_row();
-    $cell = new html_table_cell();
-    $cell->colspan = 7;
-    $cell->attributes['class'] = 'text-center';
-    $cell->text = get_string('emptyglossary', 'cobra');
-    $row->cells[] = $cell;
-    $table->data[] = $row;
-}
-
-$content = html_writer::start_tag('div', array('class' => 'no-overflow'));
-$content .= html_writer::table($table);
-$content .= html_writer::end_tag('div');
+$initialsbar = $OUTPUT->initials_bar($initial, 'initials', '', 'initial', $baseurl);
 
 $output = $PAGE->get_renderer('mod_cobra');
-$myglossaryview = new myglossary($entries);
+$myglossaryview = new myglossary($entries, $course->id, $initialsbar, $initial);
 echo $output->render($myglossaryview);
 
 // Finish the page.

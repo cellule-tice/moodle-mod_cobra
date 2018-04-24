@@ -17,17 +17,36 @@
 {{!
     placeholder for template description. Ex: Page header.
 }}
-
-{{#audio}}
+{{#warnings}}
+    <div class="alert alert-warning" role="alert">
+        <strong>{{#str}}warning{{/str}}! </strong> {{{message}}}
+    </div>
+{{/warnings}}
+{{^warnings}}
+{{#audiofile}}
     <div id="audioplayer">
         <audio controls="controls">
-            <source src="{{{audio}}}">
+            <source src="{{{audio}}}">{{cmid}}
         </audio>
     </div>
     <div class="clearfix"></div>
-{{/audio}}
+{{/audiofile}}
+
 <div id="cobratext" class="cobra-content">
-{{{text}}}
+    <h2 id="texttitle" class="text-title">{{{title}}}</h2>
+    <div id="text" class="text">
+        {{#textpart}}
+            {{#issubtitle}}
+                <p><span class="cobra-subtitle">{{{content}}}</span> </p>
+            {{/issubtitle}}
+            {{#isparagraph}}
+                <p class="cobra-paragraph">{{{content}}}</p>
+            {{/isparagraph}}
+        {{/textpart}}
+        {{#source}}
+            <p class="text-source">{{{source}}}</p>
+        {{/source}}
+    </div>
 </div>
 {{#userglossary}}
     <div id="myglossary">
@@ -46,3 +65,4 @@
 <div class="clearfix">
     &nbsp;
 </div>
+{{/warnings}}

@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Scheduled task to update glossary cache table.
+ *
  * @package    mod_cobra
  * @author     Jean-Roch Meurisse
  * @copyright  2016 onwards - Cellule TICE - Unversite de Namur
@@ -27,12 +29,25 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
 
+/**
+ * Class update_glossary_cache_task
+ */
 class update_glossary_cache_task extends \core\task\scheduled_task {
 
+    /**
+     * Get task name.
+     *
+     * @return string
+     * @throws \coding_exception
+     */
     public function get_name() {
         return get_string('updateglossarycache', 'mod_cobra');
     }
 
+    /**
+     * Execute task.
+     * @throws \dml_exception
+     */
     public function execute() {
         mtrace('Load dirty entries from remote CoBRA server');
         list($new, $updated) = cobra_update_glossary_cache(get_config('mod_cobra', 'lastglossaryupdate'));
