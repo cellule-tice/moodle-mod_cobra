@@ -13,9 +13,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                 $('#nav-drawer').addClass('closed');
                 $('button[aria-controls="nav-drawer"]').trigger('click');
             }
-            $(window).on('beforeunload', function() {
 
-            });
             log.debug('CoBRA module init');
         },
 
@@ -64,10 +62,6 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                 $(this).addClass('clicked');
 
                 displayDetails(conceptId, false);
-                /*$('html, body').animate({
-                    scrollTop: $('#details').offset().top,
-                }, 1000);*/
-
             });
             $('.expression').on('click', function() {
                 $('.clicked').removeClass('clicked');
@@ -116,7 +110,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                 }
             }]);
             promises[0]
-                .done(function(response) {console.log(objparams);
+                .done(function(response) {
                     glossaryentries = response;
                     updateglossarydisplay();
                 }).fail(notification.exception);
