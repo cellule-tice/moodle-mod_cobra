@@ -24,6 +24,8 @@ Students can click on any word or expression in a CoBRA text to get disambiguate
 
 Every clicked word or expression can be added to an exportable personal glossary.
 
+Available CoBRA-formatted texts are hosted on a dedicated server and are loaded through an api.
+
 ## Required version of Moodle ##
 
 This version works with Moodle 3.3 and above.
@@ -34,3 +36,4 @@ This version works with Moodle 3.3 and above.
  3. Unzip and copy into the '/mod/' folder.
  4. Visit 'Site administration' -> 'Notifications' to install.
  5. Put Moodle out of Maintenance Mode.
+ 6. Contact elex@unamur.be with the IP address of your server and the shortname of your Moodle instance to be allowed to access the api.
