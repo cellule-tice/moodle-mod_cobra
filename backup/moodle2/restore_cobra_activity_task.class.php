@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Defines restore_cobra_activity_task class
+ *
  * @package    mod_cobra
  * @author     Jean-Roch Meurisse
  * @copyright  2016 onwards - Cellule TICE - Unversite de Namur
@@ -25,6 +27,9 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/cobra/backup/moodle2/restore_cobra_stepslib.php');
 
+/**
+ * Cobra restore task that provides all the settings and steps to perform one complete restore of the activity
+ */
 class restore_cobra_activity_task extends restore_activity_task {
 
     /**

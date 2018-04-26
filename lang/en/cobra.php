@@ -15,32 +15,31 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * English strings for cobra
+ * Plugin strings are defined here.
  *
- * You can have a rather longer description of the file as well,
- * if you like, and it can span multiple lines.
- *
- * @package    mod_cobra
- * @author     Jean-Roch Meurisse
- * @author     Laurence Dumortier
- * @copyright  2016 onwards - Cellule TICE - Universite de Namur
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_cobra
+ * @category    string
+ * @copyright   2016 onwards - Cellule TICE - University of Namur
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['annotation'] = 'Annotation';
 $string['annotationsdisplaymode'] = 'Display annotations';
 $string['audioplayer'] = 'Audio player';
 $string['audioplayer_help'] = 'Display an audio player if an audio version of the text is available';
 $string['before'] = 'Before';
 $string['bilingual'] = 'Bilingual';
+$string['category'] = 'Category';
+$string['categoryshrinked'] = 'Cat.';
 $string['checkuncheckall'] = 'Check/Uncheck all';
 $string['cleanclickstats'] = 'Clean statistics';
 $string['clickablewordscount'] = 'Number of clickable words';
 $string['clickcount'] = 'Total clic count';
 $string['clickedin'] = 'Clicked in ...';
 $string['cobra'] = 'CoBRA';
-$string['cobra:addinstance'] = 'Add instance of CoBRA plugin';
+$string['cobra:addinstance'] = 'Add an instance of CoBRA resource to your course';
 $string['cobra:edit'] = 'Manage CoBRA plugin';
 $string['cobra:glossaryedit'] = 'Manage glossary';
 $string['cobra:myglossary'] = 'My Glossary';
@@ -48,13 +47,12 @@ $string['cobra:settings'] = 'Manage settings';
 $string['cobra:stat'] = 'Statistics';
 $string['cobra:view'] = 'Voir';
 $string['cobraname'] = 'Name';
-$string['cobraname_help'] = 'Name given to this resource inside your course.
-Default is "Reading assistant"';
+$string['cobraname_help'] = 'Name given to this resource inside your course.';
 $string['cobraserviceurl'] = 'URL of webservices';
 $string['collection'] = 'Collection';
 $string['collectionname'] = 'Collection name';
 $string['collectionnamechanged'] = 'Collection name changed';
-$string['collectionnamecannotbeempty'] = 'Collection name cannot be empty';
+$string['collectionnamecannotbeempty'] = 'Collection field cannot be empty';
 $string['collectionnamenotchanged'] = 'Unable to change collection name';
 $string['collectionsavailable'] = 'Available collections';
 $string['comparetextwithglossary'] = 'Compare text and glossary';
@@ -67,21 +65,27 @@ $string['corpusremovedfromselection'] = 'Corpus type removed from selection';
 $string['corpusselection'] = 'Corpus type selection';
 $string['corpustype'] = 'Corpus type';
 $string['currentcorpuselection'] = 'List of corpus types currently selected for your course';
+$string['definition'] = 'Definition';
 $string['displaysettings'] = 'Display settings';
 $string['editcollection'] = 'Edit collection';
-$string['emptyglossary'] = 'Glossary empty !';
+$string['emptymyglossary'] = 'Empty my glossary';
 $string['entry'] = 'Entry';
+$string['entries'] = 'Entries';
+$string['entriesfromothertext'] = '* Greyed entries were added from another text';
 $string['examplesdisplaymode'] = 'Display mode for examples';
 $string['examplesdisplaymode_help'] = 'Display examples in source language only (monolingual) or in source language and French (bilingual)';
 $string['exportglossary'] = 'Export Glossary';
 $string['exportmyglossary'] = 'Export my glossary';
 $string['generalconfig'] = 'General Configuration';
 $string['glossary'] = 'Glossary';
+$string['glossaryempty'] = 'Glossary empty !';
+$string['glossaryemptyfortext'] = 'Glossary empty for this text !';
 $string['info'] = 'Info';
 $string['language'] = 'Language';
 $string['language_help'] = 'The language teached in your course.
 
 **Warning: this parameter is not editable! **';
+$string['languageismandatory'] = 'Language is mandatory';
 $string['mailrecipient'] = 'Identifier of the recipient for email notification errors';
 $string['managetextcollections'] = 'Manage text collections';
 $string['modulename'] = 'CoBRA';
@@ -93,7 +97,6 @@ $string['mostclickedpertext'] = 'Most clicked entries per text';
 $string['mostclickedtexts'] = 'Most clicked texts';
 $string['mycollections'] = 'Collections currently linked to the course';
 $string['myglossary'] = 'My glossary';
-$string['myglossaryremove'] = 'Remove from my glossary';
 $string['myglossaryunavailable'] = 'The \'My glossary\' feature is not activated';
 $string['newwords'] = 'New words';
 $string['nextprevbuttons'] = '"Previous" and "Next" buttons';
@@ -101,16 +104,21 @@ $string['nextprevbuttons_help'] = 'Display buttons to go to "Previous" and "Next
 $string['nexttext'] = 'Next text';
 $string['nocollections'] = 'No registered collections';
 $string['nocollectionsmessage'] = 'You have not registered any collection yet. Go to activity administration to fix this.';
+$string['noconcordances'] = 'No concordances';
+$string['noentriesforletter'] = 'No entries starting with {$a}';
 $string['notexts'] = 'There are currently no texts in this collection.';
 $string['notexttoadd'] = 'No text to add';
 $string['notexttoremove'] = 'No text to remove';
 $string['OK'] = 'OK';
 $string['otherforms'] = 'Other forms';
+$string['othertranslations'] = 'Other translation(s)';
 $string['platformnotallowed'] = 'Your platform is not allowed to access CoBRA service !';
 $string['pluginadministration'] = 'cobra administration';
-$string['pluginname'] = 'cobra';
+$string['pluginname'] = 'CoBRA';
 $string['possibletranslations'] = 'Possible translations';
 $string['previoustext'] = 'Previous text';
+$string['registercollectionfailed'] = 'Collection registration failed';
+$string['removecollectionfailed'] = 'Unlink collection failed';
 $string['serviceunavailable'] = 'Unable to access CoBRA service at {$a}';
 $string['source'] = 'Source';
 $string['sourcetext'] = 'Source text';
@@ -129,10 +137,9 @@ $string['textsremoved'] = '{$a} text(s) removed';
 $string['topclickedentries'] = 'Show entries clicked 20 times at least';
 $string['topclickedentriespertext'] = 'Show entries clicked 1 times at least per text';
 $string['topclickedtexts'] = 'Show most clicked texts';
-$string['translation'] = 'Traduction';
+$string['translation'] = 'Translation(s)';
+$string['translations'] = 'Translations';
 $string['translationsdisplaymode'] = 'Display translations';
-$string['registercollectionfailed'] = 'Collection registration failed';
-$string['removecollectionfailed'] = 'Unlink collection failed';
 $string['unhandledreturntype'] = 'Unhandled return type - {$a}';
 $string['uniqueusers'] = 'Unique users';
 $string['userglossary'] = 'User glossary';
@@ -185,9 +192,12 @@ $string['corpusselection_help'] = 'Default selection and order of corpus types y
 </ul>';
 $string['addtomyglossary'] = 'Add to my glossary';
 $string['inmyglossary'] = 'Already in my glossary';
+$string['removefrommyglossary'] = 'Remove from my glossary';
 $string['showfullglossary'] = 'Display full glossary';
 $string['deletesure'] = 'Do you really want to empty your personal glossary for this course?';
-$string['emptymyglossary'] = 'Empty my glossary';
 $string['entry_viewed'] = 'Entry clicked';
 $string['updateglossarycache'] = 'Update glossary cache';
 $string['updatetextinfocache'] = 'Update cobra texts info cache';
+$string['resetdefaults'] = 'Reset display and corpus selection to platform defaults';
+$string['resetglossaries'] = 'Clear all personal glossaries';
+$string['resetclikhistory'] = 'Clear click history';

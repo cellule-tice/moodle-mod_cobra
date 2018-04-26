@@ -19,7 +19,6 @@
  *
  * @package    mod_cobra
  * @author     Jean-Roch Meurisse
- * @author     Laurence Dumortier
  * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,25 +27,41 @@ namespace mod_cobra\event;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Class entry_viewed
+ */
 class entry_viewed extends \core\event\base {
+    /**
+     * Initialize the event
+     */
     protected function init() {
         $this->data['crud'] = 'u';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
         $this->data['objecttable'] = 'cobra_clic';
     }
 
-    public function changecrud($crud) {
-        $this->data['crud'] = $crud;
-    }
-
+    /**
+     * Get the event name.
+     *
+     * @return string
+     * @throws \coding_exception
+     */
     public static function get_name() {
         return get_string('entry_viewed', 'mod_cobra');
     }
 
+    /**
+     * Get a description of the event.
+     * @return string
+     */
     public function get_description() {
         return "The user with id {$this->userid} clicked entry with id {$this->other['lingentity']}";
     }
 
+    /**
+     * Get the url of the related cobra activity.
+     * @return \moodle_url
+     */
     public function get_url() {
         return new \moodle_url('/mod/cobra/view.php', array('id' => $this->contextinstanceid));
     }

@@ -14,11 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
-
 /**
- * PHPUnit cobra generator testcase
+ * PHPUnit cobra generator test
  *
  * @package    mod_cobra
  * @author     Jean-Roch Meurisse
@@ -26,17 +23,23 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Defines PHPUnit cobra_generator testcase.
+ */
 class mod_cobra_generator_testcase extends advanced_testcase {
     public function test_generator() {
         global $DB;
 
         $this->resetAfterTest(true);
 
+        $config = get_config('mod_cobra');
+
         $this->assertEquals(0, $DB->count_records('cobra'));
 
         $course = $this->getDataGenerator()->create_course();
 
-        $this->assertFalse($DB->record_exists('url', array('course' => $course->id)));
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_cobra');
         $this->assertInstanceOf('mod_cobra_generator', $generator);
         $this->assertEquals('cobra', $generator->get_modulename());
@@ -45,6 +48,12 @@ class mod_cobra_generator_testcase extends advanced_testcase {
         $generator->create_instance(array('course' => $course->id));
         $cobra = $generator->create_instance(array('course' => $course->id));
         $this->assertEquals(3, $DB->count_records('cobra'));
+        $this->assertEquals($config->userglossary, $cobra->userglossary);
+        $this->assertEquals($config->translations, $cobra->translations);
+        $this->assertEquals($config->annotations, $cobra->annotations);
+        $this->assertEquals($config->examples, $cobra->examples);
+        $this->assertEquals($config->defaultcorpusorderen, $cobra->corpusorder);
+        $this->assertEquals($config->audioplayer, $cobra->audioplayer);
 
         $cm = get_coursemodule_from_instance('cobra', $cobra->id);
         $this->assertEquals($cobra->id, $cm->instance);

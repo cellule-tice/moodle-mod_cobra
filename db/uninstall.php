@@ -15,19 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Provides code to be executed during the module uninstallation
+ * Code that is executed before the tables and data are dropped during the plugin uninstallation.
  *
- * @see uninstall_plugin()
- *
- * @package    mod_cobra
- * @copyright  2015 Your Name <your@email.adress>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_cobra
+ * @category    upgrade
+ * @copyright   2016 onwards - Cellule TICE - University of Namur
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
+
 /**
- * Custom uninstallation procedure
+ * Custom uninstallation procedure.
  */
 function xmldb_cobra_uninstall() {
+
     return true;
 }

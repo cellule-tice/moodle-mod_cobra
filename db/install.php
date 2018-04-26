@@ -15,36 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Provides code to be executed during the module installation
+ * Code to be executed after the plugin's database scheme has been installed is defined here.
  *
- * This file replaces the legacy STATEMENTS section in db/install.xml,
- * lib.php/modulename_install() post installation hook and partially defaults.php.
- *
- * @package    mod_cobra
- * @copyright  2015 Your Name <your@email.adress>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_cobra
+ * @category    upgrade
+ * @copyright   2016 onwards - Cellule TICE - University of Namur
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/cobra/locallib.php');
-
 /**
- * Post installation procedure
- *
- * @see upgrade_plugins_modules()
+ * Custom code to be run on installing the plugin.
  */
 function xmldb_cobra_install() {
 
-    // Init config variables to allow cron tasks to run the first time.
-    set_config('lastglossaryupdate', 0, 'mod_cobra');
-    set_config('lasttextinfoupdate', 0, 'mod_cobra');
-}
-
-/**
- * Post installation recovery procedure
- *
- * @see upgrade_plugins_modules()
- */
-function xmldb_cobra_install_recovery() {
+    return true;
 }

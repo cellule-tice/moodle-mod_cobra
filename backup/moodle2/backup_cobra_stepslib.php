@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Defines backup_cobra_activity_structure_step class
+ *
  * @package    mod_cobra
  * @author     Jean-Roch Meurisse
  * @copyright  2016 onwards - Cellule TICE - Unversite de Namur
@@ -23,8 +25,14 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Define all the backup steps that will be used by the backup_cobra_activity_task
+ */
 class backup_cobra_activity_structure_step extends backup_activity_structure_step {
 
+    /**
+     * Define the complete cobra structure for backup, with file and id annotations
+     */
     protected function define_structure() {
 
         // Define each element separated.

@@ -21,17 +21,17 @@
 
 }}
 <div id="glossary" >
-    <a class="righty" title="{{#str}}showfullglossary, mod_cobra{{/str}}" href="myglossary.php?id={{cmid}}">{{#str}}myglossary, mod_cobra{{/str}}</a>
+    <a class="righty" title="{{#str}}showfullglossary, mod_cobra{{/str}}" href="myglossary.php?id={{course}}">{{#str}}myglossary, mod_cobra{{/str}}</a>
     <table class="table table-condensed" width="100%">
         <thead>
 
         <tr class="headerX">
             <th>&nbsp;</th>
-            <th>Entrée</th>
+            <th>{{#str}}entry, mod_cobra{{/str}}</th>
 
-            <th>Cat.</th>
+            <th>{{#str}}categoryshrinked, mod_cobra{{/str}}</th>
 
-            <th>Traduction</th>
+            <th>{{#str}}translation, mod_cobra{{/str}}</th>
 
             <th>&nbsp;</th>
         </tr>
@@ -40,7 +40,7 @@
         <tbody>
         {{#entries}}
             <tr {{^fromThisText}}class="discreet"{{/fromThisText}}>
-                <td class="{{#new}}hot{{/new}}">
+                <td class="{{#new}}hotentry{{/new}}">
                     &nbsp;
                 </td>
                 <td>{{entry}}</td>
@@ -48,17 +48,14 @@
                 <td style="max-width:180px;">{{translations}}</td>
                 <td class="glossaryIcon inTextGlossary">
                     <span id="currentLingEntity" class="hidden">{{lingentity}}</span>
-                    <img class=                                                                                   "glossaryremove" src="pix/glossaryremove.png" title="Supprimer de mon glossaire"></td>
+                    <img class=                                                                                   "glossaryremove" src="pix/glossaryremove.png" title="{{#str}}removefrommyglossary, cobra{{/str}}"></td>
             </tr>
         {{/entries}}
         {{^entries}}
-            <td colspan="5" style="text-align:center;">Glossaire
-                vide pour ce texte</td>
+            <td colspan="5" style="text-align:center;">{{#str}}glossaryemptyfortext, mod_cobra{{/str}}</td>
         {{/entries}}
         </tbody>
     </table>
-    <p>* Les entrées grisées ont été rajoutées via un autre texte
-
-    </p>
+    <p>{{#str}}entriesfromothertext, mod_cobra{{/str}}</p>
 </div>
 

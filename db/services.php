@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * CoBRA external functions and service definitions.
+ *
  * @package    mod_cobra
  * @author     Jean-Roch Meurisse
  * @copyright  2016 - Cellule TICE - Unversite de Namur
@@ -24,9 +26,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $functions = array(
-    'mod_cobra_display_entry' => array(
+    'mod_cobra_get_entry' => array(
         'classname' => 'mod_cobra_external',
-        'methodname' => 'display_entry',
+        'methodname' => 'get_entry',
         'classpath' => 'mod/cobra/externallib.php',
         'description' => 'Display entry details and concordances',
         'type' => 'write',
@@ -63,6 +65,28 @@ $functions = array(
         'description' => 'Load glossary entries for current text',
         'type' => 'read',
         'ajax' => true
+    ),
+    'mod_cobra_get_text' => array(
+        'classname' => 'mod_cobra_external',
+        'methodname' => 'get_text',
+        'classpath' => 'mod/cobra/externallib.php',
+        'description' => 'Loads formatted title and text content',
+        'type' => 'read',
+        'ajax' => true
+    ),
+    'mod_cobra_get_collection_list' => array(
+        'classname' => 'mod_cobra_external',
+        'methodname' => 'get_collection_list',
+        'classpath' => 'mod/cobra/externallib.php',
+        'description' => 'Collects the list of collections for set language',
+        'type' => 'read'
+    ),
+    'mod_cobra_get_text_list' => array(
+        'classname' => 'mod_cobra_external',
+        'methodname' => 'get_text_list',
+        'classpath' => 'mod/cobra/externallib.php',
+        'description' => 'Collects the list of texts for given collection',
+        'type' => 'read'
     )
 );
 
@@ -70,11 +94,14 @@ $services = array(
     'cobraservices' => array(
         'shortname' => 'cobra',
         'functions' => array(
-            'mod_cobra_display_entry',
+            'mod_cobra_get_entry',
             'mod_cobra_get_full_concordance',
+            'mod_cobra_get_text',
             'mod_cobra_add_to_glossary',
             'mod_cobra_remove_from_glossary',
-            'mod_cobra_load_glossary'
+            'mod_cobra_load_glossary',
+            'mod_cobra_get_text_list',
+            'mod_cobra_get_collection_list'
         ),
         'requiredcapability' => '',
         'restrictedusers' => 0,

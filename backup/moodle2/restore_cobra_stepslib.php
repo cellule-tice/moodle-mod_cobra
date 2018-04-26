@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Defines restore_cobra_activity_structure_step class
+ *
  * @package    mod_cobra
  * @author     Jean-Roch Meurisse
  * @copyright  2016 onwards - Cellule TICE - Unversite de Namur
@@ -23,8 +25,16 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Define all the restore steps that will be used by the restore_choice_activity_task
+ */
 class restore_cobra_activity_structure_step extends restore_activity_structure_step {
 
+    /**
+     * Structure step to restore a cobra activity
+     *
+     * @return restore_path_element $structure
+     */
     protected function define_structure() {
         $paths = array();
         $userinfo = $this->get_setting_value('userinfo');
@@ -35,6 +45,12 @@ class restore_cobra_activity_structure_step extends restore_activity_structure_s
         return $this->prepare_activity_structure($paths);
     }
 
+    /**
+     * Process a cobra restore.
+     *
+     * @param object $data The data in object form
+     * @return void
+     */
     protected function process_cobra($data) {
         global $DB;
 
@@ -49,6 +65,10 @@ class restore_cobra_activity_structure_step extends restore_activity_structure_s
         $this->apply_activity_instance($newitemid);
     }
 
+    /**
+     * Once the database tables have been fully restored, restore the files
+     * @return void
+     */
     protected function after_execute() {
         $this->add_related_files('mod_cobra', 'intro', null);
     }

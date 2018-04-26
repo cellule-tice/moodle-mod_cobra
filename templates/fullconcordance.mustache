@@ -1,0 +1,15 @@
+<table id="displayOnClic" class="entryTable">
+    <tbody>
+        <tr id="displayOnClic_row1">
+            {{#bilingual}}
+                <td style=" border-right:1px solid gray; " class="concordance">{{{source}}}</td>
+                <td style="" class="concordance">{{{target}}}</td>
+            {{/bilingual}}
+            {{^bilingual}}
+                <td class="concordance" colspan="2">{{{source}}}</td>
+            {{/bilingual}}
+        </tr>
+        <tr id="displayOnClic_row2">
+            <td colspan="2" class="reference">{{#str}}source, mod_cobra{{/str}}&nbsp;: <em>{{reference}}</em></td>
+</tr>
+</tbody></table>

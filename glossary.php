@@ -28,19 +28,17 @@
 require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/lib/glossarylib.php');
-require_once(__DIR__ . '/lib/cobraremoteservice.php');
-require_once(__DIR__ . '/lib/cobracollectionwrapper.php');
+require_once($CFG->dirroot . '/lib/dataformatlib.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
-
-
-$id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
+// Course id.
+$id = optional_param('id', 0, PARAM_INT);
 
 if ($id) {
-    $course     = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
+    $course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
     if (!cobra_is_used()) {
-       // redirect vers la page de cours
-        redirect('../course/view.php?id='.id);
+        // Redirect to course page.
+        redirect('../course/view.php?id=' . $id);
     }
 }
 
@@ -49,15 +47,13 @@ require_login($course, true);
 
 $context = context_course::instance($course->id, MUST_EXIST);
 
-if (!has_capability('mod/cobra:edit', $context)) {
-    redirect('../course/view.php?id='.id);
+if (!has_capability('mod/cobra:addinstance', $context)) {
+    redirect('../course/view.php?id=' . $id);
 }
 
 /*
  * Init request vars.
  */
-
-
 $cmd = optional_param('cmd', '', PARAM_ALPHANUM);
 $acceptedcmdlist = array('rqexport', 'exexport', 'rqcompare', 'excompare');
 if (!in_array($cmd, $acceptedcmdlist)) {
@@ -66,28 +62,37 @@ if (!in_array($cmd, $acceptedcmdlist)) {
 
 $out = '';
 
-$textlist = get_cobra_text_list();
+$textlist = cobra_get_text_list();
 
 if ($cmd == 'exexport') {
     $glossary = array();
     foreach ($textlist as $text) {
-        if ($_REQUEST['text_'.$text->id]) {
-            $textid = $text->text;
-            $glossary2 = cobra_get_glossary_for_text ( $textid );
-            
-            if (array_key_exists( $textid, $glossary2 )) {
-                $glossary2 = cobra_get_glossary_entry_of_text( $glossary2[$text->text], $text, $text->id );
-                $glossary = array_merge( $glossary, $glossary2 );
-            }
+        $mustexport = optional_param('text_' . $text->id, 0, PARAM_INT);
+        if ($mustexport) {
+            $glossary = array_merge($glossary, cobra_get_exportable_glossary_entries($text->text));
         }
-    } 
-    cobra_export_glossary($glossary);    
-}
+    }
 
+    $downloadentries = new ArrayObject($glossary);
+    $downloadfields = array(
+        'entry' => get_string('entry', 'cobra'),
+        'translations' => get_string('translations', 'cobra'),
+        'category' => get_string('category', 'cobra'),
+        'extrainfo' => get_string('otherforms', 'cobra'),
+        'sourcetexttitle' => get_string('sourcetext', 'cobra')
+    );
+    $iterator = $downloadentries->getIterator();
+    download_as_dataformat($course->shortname . '-' . get_string('myglossary', 'cobra'),
+        'excel',
+        $downloadfields,
+        $iterator
+    );
+    die();
+}
 
 // Print the page header.
 $PAGE->set_url('/mod/cobra/glossary.php', array('id' => $context->id));
-$PAGE->set_title(format_string($cobra->name));
+$PAGE->set_title(format_string(get_string('pluginname', 'mod_cobra')));
 $PAGE->set_heading(format_string($course->fullname));
 
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
@@ -124,48 +129,50 @@ if ($cmd == 'rqexport') {
     $thisform = new cobra_edit_glossary_form ($url, array('textlist' => $textlist, 'compare' => true));
 } else if ( $cmd == 'excompare') {
     cobra_increase_script_time();
-    $glossary = array();   
-    $language = '';
+    $glossary = array();
+
+    $textlist = array_values($textlist);
+    $language = $textlist[0]->language;
+    $glossary = array();
     foreach ($textlist as $text) {
-        if ($_REQUEST['text_'.$text->id]) {
-            $textid = $text->text;
-            if ($language == '') {
-                $language = $text->language;
-            }
-            $glossary2 = cobra_get_glossary_for_text ( $textid );
-            if (array_key_exists( $textid, $glossary2 )) {
-                $glossary2 = cobra_get_glossary_entry_of_text( $glossary2[$text->text], $text, $text->id );
-                $glossary = array_merge( $glossary, $glossary2 );
-            }
+        $mustexport = optional_param('text_' . $text->id, 0, PARAM_INT);
+        if ($mustexport) {
+            $glossary = array_merge($glossary, cobra_get_glossary_entries($text->text));
         }
     }
 
-    list( $lemmaglossary, $expglossary ) = cobra_explode_glossary_into_lemmas_and_expression( $glossary );
-    $glossarylemmaid = cobra_explode_array_on_key ( $lemmaglossary, 'id' );
-    $mytext = isset($_REQUEST['mytext']) ? $_REQUEST['mytext'] : '';
+    list( $lemmaentities, $expentities ) = cobra_explode_glossary_into_lemmas_and_expression( $glossary );
+
+    $mytext = optional_param('mytext', '', PARAM_RAW);
+
     $newwords = '';
     $otherwords = '';
     $words = cobra_get_list_of_words_in_text ( $mytext, $language );
-    
     $newwords = array();
 
     foreach ($words as $word) {
+
         $listflexions = cobra_word_exists_as_flexion ( $word, $language );
+
         if (count( $listflexions) != 0) {
             $trouve = false;
-            $listpossiblelemmas = cobra_get_lemmacat_list_from_ff( $word, $language );
-            foreach ($listpossiblelemmas as $lemmaid) {
-                if (array_key_exists($lemmaid, $glossarylemmaid)) {
+            $listpossibleentities = cobra_get_entity_list_from_ff($listflexions );
+
+            foreach ($listpossibleentities as $entityid) {
+                if (array_key_exists($entityid, $lemmaentities)) {
                     $trouve = true;
-                    $info = $glossarylemmaid[$lemmaid]['entry'] . ' ('.$glossarylemmaid[$lemmaid]['category'].') - '
-                        . $glossarylemmaid[$lemmaid]['traduction'];
+
+                    $info = $lemmaentities[$entityid]['entry'] . ' ('.$lemmaentities[$entityid]['category'].') - '
+                        . $lemmaentities[$entityid]['traduction'];
                     $otherwords .= '<li> ' . get_string('possibletranslations', 'cobra') . ' : '. $word . ' : '
                         . utf8_encode($info) . '</li>';
                 }
             }
             if (!$trouve) {
                 $newwords[] = $word;
-                //$newwords .= '<li> ' . get_string('newwords', 'cobra') . ' : '. $word . '</li>';
+
+                $mytext = str_replace(' ' .$word, ' <span style="color:red">'. $word. '</span>', $mytext);
+                $mytext = str_replace($word. ' ', '<span style="color:red">'. $word. '</span> ', $mytext);
                 $mytext = str_replace(' ' .$word. ' ', ' <span style="color:red">'. $word. '</span> ', $mytext);
                 $mytext = str_replace(' ' .$word. ',', ' <span style="color:red">'. $word. '</span>,', $mytext);
                 $mytext = str_replace(' ' .$word. '.', ' <span style="color:red">'. $word. '</span>.', $mytext);
@@ -176,8 +183,10 @@ if ($cmd == 'rqexport') {
                 $mytext = str_replace('(' .$word. ' ', '(<span style="color:red">'. $word. '</span> ', $mytext);
             }
         } else {
+
              $newwords[] = $word;
-            //$newwords .= '<li> ' . get_string('newwords', 'cobra')  . ' : '. $word . '</li>';
+             $mytext = str_replace(' ' .$word, ' <span style="color:red">'. $word. '</span>', $mytext);
+             $mytext = str_replace($word. ' ', '<span style="color:red">'. $word. '</span> ', $mytext);
              $mytext = str_replace(' ' .$word.' ', ' <span style="color:red">'. $word. '</span> ', $mytext);
              $mytext = str_replace(' ' .$word. ',', ' <span style="color:red">'. $word. '</span>,', $mytext);
              $mytext = str_replace(' ' .$word. '.', ' <span style="color:red">'. $word. '</span>.', $mytext);
@@ -186,16 +195,13 @@ if ($cmd == 'rqexport') {
              $mytext = str_replace('(' .$word. ')', '(<span style="color:red">'. $word. '</span>)', $mytext);
              $mytext = str_replace(' ' .$word. ')', ' <span style="color:red">'. $word. '</span>)', $mytext);
              $mytext = str_replace('(' .$word. ' ', '(<span style="color:red">'. $word. '</span> ', $mytext);
-             
         }
     }
-    
+
     $out .= html_writer::tag('div', get_string('text', 'mod_cobra') . ' : ' . $mytext);
     $out .= html_writer::tag('span', '&nbsp; ');
-    
     $out .= '<ul>';
-    //$out .= $newwords;
-    $out .= '<li>' . get_string('newwords', 'cobra')  . ' : ' . implode(', ', $newwords) . '</li>'; 
+    $out .= '<li>' . get_string('newwords', 'cobra')  . ' : ' . implode(', ', $newwords) . '</li>';
     $out .= $otherwords;
     $out .= '</ul>';
 }

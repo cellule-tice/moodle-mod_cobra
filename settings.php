@@ -15,13 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    mod_cobra
- * @author     Jean-Roch Meurisse
- * @copyright  2016 - Cellule TICE - Unversite de Namur
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Plugin administration pages are defined here.
+ *
+ * @package     mod_cobra
+ * @author      Jean-Roch Meurisse
+ * @copyright   2016 onwards - Cellule TICE - University of Namur
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
     require_once(__DIR__ . '/locallib.php');

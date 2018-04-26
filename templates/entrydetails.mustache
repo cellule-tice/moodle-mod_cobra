@@ -1,0 +1,115 @@
+<table id="displayOnClic" class="entryTable" width="100%">
+
+    <thead>
+    <tr class="digestRow">
+        <th class="glossaryIcon">
+            <span id="currentlingentity" class="hidden">{{technicalinfo.entity}}</span>
+            {{#technicalinfo.inglossary}}
+            <img height="20px" class="glossaryremove" src="pix/glossaryremove.png" title="Enlever de mon glossaire">
+            {{/technicalinfo.inglossary}}
+            {{^technicalinfo.inglossary}}
+            <img height="20px" class="glossaryadd" src="pix/glossaryadd.png" title="Ajouter à mon glossaire">
+            {{/technicalinfo.inglossary}}
+        </th>
+        <th class="superHeader" colspan="3">
+            <span id="currentConstruction" class="hidden lemma">{{technicalinfo.concept}}</span>
+            <span class="entryDisplay">{{data.entry}}{{#data.abbreviations}} ({{data.abbreviations}}){{/data.abbreviations}}</span>{{#data.article}}<span> ({{data.article}})</span>{{/data.article}}
+            <strong>:&nbsp;</strong>
+            <span class="category">{{data.category}}</span>
+
+            {{#data.forms}}
+                {{#first}}({{/first}}{{^first}}{{!
+            }}, {{/first}}<span class="cobralabel">{{type}}:</span>
+            <span class="inflectedForms">{{form}}</span>{{!
+            }}{{#last}}){{/last}}
+            {{/data.forms}}
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {{#technicalinfo.hasannotations}}
+    <tr id="displayOnClic_row1">
+        <td>&nbsp;</td>
+        <td style=" colspan:3; " colspan="2" class="description">
+            <ul class="descList">
+                {{#data.translations}}
+                <li><strong>{{#str}}translation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.translations}}</em></li>
+                {{/data.translations}}
+                {{#data.annotation}}
+                <li><strong>{{#str}}annotation, mod_cobra{{/str}}</strong>&nbsp;<em>{{data.annotation}}</em></li>
+                {{/data.annotation}}
+                {{#data.trannotation}}
+                <li><strong>{{#str}}annotation, mod_cobra{{/str}}</strong>&nbsp;<em>{{data.trannotation}}</em></li>
+                {{/data.trannotation}}
+                {{#data.definition}}
+                <li><strong>{{#str}}defintion, mod_cobra{{/str}}</strong>&nbsp;<em>{{data.definition}}</em></li>
+                {{/data.definition}}
+                {{#data.trdefinition}}
+                <li><strong>{{#str}}definition, mod_cobra{{/str}}</strong>&nbsp;<em>{{data.trdefinition}}</em></li>
+                {{/data.trdefinition}}
+            </ul>
+        </td>
+    </tr>
+    {{/technicalinfo.hasannotations}}
+    {{^technicalinfo.hasannotations}}
+        {{#data.translations}}
+        <tr id="displayOnClic_row1">
+            <td>&nbsp;</td>
+            <td style=" colspan:3; " colspan="3" class="description">
+                <ul class="singletonList">
+                    <li><strong>{{#str}}translation, mod_cobra{{/str}}</strong>&nbsp;<em>{{data.translations}}</em></li>
+                </ul>
+            </td>
+        </tr>
+        {{/data.translations}}
+    {{/technicalinfo.hasannotations}}
+    {{#technicalinfo.concordancescount}}
+    <tr id="displayOnClic_row2">
+        <td style="vertical-align:top;  padding-left:3px; " rowspan="{{technicalinfo.concordancescount}}">
+            <img src="pix/corpus.jpg" style="padding-bottom:3px;" title="Traduction(s) en contexte"></td>
+        {{/technicalinfo.concordancescount}}
+        {{#data.concordances}}
+        {{#first}}
+        <td class="concordance {{type}}" {{^bilingual}}style="width:100%;" colspan="2" {{/bilingual}}>{{{source}}}</td>
+        {{#bilingual}}
+        <td style="" class="concordance {{type}}">{{{target}}}</td>
+        {{/bilingual}}
+    </tr>
+    {{/first}}
+    {{^first}}
+    <tr id="displayOnClic_row{{index}}">
+        <td {{^bilingual}}style="width:100%;" colspan="2"{{/bilingual}} class="concordance {{type}}" {{^bilingual}}colspan="2" {{/bilingual}}>{{{source}}}</td>
+        {{#bilingual}}
+        <td style="" class="concordance {{type}}">{{{target}}}</td>
+        {{/bilingual}}
+    </tr>
+    {{/first}}
+
+    {{/data.concordances}}
+
+    {{^data.concordances}}
+    <tr>
+        <td style="padding-left:3px; width:2rem;">
+            <img src="pix/concordances_no.png" style="padding-bottom:3px;" title="Pas de traductions en contexte">
+        </td>
+        <td colpan="2">
+            <ul class="singletonList">
+                <li class="no-concordances">Pas de traductions en contexte</li>
+            </ul>
+        </td>
+    </tr>
+    {{/data.concordances}}
+    {{#unillustratedtranslations}}
+    <tr>
+        <td>&nbsp;</td>
+        <td style=" colspan:3; " colspan="2" class="description">
+            <ul class="singletonList">
+                <li><strong>{{#str}}othertranslations, mod_cobra{{/str}}&nbsp;:</strong>&nbsp;<em>{{unillustratedtranslations}}</em></li>
+            </ul>
+        </td>
+    </tr>
+    {{/unillustratedtranslations}}
+
+    </tbody>
+</table>

@@ -15,21 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the version and other meta-info about the plugin
+ * Plugin version and other meta-data are defined here.
  *
- * Setting the $plugin->version to 0 prevents the plugin from being installed.
- * See https://docs.moodle.org/dev/version.php for more info.
- *
- * @package    mod_cobra
- * @copyright  2016 - Cellule TICE - Unversite de Namur
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_cobra
+ * @author      Jean-Roch Meurisse
+ * @author      Laurence Dumortier
+ * @copyright   2016 onwards - Cellule TICE - University of Namur
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_cobra';
-$plugin->version = 2017082803;
+$plugin->version = 2017082805;
 $plugin->release = 'v2.0';
 $plugin->requires = 2016120503;
 $plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array();

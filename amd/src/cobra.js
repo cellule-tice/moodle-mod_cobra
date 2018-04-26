@@ -1,39 +1,28 @@
 /* jshint ignore:start */
-define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'], function($, log, templates, ajax, notification) {
+define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'], function($, log, ajax, templates, notification) {
 
     var jsonparams;
     var objparams;
     var glossaryentries;
     return {
-        init: function(args) {
-            // Adapt glossary height to text height.
-            $("#glossary").css('height', $("#cobratext").css('height'));
-            // Gather display and corpus params.
-            jsonparams = args;
-            objparams = JSON.parse(jsonparams);
-            // Disable blocks toggle (hidden by default in Cobra context).
-            $('small').hide();
-            $('.hbl').hide();
-            $('.sbl').hide();
+        initui: function() {
+
+            if ($('body').hasClass('drawer-open-left')) {
+                $('body').removeClass('drawer-open-left');
+                $('#nav-drawer').attr('aria-hidden', 'true');
+                $('#nav-drawer').addClass('closed');
+                $('button[aria-controls="nav-drawer"]').trigger('click');
+            }
 
             log.debug('CoBRA module init');
         },
 
+        initdata: function(args){
+            jsonparams = args;
+            objparams = JSON.parse(jsonparams);
+        },
+
         mod_form_triggers: function() {
-            var scrolltop = 0;
-            var scrollvalue = $(document.createElement('input'))
-                .attr('type', 'hidden')
-                .attr('name', 'scrolltop')
-                .attr('value', 0);
-            scrollvalue.appendTo('#id_language');
-
-            if ($('input[name="scrolltop"]').length) {
-                scrolltop = $('input[name="scrolltop"]').val();
-            }
-            $('html, body').animate({
-                scrollTop: scrolltop,
-            }, 100);
-
             var langbutton = $('#id_updatelanguage');
             var langselect = $('#id_language');
             var corpusorder = $('#id_corpusorder');
@@ -41,18 +30,6 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
             var collselect = $('#id_collection');
             var textselect = $('#id_text');
             var textlocalname = $('#id_name');
-            var defaultdisplaybutton = $('#id_updatedefaultdisplayprefs');
-            var defaultdisplaycheckbox = $('#id_isdefaultdisplayprefs');
-            var defaultcorpusbutton = $('#id_updatedefaultcorpusorder');
-            var defaultcorpuscheckbox = $('#id_isdefaultcorpusorder');
-
-            // Hide trigger buttons.
-            if($(langbutton)) {
-                $(langbutton).css('display', 'none');
-            }
-            if(collbutton) {
-                collbutton.css('display', 'none');
-            }
 
             langselect.on('change', function() {
                 var lang = langselect.find('option:selected').text();
@@ -61,12 +38,10 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                 } else if (lang == 'NL') {
                     corpusorder.val(objparams.nl);
                 }
-                scrollvalue.attr('value', $(window).scrollTop());
                 langbutton.trigger('click');
             });
 
             collselect.on('change', function() {
-                scrollvalue.attr('value', $(window).scrollTop());
                 collbutton.trigger('click');
             });
 
@@ -74,16 +49,6 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                 if (textlocalname.val() == '') {
                     textlocalname.val($('#id_text :selected').text());
                 }
-            });
-
-            defaultdisplaycheckbox.on('change', function() {
-                scrollvalue.attr('value', $(window).scrollTop());
-                defaultdisplaybutton.trigger('click');
-            });
-
-            defaultcorpuscheckbox.on('change', function() {
-                scrollvalue.attr('value', $(window).scrollTop());
-                defaultcorpusbutton.trigger('click');
             });
 
         },
@@ -95,11 +60,8 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                 $('.lemma[name=' + conceptId + ']').addClass('emphasize');
                 $(this).removeClass('emphasize');
                 $(this).addClass('clicked');
-                displayDetails(conceptId, false);
-                $('html, body').animate({
-                    scrollTop: $('#details').offset().top,
-                }, 1000);
 
+                displayDetails(conceptId, false);
             });
             $('.expression').on('click', function() {
                 $('.clicked').removeClass('clicked');
@@ -126,9 +88,9 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                 $(this).removeClass('emphasize');
                 $(this).addClass('clicked');
                 displayDetails(conceptId, true);
-                $('html, body').animate({
+                /*$('html, body').animate({
                     scrollTop: $('#details').offset().top,
-                }, 1000);
+                }, 1000);*/
             });
 
         },
@@ -150,6 +112,7 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
             promises[0]
                 .done(function(response) {
                     glossaryentries = response;
+                    updateglossarydisplay();
                 }).fail(notification.exception);
 
             $('#details').on('click', '.glossaryadd', function() {
@@ -188,14 +151,7 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                         templates.render('mod_cobra/glossaryiconcell', datafortpl).done(function(html) {
                             $('#displayOnClic').find('tr:first th:first').replaceWith(html);
                         }).fail(notification.exception);
-
-                        // Resend data to glossary template.
-                        var datafortpl = new Array;
-                        datafortpl['entries'] = glossaryentries;
-                        datafortpl['cmid'] = objparams.cmid;
-                        templates.render('mod_cobra/intextglossary', datafortpl).done(function(html) {
-                            $('#glossary').replaceWith(html);
-                        }).fail(notification.exception);
+                        updateglossarydisplay();
                     }).fail(notification.exception);
             });
 
@@ -230,15 +186,16 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
                             $('#displayOnClic').find('tr:first th:first').replaceWith(html);
                         }).fail(notification.exception);
 
-                        // Resend data to glossary template.
-                        var datafortpl = new Array;
+                        updateglossarydisplay();
+                        /*var datafortpl = new Array;
                         datafortpl['entries'] = glossaryentries;
                         datafortpl['cmid'] = objparams.cmid;
                         templates.render('mod_cobra/intextglossary', datafortpl).done(function(html) {
                             $('#glossary').replaceWith(html);
-                        }).fail(notification.exception);
+                        }).fail(notification.exception);*/
                     }).fail(notification.exception);
             });
+
         },
         global_glossary_actions : function() {
             $('#myglossary').on('click', '.glossaryremove', function () {
@@ -267,10 +224,9 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
 
     function displayDetails(conceptId, isExpression) {
         $('#full_concordance').hide();
-        var detailsDiv = $('#details');
 
         var promises = ajax.call([{
-            methodname: 'mod_cobra_display_entry',
+            methodname: 'mod_cobra_get_entry',
             args: {
                 concept_id: conceptId,
                 is_expr: isExpression,
@@ -280,53 +236,55 @@ define(['jquery', 'core/log', 'core/templates', 'core/ajax', 'core/notification'
 
         promises[0]
             .done(function(response) {
-                var content = response.html.replace(/class="label"/g, 'class="cobralabel"')
-                        .replace(/img\//g, 'pix\/')
-                        .replace(/#FFFFCC/, '');
-                detailsDiv.html(content);
-                if(objparams.userglossary == 1) {
-                    var datafortpl = new Array;
-                    datafortpl['lingentity'] = response.lingentity;
-                    if (true == response.inglossary) {
-                        datafortpl['iconclass'] = 'inglossary';
-                        datafortpl['add'] = false;
-                    } else {
-                        datafortpl['iconclass'] = 'glossaryadd';
-                        datafortpl['add'] = true;
-                    }
-                    templates.render('mod_cobra/glossaryiconcell', datafortpl).done(function(html) {
-                        $('#displayOnClic').find('tr:first')
-                            .prepend(html)
-                            .addClass('digestRow');
-                    }).fail(notification.exception);
-                } else {
-                    $('#glossary').remove();
+                if(objparams.examples == 'bilingual') {
+                    response.bilingual = true;
                 }
+                templates.render('mod_cobra/entrydetails', response).done(function(html) {
+                    $('#details').html(html);
+
+                }).fail(notification.exception);
             }).fail(notification.exception);
     }
+
     // Display full text of clicked concordance.
     function displayFullConcordance(quickindexitem)
     {
         var fullConcordanceDiv = $('#full_concordance');
         var idConcordance = quickindexitem.attr('name');
-        var backgroundColor = quickindexitem.parent().parent().css('background-color');
 
         var promises = ajax.call([{
             methodname: 'mod_cobra_get_full_concordance',
             args: {
-                id_cc: idConcordance,
-                params: jsonparams
+                id_concordance: idConcordance
             }
         }]);
 
         promises[0]
             .done(function(response) {
-                // Remove entry from displayed glossary and refresh view.
-                fullConcordanceDiv.html(response.concordance);
-                fullConcordanceDiv.css('background-color', backgroundColor);
-                fullConcordanceDiv.show();
+
+                if(objparams.examples == 'bilingual') {
+                    response.bilingual = true;
+                }
+                templates.render('mod_cobra/fullconcordance', response).done(function (html) {
+                    fullConcordanceDiv.html(html);
+                    fullConcordanceDiv.removeClass();
+                    fullConcordanceDiv.addClass(response.type);
+                    fullConcordanceDiv.show();
+                }).fail(notification.exception);
             }).fail(notification.exception);
     }
 
+    function updateglossarydisplay() {
+        var datafortpl = new Array;
+        datafortpl['entries'] = glossaryentries;
+        datafortpl['cmid'] = objparams.cmid;
+        datafortpl['course'] = objparams.course;
+        templates.render('mod_cobra/intextglossary', datafortpl).done(function (html) {
+            $('#glossary').replaceWith(html);
+            // Adapt glossary height to text height.
+            $('#glossary').css('height', $('#cobratext').css('height'));
+
+        }).fail(notification.exception);
+    }
 });
 /* jshint ignore:end */
