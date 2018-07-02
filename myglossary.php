@@ -95,15 +95,15 @@ $entries = array();
 if (!empty($data)) {
 
     foreach ($data as $entry) {
-        $sourcetexttitle = cobra_get_cached_text_title($entry->id_text);
+        $sourcetexttitle = cobra_get_cached_text_title($entry->textid);
         $entry->sourcetexttitle = $sourcetexttitle;
 
-        $query = "SELECT GROUP_CONCAT(CAST(id_text AS CHAR)) AS texts
+        $query = "SELECT GROUP_CONCAT(CAST(textid AS CHAR)) AS texts
                     FROM {cobra_clic}
-                   WHERE user_id = :userid
-                         AND id_entite_ling = :lingentity
+                   WHERE userid = :userid
+                         AND lingentity = :lingentity
                          AND course = :course
-                   GROUP BY id_entite_ling";
+                   GROUP BY lingentity";
         $result = $DB->get_field_sql($query, array(
                 'userid' => $USER->id,
                 'lingentity' => $entry->lingentity,
@@ -123,7 +123,7 @@ if (!empty($data)) {
 
         if ($export) {
             unset($entry->lingentity);
-            unset($entry->id_text);
+            unset($entry->textid);
             unset($entry->type);
             unset($entry->textcount);
             unset($entry->texttitles);

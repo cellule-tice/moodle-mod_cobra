@@ -49,8 +49,8 @@ class mod_cobra_generator extends testing_module_generator {
 
         // Add default values for cobra.
         $defaultsettings = array(
-            'collection' => 1,
-            'text' => 1,
+            'collection' => 21,
+            'text' => 2139,
             'name' => get_string('cobraname', 'cobra'),
             'language' => 'EN',
             'userglossary' => $config->userglossary,
@@ -90,14 +90,14 @@ class mod_cobra_generator extends testing_module_generator {
 
         $record2 = new stdClass();
         $record2->course = $cobraobject->course;
-        $record2->user_id = $cobraobject->user;
-        $record2->id_text = $cobraobject->text;
-        $record2->id_entite_ling = 34347;
+        $record2->userid = $cobraobject->user;
+        $record2->textid = $cobraobject->text;
+        $record2->lingentity = 34347;
         $record2->nbclicsstats = 1;
         $record2->nbclicsglossary = 1;
         $record2->datecreate = time();
         $record2->datemodif = time();
-        $record2->in_glossary = 0;
+        $record2->inglossary = 0;
         $result = $DB->insert_record('cobra_clic', $record2);
 
         $record3 = new stdClass();
@@ -111,14 +111,14 @@ class mod_cobra_generator extends testing_module_generator {
 
         $record4 = new stdClass();
         $record4->course = $cobraobject->course;
-        $record4->user_id = $cobraobject->user;
-        $record4->id_text = $cobraobject->text;
-        $record4->id_entite_ling = 27305;
+        $record4->userid = $cobraobject->user;
+        $record4->textid = $cobraobject->text;
+        $record4->lingentity = 27305;
         $record4->nbclicsstats = 1;
         $record4->nbclicsglossary = 1;
         $record4->datecreate = time();
         $record4->datemodif = time();
-        $record4->in_glossary = 1;
+        $record4->inglossary = 1;
         $result = $DB->insert_record('cobra_clic', $record4);
 
         $record5 = new stdClass();
@@ -132,14 +132,14 @@ class mod_cobra_generator extends testing_module_generator {
 
         $record6 = new stdClass();
         $record6->course = $cobraobject->course;
-        $record6->user_id = $cobraobject->user;
-        $record6->id_text = 2;
-        $record6->id_entite_ling = 40738;
+        $record6->userid = $cobraobject->user;
+        $record6->textid = 2;
+        $record6->lingentity = 40738;
         $record6->nbclicsstats = 1;
         $record6->nbclicsglossary = 1;
         $record6->datecreate = time();
         $record6->datemodif = time();
-        $record6->in_glossary = 1;
+        $record6->inglossary = 1;
         $result = $DB->insert_record('cobra_clic', $record6);
     }
 }

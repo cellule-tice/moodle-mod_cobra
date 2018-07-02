@@ -138,9 +138,9 @@ function cobra_is_in_glossary($lingentity, $courseid, $userid = 0) {
     }
     $inglossary = $DB->record_exists('cobra_clic', array(
             'course' => $courseid,
-            'id_entite_ling' => (int)$lingentity,
-            'user_id' => $user,
-            'in_glossary' => 1)
+            'lingentity' => (int)$lingentity,
+            'userid' => $user,
+            'inglossary' => 1)
     );
     return $inglossary === true;
 
@@ -195,14 +195,14 @@ function cobra_record_clic($textid, $lingentityid, $courseid, $userid) {
     global $DB;
 
     $info = $DB->get_record_select('cobra_clic',
-        "course='$courseid' AND user_id='$userid' AND id_text='$textid' AND id_entite_ling='$lingentityid'");
+        "course='$courseid' AND userid='$userid' AND textid='$textid' AND lingentity='$lingentityid'");
     if (!$info) {
         // Insert record.
         $dataobject = new stdClass();
         $dataobject->course = $courseid;
-        $dataobject->user_id = $userid;
-        $dataobject->id_text = $textid;
-        $dataobject->id_entite_ling = $lingentityid;
+        $dataobject->userid = $userid;
+        $dataobject->textid = $textid;
+        $dataobject->lingentity = $lingentityid;
         $dataobject->nbclicsstats = 1;
         $dataobject->nbclicsglossary = 1;
         $dataobject->datecreate = time();
@@ -281,6 +281,13 @@ function cobra_update_text_info_cache($timestamp) {
     return array($new, $updated);
 }
 
+function cobra_fill_cache_tables() {
+    if (!empty(get_config('mod_cobra', 'apikey'))) {
+        cobra_update_glossary_cache(0);
+        cobra_update_text_info_cache(0);
+    }
+}
+
 /**
  * Loads personal glossary entries for current user in current course for current text or all texts
  *
@@ -302,13 +309,13 @@ function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $pa
     } else {
         $initialfilter = '';
     }
-    $dataquery = "SELECT DISTINCT(id_entite_ling) AS lingentity, id_text, entry, type, translations, category, extrainfo
+    $dataquery = "SELECT DISTINCT(ug.lingentity) AS lingentity, textid, entry, type, translations, category, extrainfo
                     FROM {cobra_clic} ug
                     JOIN {cobra_glossary_cache} gc
-                      ON ug.id_entite_ling = gc.lingentity
+                      ON ug.lingentity = gc.lingentity
                    WHERE course = :courseid
-                     AND user_id = :userid
-                     AND in_glossary = 1 " . $initialfilter . "
+                     AND userid = :userid
+                     AND inglossary = 1 " . $initialfilter . "
                 ORDER BY entry";
 
     if ($export) {
@@ -337,12 +344,12 @@ function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $pa
         if (empty($entitiesintext)) {
             $entitiesintext = array();
         }
-        $textquery = "SELECT DISTINCT(id_entite_ling) AS id_entite_ling
+        $textquery = "SELECT DISTINCT(lingentity)
                         FROM {cobra_clic}
                        WHERE course = :courseid
-                             AND user_id = :userid
-                             AND in_glossary = 1
-                             AND id_text = :textid";
+                             AND userid = :userid
+                             AND inglossary = 1
+                             AND textid = :textid";
 
         $textresult = $DB->get_records_sql($textquery, array('courseid' => $courseid, 'userid' => $userid, 'textid' => $textid));
         $textglossarylist = array_keys($textresult);
@@ -384,7 +391,7 @@ function cobra_get_cached_text_title($textid) {
 }
 
 /**
- * Get glossary entry with id_entite_ling = $lingentity
+ * Get glossary entry with lingentity = $lingentity
  * @param int $lingentity
  * @return mixed
  */
@@ -404,11 +411,11 @@ function cobra_get_glossary_entry($lingentity) {
 function cobra_empty_glossary($course, $user) {
     global $DB;
     return $DB->set_field('cobra_clic',
-        'in_glossary',
+        'inglossary',
         '0',
         array(
             'course' => $course,
-            'user_id' => $user,
+            'userid' => $user,
         )
     );
 }
@@ -450,6 +457,30 @@ function cobra_get_valid_entry_types() {
     return array('lemma', 'expression');
 }
 
+/**
+ * Request an api key from CoBRA central repository.
+ *
+ * @return stdClass
+ * @throws cobra_remote_access_exception
+ * @throws dml_exception
+ * @throws moodle_exception
+ */
+function cobra_get_apikey() {
+    global $USER;
+
+    $site = get_site();
+    $email = get_config('moodle', 'supportemail');
+    $params = array(
+        'caller' => $site->shortname,
+        'email' => $email,
+        'contact' => utf8_decode($USER->firstname . ' ' . $USER->lastname),
+        'platformid' => get_config('moodle', 'siteidentifier')
+    );
+
+    $data = cobra_remote_service::call('upgrade_credentials', $params);
+    return json_decode($data);
+}
+
 
 /**
  * Class cobra_remote_service. This class handle calls to remote CoBRA system
@@ -476,11 +507,9 @@ class cobra_remote_service {
         $response = new stdClass();
         $site = get_site();
         $params['caller'] = $site->shortname;
+        $params['platformid'] = get_config('moodle', 'siteidentifier');
+        $params['apikey'] = get_config('mod_cobra', 'apikey');
         $url = get_config('mod_cobra', 'serviceurl');
-        if (PHPUNIT_TEST) {
-            $url = 'http://tice.det.fundp.ac.be/cobra/services/cobrapi-dev.php';
-            $params['caller'] = 'WebCampus-dev';
-        }
 
         $params['from'] = 'moodle';
         if (count($params)) {
@@ -496,7 +525,8 @@ class cobra_remote_service {
         }
 
         if (!in_array($response->responsetype, $validreturntypes)) {
-            print_error('unhandledreturntype', 'cobra', '', $response->responseType);
+            print_error($response);
+            print_error('unhandledreturntype', 'cobra', '', $response->responsetype);
         }
         if ('error' == $response->responsetype) {
             if ($response->errortype == COBRA_ERROR_PLATFORM_NOT_ALLOWED) {

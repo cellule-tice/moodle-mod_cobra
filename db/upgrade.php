@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/mod/cobra/locallib.php');
+
 /**
  * Execute mod_cobra upgrade from the given old version.
  *
@@ -157,5 +159,79 @@ function xmldb_cobra_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2017042829, 'cobra');
     }
 
+    if ($oldversion < 2018061803) {
+        set_config('serviceurl', 'https://webapps.unamur.be/elv/nederlex/services/api.php', 'mod_cobra');
+        // Get new API key for already registered platforms.
+        if (empty(get_config('mod_cobra', 'apikey'))) {
+            $key = cobra_get_apikey();
+            if (!empty($key->apikey)) {
+                set_config('apikey', $key->apikey, 'mod_cobra');
+            }
+        }
+    }
+
+    if ($oldversion < 2018061804) {
+        // Rename some db fields to be compliant with coding conventions and consistency with other modules.
+        $table = new xmldb_table('cobra_clic');
+
+        // First remove associated indexes.
+        $index = new xmldb_index('id_entite_ling', XMLDB_INDEX_NOTUNIQUE, array('id_entite_ling'));
+        // Conditionally launch drop index id_entite_ling.
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
+        $index = new xmldb_index('id_text', XMLDB_INDEX_NOTUNIQUE, array('id_text'));
+        // Conditionally launch drop index id_text.
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
+        $index = new xmldb_index('user_id', XMLDB_INDEX_NOTUNIQUE, array('user_id'));
+        // Conditionally launch drop index user_id.
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
+
+        // Now rename underscored fields.
+        $field = new xmldb_field('id_entite_ling', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, '0', 'course');
+        // Launch rename field id_entite_ling.
+        $dbman->rename_field($table, $field, 'lingentity');
+        $field = new xmldb_field('id_text', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, '0', 'lingentity');
+        // Launch rename field id_text.
+        $dbman->rename_field($table, $field, 'textid');
+        $field = new xmldb_field('user_id', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, '0', 'textid');
+        // Launch rename field user_id.
+        $dbman->rename_field($table, $field, 'userid');
+        $field = new xmldb_field('datecreate', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, '0', 'userid');
+        // Launch rename field datecreate.
+        $dbman->rename_field($table, $field, 'timecreated');
+        $field = new xmldb_field('datemodif', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, '0', 'timecreated');
+        // Launch rename field datemodif.
+        $dbman->rename_field($table, $field, 'timemodified');
+        $field = new xmldb_field('in_glossary', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, '0', 'timemodified');
+        // Launch rename field datemodif.
+        $dbman->rename_field($table, $field, 'inglossary');
+
+        // Finally recreate indexes.
+        $index = new xmldb_index('lingentity', XMLDB_INDEX_NOTUNIQUE, array('lingentity'));
+        // Conditionally launch add index lingentity.
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+        $index = new xmldb_index('textid', XMLDB_INDEX_NOTUNIQUE, array('lingentity'));
+        // Conditionally launch add index lingentity.
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+        $index = new xmldb_index('userid', XMLDB_INDEX_NOTUNIQUE, array('lingentity'));
+        // Conditionally launch add index lingentity.
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2018061804, 'cobra');
+
+    }
     return true;
+
 }

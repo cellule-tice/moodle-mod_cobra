@@ -274,7 +274,7 @@ function cobra_reset_userdata($data) {
         );
     } else if (!empty($data->reset_cobra_personal_glossaries)) {
         $sql = "UPDATE {cobra_clic}
-                   SET in_glossary = 0
+                   SET inglossary = 0
                  WHERE course=:course";
 
         $params = array('course' => $data->courseid);

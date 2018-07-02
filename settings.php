@@ -27,11 +27,21 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
     require_once(__DIR__ . '/locallib.php');
-
+    $PAGE->requires->js_call_amd('mod_cobra/cobra', 'demo_api_key');
     $settings->add(new admin_setting_heading('cobra_settings_general', get_string('generalconfig', 'cobra'), ''));
 
     $settings->add(new admin_setting_configtext('mod_cobra/serviceurl', get_string('cobraserviceurl', 'cobra'),
-        '', 'https://webapps.unamur.be/elv/nederlex/services/cobrapi_new.php', PARAM_URL, 60));
+        '', 'https://webapps.unamur.be/elv/nederlex/services/api.php', PARAM_URL, 40));
+
+    if (empty(get_config('mod_cobra', 'apikey'))) {
+        $apikeymessage = '<button type="button" class="btn btn-primary" id="requestapikey">Request demo key</button>';
+    } else {
+        $apikeymessage = '';
+    }
+    $setting = new admin_setting_configtext('mod_cobra/apikey', 'apikey',
+        $apikeymessage, '', PARAM_RAW, 60);
+    $setting->set_updatedcallback('cobra_fill_cache_tables');
+    $settings->add($setting);
 
     $settings->add(new admin_setting_heading('cobra_settings_display', get_string('displaysettings', 'cobra'), ''));
 

@@ -30,5 +30,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 function xmldb_cobra_install() {
 
+    set_config('serviceurl', 'https://webapps.unamur.be/elv/nederlex/services/api.php', 'mod_cobra');
     return true;
 }

@@ -93,6 +93,8 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
             $errors[] = $e->debuginfo;
         } catch (cobra_remote_access_exception $e) {
             mtrace("Unable to test remote services! Your platform is not registered with CoBRA");
+            $site = get_site();
+            mtrace($site->shortname);
         }
         $this->assertEmpty($errors, implode('\n', $errors));
     }
@@ -110,9 +112,9 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
         $generator->init_local_data($this->cobra);
         $glossaryentrycount = $DB->count_records('cobra_clic',
                 array(
-                    'user_id' => $this->cobra->user,
-                    'id_text' => $this->cobra->text,
-                    'in_glossary' => 1
+                    'userid' => $this->cobra->user,
+                    'textid' => $this->cobra->text,
+                    'inglossary' => 1
                 )
         );
 
@@ -124,9 +126,9 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
             $result = external_api::clean_returnvalue($addtoglossarydescription, $result);
             $newglossaryentrycount = $DB->count_records('cobra_clic',
                     array(
-                        'user_id' => $this->cobra->user,
-                        'id_text' => $this->cobra->text,
-                        'in_glossary' => 1
+                        'userid' => $this->cobra->user,
+                        'textid' => $this->cobra->text,
+                        'inglossary' => 1
                     )
             );
             $this->assertEquals($glossaryentrycount + 1, $newglossaryentrycount);
@@ -148,7 +150,7 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
 
         $generator->init_local_data($this->cobra);
         $glossaryentrycount = $DB->count_records('cobra_clic',
-                array('user_id' => $this->cobra->user, 'id_text' => $this->cobra->text, 'in_glossary' => 1));
+                array('userid' => $this->cobra->user, 'textid' => $this->cobra->text, 'inglossary' => 1));
 
         $errors = array();
         try {
@@ -157,7 +159,7 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
 
             $result = external_api::clean_returnvalue($removefromglossarydescription, $result);
             $newglossaryentrycount = $DB->count_records('cobra_clic',
-                    array('user_id' => $this->cobra->user, 'id_text' => $this->cobra->text, 'in_glossary' => 1));
+                    array('userid' => $this->cobra->user, 'textid' => $this->cobra->text, 'inglossary' => 1));
             $this->assertEquals($glossaryentrycount - 1, $newglossaryentrycount);
         } catch (invalid_response_exception $e) {
             $errors[] = $e->debuginfo;

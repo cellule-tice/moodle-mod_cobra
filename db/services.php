@@ -87,6 +87,14 @@ $functions = array(
         'classpath' => 'mod/cobra/externallib.php',
         'description' => 'Collects the list of texts for given collection',
         'type' => 'read'
+    ),
+    'mod_cobra_get_demo_api_key' => array(
+        'classname' => 'mod_cobra_external',
+        'methodname' => 'get_demo_api_key',
+        'classpath' => 'mod/cobra/externallib.php',
+        'description' => 'Request a demo API key from Cobra server',
+        'type' => 'write',
+        'ajax' => true
     )
 );
 

@@ -219,7 +219,22 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                         }
                     }).fail(notification.exception);
             });
-        }
+        },
+        demo_api_key: function() {
+            $('#requestapikey').on('click', function() {
+                var promises = ajax.call([{
+                    methodname: 'mod_cobra_get_demo_api_key',
+                    args: {
+                    }
+                }]);
+                promises[0]
+                    .done(function(response) {
+                        $('#id_s_mod_cobra_apikey').val(response.apikey);
+
+                    }).fail(notification.exception);
+                $(this).prop('disabled', true);
+            });
+        },
     };
 
     function displayDetails(conceptId, isExpression) {

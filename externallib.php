@@ -301,13 +301,13 @@ class mod_cobra_external extends external_api {
                 )
         );
         $result = (int)$DB->set_field('cobra_clic',
-            'in_glossary',
+            'inglossary',
             '1',
             array(
                 'course' => $courseid,
-                'user_id' => $userid,
-                'id_text' => $textid,
-                'id_entite_ling' => $lingentity
+                'userid' => $userid,
+                'textid' => $textid,
+                'lingentity' => $lingentity
             )
         );
 
@@ -354,12 +354,12 @@ class mod_cobra_external extends external_api {
                 )
         );
         $result = (int)$DB->set_field('cobra_clic',
-            'in_glossary',
+            'inglossary',
             '0',
             array(
                 'course' => $courseid,
-                'user_id' => $userid,
-                'id_entite_ling' => $lingentity
+                'userid' => $userid,
+                'lingentity' => $lingentity
             )
         );
         if ($result) {
@@ -535,6 +535,50 @@ class mod_cobra_external extends external_api {
                         )
                     )
                 ),
+                'warnings' => new external_warnings()
+            )
+        );
+    }
+
+    /**
+     * Describes the parameters for get_demo_api_key
+     * @return external_function_parameters
+     */
+    public static function get_demo_api_key_parameters() {
+        return new external_function_parameters(
+            array(
+            )
+        );
+    }
+
+    /**
+     * Gets a demo api key for testing purpose.
+     * @return stdClass
+     * @throws cobra_remote_access_exception
+     * @throws invalid_parameter_exception
+     */
+    public static function get_demo_api_key() {
+        global $USER;
+        $site = get_site();
+        $email = get_config('moodle', 'supportemail');
+        $params = array(
+            'caller' => $site->shortname,
+            'email' => $email,
+            'contact' => utf8_decode($USER->firstname . ' ' . $USER->lastname),
+            'platformid' => get_config('moodle', 'siteidentifier')
+        );
+        $data = cobra_remote_service::call('get_demo_api_key', $params);
+        return json_decode($data);
+    }
+
+    /**
+     * Describes the get_demo_api_key return value
+     * @return external_single_structure
+     */
+    public static function get_demo_api_key_returns() {
+        return new external_single_structure(
+            array(
+                'apikey' => new external_value(PARAM_RAW, 'Demo API key'),
                 'warnings' => new external_warnings()
             )
         );
