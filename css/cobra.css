@@ -480,3 +480,7 @@ p {
 .myglossaryform .emptyglossary {
     margin-left: .5rem;
 }
+
+#glossary table td {
+    border-top: none;
+}
