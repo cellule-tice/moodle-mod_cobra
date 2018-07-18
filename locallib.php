@@ -187,11 +187,12 @@ function cobra_get_texts_options_list($collection) {
  * @param int $lingentityid identifier of the linguistic entity that was clicked
  * @param int $courseid current course id
  * @param int $userid current user id
+ * @param int $cobraid module instance id
  * @return bool|int
  * @throws coding_exception
  * @throws dml_missing_record_exception
  */
-function cobra_record_clic($textid, $lingentityid, $courseid, $userid) {
+function cobra_record_clic($textid, $lingentityid, $courseid, $userid, $cobraid) {
     global $DB;
 
     $info = $DB->get_record_select('cobra_clic',
@@ -199,14 +200,15 @@ function cobra_record_clic($textid, $lingentityid, $courseid, $userid) {
     if (!$info) {
         // Insert record.
         $dataobject = new stdClass();
+        $dataobject->cobra = $cobraid;
         $dataobject->course = $courseid;
         $dataobject->userid = $userid;
         $dataobject->textid = $textid;
         $dataobject->lingentity = $lingentityid;
         $dataobject->nbclicsstats = 1;
         $dataobject->nbclicsglossary = 1;
-        $dataobject->datecreate = time();
-        $dataobject->datemodif = time();
+        $dataobject->timecreated = time();
+        $dataobject->timemodified = time();
         $result = $DB->insert_record('cobra_clic', $dataobject);
     } else {
         // Update record.
@@ -214,7 +216,7 @@ function cobra_record_clic($textid, $lingentityid, $courseid, $userid) {
         $dataobject->id = $info->id;
         $dataobject->nbclicsstats = ($info->nbclicsstats + 1);
         $dataobject->nbclicsglossary = ($info->nbclicsglossary + 1);
-        $dataobject->datemodif = time();
+        $dataobject->timemodified = time();
         $result = $DB->update_record('cobra_clic', $dataobject);
     }
 
@@ -281,6 +283,9 @@ function cobra_update_text_info_cache($timestamp) {
     return array($new, $updated);
 }
 
+/**
+ * Fill in cached text info and glossary entries.
+ */
 function cobra_fill_cache_tables() {
     if (!empty(get_config('mod_cobra', 'apikey'))) {
         cobra_update_glossary_cache(0);

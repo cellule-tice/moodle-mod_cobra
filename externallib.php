@@ -127,7 +127,7 @@ class mod_cobra_external extends external_api {
 
         if ($jsonobj->encodeclic) {
             cobra_record_clic($jsonobj->text, $dataobj->technicalinfo->entity,
-                    $jsonobj->course, $jsonobj->user);
+                    $jsonobj->course, $jsonobj->user, $jsonobj->id);
         }
 
         $dataobj->technicalinfo->inglossary = cobra_is_in_glossary($dataobj->data->entity,
@@ -254,7 +254,7 @@ class mod_cobra_external extends external_api {
                 'lingentity' => new external_value(PARAM_INT, 'Id of lingentity'),
                 'textid' => new external_value(PARAM_INT, 'Id of current text'),
                 'courseid' => new external_value(PARAM_INT, 'Id of current course'),
-                'userid' => new external_value(PARAM_INT, 'Id of current user'),
+                'userid' => new external_value(PARAM_INT, 'Id of current user')
             )
         );
     }
