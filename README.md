@@ -1,7 +1,9 @@
 ## License ##
 
 CoBRA module for Moodle
+
 Copyright (C) 2016 onwards University of Namur - Cellule TICE
+
 Authors: Jean-Roch Meurisse and Laurence Dumortier
 
 This program is free software; you can redistribute it and/or modify
@@ -28,12 +30,15 @@ Available CoBRA-formatted texts are hosted on a dedicated server and are loaded 
 
 ## Access ##
 A demo access to CoBRA-formatted texts with an English and a Dutch text is available for testing purposes. (See Installation section for instructions on how you can get a demo key)
-Note that the full CoBRA text repository is not in open access, some resources (dictionaries, texts) being subject to copyright. 
+
+Note that access to the full CoBRA text repository is free of charge but not open, some resources (dictionaries, texts) being subject to copyright. 
+
+In order to access the full CoBRA text repository, a written agreement with UNamur is required, that specifies the user's rights. (Contact guy.deville@unamur.be).
 
 
 ## Required version of Moodle ##
 
-This version works with Moodle 3.3 and above.
+This version works with Moodle 3.5 and above.
 
 ## Installation ##
 ============
@@ -42,4 +47,3 @@ This version works with Moodle 3.3 and above.
  4. Visit 'Site administration' -> 'Notifications' to install.
  5. On the settings page, click "Request Demo key" to be able to test the plugin.
  5. Put Moodle out of Maintenance Mode.
- 6. Contact elex@unamur.be with the IP address of your server and the shortname of your Moodle instance to be allowed to access the api.
