@@ -1,4 +1,8 @@
-<XMLDB xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" PATH="mod/cobra/db" VERSION="20171019" COMMENT="XMLDB file for Moodle mod/cobra" xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/cobra/db" VERSION="20180710" COMMENT="XMLDB file for Moodle mod/cobra"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
   <TABLES>
     <TABLE NAME="cobra" COMMENT="Main CoBRA table recording resource instances">
       <FIELDS>
@@ -31,14 +35,15 @@
     <TABLE NAME="cobra_clic" COMMENT="cobra clics details per user">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="cobra" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course cobra activity belongs to"/>
         <FIELD NAME="lingentity" TYPE="int" LENGTH="11" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="textid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="11" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="nbclicsstats" TYPE="int" LENGTH="11" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="nbclicsglossary" TYPE="int" LENGTH="11" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="datecreate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="datemodif" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="inglossary" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="flag stating whether this element is part of userid personal glossary"/>
       </FIELDS>
       <KEYS>
@@ -49,6 +54,7 @@
         <INDEX NAME="lingentity" UNIQUE="false" FIELDS="lingentity"/>
         <INDEX NAME="textid" UNIQUE="false" FIELDS="textid"/>
         <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+        <INDEX NAME="cobra" UNIQUE="false" FIELDS="cobra"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="cobra_glossary_cache" COMMENT="Default comment for the table, please edit me">

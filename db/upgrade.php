@@ -159,7 +159,7 @@ function xmldb_cobra_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2017042829, 'cobra');
     }
 
-    if ($oldversion < 2018061803) {
+    if ($oldversion < 2018061900) {
         set_config('serviceurl', 'https://webapps.unamur.be/elv/nederlex/services/api.php', 'mod_cobra');
         // Get new API key for already registered platforms.
         if (empty(get_config('mod_cobra', 'apikey'))) {
@@ -168,9 +168,10 @@ function xmldb_cobra_upgrade($oldversion) {
                 set_config('apikey', $key->apikey, 'mod_cobra');
             }
         }
+        upgrade_mod_savepoint(true, 2018061900, 'cobra');
     }
 
-    if ($oldversion < 2018061804) {
+    if ($oldversion < 2018062400) {
         // Rename some db fields to be compliant with coding conventions and consistency with other modules.
         $table = new xmldb_table('cobra_clic');
 
@@ -228,10 +229,75 @@ function xmldb_cobra_upgrade($oldversion) {
             $dbman->add_index($table, $index);
         }
 
+        // Define field cobra to be added to cobra_clic and associated index.
+        $table = new xmldb_table('cobra_clic');
+        $field = new xmldb_field('cobra', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'id');
+
+        // Conditionally launch add field cobra.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $index = new xmldb_index('cobra', XMLDB_INDEX_NOTUNIQUE, array('cobra'));
+
+        // Conditionally launch add index cobra.
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Fill in cobra field in cobra_clic table
+        $instances = $DB->get_records('cobra');
+        foreach ($instances as $instance) {
+            $params = [
+                'cobraid' => $instance->id,
+                'course' => $instance->course,
+                'textid' => $instance->text
+            ];
+            $update = "UPDATE {cobra_clic}
+                          SET cobra = :cobraid
+                        WHERE course = :course
+                          AND textid = :textid";
+            $DB->execute($update, $params);
+        }
+
+        // Delete legacy tables glossaire, ordre_concordances, prefs, registered_collections, texts_config
+        if ($dbman->table_exists('cobra_glossaire'))  {
+            $table = new xmldb_table('cobra_glossaire');
+            $dbman->drop_table($table);
+        }
+        if ($dbman->table_exists('cobra_ordre_concordances'))  {
+            $table = new xmldb_table('cobra_ordre_concordances');
+            $dbman->drop_table($table);
+        }
+        if ($dbman->table_exists('cobra_prefs'))  {
+            $table = new xmldb_table('cobra_prefs');
+            $dbman->drop_table($table);
+        }
+        if ($dbman->table_exists('cobra_registered_collections'))  {
+            $table = new xmldb_table('cobra_registered_collections');
+            $dbman->drop_table($table);
+        }
+        if ($dbman->table_exists('texts_config'))  {
+            $table = new xmldb_table('texts_config');
+            $dbman->drop_table($table);
+        }
+
         // Cobra savepoint reached.
-        upgrade_mod_savepoint(true, 2018061804, 'cobra');
+        upgrade_mod_savepoint(true, 2018062400, 'cobra');
 
     }
+    if ($oldversion < 2018071800) {
+
+        $DB->execute('TRUNCATE TABLE {cobra_glossary_cache}');
+        $DB->execute('TRUNCATE TABLE {cobra_text_info_cache}');
+        cobra_update_glossary_cache(0);
+        cobra_update_text_info_cache(0);
+        set_config('lastglossaryupdate', time(), 'mod_cobra');
+        set_config('lasttextinfoupdate', time(), 'mod_cobra');
+        // Cobra savepoint reached.
+        upgrade_mod_savepoint(true, 2018071800, 'cobra');
+    }
+
     return true;
 
 }
