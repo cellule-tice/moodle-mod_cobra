@@ -72,74 +72,86 @@ class mod_cobra_generator extends testing_module_generator {
     }
 
     /**
-     * Add data for testing purpose
+     * Add glossary and text data for testing purpose
      *
      * @param stdClass $cobraobject
      * @return void
      */
-    public function init_local_data($cobraobject) {
+    public function init_local_data() {
         global $DB;
         $record1 = new stdClass();
-        $record1->lingentity = 34347;
-        $record1->entry = 'friend';
+        $record1->lingentity = 36638;
+        $record1->entry = 'language';
         $record1->type = 'lemma';
-        $record1->translations = 'ami';
+        $record1->translations = 'langue';
         $record1->category = 'n';
-        $record1->extrainfo = 'friends';
+        $record1->extrainfo = 'languages';
         $DB->insert_record('cobra_glossary_cache', $record1);
-
+      
         $record2 = new stdClass();
-        $record2->course = $cobraobject->course;
-        $record2->userid = $cobraobject->user;
-        $record2->textid = $cobraobject->text;
-        $record2->lingentity = 34347;
-        $record2->nbclicsstats = 1;
-        $record2->nbclicsglossary = 1;
-        $record2->datecreate = time();
-        $record2->datemodif = time();
-        $record2->inglossary = 0;
-        $result = $DB->insert_record('cobra_clic', $record2);
+        $record2->lingentity = 147302;
+        $record2->entry = 'as far as is concerned';
+        $record2->type = 'expression';
+        $record2->translations = 'en ce qui concerne';
+        $record2->category = 'conj';
+        $record2->extrainfo = '';
+        $DB->insert_record('cobra_glossary_cache', $record2);
 
         $record3 = new stdClass();
-        $record3->lingentity = 27305;
-        $record3->entry = 'help';
+        $record3->lingentity = 36515;
+        $record3->entry = 'start';
         $record3->type = 'lemma';
-        $record3->translations = 'aider';
+        $record3->translations = 'commencer, débuter, démarrer, lancer';
         $record3->category = 'v';
-        $record3->extrainfo = 'helped, helped';
+        $record3->extrainfo = 'started, started';
         $DB->insert_record('cobra_glossary_cache', $record3);
 
         $record4 = new stdClass();
-        $record4->course = $cobraobject->course;
-        $record4->userid = $cobraobject->user;
-        $record4->textid = $cobraobject->text;
-        $record4->lingentity = 27305;
-        $record4->nbclicsstats = 1;
-        $record4->nbclicsglossary = 1;
-        $record4->datecreate = time();
-        $record4->datemodif = time();
-        $record4->inglossary = 1;
-        $result = $DB->insert_record('cobra_clic', $record4);
+        $record4->id = 2139;
+        $record4->title = 'Best to learn a new language before age of 10';
+        $record4->collection = 21;
+        $DB->insert_record_raw('cobra_text_info_cache', $record4, false, false, true);
+    }
 
-        $record5 = new stdClass();
-        $record5->lingentity = 40738;
-        $record5->entry = 'long';
-        $record5->type = 'lemma';
-        $record5->translations = 'depuis longtemps, longtemps';
-        $record5->category = 'adv';
-        $record5->extrainfo = 'longer, longest';
-        $DB->insert_record('cobra_glossary_cache', $record5);
+    public function init_user_data($userid, $cobraobject) {
+        global $DB;
+        $record1 = new stdClass();
+        $record1->cobra = $cobraobject->id;
+        $record1->course = $cobraobject->course;
+        $record1->userid = $userid;
+        $record1->textid = $cobraobject->text;
+        $record1->lingentity = 36638;
+        $record1->nbclicsstats = 1;
+        $record1->nbclicsglossary = 1;
+        $record1->timecreated = time();
+        $record1->timemodified = time();
+        $record1->inglossary = 0;
+        $DB->insert_record('cobra_clic', $record1);
 
-        $record6 = new stdClass();
-        $record6->course = $cobraobject->course;
-        $record6->userid = $cobraobject->user;
-        $record6->textid = 2;
-        $record6->lingentity = 40738;
-        $record6->nbclicsstats = 1;
-        $record6->nbclicsglossary = 1;
-        $record6->datecreate = time();
-        $record6->datemodif = time();
-        $record6->inglossary = 1;
-        $result = $DB->insert_record('cobra_clic', $record6);
+        $record2 = new stdClass();
+        $record2->cobra = $cobraobject->id;
+        $record2->course = $cobraobject->course;
+        $record2->userid = $userid;
+        $record2->textid = $cobraobject->text;
+        $record2->lingentity = 147302;
+        $record2->nbclicsstats = 1;
+        $record2->nbclicsglossary = 1;
+        $record2->timecreated = time();
+        $record2->timemodified = time();
+        $record2->inglossary = 1;
+        $DB->insert_record('cobra_clic', $record2);
+
+        $record3 = new stdClass();
+        $record3->cobra = $cobraobject->id;
+        $record3->course = $cobraobject->course;
+        $record3->userid = $userid;
+        $record3->textid = $cobraobject->text;
+        $record3->lingentity = 36515;
+        $record3->nbclicsstats = 1;
+        $record3->nbclicsglossary = 1;
+        $record3->timecreated = time();
+        $record3->timemodified = time();
+        $record3->inglossary = 1;
+        $DB->insert_record('cobra_clic', $record3);
     }
 }

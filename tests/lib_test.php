@@ -28,6 +28,8 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines PHPUnit lib testcase.
+ *
+ * @group mod_cobra
  */
 class mod_cobra_lib_testcase extends advanced_testcase {
 

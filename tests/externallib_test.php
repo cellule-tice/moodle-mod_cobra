@@ -31,6 +31,8 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 /**
  * Defines PHPUnit cobra external testcase.
+ *
+ * @group mod_cobra
  */
 class mod_cobra_external_testcase extends externallib_advanced_testcase {
 
@@ -42,7 +44,6 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
 
         require_once($CFG->dirroot . '/mod/cobra/externallib.php');
         $this->resetAfterTest();
-        $this->setAdminUser();
 
         // Setup test data.
         $this->course = $this->getDataGenerator()->create_course();
@@ -52,13 +53,10 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
 
         // Create users.
         $this->student = self::getDataGenerator()->create_user();
-        $this->teacher = self::getDataGenerator()->create_user();
 
         // Users enrolments.
         $this->studentrole = $DB->get_record('role', array('shortname' => 'student'));
-        $this->teacherrole = $DB->get_record('role', array('shortname' => 'editingteacher'));
         $this->getDataGenerator()->enrol_user($this->student->id, $this->course->id, $this->studentrole->id, 'manual');
-        $this->getDataGenerator()->enrol_user($this->teacher->id, $this->course->id, $this->teacherrole->id, 'manual');
     }
 
     public function test_remote_services() {
@@ -109,10 +107,11 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
 
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_cobra');
 
-        $generator->init_local_data($this->cobra);
+        $generator->init_local_data();
+        $generator->init_user_data($this->student->id, $this->cobra);
         $glossaryentrycount = $DB->count_records('cobra_clic',
                 array(
-                    'userid' => $this->cobra->user,
+                    'userid' => $this->student->id,
                     'textid' => $this->cobra->text,
                     'inglossary' => 1
                 )
@@ -121,12 +120,13 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
         $errors = array();
         try {
             $addtoglossarydescription = mod_cobra_external::add_to_glossary_returns();
-            $result = mod_cobra_external::add_to_glossary(34347, $this->cobra->text, $this->cobra->course, $this->cobra->user);
+
+            $result = mod_cobra_external::add_to_glossary(36638, $this->cobra->text, $this->cobra->course, $this->student->id);
 
             $result = external_api::clean_returnvalue($addtoglossarydescription, $result);
             $newglossaryentrycount = $DB->count_records('cobra_clic',
                     array(
-                        'userid' => $this->cobra->user,
+                        'userid' => $this->student->id,
                         'textid' => $this->cobra->text,
                         'inglossary' => 1
                     )
@@ -144,22 +144,22 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
 
         self::setUser($this->student);
         $this->cobra->encodeclic = true;
-        $this->cobra->user = $this->student->id;
 
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_cobra');
 
-        $generator->init_local_data($this->cobra);
+        $generator->init_local_data();
+        $generator->init_user_data($this->student->id, $this->cobra);
         $glossaryentrycount = $DB->count_records('cobra_clic',
-                array('userid' => $this->cobra->user, 'textid' => $this->cobra->text, 'inglossary' => 1));
+                array('userid' => $this->student->id, 'textid' => $this->cobra->text, 'inglossary' => 1));
 
         $errors = array();
         try {
             $removefromglossarydescription = mod_cobra_external::remove_from_glossary_returns();
-            $result = mod_cobra_external::remove_from_glossary(27305, $this->cobra->course, $this->cobra->user);
+            $result = mod_cobra_external::remove_from_glossary(36515, $this->cobra->course, $this->student->id);
 
             $result = external_api::clean_returnvalue($removefromglossarydescription, $result);
             $newglossaryentrycount = $DB->count_records('cobra_clic',
-                    array('userid' => $this->cobra->user, 'textid' => $this->cobra->text, 'inglossary' => 1));
+                    array('userid' => $this->student->id, 'textid' => $this->cobra->text, 'inglossary' => 1));
             $this->assertEquals($glossaryentrycount - 1, $newglossaryentrycount);
         } catch (invalid_response_exception $e) {
             $errors[] = $e->debuginfo;

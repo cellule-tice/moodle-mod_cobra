@@ -27,6 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines PHPUnit cobra_generator testcase.
+ *
+ * @group mod_cobra
  */
 class mod_cobra_generator_testcase extends advanced_testcase {
     public function test_generator() {

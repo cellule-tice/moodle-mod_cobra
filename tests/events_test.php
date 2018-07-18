@@ -27,6 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Defines PHPUnit cobra_events testcase.
+ *
+ * @group mod_cobra
  */
 class mod_cobra_event_testcase extends advanced_testcase {
 
