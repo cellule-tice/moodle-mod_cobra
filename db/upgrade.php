@@ -245,7 +245,7 @@ function xmldb_cobra_upgrade($oldversion) {
             $dbman->add_index($table, $index);
         }
 
-        // Fill in cobra field in cobra_clic table
+        // Fill in cobra field in cobra_clic table.
         $instances = $DB->get_records('cobra');
         foreach ($instances as $instance) {
             $params = [
@@ -260,24 +260,24 @@ function xmldb_cobra_upgrade($oldversion) {
             $DB->execute($update, $params);
         }
 
-        // Delete legacy tables glossaire, ordre_concordances, prefs, registered_collections, texts_config
-        if ($dbman->table_exists('cobra_glossaire'))  {
+        // Delete legacy tables glossaire, ordre_concordances, prefs, registered_collections, texts_config.
+        if ($dbman->table_exists('cobra_glossaire')) {
             $table = new xmldb_table('cobra_glossaire');
             $dbman->drop_table($table);
         }
-        if ($dbman->table_exists('cobra_ordre_concordances'))  {
+        if ($dbman->table_exists('cobra_ordre_concordances')) {
             $table = new xmldb_table('cobra_ordre_concordances');
             $dbman->drop_table($table);
         }
-        if ($dbman->table_exists('cobra_prefs'))  {
+        if ($dbman->table_exists('cobra_prefs')) {
             $table = new xmldb_table('cobra_prefs');
             $dbman->drop_table($table);
         }
-        if ($dbman->table_exists('cobra_registered_collections'))  {
+        if ($dbman->table_exists('cobra_registered_collections')) {
             $table = new xmldb_table('cobra_registered_collections');
             $dbman->drop_table($table);
         }
-        if ($dbman->table_exists('texts_config'))  {
+        if ($dbman->table_exists('texts_config')) {
             $table = new xmldb_table('texts_config');
             $dbman->drop_table($table);
         }

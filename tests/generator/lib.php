@@ -73,8 +73,6 @@ class mod_cobra_generator extends testing_module_generator {
 
     /**
      * Add glossary and text data for testing purpose
-     *
-     * @param stdClass $cobraobject
      * @return void
      */
     public function init_local_data() {
@@ -87,7 +85,7 @@ class mod_cobra_generator extends testing_module_generator {
         $record1->category = 'n';
         $record1->extrainfo = 'languages';
         $DB->insert_record('cobra_glossary_cache', $record1);
-      
+
         $record2 = new stdClass();
         $record2->lingentity = 147302;
         $record2->entry = 'as far as is concerned';
@@ -113,6 +111,13 @@ class mod_cobra_generator extends testing_module_generator {
         $DB->insert_record_raw('cobra_text_info_cache', $record4, false, false, true);
     }
 
+    /**
+     * Add user data for testing purposes.
+     *
+     * @param int $userid the userid to insert data for
+     * @param stdClass $cobraobject the related cobra instance object
+     * @return void
+     */
     public function init_user_data($userid, $cobraobject) {
         global $DB;
         $record1 = new stdClass();

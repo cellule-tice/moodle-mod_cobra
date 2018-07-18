@@ -61,8 +61,6 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $this->course = $this->getDataGenerator()->create_course();
         $this->cobra1 = $this->getDataGenerator()->create_module('cobra', array('course' => $this->course->id));
         $this->cobra2 = $this->getDataGenerator()->create_module('cobra', array('course' => $this->course->id));
-        //$this->context = context_module::instance($this->cobra1->cmid);
-        //$this->cm = get_coursemodule_from_instance('cobra', $this->cobra1->id);
 
         // Create a student who will add entries to their personal glossary.
         $this->student1 = $this->getDataGenerator()->create_user();
@@ -73,9 +71,7 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
 
         self::setUser($this->student1);
         $this->cobra1->encodeclic = true;
-        //$this->cobra1->user = $this->student1->id;
         $this->cobra2->encodeclic = true;
-        //$this->cobra2->user = $this->student1->id;
 
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_cobra');
 
@@ -187,7 +183,8 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
     public function test_delete_data_for_all_users_in_context() {
         global $DB;
 
-        // Before deletion, we should have 12 entries in cobra_clic tabel, 6 for student1 (3 cobra1, 3 cobra2) and 6 for student2 (same).
+        // Before deletion, we should have 12 entries in cobra_clic table,
+        // 6 for student1 (3 cobra1, 3 cobra2) and 6 for student2 (same).
         $this->assertEquals(12, $DB->count_records('cobra_clic'));
         $this->assertEquals(6, $DB->count_records('cobra_clic', ['userid' => $this->student1->id]));
         $this->assertEquals(6, $DB->count_records('cobra_clic', ['userid' => $this->student2->id]));
@@ -200,7 +197,8 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $cm = get_coursemodule_from_instance('cobra', $this->cobra1->id);
         $cmcontext = context_module::instance($cm->id);
         provider::delete_data_for_all_users_in_context($cmcontext);
-        // After deletion, there should be no items for cobra1 but still 3 items for student1 in cobra2 and 3 items for student2 in cobra2.
+        // After deletion, there should be no items for cobra1
+        // but still 3 items for student1 in cobra2 and 3 items for student2 in cobra2.
         $this->assertEquals(0, $DB->count_records('cobra_clic', ['cobra' => $this->cobra1->id]));
         $this->assertEquals(3, $DB->count_records('cobra_clic', ['userid' => $this->student1->id, 'cobra' => $this->cobra2->id]));
         $this->assertEquals(3, $DB->count_records('cobra_clic', ['userid' => $this->student2->id, 'cobra' => $this->cobra2->id]));
