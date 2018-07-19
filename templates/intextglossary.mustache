@@ -15,14 +15,38 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template local_hackfest/index_page
+    @template mod_cobra/intext_glossary
 
-    Starting point for an awesome template.
+    Example context (json):
+    {
+        "entries: [
+            {
+                "id": "34423",
+                "lingentity": "34423",
+                "entry": "age",
+                "type": "lemma",
+                "translations": "âge",
+                "category": "n",
+                "extrainfo": "ages",
+                "fromThisText": "1"
+            },
+            {
+                "id": "29345",
+                "lingentity": "29345",
+                "entry": "suggest",
+                "type": "lemma",
+                "translations": "proposer, suggérer",
+                "category": "v",
+                "extrainfo": "suggested, suggested",
+                "fromThisText": "0"
+            }
+        ]
+    }
 
 }}
 <div id="glossary" >
     <a class="righty" title="{{#str}}showfullglossary, mod_cobra{{/str}}" href="myglossary.php?id={{course}}">{{#str}}myglossary, mod_cobra{{/str}}</a>
-    <table class="table table-condensed" width="100%">
+    <table class="table table-condensed">
         <thead>
 
         <tr class="headerX">
@@ -52,7 +76,9 @@
             </tr>
         {{/entries}}
         {{^entries}}
-            <td colspan="5" style="text-align:center;">{{#str}}glossaryemptyfortext, mod_cobra{{/str}}</td>
+            <tr>
+                <td colspan="5" style="text-align:center;">{{#str}}glossaryemptyfortext, mod_cobra{{/str}}</td>
+            </tr>
         {{/entries}}
         </tbody>
     </table>

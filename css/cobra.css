@@ -120,6 +120,7 @@
 .glossaryadd,
 .glossaryremove,
 .gglossaryremove,
+.inglossary,
 .glossaryremove img.icon {
     cursor: pointer;
     height: 20px;

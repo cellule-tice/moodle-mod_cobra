@@ -15,10 +15,17 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    placeholder for template description. Ex: Page header.
+    @template mod_cobra/entrydetails
+
+    Example context (json):
+    {
+        "lingentity": "28157",
+        "iconclass": "inglossary",
+        "add": "false"
+    }
 }}
 
 <th class="glossaryIcon">
     <span id="currentlingentity" class="hidden">{{lingentity}}</span>
-    <img height="20px" class="{{iconclass}}" src="pix/{{iconclass}}.png" title="{{#add}}{{#str}} addtomyglossary, mod_cobra{{/str}}{{/add}}{{^add}}{{#str}}inmyglossary, mod_cobra{{/str}}{{/add}}"/>
+    <img class="{{iconclass}}" src="pix/{{iconclass}}.png" title="{{#add}}{{#str}} addtomyglossary, mod_cobra{{/str}}{{/add}}{{^add}}{{#str}}inmyglossary, mod_cobra{{/str}}{{/add}}"/>
 </th>

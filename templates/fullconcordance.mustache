@@ -1,3 +1,32 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+
+{{!
+    @template mod_cobra/fullconcordance
+
+
+    Example context (json):
+    {
+        "source": "The right thing to do is to ignore the gossip mong…tarnishing <strong>people's</strong> reputations.",
+        "target": "La chose correcte à faire, ce n'est pas de regarde…ent la réputation des <strong>personnes</strong>.",
+        "reference": "Débats du Parlement canadien - Séance du 09.10.1997",
+        "type": "semi-technique"
+    }
+}}
 <table id="displayOnClic" class="entryTable">
     <tbody>
         <tr id="displayOnClic_row1">
@@ -6,10 +35,11 @@
                 <td style="" class="concordance">{{{target}}}</td>
             {{/bilingual}}
             {{^bilingual}}
-                <td class="concordance" colspan="2">{{{source}}}</td>
+                <td class="concordance">{{{source}}}</td>
             {{/bilingual}}
         </tr>
         <tr id="displayOnClic_row2">
-            <td colspan="2" class="reference">{{#str}}source, mod_cobra{{/str}}&nbsp;: <em>{{{reference}}}</em></td>
+            <td {{#bilingual}}colspan="2"{{/bilingual}} class="reference">{{#str}}source, mod_cobra{{/str}}&nbsp;: <em>{{{reference}}}</em>
+        </td>
 </tr>
 </tbody></table>

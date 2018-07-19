@@ -1,17 +1,74 @@
-<table id="displayOnClic" class="entryTable" width="100%">
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_cobra/entrydetails
+
+    Example context (json):
+    {
+        "bilingual": "true",
+        "data" : {
+            "abbreviations": "",
+            "article": "",
+            "category": "nom commun",
+            "concordances": [
+                {
+                    "source": "<strong><a class="cc_source" name="44803">People</a></strong> are starving.",
+                    "target": "Les <strong>gens</strong> meurent de faim.",
+                    "type": "usuel_FUNDP"
+                },
+                {
+                    "source": "She is a real <strong><a class="cc_source" name="246139">people's</a></strong> person.",
+                    "target": "C'est vraiment une personne qui aime les <strong>gens</strong>.",
+                    "type": "semi-technique"
+                }
+            ],
+            "entry": "people",
+            "forms": [
+                {
+                    "type": "plur.",
+                    "form": "peoples",
+                    "first": "true",
+                    "last": "true",
+                }
+            ],
+        },
+        "technicalinfo": {
+            "concept": "23776",
+            "entity": "28157",
+            "inglossary": "false",
+            "concordancescount": 6
+        }
+    }
+}}
+
+<table id="displayOnClic" class="entryTable">
 
     <thead>
     <tr class="digestRow">
         <th class="glossaryIcon">
             <span id="currentlingentity" class="hidden">{{technicalinfo.entity}}</span>
             {{#technicalinfo.inglossary}}
-            <img height="20px" class="glossaryremove" src="pix/inglossary.png" title="Enlever de mon glossaire">
+            <img class="glossaryremove" src="pix/inglossary.png" title="Enlever de mon glossaire">
             {{/technicalinfo.inglossary}}
             {{^technicalinfo.inglossary}}
-            <img height="20px" class="glossaryadd" src="pix/glossaryadd.png" title="Ajouter à mon glossaire">
+            <img class="glossaryadd" src="pix/glossaryadd.png" title="Ajouter à mon glossaire">
             {{/technicalinfo.inglossary}}
         </th>
-        <th class="superHeader" colspan="3">
+        <th class="superHeader" colspan="2">
             <span id="currentConstruction" class="hidden lemma">{{technicalinfo.concept}}</span>
             <span class="entryDisplay">{{data.entry}}{{#data.abbreviations}} ({{data.abbreviations}}){{/data.abbreviations}}</span>{{#data.article}}<span> ({{data.article}})</span>{{/data.article}}
             <strong>:&nbsp;</strong>
@@ -31,7 +88,7 @@
     {{#technicalinfo.hasannotations}}
     <tr id="displayOnClic_row1">
         <td>&nbsp;</td>
-        <td style=" colspan:3; " colspan="2" class="description">
+        <td colspan="2" class="description">
             <ul class="descList">
                 {{#data.translations}}
                 <li><strong>{{#str}}translation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.translations}}</em></li>
@@ -56,7 +113,7 @@
         {{#data.translations}}
         <tr id="displayOnClic_row1">
             <td>&nbsp;</td>
-            <td style=" colspan:3; " colspan="3" class="description">
+            <td colspan="2" class="description">
                 <ul class="singletonList">
                     <li><strong>{{#str}}translation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.translations}}</em></li>
                 </ul>
@@ -79,7 +136,7 @@
     {{/first}}
     {{^first}}
     <tr id="displayOnClic_row{{index}}">
-        <td {{^bilingual}}style="width:100%;" colspan="2"{{/bilingual}} class="concordance {{type}}" {{^bilingual}}colspan="2" {{/bilingual}}>{{{source}}}</td>
+        <td {{^bilingual}}style="width:100%;" colspan="2"{{/bilingual}} class="concordance {{type}}">{{{source}}}</td>
         {{#bilingual}}
         <td style="" class="concordance {{type}}">{{{target}}}</td>
         {{/bilingual}}
@@ -93,7 +150,7 @@
         <td style="padding-left:3px; width:2rem;">
             <img src="pix/concordances_no.png" style="padding-bottom:3px;" title="Pas de traductions en contexte">
         </td>
-        <td colpan="2">
+        <td colspan="2">
             <ul class="singletonList">
                 <li class="no-concordances">Pas de traductions en contexte</li>
             </ul>
@@ -103,7 +160,7 @@
     {{#unillustratedtranslations}}
     <tr>
         <td>&nbsp;</td>
-        <td style=" colspan:3; " colspan="2" class="description">
+        <td colspan="2" class="description">
             <ul class="singletonList">
                 <li><strong>{{#str}}othertranslations, mod_cobra{{/str}}&nbsp;:</strong>&nbsp;<em>{{unillustratedtranslations}}</em></li>
             </ul>
