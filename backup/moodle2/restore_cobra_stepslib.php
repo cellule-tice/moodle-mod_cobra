@@ -27,6 +27,11 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Define all the restore steps that will be used by the restore_choice_activity_task
+ *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_cobra_activity_structure_step extends restore_activity_structure_step {
 

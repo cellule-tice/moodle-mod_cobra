@@ -48,8 +48,8 @@ class mod_cobra_mod_form extends moodleform_mod {
         $jsparams = array();
         $jsparams['en'] = cobra_get_default_corpus_order($COURSE->id, 'EN');
         $jsparams['nl'] = cobra_get_default_corpus_order($COURSE->id, 'NL');
-        $PAGE->requires->js_call_amd('mod_cobra/cobra', 'initdata', array(json_encode($jsparams)));
-        $PAGE->requires->js_call_amd('mod_cobra/cobra', 'mod_form_triggers');
+        $PAGE->requires->js_call_amd('mod_cobra/cobra', 'initData', array(json_encode($jsparams)));
+        $PAGE->requires->js_call_amd('mod_cobra/cobra', 'modFormTriggers');
 
         // Get edition mode, behaviour is slightly different for add and edit.
         $mode = optional_param('add', null, PARAM_ALPHA);

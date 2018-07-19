@@ -28,7 +28,12 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/cobra/backup/moodle2/backup_cobra_stepslib.php');
 
 /**
- * Provides the steps to perform one complete backup of the Cobra instance
+ * Provides the steps to perform one complete backup of the Cobra instance.
+ *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_cobra_activity_task extends backup_activity_task {
 

@@ -28,6 +28,11 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Defines PHPUnit cobra_generator testcase.
  *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
  * @group mod_cobra
  */
 class mod_cobra_generator_testcase extends advanced_testcase {

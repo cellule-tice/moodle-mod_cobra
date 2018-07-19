@@ -31,6 +31,11 @@ require_once($CFG->dirroot . '/mod/cobra/locallib.php');
 
 /**
  * Class update_glossary_cache_task
+ *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class update_glossary_cache_task extends \core\task\scheduled_task {
 

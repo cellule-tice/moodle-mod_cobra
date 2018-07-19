@@ -31,6 +31,11 @@ require_once(__DIR__ . '/locallib.php');
 
 /**
  * Cobra external functions.
+ *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_cobra_external extends external_api {
 

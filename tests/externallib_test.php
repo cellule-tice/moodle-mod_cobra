@@ -32,6 +32,11 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 /**
  * Defines PHPUnit cobra external testcase.
  *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
  * @group mod_cobra
  */
 class mod_cobra_external_testcase extends externallib_advanced_testcase {

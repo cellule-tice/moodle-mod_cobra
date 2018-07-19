@@ -29,6 +29,11 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Class entry_viewed
+ *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class entry_viewed extends \core\event\base {
     /**

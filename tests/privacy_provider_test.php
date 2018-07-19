@@ -32,6 +32,11 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Unit tests for mod/cobra/classes/privacy/
  *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
  * @group mod_cobra
  */
 class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_testcase {

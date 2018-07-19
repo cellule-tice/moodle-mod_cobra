@@ -65,10 +65,10 @@ $PAGE->set_context($context);
 // Add css and js requires.
 $PAGE->requires->css('/mod/cobra/css/cobra.css');
 
-$PAGE->requires->js_call_amd('mod_cobra/cobra', 'initdata', array(json_encode($cobra)));
-$PAGE->requires->js_call_amd('mod_cobra/cobra', 'entry_on_click');
-$PAGE->requires->js_call_amd('mod_cobra/cobra', 'concordance_on_click');
-$PAGE->requires->js_call_amd('mod_cobra/cobra', 'text_glossary_actions');
+$PAGE->requires->js_call_amd('mod_cobra/cobra', 'initData', array(json_encode($cobra)));
+$PAGE->requires->js_call_amd('mod_cobra/cobra', 'entryOnClick');
+$PAGE->requires->js_call_amd('mod_cobra/cobra', 'concordanceOnClick');
+$PAGE->requires->js_call_amd('mod_cobra/cobra', 'textGlossaryActions');
 
 $output = $PAGE->get_renderer('mod_cobra');
 
@@ -79,5 +79,5 @@ echo $output->header();
 echo $output->heading(get_string('textreading', 'cobra'));
 echo $content;
 
-$PAGE->requires->js_call_amd('mod_cobra/cobra', 'initui');
+$PAGE->requires->js_call_amd('mod_cobra/cobra', 'initUi');
 echo $output->footer();

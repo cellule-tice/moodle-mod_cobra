@@ -31,6 +31,11 @@ require_once($CFG->dirroot . '/mod/cobra/locallib.php');
 
 /**
  * Class fill_cache_tables_task
+ *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class fill_cache_tables_task extends \core\task\adhoc_task {
 

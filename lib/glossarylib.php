@@ -163,6 +163,11 @@ function cobra_explode_glossary_into_lemmas_and_expression($glossary) {
 
 /**
  * Class cobra_edit_glossary_form
+ *
+ * @package    mod_cobra
+ * @author     Laurence Dumortier
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cobra_edit_glossary_form extends moodleform {
     /**

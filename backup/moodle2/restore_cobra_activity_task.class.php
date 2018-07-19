@@ -28,7 +28,12 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/cobra/backup/moodle2/restore_cobra_stepslib.php');
 
 /**
- * Cobra restore task that provides all the settings and steps to perform one complete restore of the activity
+ * Cobra restore task that provides all the settings and steps to perform one complete restore of the activity.
+ *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_cobra_activity_task extends restore_activity_task {
 

@@ -489,6 +489,11 @@ function cobra_get_apikey() {
 
 /**
  * Class cobra_remote_service. This class handle calls to remote CoBRA system
+ *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cobra_remote_service {
 
@@ -551,6 +556,11 @@ class cobra_remote_service {
 
 /**
  * Exception handling errors when trying to send requests to the remote CoBRA system (service unavailable or unauthorized access
+ *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cobra_remote_access_exception extends moodle_exception {
 

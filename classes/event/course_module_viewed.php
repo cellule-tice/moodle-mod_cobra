@@ -28,13 +28,11 @@ namespace mod_cobra\event;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * The mod_cobra instance list viewed event class
- *
- * If the view mode needs to be stored as well, you may need to
- * override methods get_url() and get_legacy_log_data(), too.
+ * The mod_cobra course module viewed event class
  *
  * @package    mod_cobra
- * @copyright  2015 Your Name <your@email.adress>
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class course_module_viewed extends \core\event\course_module_viewed {

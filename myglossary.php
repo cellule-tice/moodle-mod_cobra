@@ -68,8 +68,8 @@ $PAGE->requires->css('/mod/cobra/css/cobra.css');
 $params = new stdClass();
 $params->course = $course->id;
 $params->user = $USER->id;
-$PAGE->requires->js_call_amd('mod_cobra/cobra', 'initdata', array(json_encode($params)));
-$PAGE->requires->js_call_amd('mod_cobra/cobra', 'global_glossary_actions');
+$PAGE->requires->js_call_amd('mod_cobra/cobra', 'initData', array(json_encode($params)));
+$PAGE->requires->js_call_amd('mod_cobra/cobra', 'myGlossaryActions');
 
 // Handle empty action.
 if ($empty) {
