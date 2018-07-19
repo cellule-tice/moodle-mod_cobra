@@ -3,9 +3,9 @@
 }
 
 .text-title {
-    color : #000000;
-    padding : 1rem;
-    margin: 0px;
+    color: #000;
+    padding: 1rem;
+    margin: 0;
     font-size: 24px;
 }
 
@@ -16,43 +16,44 @@
 }
 
 .left {
-    width:62%;
+    width: 62%;
     min-width: 580px;
-    float:left;
+    float: left;
 }
 
 .right {
-    float:left;
-    width:35%;
-    min-width:290px;
-    padding-left:20px;
+    float: left;
+    width: 35%;
+    min-width: 290px;
+    padding-left: 20px;
     margin-top: 15px;
 }
 
-.concordance{
+.concordance {
     padding: 5px;
     vertical-align: text-top;
     width: 50%;
     line-height: 120%;
 }
 
-.reference{
+.reference {
     padding: 5px;
-    border-top : 1px solid gray;
+    border-top: 1px solid gray;
     font-size: 85%;
     line-height: 1.1rem;
 }
 
-.aloneReference{
+.aloneReference {
     padding: 5px;
     font-size: 95%;
 }
 
 #top {
-    max-height:350px;
+    max-height: 350px;
 }
 
-.top, .bottom {
+.top,
+.bottom {
     padding-left: 0;
 }
 
@@ -87,36 +88,13 @@
     color: #fff;
 }
 
-.glossaryexport:before {
-    font-family: FontAwesome;
-    content: " \f019";
-    color: #3a3a3a;
-}
-
-.emptyglossary:before {
-    font-family: FontAwesome;
-    content: " \f1f8";
-    color: #3a3a3a;
-}
-
-.glossaryexport:hover,
-.emptyglossary:hover {
-    text-decoration: none !important;
-
-}
-
-.glossaryexport:hover:before,
-.emptyglossary:hover:before {
-    color: #55ab26;
-}
-
 #text {
     max-height: 350px;
-    float:left;
-    text-align:justify;
-    color:#333;
+    float: left;
+    text-align: justify;
+    color: #333;
     padding: 15px;
-    overflow:auto;
+    overflow: auto;
 }
 
 #text:after {
@@ -126,35 +104,39 @@
     width: 100%;
 }
 
-#card, #glossary {
-    background-color : #eceeef;
+#card,
+#glossary {
+    background-color: #eceeef;
     filter: sepia(15%);
     font-size: 0.9em;
     color: #333;
-    padding:5px;
-    float:left;
-    width:33%;
+    padding: 5px;
+    float: left;
+    width: 33%;
     margin: 0 0 10px 20px;
     overflow: auto;
 }
 
-.glossaryadd, .glossaryremove, .gglossaryremove, .glossaryremove img.icon {
+.glossaryadd,
+.glossaryremove,
+.gglossaryremove,
+.glossaryremove img.icon {
     cursor: pointer;
     height: 20px;
     width: 20px;
 }
 
 .righty {
-    float:right;
+    float: right;
     padding: .5rem;
 }
 
-#details{
+#details {
     margin-top: 10px;
-    width:65%;
-    float:left;
-    overflow:auto;
-    padding:0;
+    width: 65%;
+    float: left;
+    overflow: auto;
+    padding: 0;
     background-color: #eceeef;
     filter: sepia(15%);
 }
@@ -162,11 +144,11 @@
 #full_concordance {
     font-size: 0.9em;
     color: #333;
-    padding:5px;
+    padding: 5px;
     display: none;
-    float:left;
-    width:32%;
-    min-width:290px;
+    float: left;
+    width: 32%;
+    min-width: 290px;
     margin-top: 10px;
     margin-left: 20px;
 }
@@ -176,8 +158,9 @@
     max-width: 150px;
 }
 
-.lemma, .expression {
-    cursor:pointer;
+.lemma,
+.expression {
+    cursor: pointer;
 }
 
 .entryDisplay {
@@ -188,7 +171,8 @@
     font-weight: normal;
 }
 
-.inflectedForms, .auxiliaries {
+.inflectedForms,
+.auxiliaries {
     font-weight: normal;
 }
 
@@ -198,7 +182,7 @@
 
 .fakeLink {
     text-decoration: underline;
-    cursor:help;
+    cursor: help;
 }
 
 #showCard {
@@ -210,10 +194,12 @@
 }
 
 .hidden {
-    display:none;
+    display: none;
 }
 
-.entryTable .superHeader th, .entryTable th.superHeader, .entryTable td.superHeader {
+.entryTable .superHeader th,
+.entryTable th.superHeader,
+.entryTable td.superHeader {
     color: #333;
     font-weight: normal;
     text-align: center;
@@ -221,9 +207,9 @@
 
 .entryTable {
     width: 100%;
-    border-color:white;
-    border-spacing:3px;
-    border-collapse : separate;
+    border-color: white;
+    border-spacing: 3px;
+    border-collapse: separate;
 }
 
 .lexTable {
@@ -231,11 +217,12 @@
 }
 
 .lexTable tbody td {
-    border-bottom: solid #DDDEBC 1px ;
+    border-bottom: solid #dddebc 1px;
 }
 
-.lexTable td, th {
-    margin:  1px;
+.lexTable td,
+.lexTable th {
+    margin: 1px;
     padding: 4px 10px;
     border: none;
 }
@@ -259,13 +246,16 @@
     color: white;
 }
 
-.lexTable th.headerY, .lexTable .headerY th,
-.lexTable th.headerX, .lexTable .headerX th {
+.lexTable th.headerY,
+.lexTable .headerY th,
+.lexTable th.headerX,
+.lexTable .headerX th {
     font-weight: normal;
 }
 
-.lexTable .headerX th,  .lexTable th.headerX {
-    background-color: #DDDEBC;
+.lexTable .headerX th,
+.lexTable th.headerX {
+    background-color: #dddebc;
 }
 
 .lexTable tr th.toolbar {
@@ -274,91 +264,91 @@
 }
 
 .lexTable tr.toolbar th.prev {
-    text-align:left;
+    text-align: left;
     font-weight: normal;
 }
 
 .lexTable tr.toolbar th.title {
-    font-weight:bold;
-    text-align:center;
+    font-weight: bold;
+    text-align: center;
 }
 
 .lexTable tr.toolbar th.next {
-    text-align:right;
+    text-align: right;
     font-weight: normal;
 }
 
 .lexTable .listCell {
-    margin-top:-2px;
-    margin-left:12px;
+    margin-top: -2px;
+    margin-left: 12px;
 }
 
 .lexTable li {
-    margin-top:0px;
-    margin-bottom:0px;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .usuel_FUNDP {
-    background-color: #CCFFCC !important;
+    background-color: #cfc;
 }
 
 .usuel {
-    background-color: #99FF99 !important;
+    background-color: #9f9;
 }
 
 .semi-technique {
-    background-color: #FFCC99 !important;
+    background-color: #fc9;
 }
 
 .technique {
-    background-color: #FF9966 !important;
+    background-color: #f96;
 }
 
 .histoire_FUNDP {
-    background-color:#CCFFFF !important;
+    background-color: #cff;
 }
 
 .histoire {
-    background-color: #99CCFF !important;
+    background-color: #9cf;
 }
 
 .informatique_FUNDP {
-    background-color: #FFFF99 !important;
+    background-color: #ff9;
 }
 
 .informatique {
-    background-color: #FFFF66 !important;
+    background-color: #ff6;
 }
 
 .sciences {
-    background-color: #CCCCFF !important;
+    background-color: #ccf;
 }
 
 .sciences_FUNDP {
-    background-color : #CC99CC !important;
+    background-color: #c9c;
 }
 
 .eco {
-    background-color: #FF9999 !important;
+    background-color: #f99;
 }
 
 .eco_FUNDP {
-    background-color: #FFCCCC !important;
+    background-color: #fcc;
 }
 
 .floatContainer {
-    float:left;
-    background-color:#FFF;
-    width:95%;
+    float: left;
+    background-color: #fff;
+    width: 95%;
 }
 
 .iconDiv {
-    background-color:#FFF;
-    float:left;
-    width:3%;
-    height:100%;
-    padding-top:3px;
-    margin-top:25px;
+    background-color: #fff;
+    float: left;
+    width: 3%;
+    height: 100%;
+    padding-top: 3px;
+    margin-top: 25px;
 }
 
 .description {
@@ -369,7 +359,7 @@
 
 .descList {
     list-style-type: disc;
-    margin : 5px;
+    margin: 5px;
 }
 
 .singletonList {
@@ -391,7 +381,7 @@
 }
 
 a img {
-    border:none;
+    border: none;
     text-decoration: none;
 }
 
@@ -399,17 +389,18 @@ p {
     line-height: 1.4em;
 }
 .commands > li {
-    color:#ffffff;
+    color: #fff;
     background-color: LightGrey;
-    display:inline;
-    list-style-image:none;
-    list-style-position:outside;
-    list-style-type:none;
-    margin:0pt;
-    padding:0pt;
+    display: inline;
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
-.textlist th, .collectionlist th {
+.textlist th,
+.collectionlist th {
     text-align: center;
 }
 
@@ -421,8 +412,7 @@ p {
     color: crimson;
     font-size: 10px;
     margin-right: 5px;
-    float:left;
-    margin-top: 4px;
+    float: left;
     background-image: url(../pix/hot.png);
     background-repeat: no-repeat;
     background-position: center;
@@ -431,24 +421,6 @@ p {
 
 .path-mod-cobra .text-center {
     text-align: center;
-}
-
-.noblocks .block-region, .noblocks .sklt-container .four.columns.leftsidebar {
-    display:none;
-}
-
-.noblocks #region-main-box, .noblocks #region-main-box .row-fluid .span8,
-.noblocks .sklt-container .twelve.columns {
-    width: 100% !important;
-}
-
-.noblocks #region-main-box #glossary {
-    width: 32%;
-}
-
-#page-mod-cobra-statistics fieldset.hidden, #page-mod-cobra-glossary fieldset.hidden {
-    display: inherit !important;
-    visibility: inherit !important;
 }
 
 .showglossary {
@@ -469,15 +441,11 @@ p {
     margin-top: 3rem;
 }
 
-/*#glossary .table td {
-    vertical-align: middle;
-}*/
-
 .myglossaryform {
     padding-top: 0;
 }
 
-.myglossaryform .emptyglossary {
+.myglossaryform input[type="submit"] {
     margin-left: .5rem;
 }
 
