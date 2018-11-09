@@ -535,7 +535,7 @@ class cobra_remote_service {
         }
 
         if (!in_array($response->responsetype, $validreturntypes)) {
-            print_error($response);
+            //print_error($response);
             print_error('unhandledreturntype', 'cobra', '', $response->responsetype);
         }
         if ('error' == $response->responsetype) {

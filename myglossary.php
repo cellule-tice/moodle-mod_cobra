@@ -98,19 +98,15 @@ if (!empty($data)) {
         $sourcetexttitle = cobra_get_cached_text_title($entry->textid);
         $entry->sourcetexttitle = $sourcetexttitle;
 
-        $query = "SELECT GROUP_CONCAT(CAST(textid AS CHAR)) AS texts
-                    FROM {cobra_clic}
-                   WHERE userid = :userid
-                         AND lingentity = :lingentity
-                         AND course = :course
-                   GROUP BY lingentity";
-        $result = $DB->get_field_sql($query, array(
-                'userid' => $USER->id,
-                'lingentity' => $entry->lingentity,
-                'course' => $course->id
-            )
+        $where = 'userid = :userid AND lingentity = :lingentity AND course = :course';
+        $sqlparams = array(
+            'userid' => $USER->id,
+            'lingentity' => $entry->lingentity,
+            'course' => $course->id
         );
-        $textidlist = explode(',', $result);
+
+        $textidlist = $DB->get_fieldset_select('cobra_clic', 'textid', $where, $sqlparams);
+
         asort($textidlist);
 
         $texttitles = array();
