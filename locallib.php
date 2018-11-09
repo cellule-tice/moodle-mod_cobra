@@ -529,6 +529,7 @@ class cobra_remote_service {
         $curl = new curl();
 
         $curl->setHeader(array('Accept: application/json', 'Expect:'));
+
         $options = array(
             'FRESH_CONNECT' => true,
             'RETURNTRANSFER' => true,
