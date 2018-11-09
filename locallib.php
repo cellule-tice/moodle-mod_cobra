@@ -525,17 +525,28 @@ class cobra_remote_service {
         if (count($params)) {
             $querystring = http_build_query($params, '', '&');
         }
+        $params['verb'] = $servicename;
+        $curl = new curl();
 
-        $data = cobra_curl_request($url . '?verb=' . $servicename . '&' . $querystring);
+        $curl->setHeader(array('Accept: application/json', 'Expect:'));
+        $options = array(
+            'FRESH_CONNECT' => true,
+            'RETURNTRANSFER' => true,
+            'FORBID_REUSE' => true,
+            'HEADER' => 0,
+            'CONNECTTIMEOUT' => 3,
+            // Follow redirects with the same type of request when sent 301, or 302 redirects.
+            'CURLOPT_POSTREDIR' => 3
+        );
+
+        $data = $curl->post($url . '?verb=' . $servicename . '&' . $querystring, json_encode($params), $options);
 
         if ($data === false) {
             throw new cobra_remote_access_exception('serviceunavailable');
         } else {
             $response = json_decode($data);
         }
-
         if (!in_array($response->responsetype, $validreturntypes)) {
-            //print_error($response);
             print_error('unhandledreturntype', 'cobra', '', $response->responsetype);
         }
         if ('error' == $response->responsetype) {
