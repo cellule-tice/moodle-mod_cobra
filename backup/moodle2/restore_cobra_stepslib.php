@@ -42,7 +42,6 @@ class restore_cobra_activity_structure_step extends restore_activity_structure_s
      */
     protected function define_structure() {
         $paths = array();
-        $userinfo = $this->get_setting_value('userinfo');
 
         $paths[] = new restore_path_element('cobra', '/activity/cobra');
 
@@ -60,7 +59,6 @@ class restore_cobra_activity_structure_step extends restore_activity_structure_s
         global $DB;
 
         $data = (object)$data;
-        $oldid = $data->id;
         $data->course = $this->get_courseid();
 
         $data->timecreated = $this->apply_date_offset($data->timecreated);

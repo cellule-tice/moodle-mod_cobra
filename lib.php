@@ -62,7 +62,7 @@ function cobra_supports($feature) {
  * @param mod_cobra_mod_form $mform The form.
  * @return int The id of the newly inserted record.
  */
-function cobra_add_instance($moduleinstance, $mform = null) {
+function cobra_add_instance($moduleinstance) {
     global $DB;
 
     $moduleinstance->timecreated = time();
@@ -82,7 +82,7 @@ function cobra_add_instance($moduleinstance, $mform = null) {
  * @param mod_cobra_mod_form $mform The form.
  * @return bool True if successful, false otherwise.
  */
-function cobra_update_instance($moduleinstance, $mform = null) {
+function cobra_update_instance($moduleinstance) {
     global $DB;
 
     $moduleinstance->timemodified = time();
@@ -108,29 +108,6 @@ function cobra_delete_instance($id) {
     $DB->delete_records('cobra', array('id' => $id));
 
     return true;
-}
-
-/**
- * Extends the global navigation tree by adding mod_cobra nodes if there is a relevant content.
- * This can be called by an AJAX request so do not rely on $PAGE as it might not be set up properly.
- * @param navigation_node $cobranode An object representing the navigation tree node
- * @param stdClass $course
- * @param stdClass $module
- * @param cm_info $cm
- */
-function cobra_extend_navigation($cobranode, $course, $module, $cm) {
-}
-
-/**
- * Extends the settings navigation with the mod_cobra settings.
- *
- * This function is called when the context for the page is a mod_cobra module.
- * This is not called by AJAX so it is safe to rely on the $PAGE.
- *
- * @param settings_navigation $settingsnav {@link settings_navigation}
- * @param navigation_node $cobranode {@link navigation_node}
- */
-function cobra_extend_settings_navigation($settingsnav, $cobranode = null) {
 }
 
 /**
@@ -236,7 +213,7 @@ function mod_cobra_core_calendar_provide_event_action(calendar_event $event,
  * @return array status array
  */
 function cobra_reset_userdata($data) {
-    global $CFG, $DB;
+    global $DB;
 
     $componentstr = get_string('modulename', 'cobra');
     $status = array();

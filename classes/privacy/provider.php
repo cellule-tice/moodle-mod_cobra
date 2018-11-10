@@ -228,7 +228,6 @@ class provider implements
             $instanceid = $DB->get_field('course_modules', 'instance', ['id' => $context->instanceid], MUST_EXIST);
             $itemids = $DB->get_fieldset_select('cobra_clic', 'id', 'cobra = ?', [$instanceid]);
             if ($itemids) {
-                list($isql, $params) = $DB->get_in_or_equal($itemids, SQL_PARAMS_NAMED);
                 $params = ['instanceid' => $instanceid, 'userid' => $userid];
                 $DB->delete_records_select('cobra_clic', 'cobra = :instanceid AND userid = :userid', $params);
             }

@@ -54,7 +54,7 @@ class backup_cobra_activity_structure_step extends backup_activity_structure_ste
         // Define id annotations.
 
         // Define file annotations.
-        $cobra->annotate_files('mod_cobra', 'intro', null, $contextid = null);
+        $cobra->annotate_files('mod_cobra', 'intro', null);
 
         // Return the root element (choice), wrapped into standard activity structure.
 

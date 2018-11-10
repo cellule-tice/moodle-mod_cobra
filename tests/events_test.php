@@ -52,7 +52,6 @@ class mod_cobra_event_testcase extends advanced_testcase {
         $dbcourse = $DB->get_record('course', array('id' => $course->id));
         $dbcobra = $DB->get_record('cobra', array('id' => $cobra->id));
         $context = context_module::instance($cobra->cmid);
-        $mode = 'letter';
 
         $event = \mod_cobra\event\course_module_viewed::create(array(
             'objectid' => $dbcobra->id,

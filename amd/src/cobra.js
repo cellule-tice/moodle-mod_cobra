@@ -122,7 +122,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                     args: {
                         lingentity: lingEntity,
                         textid: objparams.text,
-                        courseid: objparams.course,
+                        course: objparams.course,
                         userid: objparams.user
                     }
                 }]);
@@ -161,7 +161,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                     methodname: 'mod_cobra_remove_from_glossary',
                     args: {
                         lingentity: lingEntity,
-                        courseid: objparams.course,
+                        course: objparams.course,
                         userid: objparams.user
                     }
                 }]);

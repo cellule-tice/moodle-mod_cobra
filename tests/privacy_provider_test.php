@@ -158,7 +158,6 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
     public function test_delete_data_for_user() {
         global $DB;
 
-        $gen = self::getDataGenerator();
         $cms = [
             get_coursemodule_from_instance('cobra', $this->cobra1->id),
             get_coursemodule_from_instance('cobra', $this->cobra2->id)

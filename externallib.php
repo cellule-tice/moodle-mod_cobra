@@ -244,7 +244,8 @@ class mod_cobra_external extends external_api {
                 )
         );
 
-        $data = cobra_get_student_glossary($userid, $courseid, $textid);
+        //$data = cobra_get_student_glossary($userid, $courseid, $textid);
+        $data = cobra_get_student_glossary($params['userid'], $params['courseid'], $params['textid']);
         return $data;
     }
 
@@ -258,7 +259,7 @@ class mod_cobra_external extends external_api {
             array(
                 'lingentity' => new external_value(PARAM_INT, 'Id of lingentity'),
                 'textid' => new external_value(PARAM_INT, 'Id of current text'),
-                'courseid' => new external_value(PARAM_INT, 'Id of current course'),
+                'course' => new external_value(PARAM_INT, 'Id of current course'),
                 'userid' => new external_value(PARAM_INT, 'Id of current user')
             )
         );
@@ -301,19 +302,14 @@ class mod_cobra_external extends external_api {
                 array(
                     'lingentity' => $lingentity,
                     'textid' => $textid,
-                    'courseid' => $courseid,
+                    'course' => $courseid,
                     'userid' => $userid
                 )
         );
         $result = (int)$DB->set_field('cobra_clic',
             'inglossary',
             '1',
-            array(
-                'course' => $courseid,
-                'userid' => $userid,
-                'textid' => $textid,
-                'lingentity' => $lingentity
-            )
+            $params
         );
 
         if ($result) {
@@ -334,7 +330,7 @@ class mod_cobra_external extends external_api {
         return new external_function_parameters(
             array(
                 'lingentity' => new external_value(PARAM_INT, 'Id of lingentity'),
-                'courseid' => new external_value(PARAM_INT, 'Id of current course'),
+                'course' => new external_value(PARAM_INT, 'Id of current course'),
                 'userid' => new external_value(PARAM_INT, 'Id of current user'),
             )
         );
@@ -354,18 +350,19 @@ class mod_cobra_external extends external_api {
         $params = self::validate_parameters(self::remove_from_glossary_parameters(),
                 array(
                     'lingentity' => $lingentity,
-                    'courseid' => $courseid,
+                    'course' => $courseid,
                     'userid' => $userid
                 )
         );
         $result = (int)$DB->set_field('cobra_clic',
             'inglossary',
             '0',
-            array(
+            /*array(
                 'course' => $courseid,
                 'userid' => $userid,
                 'lingentity' => $lingentity
-            )
+            )*/
+            $params
         );
         if ($result) {
             return array('lingentity' => $lingentity);
@@ -406,7 +403,6 @@ class mod_cobra_external extends external_api {
      * @throws invalid_parameter_exception
      */
     public static function get_text($idtext) {
-        global $DB;
         $params = self::validate_parameters(self::get_text_parameters(),
             array(
                 'id_text' => $idtext
@@ -463,7 +459,6 @@ class mod_cobra_external extends external_api {
      * @throws invalid_parameter_exception
      */
     public static function get_text_list($collection) {
-        global $DB;
         $params = self::validate_parameters(self::get_text_list_parameters(),
             array(
                 'collection' => $collection
@@ -514,7 +509,6 @@ class mod_cobra_external extends external_api {
      * @throws invalid_parameter_exception
      */
     public static function get_collection_list($language) {
-        global $DB;
         $params = self::validate_parameters(self::get_collection_list_parameters(),
             array(
                 'language' => $language

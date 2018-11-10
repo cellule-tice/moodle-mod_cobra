@@ -30,6 +30,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/lib.php');
+require_once($CFG->dirroot . '/lib/filelib.php');
 
 /**
  * Constants definition for CoBRA settings.
@@ -508,7 +509,6 @@ class cobra_remote_service {
      * @throws moodle_exception
      */
     public static function call($servicename, $params = array()) {
-        global $CFG, $COURSE;
         $validreturntypes = array(
             'object',
             'objectList',
