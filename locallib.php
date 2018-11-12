@@ -475,7 +475,7 @@ function cobra_get_apikey() {
     global $USER;
     
     $contact = isset($USER->firstname) ? $USER->firstname : 'admin' .
-               isset($USER->lastanem) ? ' ' . $USER->lastname : '';
+               isset($USER->lastname) ? ' ' . $USER->lastname : '';
 
     $site = get_site();
     $email = get_config('moodle', 'supportemail');
