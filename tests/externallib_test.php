@@ -158,10 +158,10 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
 
         $errors = array();
         try {
-            $removefromglossarydesc = mod_cobra_external::remove_from_glossary_returns();
+            $removefromglossdesc = mod_cobra_external::remove_from_glossary_returns();
             $result = mod_cobra_external::remove_from_glossary(36515, $this->cobra->course, $this->student->id);
 
-            $result = external_api::clean_returnvalue($removefromglossarydesc, $result);
+            $result = external_api::clean_returnvalue($removefromglossdesc, $result);
             $newglossarycount = $DB->count_records('cobra_clic',
                     array('userid' => $this->student->id, 'textid' => $this->cobra->text, 'inglossary' => 1));
             $this->assertEquals($glossarycount - 1, $newglossarycount);

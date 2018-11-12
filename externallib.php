@@ -244,7 +244,6 @@ class mod_cobra_external extends external_api {
                 )
         );
 
-        //$data = cobra_get_student_glossary($userid, $courseid, $textid);
         $data = cobra_get_student_glossary($params['userid'], $params['courseid'], $params['textid']);
         return $data;
     }
@@ -357,11 +356,6 @@ class mod_cobra_external extends external_api {
         $result = (int)$DB->set_field('cobra_clic',
             'inglossary',
             '0',
-            /*array(
-                'course' => $courseid,
-                'userid' => $userid,
-                'lingentity' => $lingentity
-            )*/
             $params
         );
         if ($result) {
