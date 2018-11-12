@@ -473,13 +473,13 @@ function cobra_get_valid_entry_types() {
  */
 function cobra_get_apikey() {
     global $USER;
-
+    $user = user_get_user_details($USER);
     $site = get_site();
     $email = get_config('moodle', 'supportemail');
     $params = array(
         'caller' => $site->shortname,
         'email' => $email,
-        'contact' => utf8_decode($USER->firstname . ' ' . $USER->lastname),
+        'contact' => utf8_decode($user['fullname']),
         'platformid' => get_config('moodle', 'siteidentifier')
     );
 
