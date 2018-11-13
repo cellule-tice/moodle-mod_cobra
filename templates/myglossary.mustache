@@ -15,6 +15,10 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
+    @template mod_cobra/myglossary
+
+
+    Example context (json):
     {
       "entries": [
         {
@@ -83,7 +87,7 @@
             <td>{{sourcetexttitle}}</td>
             <td><span title="{{texttitles}}">{{textcount}} {{#str}}texts, mod_cobra{{/str}}</span></td>
             <td class="glossaryIcon glossaryremove inDisplay">
-                <span id="currentLingEntity" class="hidden">{{lingentity}}</span>
+                <span class="hidden">{{lingentity}}</span>
                 {{#pix}}glossaryremove, mod_cobra, {{#str}}removefrommyglossary, cobra{{/str}}{{/pix}}
             </td>
         </tr>

@@ -35,7 +35,9 @@ require_once($CFG->dirroot . '/mod/cobra/locallib.php');
  */
 function xmldb_cobra_upgrade($oldversion) {
 
-
-    return true;
-
+    $result = true;
+    if ($oldversion < 2017082800) {
+        $result = true;
+    }
+    return $result;
 }

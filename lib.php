@@ -59,7 +59,6 @@ function cobra_supports($feature) {
  * number of the instance.
  *
  * @param object $moduleinstance An object from the form.
- * @param mod_cobra_mod_form $mform The form.
  * @return int The id of the newly inserted record.
  */
 function cobra_add_instance($moduleinstance) {
@@ -79,7 +78,6 @@ function cobra_add_instance($moduleinstance) {
  * this function will update an existing instance with new data.
  *
  * @param object $moduleinstance An object from the form in mod_form.php.
- * @param mod_cobra_mod_form $mform The form.
  * @return bool True if successful, false otherwise.
  */
 function cobra_update_instance($moduleinstance) {

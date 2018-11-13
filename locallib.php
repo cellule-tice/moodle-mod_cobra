@@ -301,9 +301,6 @@ function cobra_fill_cache_tables() {
  * @param int $userid
  * @param int $courseid
  * @param int $textid
- * @param int $page
- * @param int $perpage
- * @param bool $export
  * @param string $initial
  * @return array
  */
@@ -315,8 +312,7 @@ function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $in
     } else {
         $initialfilter = '';
     }
-    //print_object($page);
-    //print_object($perpage);
+
     $dataquery = "SELECT DISTINCT(ug.lingentity) AS lingentity, textid, entry, type, translations, category, extrainfo
                     FROM {cobra_clic} ug
                     JOIN {cobra_glossary_cache} gc

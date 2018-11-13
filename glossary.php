@@ -149,7 +149,6 @@ if ($cmd == 'rqexport') {
     $otherwords = '';
     $words = cobra_get_list_of_words_in_text ( $mytext, $language );
     $newwords = array();
-    $log = '';
 
     foreach ($words as $word) {
 
@@ -182,7 +181,6 @@ if ($cmd == 'rqexport') {
     $out .= '<li>' . get_string('newwords', 'cobra')  . ' : ' . implode(', ', $newwords) . '</li>';
     $out .= $otherwords;
     $out .= '</ul>';
-    $out.= $log;
 }
 
 if (!empty($thisform)) {

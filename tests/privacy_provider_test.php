@@ -121,15 +121,17 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
             context_module::instance($cms[0]->id),
             context_module::instance($cms[1]->id),
         ];
+
         $expectedctxids = [];
         foreach ($expectedctxs as $ctx) {
             $expectedctxids[] = $ctx->id;
         }
-        $contextlist = provider::get_contexts_for_userid($this->student1->id);
+        $contextlist = provider::get_contexts_for_userid($this->student1->id)->get_contextids();
+
         $this->assertCount(2, $contextlist);
         $uctxids = [];
         foreach ($contextlist as $uctx) {
-            $uctxids[] = $uctx->id;
+            $uctxids[] = $uctx;
         }
         $this->assertEmpty(array_diff($expectedctxids, $uctxids));
         $this->assertEmpty(array_diff($uctxids, $expectedctxids));
