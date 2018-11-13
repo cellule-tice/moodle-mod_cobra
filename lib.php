@@ -125,10 +125,10 @@ function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $
         global $CFG;
 
         $cobranode = $parentnode->add(get_string('cobra', 'mod_cobra'));
-        $params = array('id' => $course->id, 'cmd' => 'rqexport');
+        $params = array('id' => $context->instanceid, 'cmd' => 'rqexport');
         $cobranode->add(get_string('exportglossary', 'mod_cobra'), new moodle_url(
             $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_export_glossary');
-        $params = array('id' => $course->id, 'cmd' => 'rqcompare');
+        $params = array('id' => $context->instanceid, 'cmd' => 'rqcompare');
         $cobranode->add(get_string('comparetextwithglossary', 'mod_cobra'), new moodle_url(
             $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_compare_glossary');
     }

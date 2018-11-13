@@ -149,18 +149,19 @@ if ($cmd == 'rqexport') {
     $otherwords = '';
     $words = cobra_get_list_of_words_in_text ( $mytext, $language );
     $newwords = array();
+    $log = '';
 
     foreach ($words as $word) {
 
         $listflexions = cobra_word_exists_as_flexion ( $word, $language );
-
+        $found = false;
         if (count( $listflexions) != 0) {
-            $trouve = false;
+            $found = false;
             $listpossibleentities = cobra_get_entity_list_from_ff($listflexions );
 
             foreach ($listpossibleentities as $entityid) {
                 if (array_key_exists($entityid, $lemmaentities)) {
-                    $trouve = true;
+                    $found = true;
 
                     $info = $lemmaentities[$entityid]['entry'] . ' ('.$lemmaentities[$entityid]['category'].') - '
                         . $lemmaentities[$entityid]['traduction'];
@@ -168,33 +169,10 @@ if ($cmd == 'rqexport') {
                         . utf8_encode($info) . '</li>';
                 }
             }
-            if (!$trouve) {
-                $newwords[] = $word;
-
-                $mytext = str_replace(' ' .$word, ' <span style="color:red">'. $word. '</span>', $mytext);
-                $mytext = str_replace($word. ' ', '<span style="color:red">'. $word. '</span> ', $mytext);
-                $mytext = str_replace(' ' .$word. ' ', ' <span style="color:red">'. $word. '</span> ', $mytext);
-                $mytext = str_replace(' ' .$word. ',', ' <span style="color:red">'. $word. '</span>,', $mytext);
-                $mytext = str_replace(' ' .$word. '.', ' <span style="color:red">'. $word. '</span>.', $mytext);
-                $mytext = str_replace(' ' .$word. ':', ' <span style="color:red">'. $word. '</span>:', $mytext);
-                $mytext = str_replace(' ' .$word. ';', ' <span style="color:red">'. $word. '</span>;', $mytext);
-                $mytext = str_replace('(' .$word. ')', '(<span style="color:red">'. $word. '</span>)', $mytext);
-                $mytext = str_replace(' ' .$word. ')', ' <span style="color:red">'. $word. '</span>)', $mytext);
-                $mytext = str_replace('(' .$word. ' ', '(<span style="color:red">'. $word. '</span> ', $mytext);
-            }
-        } else {
-
-             $newwords[] = $word;
-             $mytext = str_replace(' ' .$word, ' <span style="color:red">'. $word. '</span>', $mytext);
-             $mytext = str_replace($word. ' ', '<span style="color:red">'. $word. '</span> ', $mytext);
-             $mytext = str_replace(' ' .$word.' ', ' <span style="color:red">'. $word. '</span> ', $mytext);
-             $mytext = str_replace(' ' .$word. ',', ' <span style="color:red">'. $word. '</span>,', $mytext);
-             $mytext = str_replace(' ' .$word. '.', ' <span style="color:red">'. $word. '</span>.', $mytext);
-             $mytext = str_replace(' ' .$word. ':', ' <span style="color:red">'. $word. '</span>:', $mytext);
-             $mytext = str_replace(' ' .$word. ';', ' <span style="color:red">'. $word. '</span>;', $mytext);
-             $mytext = str_replace('(' .$word. ')', '(<span style="color:red">'. $word. '</span>)', $mytext);
-             $mytext = str_replace(' ' .$word. ')', ' <span style="color:red">'. $word. '</span>)', $mytext);
-             $mytext = str_replace('(' .$word. ' ', '(<span style="color:red">'. $word. '</span> ', $mytext);
+        }
+        if (!$found) {
+            $newwords[] = $word;
+            $mytext = cobra_mark_unknown_word($word, $mytext);
         }
     }
 
@@ -204,6 +182,7 @@ if ($cmd == 'rqexport') {
     $out .= '<li>' . get_string('newwords', 'cobra')  . ' : ' . implode(', ', $newwords) . '</li>';
     $out .= $otherwords;
     $out .= '</ul>';
+    $out.= $log;
 }
 
 if (!empty($thisform)) {

@@ -161,6 +161,20 @@ function cobra_explode_glossary_into_lemmas_and_expression($glossary) {
     return array($lemmalist, $explist);
 }
 
+function cobra_mark_unknown_word($word, $text) {
+    $text = str_replace(' ' .$word, ' <span style="color:red">'. $word. '</span>', $text);
+    $text = str_replace($word. ' ', '<span style="color:red">'. $word. '</span> ', $text);
+    $text = str_replace(' ' .$word. ' ', ' <span style="color:red">'. $word. '</span> ', $text);
+    $text = str_replace(' ' .$word. ',', ' <span style="color:red">'. $word. '</span>,', $text);
+    $text = str_replace(' ' .$word. '.', ' <span style="color:red">'. $word. '</span>.', $text);
+    $text = str_replace(' ' .$word. ':', ' <span style="color:red">'. $word. '</span>:', $text);
+    $text = str_replace(' ' .$word. ';', ' <span style="color:red">'. $word. '</span>;', $text);
+    $text = str_replace('(' .$word. ')', '(<span style="color:red">'. $word. '</span>)', $text);
+    $text = str_replace(' ' .$word. ')', ' <span style="color:red">'. $word. '</span>)', $text);
+    $text = str_replace('(' .$word. ' ', '(<span style="color:red">'. $word. '</span> ', $text);
+    return $text;
+}
+
 /**
  * Class cobra_edit_glossary_form
  *

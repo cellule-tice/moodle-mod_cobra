@@ -307,8 +307,7 @@ function cobra_fill_cache_tables() {
  * @param string $initial
  * @return array
  */
-function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $page = 0,
-                                    $perpage = 0, $export = false, $initial = '') {
+function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $initial = '') {
     global $DB;
 
     if ($initial !== 'all') {
@@ -316,6 +315,8 @@ function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $pa
     } else {
         $initialfilter = '';
     }
+    //print_object($page);
+    //print_object($perpage);
     $dataquery = "SELECT DISTINCT(ug.lingentity) AS lingentity, textid, entry, type, translations, category, extrainfo
                     FROM {cobra_clic} ug
                     JOIN {cobra_glossary_cache} gc
@@ -325,15 +326,8 @@ function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $pa
                      AND inglossary = 1 " . $initialfilter . "
                 ORDER BY entry";
 
-    if ($export) {
-        $fullglossaryresult = $DB->get_records_sql($dataquery,
+    $fullglossaryresult = $DB->get_records_sql($dataquery,
             array('courseid' => $courseid, 'userid' => $userid, 'initial' => $initial . '%'));
-
-    } else {
-        $fullglossaryresult = $DB->get_records_sql($dataquery,
-            array('courseid' => $courseid, 'userid' => $userid, 'initial' => $initial . '%'),
-            $page * $perpage, $perpage);
-    }
 
     if (empty($textid)) {
         $result = $DB->get_records_sql($dataquery,

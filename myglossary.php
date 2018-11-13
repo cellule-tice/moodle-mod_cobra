@@ -30,17 +30,10 @@ require_once("$CFG->dirroot/lib/dataformatlib.php");
 
 $id = required_param('id', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_INT);
-$page = optional_param('page', 0, PARAM_INT);
 $initial = optional_param('initial', 'all', PARAM_ALPHA);
 $export = optional_param('download', '', PARAM_TEXT);
 $format = optional_param('exportformat', null, PARAM_ALPHA);
 $empty = optional_param('empty', null, PARAM_TEXT);
-$viewall = optional_param('viewall', null, PARAM_INT);
-if ($viewall) {
-    $perpage = 0;
-} else {
-    $perpage = 0;
-}
 
 $course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
 
@@ -89,7 +82,7 @@ if ($empty) {
     }
 }
 
-list($totalcount, $data) = cobra_get_student_glossary($USER->id, $course->id, 0, $page, $perpage, !empty($export), $initial);
+list($totalcount, $data) = cobra_get_student_glossary($USER->id, $course->id, 0, $initial);
 
 $entries = array();
 if (!empty($data)) {

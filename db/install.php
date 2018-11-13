@@ -32,8 +32,7 @@ require_once($CFG->dirroot . '/mod/cobra/locallib.php');
  */
 function xmldb_cobra_install() {
 
-    //set_config('serviceurl', 'https://webapps.unamur.be/elv/nederlex/services/api.php', 'mod_cobra');
-    set_config('serviceurl', 'http://tice.det.fundp.ac.be/cobra-dev/services/api.php', 'mod_cobra');
+    set_config('serviceurl', 'https://webapps.unamur.be/elv/nederlex/services/api.php', 'mod_cobra');
 
     $key = cobra_get_apikey();
     if (!empty($key->apikey)) {

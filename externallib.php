@@ -551,13 +551,13 @@ class mod_cobra_external extends external_api {
      * @throws invalid_parameter_exception
      */
     public static function get_demo_api_key() {
-        global $USER;
+        global $CFG;
         $site = get_site();
         $email = get_config('moodle', 'supportemail');
         $params = array(
             'caller' => $site->shortname,
             'email' => $email,
-            'contact' => utf8_decode($USER->firstname . ' ' . $USER->lastname),
+            'url' => $CFG->wwwroot,
             'platformid' => get_config('moodle', 'siteidentifier')
         );
         $data = cobra_remote_service::call('get_demo_api_key', $params);
