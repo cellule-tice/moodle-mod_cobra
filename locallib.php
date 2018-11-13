@@ -473,14 +473,14 @@ function cobra_get_valid_entry_types() {
  * @throws moodle_exception
  */
 function cobra_get_apikey() {
-    global $USER;
-    $user = user_get_user_details($USER);
+    global $CFG;
+
     $site = get_site();
-    $email = $user['email'];
     $params = array(
         'caller' => $site->shortname,
-        'email' => $email,
-        'contact' => utf8_decode($user['fullname']),
+        'url' => $CFG->wwwroot,
+        'email' => $CFG->supportemail,
+        'contact' => '',
         'platformid' => get_config('moodle', 'siteidentifier')
     );
 
