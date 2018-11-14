@@ -1,0 +1,276 @@
+.path-mod-cobra .text-title {
+    color: #000;
+    padding: 1rem;
+    margin: 0;
+    font-size: 24px;
+}
+
+.path-mod-cobra .cobra-subtitle {
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.path-mod-cobra .concordance {
+    padding: 5px;
+    vertical-align: text-top;
+    width: 50%;
+    line-height: 120%;
+}
+
+.path-mod-cobra .reference {
+    padding: 5px;
+    border-top: 1px solid gray;
+    font-size: 85%;
+    line-height: 1.1rem;
+}
+
+.path-mod-cobra .cobra-content {
+    float: left;
+    padding-left: 0;
+    padding-right: 0;
+    width: 65%;
+    background-color: #eceeef;
+    filter: sepia(15%);
+}
+
+.path-mod-cobra .textnavbuttons {
+    margin-bottom: 5px;
+    float: left;
+}
+
+.path-mod-cobra .textnavbuttons .btn {
+    height: 32px;
+    margin-right: 5px;
+    border-radius: 0;
+}
+
+.path-mod-cobra .textnavbuttons .btn-default:hover {
+    background-color: #494949;
+    color: #fff;
+}
+
+.path-mod-cobra #text {
+    max-height: 350px;
+    float: left;
+    text-align: justify;
+    color: #373a3c;
+    padding: 15px;
+    overflow: auto;
+}
+
+.path-mod-cobra #text:after {
+    content: "";
+    display: block;
+    height: 50px;
+    width: 100%;
+}
+
+.path-mod-cobra #glossary {
+    background-color: #eceeef;
+    filter: sepia(15%);
+    font-size: 0.9em;
+    color: #373a3c;
+    padding: 5px;
+    float: left;
+    width: 33%;
+    margin: 0 0 10px 20px;
+    overflow: auto;
+}
+
+.path-mod-cobra .glossaryadd,
+.path-mod-cobra .glossaryremove,
+.path-mod-cobra .inglossary,
+.path-mod-cobra .glossaryremove img.icon {
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+}
+
+.path-mod-cobra .righty {
+    float: right;
+    padding: .5rem;
+}
+
+.path-mod-cobra #details {
+    margin-top: 10px;
+    width: 65%;
+    float: left;
+    overflow: auto;
+    padding: 0;
+    background-color: #eceeef;
+    filter: sepia(15%);
+}
+
+.path-mod-cobra #full_concordance {
+    font-size: 0.9em;
+    color: #373a3c;
+    padding: 5px;
+    display: none;
+    float: left;
+    width: 32%;
+    min-width: 290px;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+.path-mod-cobra .lemma,
+.path-mod-cobra .expression {
+    cursor: pointer;
+}
+
+.path-mod-cobra .entryDisplay {
+    font-weight: bold;
+}
+
+.path-mod-cobra .category,
+.path-mod-cobra .inflectedForms,
+.path-mod-cobra .auxiliaries {
+    font-weight: normal;
+}
+
+.path-mod-cobra .cobralabel {
+    font-style: italic;
+}
+
+.path-mod-cobra .glossaryIcon {
+    padding: 4px 1px 1px 4px;
+}
+
+.path-mod-cobra .entryTable {
+    width: 100%;
+    border-color: white;
+    border-spacing: 3px;
+    border-collapse: separate;
+}
+
+.path-mod-cobra .entryTable .superHeader th,
+.path-mod-cobra .entryTable th.superHeader,
+.path-mod-cobra .entryTable td.superHeader {
+    font-weight: normal;
+    text-align: center;
+}
+
+.path-mod-cobra .cc_source {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.path-mod-cobra .usuel_FUNDP {
+    background-color: #cfc;
+}
+
+.path-mod-cobra .usuel {
+    background-color: #9f9;
+}
+
+.path-mod-cobra .semi-technique {
+    background-color: #fc9;
+}
+
+.path-mod-cobra .technique {
+    background-color: #f96;
+}
+
+.path-mod-cobra .histoire_FUNDP {
+    background-color: #cff;
+}
+
+.path-mod-cobra .histoire {
+    background-color: #9cf;
+}
+
+.path-mod-cobra .informatique_FUNDP {
+    background-color: #ff9;
+}
+
+.path-mod-cobra .informatique {
+    background-color: #ff6;
+}
+
+.path-mod-cobra .sciences {
+    background-color: #ccf;
+}
+
+.path-mod-cobra .sciences_FUNDP {
+    background-color: #c9c;
+}
+
+.path-mod-cobra .eco {
+    background-color: #f99;
+}
+
+.path-mod-cobra .eco_FUNDP {
+    background-color: #fcc;
+}
+
+.path-mod-cobra .description {
+    color: #373a3c;
+    font-weight: normal;
+    text-align: left;
+}
+
+.path-mod-cobra .descList {
+    list-style-type: disc;
+    margin: 5px;
+}
+
+.path-mod-cobra .singletonList {
+    list-style-type: none;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.path-mod-cobra .clicked {
+    background-color: yellow;
+}
+
+.path-mod-cobra .emphasize {
+    background-color: LightGrey;
+}
+
+.path-mod-cobra .lemma:hover {
+    color: #55ab26;
+}
+
+.path-mod-cobra p {
+    line-height: 1.4rem;
+}
+
+.path-mod-cobra .discreet {
+    color: #868e96;
+}
+
+.path-mod-cobra .hotentry {
+    color: crimson;
+    font-size: 10px;
+    margin-right: 5px;
+    float: left;
+    background-image: url(../pix/hot.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-top: 1px;
+}
+
+.path-mod-cobra .text-center {
+    text-align: center;
+}
+
+.path-mod-cobra #displayOnClic ul.singletonList {
+    padding-left: 0;
+}
+
+.path-mod-cobra .text-source {
+    text-align: right;
+    font-style: italic;
+    font-size: small;
+    margin-top: 3rem;
+}
+
+.path-mod-cobra.myglossaryform input[type="submit"] {
+    margin-left: .5rem;
+}
+
+.path-mod-cobra #glossary table td {
+    border-top: none;
+}

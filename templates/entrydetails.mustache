@@ -121,23 +121,22 @@
         </tr>
         {{/data.translations}}
     {{/technicalinfo.hasannotations}}
-{{#data.concordances}}
-    <tr>{{#first}}
-        <td style="vertical-align:top;  padding-left:3px; " >
-            <img src="pix/corpus.jpg" style="padding-bottom:3px;" title="Traduction(s) en contexte"></td>
-    {{/first}}
-{{^first}}
-    <td>&nbsp;</td>
-{{/first}}
+    {{#data.concordances}}
+    <tr>
+        {{#first}}
+            <td style="vertical-align:top;  padding-left:3px;">
+                <img src="pix/corpus.jpg" style="padding-bottom:3px;" title="Traduction(s) en contexte">
+            </td>
+        {{/first}}
+        {{^first}}
+        <td>&nbsp;</td>
+        {{/first}}
 
         <td class="concordance {{type}}" {{^bilingual}}style="width:100%;" colspan="2" {{/bilingual}}>{{{source}}}</td>
         {{#bilingual}}
         <td class="concordance {{type}}">{{{target}}}</td>
         {{/bilingual}}
     </tr>
-
-    
-
     {{/data.concordances}}
 
     {{^data.concordances}}
