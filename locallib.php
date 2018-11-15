@@ -292,11 +292,13 @@ function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $in
         $initialfilter = '';
     }
 
-    $dataquery = "SELECT DISTINCT(ug.lingentity) AS lingentity, textid, entry, type, translations, category, extrainfo
+    $dataquery = "SELECT DISTINCT(ug.lingentity) AS lingentity, textid, entry, type, gc.translations, category, extrainfo
                     FROM {cobra_clic} ug
+                    JOIN {cobra} c
+                      ON ug.cobra = c.id
                     JOIN {cobra_glossary_cache} gc
                       ON ug.lingentity = gc.lingentity
-                   WHERE course = :courseid
+                   WHERE c.course = :courseid
                      AND userid = :userid
                      AND inglossary = 1 " . $initialfilter . "
                 ORDER BY entry";
@@ -321,11 +323,13 @@ function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $in
             $entitiesintext = array();
         }
         $textquery = "SELECT DISTINCT(lingentity)
-                        FROM {cobra_clic}
-                       WHERE course = :courseid
-                             AND userid = :userid
-                             AND inglossary = 1
-                             AND textid = :textid";
+                        FROM {cobra_clic} cc
+                        JOIN {cobra} c
+                          ON cc.cobra = c.id
+                       WHERE c.course = :courseid
+                         AND userid = :userid
+                         AND inglossary = 1
+                         AND textid = :textid";
 
         $textresult = $DB->get_records_sql($textquery, array('courseid' => $courseid, 'userid' => $userid, 'textid' => $textid));
         $textglossarylist = array_keys($textresult);
