@@ -456,26 +456,3 @@ function cobra_get_apikey() {
     $data = cobra_remote_service::call('upgrade_credentials', $params);
     return json_decode($data);
 }
-
-
-
-
-/**
- * Exception handling errors when trying to send requests to the remote CoBRA system (service unavailable or unauthorized access
- *
- * @package    mod_cobra
- * @author     Jean-Roch Meurisse
- * @copyright  2016 onwards - Cellule TICE - Universite de Namur
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class cobra_remote_access_exception extends moodle_exception {
-
-    /**
-     * Constructor
-     *
-     * @param string $debuginfo the debug info
-     */
-    public function __construct($debuginfo) {
-        parent::__construct('platformnotallowed', 'cobra', '', null, $debuginfo);
-    }
-}

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Cobra remote service class definition
+ * Cobra remote service class definition.
  *
  * @package    mod_cobra
  * @author     Jean-Roch Meurisse
@@ -26,6 +26,7 @@
 namespace mod_cobra;
 
 use curl;
+use cobra_remote_access_exception;
 
 /**
  * Class cobra_remote_service. This class handle calls to remote CoBRA system
