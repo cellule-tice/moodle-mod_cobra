@@ -30,8 +30,6 @@ use moodleform;
 
 defined('MOODLE_INTERNAL') || die();
 
-//require_once($CFG->libdir . '/formslib.php');
-
 /**
  * Class cobra_edit_glossary_form
  *

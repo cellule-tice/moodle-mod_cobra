@@ -28,6 +28,8 @@ namespace mod_cobra;
 use curl;
 use cobra_remote_access_exception;
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Class cobra_remote_service. This class handle calls to remote CoBRA system
  *

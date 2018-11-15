@@ -25,6 +25,8 @@
 
 namespace mod_cobra;
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Exception handling errors when trying to send requests to the remote CoBRA system (service unavailable or unauthorized access
  *
