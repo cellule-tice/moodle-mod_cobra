@@ -27,6 +27,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_cobra\cobra_remote_service;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/lib.php');
@@ -456,83 +458,7 @@ function cobra_get_apikey() {
 }
 
 
-/**
- * Class cobra_remote_service. This class handle calls to remote CoBRA system
- *
- * @package    mod_cobra
- * @author     Jean-Roch Meurisse
- * @copyright  2016 onwards - Cellule TICE - Universite de Namur
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class cobra_remote_service {
 
-    /**
-     * Send request to remote CoBRA system and return response
-     *
-     * @param string $servicename the request name
-     * @param array $params arguments for the call
-     * @return mixed
-     * @throws cobra_remote_access_exception
-     * @throws dml_exception
-     * @throws moodle_exception
-     */
-    public static function call($servicename, $params = array()) {
-        $validreturntypes = array(
-            'object',
-            'objectList',
-            'error'
-        );
-        $response = new stdClass();
-        $site = get_site();
-        $params['caller'] = $site->shortname;
-        $params['platformid'] = get_config('moodle', 'siteidentifier');
-        $params['apikey'] = get_config('mod_cobra', 'apikey');
-        $url = get_config('mod_cobra', 'serviceurl');
-
-        $params['from'] = 'moodle';
-        if (count($params)) {
-            $querystring = http_build_query($params, '', '&');
-        }
-        $params['verb'] = $servicename;
-        $curl = new curl();
-
-        $curl->setHeader(array('Accept: application/json', 'Expect:'));
-
-        $options = array(
-            'FRESH_CONNECT' => true,
-            'RETURNTRANSFER' => true,
-            'FORBID_REUSE' => true,
-            'HEADER' => 0,
-            'CONNECTTIMEOUT' => 3,
-            // Follow redirects with the same type of request when sent 301, or 302 redirects.
-            'CURLOPT_POSTREDIR' => 3
-        );
-
-        $data = $curl->post($url . '?verb=' . $servicename . '&' . $querystring, json_encode($params), $options);
-
-        if ($data === false) {
-            throw new cobra_remote_access_exception('serviceunavailable');
-        } else {
-            $response = json_decode($data);
-        }
-        if (!in_array($response->responsetype, $validreturntypes)) {
-            print_error('unhandledreturntype', 'cobra', '', $response->responsetype);
-        }
-        if ('error' == $response->responsetype) {
-            if ($response->errortype == COBRA_ERROR_PLATFORM_NOT_ALLOWED) {
-                throw new cobra_remote_access_exception('platformnotallowed');
-            }
-            if ($response->errortype == COBRA_ERROR_MISSING_PARAM) {
-                print_error('missingparam', '', '', $response->content);
-            }
-            if ($response->errortype == COBRA_ERROR_UNHANDLED_CALL) {
-                print_error('unhandledcall', '', '', $response->content);
-            }
-        } else {
-            return $response->content;
-        }
-    }
-}
 
 /**
  * Exception handling errors when trying to send requests to the remote CoBRA system (service unavailable or unauthorized access
