@@ -31,7 +31,7 @@ Available CoBRA-formatted texts are hosted on a dedicated server and are loaded 
 ## Access ##
 A demo access to CoBRA-formatted texts with an English and a Dutch text is available for testing purposes. (See Installation section for instructions on how you can get a demo key)
 
-Note that access to the full CoBRA text repository is free of charge but not open, some resources (dictionaries, texts) being subject to copyright. 
+Note that access to the full CoBRA text repository is free of charge but not open, some resources (dictionaries, texts) being subject to copyright. In other words, there is no commercial subscription required and absolutely no fees tu use it, but a win-win convention with the University of Namur is mandatory. (We offer the technology, you provide the central text repository with new texts.)
 
 In order to access the full CoBRA text repository, a written agreement with UNamur is required, that specifies the user's rights. (Contact guy.deville@unamur.be).
 
