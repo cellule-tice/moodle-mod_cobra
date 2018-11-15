@@ -209,3 +209,5 @@ $string['privacy:metadata:cobra_clic:userid'] = 'The ID of the user who clicked 
 $string['privacy:metadata:cobra_clic:nbclicsstats'] = 'The number of times the user clicked that word in the same text of the same course.';
 $string['privacy:metadata:cobra_clic:timecreated'] = 'The time when the user clicked for the first time on this word in the same text and course.';
 $string['privacy:metadata:cobra_clic:inglossary'] = 'Flag stating whether this lexicon entry is in the student personal dictionary.';
+$string['requestdemokey'] = 'Request demo key';
+$string['requestdemokey_desc'] = 'Clicking this button will send information about your platform (shortname, IP address, URL and siteid) in order to register it with CoBRA and get a demo access key';

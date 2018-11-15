@@ -205,3 +205,5 @@ $string['updatetextinfocache'] = 'Mise à jour du cache des informations sur les
 $string['resetdefaults'] = 'Remettre les valeurs plateforme par défaut pour les paramètres d\'affichage et la sélection des corpus';
 $string['resetglossaries'] = 'Vider tous les glossaires personnels';
 $string['resetclikhistory'] = 'Effacer les statistiques de clics';
+$string['requestdemokey'] = 'Demander une clé démo';
+$string['requestdemokey_desc'] = 'En cliquant sur ce bouton vous enverrez des informations relatives à votre plateforme (shortname, adresse IP, URL, et identifiant de site) afin de vous enregistrer sur CoBRA et obtenir une clé d\'accès de démonstration';

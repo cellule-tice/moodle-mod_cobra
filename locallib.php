@@ -98,29 +98,6 @@ function cobra_get_default_corpus_order($course, $language) {
     return $corpusorder;
 }
 
-/**
- * Prepares and executes a curl request to the central CoBRA system
- *
- * @param string $url target url
- * @return mixed|bool response of the curl request or false on error
- */
-function cobra_curl_request($url) {
-    $handle = curl_init();
-
-    $options = array(
-        CURLOPT_URL => $url,
-        CURLOPT_HEADER => false,
-        CURLOPT_RETURNTRANSFER => true
-    );
-    curl_setopt_array($handle, $options);
-
-    if (!$content = curl_exec($handle)) {
-        return false;
-    }
-    curl_close($handle);
-    return $content;
-}
-
 // Functions dedicated to student personal glossary.
 
 /**
