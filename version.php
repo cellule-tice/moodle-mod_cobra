@@ -30,6 +30,6 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->component = 'mod_cobra';
 $plugin->version = 2018111401;
 $plugin->release = 'v2.0';
-$plugin->requires = 2018051703;
+$plugin->requires = 2018051700;
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = array();
