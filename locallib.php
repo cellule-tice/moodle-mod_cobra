@@ -117,7 +117,7 @@ function cobra_is_in_glossary($lingentity, $courseid, $userid = 0) {
     } else {
         $user = $USER->id;
     }
-    $inglossary = $DB->record_exists('cobra_clic', array(
+    $inglossary = $DB->record_exists('cobra_click', array(
             'course' => $courseid,
             'lingentity' => (int)$lingentity,
             'userid' => $user,
@@ -176,7 +176,7 @@ function cobra_get_texts_options_list($collection) {
 function cobra_record_clic($textid, $lingentityid, $courseid, $userid, $cobraid) {
     global $DB;
 
-    $info = $DB->get_record_select('cobra_clic',
+    $info = $DB->get_record_select('cobra_click',
         "course='$courseid' AND userid='$userid' AND textid='$textid' AND lingentity='$lingentityid'");
     if (!$info) {
         // Insert record.
@@ -186,19 +186,17 @@ function cobra_record_clic($textid, $lingentityid, $courseid, $userid, $cobraid)
         $dataobject->userid = $userid;
         $dataobject->textid = $textid;
         $dataobject->lingentity = $lingentityid;
-        $dataobject->nbclicsstats = 1;
-        $dataobject->nbclicsglossary = 1;
+        $dataobject->nbclicks = 1;
         $dataobject->timecreated = time();
         $dataobject->timemodified = time();
-        $result = $DB->insert_record('cobra_clic', $dataobject);
+        $result = $DB->insert_record('cobra_click', $dataobject);
     } else {
         // Update record.
         $dataobject = new  stdClass();
         $dataobject->id = $info->id;
-        $dataobject->nbclicsstats = ($info->nbclicsstats + 1);
-        $dataobject->nbclicsglossary = ($info->nbclicsglossary + 1);
+        $dataobject->nbclicks = ($info->nbclicks + 1);
         $dataobject->timemodified = time();
-        $result = $DB->update_record('cobra_clic', $dataobject);
+        $result = $DB->update_record('cobra_click', $dataobject);
     }
 
     return $result;
@@ -292,13 +290,11 @@ function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $in
         $initialfilter = '';
     }
 
-    $dataquery = "SELECT DISTINCT(ug.lingentity) AS lingentity, textid, entry, type, gc.translations, category, extrainfo
-                    FROM {cobra_clic} ug
-                    JOIN {cobra} c
-                      ON ug.cobra = c.id
+    $dataquery = "SELECT DISTINCT(ug.lingentity) AS lingentity, textid, entry, type, translations, category, extrainfo
+                    FROM {cobra_click} ug
                     JOIN {cobra_glossary_cache} gc
                       ON ug.lingentity = gc.lingentity
-                   WHERE c.course = :courseid
+                   WHERE course = :courseid
                      AND userid = :userid
                      AND inglossary = 1 " . $initialfilter . "
                 ORDER BY entry";
@@ -323,10 +319,8 @@ function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $in
             $entitiesintext = array();
         }
         $textquery = "SELECT DISTINCT(lingentity)
-                        FROM {cobra_clic} cc
-                        JOIN {cobra} c
-                          ON cc.cobra = c.id
-                       WHERE c.course = :courseid
+                        FROM {cobra_click}
+                       WHERE course = :courseid
                          AND userid = :userid
                          AND inglossary = 1
                          AND textid = :textid";
@@ -390,7 +384,7 @@ function cobra_get_glossary_entry($lingentity) {
  */
 function cobra_empty_glossary($course, $user) {
     global $DB;
-    return $DB->set_field('cobra_clic',
+    return $DB->set_field('cobra_click',
         'inglossary',
         '0',
         array(

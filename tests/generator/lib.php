@@ -131,12 +131,11 @@ class mod_cobra_generator extends testing_module_generator {
         $record1->userid = $userid;
         $record1->textid = $cobraobject->text;
         $record1->lingentity = 36638;
-        $record1->nbclicsstats = 1;
-        $record1->nbclicsglossary = 1;
+        $record1->nbclicks = 1;
         $record1->timecreated = time();
         $record1->timemodified = time();
         $record1->inglossary = 0;
-        $DB->insert_record('cobra_clic', $record1);
+        $DB->insert_record('cobra_click', $record1);
 
         $record2 = new stdClass();
         $record2->cobra = $cobraobject->id;
@@ -144,12 +143,11 @@ class mod_cobra_generator extends testing_module_generator {
         $record2->userid = $userid;
         $record2->textid = $cobraobject->text;
         $record2->lingentity = 147302;
-        $record2->nbclicsstats = 1;
-        $record2->nbclicsglossary = 1;
+        $record2->nbclicks = 1;
         $record2->timecreated = time();
         $record2->timemodified = time();
         $record2->inglossary = 1;
-        $DB->insert_record('cobra_clic', $record2);
+        $DB->insert_record('cobra_click', $record2);
 
         $record3 = new stdClass();
         $record3->cobra = $cobraobject->id;
@@ -157,11 +155,10 @@ class mod_cobra_generator extends testing_module_generator {
         $record3->userid = $userid;
         $record3->textid = $cobraobject->text;
         $record3->lingentity = 36515;
-        $record3->nbclicsstats = 1;
-        $record3->nbclicsglossary = 1;
+        $record3->nbclicks = 1;
         $record3->timecreated = time();
         $record3->timemodified = time();
         $record3->inglossary = 1;
-        $DB->insert_record('cobra_clic', $record3);
+        $DB->insert_record('cobra_click', $record3);
     }
 }

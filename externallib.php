@@ -307,7 +307,7 @@ class mod_cobra_external extends external_api {
                     'userid' => $userid
                 )
         );
-        $result = (int)$DB->set_field('cobra_clic',
+        $result = (int)$DB->set_field('cobra_click',
             'inglossary',
             '1',
             $params
@@ -355,7 +355,7 @@ class mod_cobra_external extends external_api {
                     'userid' => $userid
                 )
         );
-        $result = (int)$DB->set_field('cobra_clic',
+        $result = (int)$DB->set_field('cobra_click',
             'inglossary',
             '0',
             $params

@@ -82,11 +82,12 @@ class restore_cobra_activity_structure_step extends restore_activity_structure_s
         global $DB, $COURSE;
 
         $data = (object)$data;
+        $data->course = $this->get_courseid();
 
         $data->cobra = $this->get_new_parentid('cobra');
         $data->userid = $this->get_mappingid('user', $data->userid);
 
-        $DB->insert_record('cobra_clic', $data);
+        $DB->insert_record('cobra_click', $data);
         // No need to save this mapping as far as nothing depend on it.
     }
 

@@ -232,10 +232,10 @@ function cobra_reset_userdata($data) {
         );
     }
 
-    if (!empty($data->reset_cobra_clic_history) && !empty($data->reset_cobra_personal_glossaries)) {
+    if (!empty($data->reset_cobra_click_history) && !empty($data->reset_cobra_personal_glossaries)) {
 
         $params = array('course' => $data->courseid);
-        $success = $DB->delete_records('cobra_clic', $params);
+        $success = $DB->delete_records('cobra_click', $params);
 
         $status[] = array(
             'component' => $componentstr,
@@ -248,7 +248,7 @@ function cobra_reset_userdata($data) {
             'error' => !$success
         );
     } else if (!empty($data->reset_cobra_personal_glossaries)) {
-        $sql = "UPDATE {cobra_clic}
+        $sql = "UPDATE {cobra_click}
                    SET inglossary = 0
                  WHERE course=:course";
 
@@ -277,8 +277,8 @@ function cobra_reset_course_form_definition(&$mform) {
 
     $mform->addElement('checkbox', 'reset_cobra_personal_glossaries', get_string('resetglossaries', 'cobra'));
 
-    $mform->addElement('checkbox', 'reset_cobra_clic_history', get_string('resetclichistory', 'cobra'));
-    $mform->disabledIf('reset_cobra_clic_history', 'reset_cobra_personal_glossaries', 'notchecked');
+    $mform->addElement('checkbox', 'reset_cobra_click_history', get_string('resetclichistory', 'cobra'));
+    $mform->disabledIf('reset_cobra_click_history', 'reset_cobra_personal_glossaries', 'notchecked');
 }
 
 /**
@@ -290,6 +290,6 @@ function cobra_reset_course_form_defaults($course) {
     return array(
         'reset_cobra_defaults' => 0,
         'reset_cobra_personal_glossaries' => 1,
-        'reset_cobra_clic_history' => 0
+        'reset_cobra_click_history' => 0
     );
 }

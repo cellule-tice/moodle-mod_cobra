@@ -52,7 +52,7 @@ class backup_cobra_activity_structure_step extends backup_activity_structure_ste
         $clics = new backup_nested_element('clics');
 
         $clic = new backup_nested_element('clic', array('id'), array(
-            'course', 'lingentity', 'textid', 'userid', 'nbclicsstats', 'nbclicsglossary',
+            'lingentity', 'textid', 'userid', 'nbclicks',
             'timecreated', 'timemodified', 'inglossary'));
 
         // Build the tree.
@@ -64,7 +64,7 @@ class backup_cobra_activity_structure_step extends backup_activity_structure_ste
 
         // Clicks included only if we are including user info.
         if ($userinfo) {
-            $clic->set_source_table('cobra_clic', array('cobra' => backup::VAR_PARENTID), 'id ASC');
+            $clic->set_source_table('cobra_click', array('cobra' => backup::VAR_PARENTID), 'id ASC');
         }
 
         // Define id annotations.

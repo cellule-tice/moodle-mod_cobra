@@ -98,7 +98,7 @@ if (!empty($data)) {
             'course' => $course->id
         );
 
-        $textidlist = $DB->get_fieldset_select('cobra_clic', 'textid', $where, $sqlparams);
+        $textidlist = $DB->get_fieldset_select('cobra_click', 'textid', $where, $sqlparams);
 
         asort($textidlist);
 

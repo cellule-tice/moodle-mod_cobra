@@ -35,8 +35,31 @@ require_once($CFG->dirroot . '/mod/cobra/locallib.php');
  */
 function xmldb_cobra_upgrade($oldversion) {
 
-    if ($oldversion < 2017082800) {
-        upgrade_mod_savepoint(true, 2017082800, 'cobra');
+    global $DB;
+    // Loads ddl manager and xmldb classes.
+    $dbman = $DB->get_manager();
+
+    if ($oldversion < 2018111603) {
+        // Refactor click table.
+        $table = new xmldb_table('cobra_clic');
+
+        // Rename field nbclicsstats on table cobra_click to nbclicks.
+        $field = new xmldb_field('nbclicsstats', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, '0', 'userid');
+
+        // Launch rename field nbclicks.
+        $dbman->rename_field($table, $field, 'nbclicks');
+
+        $field = new xmldb_field('nbclicsglossary');
+
+        // Conditionally launch drop field nbclicsglossary.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Finally rename table cobra_clic to cobra_click.
+        $dbman->rename_table($table, 'cobra_click');
+
+        upgrade_mod_savepoint(true, 2018111603, 'cobra');
     }
 
     return true;
