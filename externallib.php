@@ -558,7 +558,6 @@ class mod_cobra_external extends external_api {
         $email = get_config('moodle', 'supportemail');
         $params = array(
             'caller' => $site->shortname,
-            'email' => $email,
             'url' => $CFG->wwwroot,
             'platformid' => get_config('moodle', 'siteidentifier')
         );
