@@ -246,10 +246,8 @@
     font-size: 10px;
     margin-right: 5px;
     float: left;
-    background-image: url(../pix/hot.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    margin-top: 1px;
+    background: url([[pix:mod_cobra|hot]]) no-repeat center;
+    margin-top: 3px;
 }
 
 .path-mod-cobra .text-center {
