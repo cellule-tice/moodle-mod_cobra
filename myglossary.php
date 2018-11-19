@@ -55,8 +55,6 @@ $PAGE->navbar->add(get_string('mycourses'));
 $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
 $PAGE->navbar->add(get_string('myglossary', 'cobra'), new moodle_url('/mod/cobra/myglossary.php', array('id' => $id)));
 
-$PAGE->requires->css('/mod/cobra/css/cobra.css');
-
 // Add the ajaxcommand for the form.
 $params = new stdClass();
 $params->course = $course->id;

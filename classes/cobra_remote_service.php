@@ -26,7 +26,6 @@
 namespace mod_cobra;
 
 use curl;
-use cobra_remote_access_exception;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -85,6 +84,7 @@ class cobra_remote_service {
         $data = $curl->post($url . '?verb=' . $servicename . '&' . $querystring, json_encode($params), $options);
 
         if ($data === false) {
+
             throw new cobra_remote_access_exception('serviceunavailable');
         } else {
             $response = json_decode($data);

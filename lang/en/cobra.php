@@ -154,5 +154,7 @@ $string['privacy:metadata:cobra_click:userid'] = 'The ID of the user who clicked
 $string['privacy:metadata:cobra_click:nbclicks'] = 'The number of times the user clicked that word in the same text of the same course.';
 $string['privacy:metadata:cobra_click:timecreated'] = 'The time when the user clicked for the first time on this word in the same text and course.';
 $string['privacy:metadata:cobra_click:inglossary'] = 'Flag stating whether this lexicon entry is in the student personal dictionary.';
+$string['registrationrequired'] = 'Registration is mandatory';
+$string['registrationwarning'] = '<div class="box errorbox alert alert-danger py-3">Your platform is currently not registered with CoBRA. In order to add CoBRA texts to your courses, you must ask your platform administrator to request an api key and add it to the plugin configuration.</div>';
 $string['requestdemokey'] = 'Request demo key';
 $string['requestdemokey_desc'] = 'Clicking this button will send information about your platform (shortname, IP address, URL and siteid) in order to register it with CoBRA and get a demo access key. No user related information is sent to CoBRA remote server.';

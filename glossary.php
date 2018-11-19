@@ -97,8 +97,6 @@ $PAGE->set_url('/mod/cobra/glossary.php', array('id' => $context->id));
 $PAGE->set_title(format_string(get_string('pluginname', 'mod_cobra')));
 $PAGE->set_heading(format_string($course->fullname));
 
-$PAGE->requires->css('/mod/cobra/css/cobra.css');
-
 echo $OUTPUT->header();
 
 switch ($cmd) {

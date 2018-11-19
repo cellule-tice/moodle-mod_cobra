@@ -42,12 +42,25 @@ class mod_cobra_mod_form extends moodleform_mod {
     public function definition() {
         global $CFG, $DB, $COURSE, $PAGE;
 
-        // Load css and js calls.
-        $PAGE->requires->css('/mod/cobra/css/cobra.css');
+        $mform = $this->_form;
+
+        if (empty(get_config('mod_cobra', 'apikey'))) {
+            $mform->addElement('header', 'registrationrequired', get_string('registrationrequired', 'cobra'));
+            $mform->addElement('static', 'registrationwarning', '', get_string('registrationwarning', 'cobra'));
+            $mform->addElement('hidden', 'registered', 0);
+            $mform->setType('registered', PARAM_INT);
+
+        } else {
+            $mform->addElement('hidden', 'registered', 1);
+            $mform->setType('registered', PARAM_INT);
+        }
+
         // Prepare params for js calls.
         $jsparams = array();
         $jsparams['en'] = cobra_get_default_corpus_order($COURSE->id, 'EN');
         $jsparams['nl'] = cobra_get_default_corpus_order($COURSE->id, 'NL');
+
+        // Load js calls.
         $PAGE->requires->js_call_amd('mod_cobra/cobra', 'initData', array(json_encode($jsparams)));
         $PAGE->requires->js_call_amd('mod_cobra/cobra', 'modFormTriggers');
 
@@ -59,7 +72,6 @@ class mod_cobra_mod_form extends moodleform_mod {
             $mode = 'add';
         }
 
-        $mform = $this->_form;
 
         // Adding the "general" fieldset, where all the common settings are showed.
         $mform->addElement('header', 'general', get_string('general', 'form'));
@@ -114,6 +126,8 @@ class mod_cobra_mod_form extends moodleform_mod {
         if ($lastinstance) {
             $langselect->setSelected($lastinstance->language);
         }
+        $mform->addRule('language', null, 'required', null, 'client');
+        $mform->disabledIf('language', 'registered', 'eq', 0);
 
         // Button to update collection fieldset on language change (will be hidden by JavaScript).
         $mform->registerNoSubmitButton('updatelanguage');
