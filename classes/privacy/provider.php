@@ -54,17 +54,17 @@ class provider implements
     public static function get_metadata(collection $items) : collection {
 
         $items->add_database_table(
-            'cobra_clic',
+            'cobra_click',
             [
-                  'course' => 'privacy:metadata:cobra_clic:course',
-                  'lingentity' => 'privacy:metadata:cobra_clic:lingentity',
-                  'textid' => 'privacy:metadata:cobra_clic:textid',
-                  'userid' => 'privacy:metadata:cobra_clic:userid',
-                  'nbclicsstats' => 'privacy:metadata:cobra_clic:nbclicsstats',
-                  'timecreated' => 'privacy:metadata:cobra_clic:timecreated',
-                  'inglossary' => 'privacy:metadata:cobra_clic:inglossary'
+                  'course' => 'privacy:metadata:cobra_click:course',
+                  'lingentity' => 'privacy:metadata:cobra_click:lingentity',
+                  'textid' => 'privacy:metadata:cobra_click:textid',
+                  'userid' => 'privacy:metadata:cobra_click:userid',
+                  'nbclicks' => 'privacy:metadata:cobra_click:nbclicks',
+                  'timecreated' => 'privacy:metadata:cobra_click:timecreated',
+                  'inglossary' => 'privacy:metadata:cobra_click:inglossary'
             ],
-            'privacy:metadata:cobra_clic'
+            'privacy:metadata:cobra_click'
         );
 
         return $items;
@@ -83,7 +83,7 @@ class provider implements
             INNER JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
             INNER JOIN {modules} m ON m.id = cm.module AND m.name = :modname
             INNER JOIN {cobra} co ON co.id = cm.instance
-             LEFT JOIN {cobra_clic} cc ON cc.cobra = co.id
+             LEFT JOIN {cobra_click} cc ON cc.cobra = co.id
                  WHERE cc.userid = :userid";
 
         $params = [
@@ -118,14 +118,14 @@ class provider implements
                        cc.course,
                        cg.entry,
                        ct.title,
-                       cc.nbclicsstats,
+                       cc.nbclicks,
                        cc.timecreated,
                        cc.inglossary
 
                  FROM {context} c
                  JOIN {course_modules} cm ON cm.id = c.instanceid
                  JOIN {cobra} co ON co.id = cm.instance
-                 JOIN {cobra_clic} cc ON cc.cobra = co.id
+                 JOIN {cobra_click} cc ON cc.cobra = co.id
                  JOIN {cobra_text_info_cache} ct ON ct.id = cc.textid
                  JOIN {cobra_glossary_cache} cg ON cg.lingentity = cc.lingentity
 
@@ -153,7 +153,7 @@ class provider implements
                 'course' => $item->course,
                 'glossaryentry' => $item->entry,
                 'text' => $item->title,
-                'nbrclics' => $item->nbclicsstats,
+                'nbrclicks' => $item->nbclicks,
                 'inglossary' => $item->inglossary,
                 'usertimestamp' => $item->timecreated ? transform::datetime($item->timecreated) : '',
             ];
@@ -180,15 +180,15 @@ class provider implements
         $contextdata = (object)array_merge((array)$contextdata, ['items' => $items]);
         writer::with_context($context)->export_data([], $contextdata)->export_metadata(
                 [],
-                'cobra_clic', (object) [
+                'cobra_click', (object) [
                     'course' => 'course',
                     'lingentity' => 'lingentity',
                     'textid' => 'textid',
-                    'nbclicsstats' => 'nbclicsstats',
+                    'nbclicks' => 'nbclicks',
                     'timecreated' => 'timecreated',
                     'inglossary' => 'inglossary'
                 ],
-                get_string('privacy:metadata:cobra_clic', 'mod_cobra')
+                get_string('privacy:metadata:cobra_click', 'mod_cobra')
         );
 
         // Write generic module intro files.
@@ -206,9 +206,9 @@ class provider implements
             return;
         }
         $instanceid = $DB->get_field('course_modules', 'instance', ['id' => $context->instanceid], MUST_EXIST);
-        $itemids = $DB->get_fieldset_select('cobra_clic', 'id', 'cobra = ?', [$instanceid]);
+        $itemids = $DB->get_fieldset_select('cobra_click', 'id', 'cobra = ?', [$instanceid]);
         if ($itemids) {
-            $DB->delete_records_select('cobra_clic', 'cobra = ? AND userid <> 0', [$instanceid]);
+            $DB->delete_records_select('cobra_click', 'cobra = ? AND userid <> 0', [$instanceid]);
         }
     }
 
@@ -226,11 +226,10 @@ class provider implements
         $userid = $contextlist->get_user()->id;
         foreach ($contextlist->get_contexts() as $context) {
             $instanceid = $DB->get_field('course_modules', 'instance', ['id' => $context->instanceid], MUST_EXIST);
-            $itemids = $DB->get_fieldset_select('cobra_clic', 'id', 'cobra = ?', [$instanceid]);
+            $itemids = $DB->get_fieldset_select('cobra_click', 'id', 'cobra = ?', [$instanceid]);
             if ($itemids) {
-                list($isql, $params) = $DB->get_in_or_equal($itemids, SQL_PARAMS_NAMED);
                 $params = ['instanceid' => $instanceid, 'userid' => $userid];
-                $DB->delete_records_select('cobra_clic', 'cobra = :instanceid AND userid = :userid', $params);
+                $DB->delete_records_select('cobra_click', 'cobra = :instanceid AND userid = :userid', $params);
             }
         }
     }

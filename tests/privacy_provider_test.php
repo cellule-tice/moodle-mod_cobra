@@ -97,16 +97,16 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $this->assertCount(1, $itemcollection);
 
         $table = array_shift($itemcollection);
-        $this->assertEquals('cobra_clic', $table->get_name());
+        $this->assertEquals('cobra_click', $table->get_name());
         $privacyfields = $table->get_privacy_fields();
         $this->assertArrayHasKey('course', $privacyfields);
         $this->assertArrayHasKey('userid', $privacyfields);
         $this->assertArrayHasKey('lingentity', $privacyfields);
         $this->assertArrayHasKey('textid', $privacyfields);
-        $this->assertArrayHasKey('nbclicsstats', $privacyfields);
+        $this->assertArrayHasKey('nbclicks', $privacyfields);
         $this->assertArrayHasKey('timecreated', $privacyfields);
         $this->assertArrayHasKey('inglossary', $privacyfields);
-        $this->assertEquals('privacy:metadata:cobra_clic', $table->get_summary());
+        $this->assertEquals('privacy:metadata:cobra_click', $table->get_summary());
     }
 
     /**
@@ -121,15 +121,17 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
             context_module::instance($cms[0]->id),
             context_module::instance($cms[1]->id),
         ];
+
         $expectedctxids = [];
         foreach ($expectedctxs as $ctx) {
             $expectedctxids[] = $ctx->id;
         }
-        $contextlist = provider::get_contexts_for_userid($this->student1->id);
+        $contextlist = provider::get_contexts_for_userid($this->student1->id)->get_contextids();
+
         $this->assertCount(2, $contextlist);
         $uctxids = [];
         foreach ($contextlist as $uctx) {
-            $uctxids[] = $uctx->id;
+            $uctxids[] = $uctx;
         }
         $this->assertEmpty(array_diff($expectedctxids, $uctxids));
         $this->assertEmpty(array_diff($uctxids, $expectedctxids));
@@ -158,7 +160,6 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
     public function test_delete_data_for_user() {
         global $DB;
 
-        $gen = self::getDataGenerator();
         $cms = [
             get_coursemodule_from_instance('cobra', $this->cobra1->id),
             get_coursemodule_from_instance('cobra', $this->cobra2->id)
@@ -169,8 +170,8 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
         }
 
         // Before deletion, we should have 6 items for both student1 and student2.
-        $this->assertEquals(6, $DB->count_records('cobra_clic', ['userid' => $this->student1->id]));
-        $this->assertEquals(6, $DB->count_records('cobra_clic', ['userid' => $this->student2->id]));
+        $this->assertEquals(6, $DB->count_records('cobra_click', ['userid' => $this->student1->id]));
+        $this->assertEquals(6, $DB->count_records('cobra_click', ['userid' => $this->student2->id]));
 
         // Delete the data for student.
         $contextlist = new \core_privacy\local\request\approved_contextlist($this->student1, 'cobra',
@@ -178,8 +179,8 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
         provider::delete_data_for_user($contextlist);
 
         // After deletion, we should have no items for student1 but still 6 for student2.
-        $this->assertEquals(0, $DB->count_records('cobra_clic', ['userid' => $this->student1->id]));
-        $this->assertEquals(6, $DB->count_records('cobra_clic', ['userid' => $this->student2->id]));
+        $this->assertEquals(0, $DB->count_records('cobra_click', ['userid' => $this->student1->id]));
+        $this->assertEquals(6, $DB->count_records('cobra_click', ['userid' => $this->student2->id]));
     }
 
     /**
@@ -188,15 +189,15 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
     public function test_delete_data_for_all_users_in_context() {
         global $DB;
 
-        // Before deletion, we should have 12 entries in cobra_clic table,
+        // Before deletion, we should have 12 entries in cobra_click table,
         // 6 for student1 (3 cobra1, 3 cobra2) and 6 for student2 (same).
-        $this->assertEquals(12, $DB->count_records('cobra_clic'));
-        $this->assertEquals(6, $DB->count_records('cobra_clic', ['userid' => $this->student1->id]));
-        $this->assertEquals(6, $DB->count_records('cobra_clic', ['userid' => $this->student2->id]));
-        $this->assertEquals(3, $DB->count_records('cobra_clic', ['userid' => $this->student1->id, 'cobra' => $this->cobra1->id]));
-        $this->assertEquals(3, $DB->count_records('cobra_clic', ['userid' => $this->student2->id, 'cobra' => $this->cobra1->id]));
-        $this->assertEquals(3, $DB->count_records('cobra_clic', ['userid' => $this->student1->id, 'cobra' => $this->cobra2->id]));
-        $this->assertEquals(3, $DB->count_records('cobra_clic', ['userid' => $this->student2->id, 'cobra' => $this->cobra2->id]));
+        $this->assertEquals(12, $DB->count_records('cobra_click'));
+        $this->assertEquals(6, $DB->count_records('cobra_click', ['userid' => $this->student1->id]));
+        $this->assertEquals(6, $DB->count_records('cobra_click', ['userid' => $this->student2->id]));
+        $this->assertEquals(3, $DB->count_records('cobra_click', ['userid' => $this->student1->id, 'cobra' => $this->cobra1->id]));
+        $this->assertEquals(3, $DB->count_records('cobra_click', ['userid' => $this->student2->id, 'cobra' => $this->cobra1->id]));
+        $this->assertEquals(3, $DB->count_records('cobra_click', ['userid' => $this->student1->id, 'cobra' => $this->cobra2->id]));
+        $this->assertEquals(3, $DB->count_records('cobra_click', ['userid' => $this->student2->id, 'cobra' => $this->cobra2->id]));
 
         // Delete data from the first checklist.
         $cm = get_coursemodule_from_instance('cobra', $this->cobra1->id);
@@ -204,8 +205,8 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
         provider::delete_data_for_all_users_in_context($cmcontext);
         // After deletion, there should be no items for cobra1
         // but still 3 items for student1 in cobra2 and 3 items for student2 in cobra2.
-        $this->assertEquals(0, $DB->count_records('cobra_clic', ['cobra' => $this->cobra1->id]));
-        $this->assertEquals(3, $DB->count_records('cobra_clic', ['userid' => $this->student1->id, 'cobra' => $this->cobra2->id]));
-        $this->assertEquals(3, $DB->count_records('cobra_clic', ['userid' => $this->student2->id, 'cobra' => $this->cobra2->id]));
+        $this->assertEquals(0, $DB->count_records('cobra_click', ['cobra' => $this->cobra1->id]));
+        $this->assertEquals(3, $DB->count_records('cobra_click', ['userid' => $this->student1->id, 'cobra' => $this->cobra2->id]));
+        $this->assertEquals(3, $DB->count_records('cobra_click', ['userid' => $this->student2->id, 'cobra' => $this->cobra2->id]));
     }
 }

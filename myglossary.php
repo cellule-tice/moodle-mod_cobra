@@ -30,17 +30,10 @@ require_once("$CFG->dirroot/lib/dataformatlib.php");
 
 $id = required_param('id', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_INT);
-$page = optional_param('page', 0, PARAM_INT);
 $initial = optional_param('initial', 'all', PARAM_ALPHA);
 $export = optional_param('download', '', PARAM_TEXT);
 $format = optional_param('exportformat', null, PARAM_ALPHA);
 $empty = optional_param('empty', null, PARAM_TEXT);
-$viewall = optional_param('viewall', null, PARAM_INT);
-if ($viewall) {
-    $perpage = 0;
-} else {
-    $perpage = 0;
-}
 
 $course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
 
@@ -61,8 +54,6 @@ $PAGE->navbar->ignore_active();
 $PAGE->navbar->add(get_string('mycourses'));
 $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
 $PAGE->navbar->add(get_string('myglossary', 'cobra'), new moodle_url('/mod/cobra/myglossary.php', array('id' => $id)));
-
-$PAGE->requires->css('/mod/cobra/css/cobra.css');
 
 // Add the ajaxcommand for the form.
 $params = new stdClass();
@@ -89,7 +80,7 @@ if ($empty) {
     }
 }
 
-list($totalcount, $data) = cobra_get_student_glossary($USER->id, $course->id, 0, $page, $perpage, !empty($export), $initial);
+list($totalcount, $data) = cobra_get_student_glossary($USER->id, $course->id, 0, $initial);
 
 $entries = array();
 if (!empty($data)) {
@@ -98,19 +89,15 @@ if (!empty($data)) {
         $sourcetexttitle = cobra_get_cached_text_title($entry->textid);
         $entry->sourcetexttitle = $sourcetexttitle;
 
-        $query = "SELECT GROUP_CONCAT(CAST(textid AS CHAR)) AS texts
-                    FROM {cobra_clic}
-                   WHERE userid = :userid
-                         AND lingentity = :lingentity
-                         AND course = :course
-                   GROUP BY lingentity";
-        $result = $DB->get_field_sql($query, array(
-                'userid' => $USER->id,
-                'lingentity' => $entry->lingentity,
-                'course' => $course->id
-            )
+        $where = 'userid = :userid AND lingentity = :lingentity AND course = :course';
+        $sqlparams = array(
+            'userid' => $USER->id,
+            'lingentity' => $entry->lingentity,
+            'course' => $course->id
         );
-        $textidlist = explode(',', $result);
+
+        $textidlist = $DB->get_fieldset_select('cobra_click', 'textid', $where, $sqlparams);
+
         asort($textidlist);
 
         $texttitles = array();

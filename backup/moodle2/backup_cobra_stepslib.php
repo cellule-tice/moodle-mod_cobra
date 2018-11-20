@@ -40,21 +40,38 @@ class backup_cobra_activity_structure_step extends backup_activity_structure_ste
      */
     protected function define_structure() {
 
+        // To know if we are including userinfo.
+        $userinfo = $this->get_setting_value('userinfo');
+
         // Define each element separated.
         $cobra = new backup_nested_element('cobra', array('id'), array(
             'collection', 'text', 'name', 'intro', 'introformat', 'timecreated', 'timemodified',
             'language', 'userglossary', 'audioplayer', 'examples', 'translations', 'annotations',
             'corpusorder', 'isdefaultcorpusorder', 'isdefaultdisplayprefs'));
 
+        $clics = new backup_nested_element('clics');
+
+        $clic = new backup_nested_element('clic', array('id'), array(
+            'lingentity', 'textid', 'userid', 'nbclicks',
+            'timecreated', 'timemodified', 'inglossary'));
+
         // Build the tree.
+        $cobra->add_child($clics);
+        $clics->add_child($clic);
 
         // Define sources.
         $cobra->set_source_table('cobra', array('id' => backup::VAR_ACTIVITYID));
 
+        // Clicks included only if we are including user info.
+        if ($userinfo) {
+            $clic->set_source_table('cobra_click', array('cobra' => backup::VAR_PARENTID), 'id ASC');
+        }
+
         // Define id annotations.
+        $clic->annotate_ids('user', 'userid');
 
         // Define file annotations.
-        $cobra->annotate_files('mod_cobra', 'intro', null, $contextid = null);
+        $cobra->annotate_files('mod_cobra', 'intro', null);
 
         // Return the root element (choice), wrapped into standard activity structure.
 

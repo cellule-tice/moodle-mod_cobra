@@ -42,10 +42,13 @@ class restore_cobra_activity_structure_step extends restore_activity_structure_s
      */
     protected function define_structure() {
         $paths = array();
+
         $userinfo = $this->get_setting_value('userinfo');
 
         $paths[] = new restore_path_element('cobra', '/activity/cobra');
-
+        if ($userinfo) {
+            $paths[] = new restore_path_element('clic', '/activity/cobra/clics/clic');
+        }
         // Return paths wrapped into standard activity structure.
         return $this->prepare_activity_structure($paths);
     }
@@ -60,7 +63,6 @@ class restore_cobra_activity_structure_step extends restore_activity_structure_s
         global $DB;
 
         $data = (object)$data;
-        $oldid = $data->id;
         $data->course = $this->get_courseid();
 
         $data->timecreated = $this->apply_date_offset($data->timecreated);
@@ -68,6 +70,25 @@ class restore_cobra_activity_structure_step extends restore_activity_structure_s
 
         $newitemid = $DB->insert_record('cobra', $data);
         $this->apply_activity_instance($newitemid);
+    }
+
+    /**
+     * Process a cobra clic restore.
+     *
+     * @param object $data The data in object form
+     * @return void
+     */
+    protected function process_clic($data) {
+        global $DB, $COURSE;
+
+        $data = (object)$data;
+        $data->course = $this->get_courseid();
+
+        $data->cobra = $this->get_new_parentid('cobra');
+        $data->userid = $this->get_mappingid('user', $data->userid);
+
+        $DB->insert_record('cobra_click', $data);
+        // No need to save this mapping as far as nothing depend on it.
     }
 
     /**

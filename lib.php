@@ -59,10 +59,9 @@ function cobra_supports($feature) {
  * number of the instance.
  *
  * @param object $moduleinstance An object from the form.
- * @param mod_cobra_mod_form $mform The form.
  * @return int The id of the newly inserted record.
  */
-function cobra_add_instance($moduleinstance, $mform = null) {
+function cobra_add_instance($moduleinstance) {
     global $DB;
 
     $moduleinstance->timecreated = time();
@@ -79,10 +78,9 @@ function cobra_add_instance($moduleinstance, $mform = null) {
  * this function will update an existing instance with new data.
  *
  * @param object $moduleinstance An object from the form in mod_form.php.
- * @param mod_cobra_mod_form $mform The form.
  * @return bool True if successful, false otherwise.
  */
-function cobra_update_instance($moduleinstance, $mform = null) {
+function cobra_update_instance($moduleinstance) {
     global $DB;
 
     $moduleinstance->timemodified = time();
@@ -111,29 +109,6 @@ function cobra_delete_instance($id) {
 }
 
 /**
- * Extends the global navigation tree by adding mod_cobra nodes if there is a relevant content.
- * This can be called by an AJAX request so do not rely on $PAGE as it might not be set up properly.
- * @param navigation_node $cobranode An object representing the navigation tree node
- * @param stdClass $course
- * @param stdClass $module
- * @param cm_info $cm
- */
-function cobra_extend_navigation($cobranode, $course, $module, $cm) {
-}
-
-/**
- * Extends the settings navigation with the mod_cobra settings.
- *
- * This function is called when the context for the page is a mod_cobra module.
- * This is not called by AJAX so it is safe to rely on the $PAGE.
- *
- * @param settings_navigation $settingsnav {@link settings_navigation}
- * @param navigation_node $cobranode {@link navigation_node}
- */
-function cobra_extend_settings_navigation($settingsnav, $cobranode = null) {
-}
-
-/**
  * Extends the course navigation with mod_cobra nodes.
  *
  * @param navigation_node $parentnode main course navigation node
@@ -148,10 +123,10 @@ function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $
         global $CFG;
 
         $cobranode = $parentnode->add(get_string('cobra', 'mod_cobra'));
-        $params = array('id' => $course->id, 'cmd' => 'rqexport');
+        $params = array('id' => $context->instanceid, 'cmd' => 'rqexport');
         $cobranode->add(get_string('exportglossary', 'mod_cobra'), new moodle_url(
             $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_export_glossary');
-        $params = array('id' => $course->id, 'cmd' => 'rqcompare');
+        $params = array('id' => $context->instanceid, 'cmd' => 'rqcompare');
         $cobranode->add(get_string('comparetextwithglossary', 'mod_cobra'), new moodle_url(
             $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_compare_glossary');
     }
@@ -236,7 +211,7 @@ function mod_cobra_core_calendar_provide_event_action(calendar_event $event,
  * @return array status array
  */
 function cobra_reset_userdata($data) {
-    global $CFG, $DB;
+    global $DB;
 
     $componentstr = get_string('modulename', 'cobra');
     $status = array();
@@ -257,10 +232,10 @@ function cobra_reset_userdata($data) {
         );
     }
 
-    if (!empty($data->reset_cobra_clic_history) && !empty($data->reset_cobra_personal_glossaries)) {
+    if (!empty($data->reset_cobra_click_history) && !empty($data->reset_cobra_personal_glossaries)) {
 
         $params = array('course' => $data->courseid);
-        $success = $DB->delete_records('cobra_clic', $params);
+        $success = $DB->delete_records('cobra_click', $params);
 
         $status[] = array(
             'component' => $componentstr,
@@ -273,7 +248,7 @@ function cobra_reset_userdata($data) {
             'error' => !$success
         );
     } else if (!empty($data->reset_cobra_personal_glossaries)) {
-        $sql = "UPDATE {cobra_clic}
+        $sql = "UPDATE {cobra_click}
                    SET inglossary = 0
                  WHERE course=:course";
 
@@ -302,8 +277,8 @@ function cobra_reset_course_form_definition(&$mform) {
 
     $mform->addElement('checkbox', 'reset_cobra_personal_glossaries', get_string('resetglossaries', 'cobra'));
 
-    $mform->addElement('checkbox', 'reset_cobra_clic_history', get_string('resetclichistory', 'cobra'));
-    $mform->disabledIf('reset_cobra_clic_history', 'reset_cobra_personal_glossaries', 'notchecked');
+    $mform->addElement('checkbox', 'reset_cobra_click_history', get_string('resetclichistory', 'cobra'));
+    $mform->disabledIf('reset_cobra_click_history', 'reset_cobra_personal_glossaries', 'notchecked');
 }
 
 /**
@@ -315,6 +290,6 @@ function cobra_reset_course_form_defaults($course) {
     return array(
         'reset_cobra_defaults' => 0,
         'reset_cobra_personal_glossaries' => 1,
-        'reset_cobra_clic_history' => 0
+        'reset_cobra_click_history' => 0
     );
 }

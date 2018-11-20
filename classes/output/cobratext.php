@@ -23,6 +23,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_cobra\cobra_remote_service;
+use mod_cobra\cobra_remote_access_exception;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**

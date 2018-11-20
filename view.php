@@ -63,7 +63,6 @@ $PAGE->add_body_class('noblocks');
 $PAGE->set_context($context);
 
 // Add css and js requires.
-$PAGE->requires->css('/mod/cobra/css/cobra.css');
 
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'initData', array(json_encode($cobra)));
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'entryOnClick');

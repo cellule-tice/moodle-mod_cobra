@@ -15,19 +15,34 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the version and other meta-info about the plugin
- *
- * Setting the $plugin->version to 0 prevents the plugin from being installed.
- * See https://docs.moodle.org/dev/version.php for more info.
+ * Cobra remote access exception class definition.
  *
  * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
  * @copyright  2016 - Cellule TICE - Unversite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_cobra;
+
 defined('MOODLE_INTERNAL') || die();
-$plugin->component = 'mod_cobra';
-$plugin->version = 2018111608;
-$plugin->release = 'v3.5.1';
-$plugin->requires = 2018051700; // Moodle 3.5 (Build: 20180517).
-$plugin->maturity = MATURITY_RC; // Will be changed to MATURITY_STABLE on approval.
+
+/**
+ * Exception handling errors when trying to send requests to the remote CoBRA system (service unavailable or unauthorized access
+ *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class cobra_remote_access_exception extends \moodle_exception {
+
+    /**
+     * Constructor
+     *
+     * @param string $debuginfo the debug info
+     */
+    public function __construct($debuginfo) {
+        parent::__construct('platformnotallowed', 'cobra', '', null, $debuginfo);
+    }
+}

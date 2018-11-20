@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * External cobra API
+ * CoBRA functions dedicated to glossary management.
  *
  * @package    mod_cobra
  * @author     Jean-Roch Meurisse
@@ -23,6 +23,8 @@
  * @copyright  2016 onwards - Cellule TICE - Unversite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use mod_cobra\cobra_remote_service;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -139,7 +141,8 @@ function cobra_get_list_of_words_in_text($mytext, $language) {
 function cobra_explode_glossary_into_lemmas_and_expression($glossary) {
     $lemmalist = array();
     $explist = array();
-    foreach ($glossary as $key => $element) {
+
+    foreach ($glossary as $element) {
         if ($element->type == 'lemma') {
             $lemmalist[$element->id] = array(
                 'id' => $element->id,
@@ -161,35 +164,24 @@ function cobra_explode_glossary_into_lemmas_and_expression($glossary) {
     return array($lemmalist, $explist);
 }
 
-/**
- * Class cobra_edit_glossary_form
- *
- * @package    mod_cobra
- * @author     Laurence Dumortier
- * @copyright  2016 onwards - Cellule TICE - Universite de Namur
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class cobra_edit_glossary_form extends moodleform {
-    /**
-     * Form definition.
-     *
-     * @throws coding_exception
-     */
-    public function definition() {
-        $mform = $this->_form;
-        // 1st argument is group name, 2nd is link text, 3rd is attributes and 4th is original value.
-        $this->add_checkbox_controller(1, null, null, 1);
-        $textlist = $this->_customdata['textlist'];
-        $compare = $this->_customdata['compare'];
-        foreach ($textlist as $text) {
-            $mform->addElement('advcheckbox', 'text_' . $text->id, '',
-                    htmlspecialchars(strip_tags($text->name)), array('group' => 1));
-            $mform->setDefault('text_' . $text->id, 1);
 
-        }
-        if ($compare) {
-            $mform->addElement('textarea', 'mytext', get_string('mytext', 'cobra'), array('rows' => 30, 'cols' => 80));
-        }
-        $this->add_action_buttons(true, get_string('OK', 'cobra'));
-    }
+/**
+ * Marks the unknown words in the searched text.
+ *
+ * @param string $word the current word to mark
+ * @param string $text the text within which the word is searched for to be marked
+ * @return string
+ */
+function cobra_mark_unknown_word($word, $text) {
+    $text = str_replace(' ' . $word, ' <span style="color:red">'. $word . '</span>', $text);
+    $text = str_replace($word. ' ', '<span style="color:red">'. $word . '</span> ', $text);
+    $text = str_replace(' ' . $word . ' ', ' <span style="color:red">' . $word . '</span> ', $text);
+    $text = str_replace(' ' . $word . ',', ' <span style="color:red">' . $word . '</span>,', $text);
+    $text = str_replace(' ' . $word . '.', ' <span style="color:red">' . $word . '</span>.', $text);
+    $text = str_replace(' ' . $word . ':', ' <span style="color:red">' . $word . '</span>:', $text);
+    $text = str_replace(' ' . $word . ';', ' <span style="color:red">' . $word . '</span>;', $text);
+    $text = str_replace('(' . $word . ')', '(<span style="color:red">' . $word . '</span>)', $text);
+    $text = str_replace(' ' . $word . ')', ' <span style="color:red">' . $word . '</span>)', $text);
+    $text = str_replace('(' . $word . ' ', '(<span style="color:red">' . $word . '</span> ', $text);
+    return $text;
 }

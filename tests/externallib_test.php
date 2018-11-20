@@ -23,6 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_cobra\cobra_remote_access_exception;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -65,7 +67,6 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
     }
 
     public function test_remote_services() {
-        global $DB, $USER, $CFG;
 
         $this->resetAfterTest(true);
 
@@ -83,15 +84,15 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
             $result2 = external_api::clean_returnvalue($entrydescription, $result2);
             $result3 = mod_cobra_external::get_entry(23927, true, json_encode($this->cobra));
             $result3 = external_api::clean_returnvalue($entrydescription, $result3);
-            $concordancedescription = mod_cobra_external::get_full_concordance_returns();
+            $concordancedesc = mod_cobra_external::get_full_concordance_returns();
             $result4 = mod_cobra_external::get_full_concordance(77796);
-            $result4 = external_api::clean_returnvalue($concordancedescription, $result4);
-            $collectionlistdescription = mod_cobra_external::get_collection_list_returns();
+            $result4 = external_api::clean_returnvalue($concordancedesc, $result4);
+            $collectionlistdesc = mod_cobra_external::get_collection_list_returns();
             $result5 = mod_cobra_external::get_collection_list($this->cobra->language);
-            $result5 = external_api::clean_returnvalue($collectionlistdescription, $result5);
-            $textlistdescription = mod_cobra_external::get_text_list_returns();
+            $result5 = external_api::clean_returnvalue($collectionlistdesc, $result5);
+            $textlistdesc = mod_cobra_external::get_text_list_returns();
             $result6 = mod_cobra_external::get_text_list($this->cobra->collection);
-            $result6 = external_api::clean_returnvalue($textlistdescription, $result6);
+            $result6 = external_api::clean_returnvalue($textlistdesc, $result6);
         } catch (invalid_response_exception $e) {
             $errors[] = $e->debuginfo;
         } catch (cobra_remote_access_exception $e) {
@@ -114,7 +115,7 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
 
         $generator->init_local_data();
         $generator->init_user_data($this->student->id, $this->cobra);
-        $glossaryentrycount = $DB->count_records('cobra_clic',
+        $glossarycount = $DB->count_records('cobra_click',
                 array(
                     'userid' => $this->student->id,
                     'textid' => $this->cobra->text,
@@ -124,19 +125,19 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
 
         $errors = array();
         try {
-            $addtoglossarydescription = mod_cobra_external::add_to_glossary_returns();
+            $addtoglossarydesc = mod_cobra_external::add_to_glossary_returns();
 
             $result = mod_cobra_external::add_to_glossary(36638, $this->cobra->text, $this->cobra->course, $this->student->id);
 
-            $result = external_api::clean_returnvalue($addtoglossarydescription, $result);
-            $newglossaryentrycount = $DB->count_records('cobra_clic',
+            $result = external_api::clean_returnvalue($addtoglossarydesc, $result);
+            $newglossarycount = $DB->count_records('cobra_click',
                     array(
                         'userid' => $this->student->id,
                         'textid' => $this->cobra->text,
                         'inglossary' => 1
                     )
             );
-            $this->assertEquals($glossaryentrycount + 1, $newglossaryentrycount);
+            $this->assertEquals($glossarycount + 1, $newglossarycount);
         } catch (invalid_response_exception $e) {
             $errors[] = $e->debuginfo;
         }
@@ -154,18 +155,18 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
 
         $generator->init_local_data();
         $generator->init_user_data($this->student->id, $this->cobra);
-        $glossaryentrycount = $DB->count_records('cobra_clic',
+        $glossarycount = $DB->count_records('cobra_click',
                 array('userid' => $this->student->id, 'textid' => $this->cobra->text, 'inglossary' => 1));
 
         $errors = array();
         try {
-            $removefromglossarydescription = mod_cobra_external::remove_from_glossary_returns();
+            $removefromglossdesc = mod_cobra_external::remove_from_glossary_returns();
             $result = mod_cobra_external::remove_from_glossary(36515, $this->cobra->course, $this->student->id);
 
-            $result = external_api::clean_returnvalue($removefromglossarydescription, $result);
-            $newglossaryentrycount = $DB->count_records('cobra_clic',
+            $result = external_api::clean_returnvalue($removefromglossdesc, $result);
+            $newglossarycount = $DB->count_records('cobra_click',
                     array('userid' => $this->student->id, 'textid' => $this->cobra->text, 'inglossary' => 1));
-            $this->assertEquals($glossaryentrycount - 1, $newglossaryentrycount);
+            $this->assertEquals($glossarycount - 1, $newglossarycount);
         } catch (invalid_response_exception $e) {
             $errors[] = $e->debuginfo;
         }

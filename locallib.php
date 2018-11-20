@@ -27,9 +27,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_cobra\cobra_remote_service;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/lib.php');
+require_once($CFG->dirroot . '/lib/filelib.php');
+require_once($CFG->dirroot . '/user/lib.php');
 
 /**
  * Constants definition for CoBRA settings.
@@ -96,29 +100,6 @@ function cobra_get_default_corpus_order($course, $language) {
     return $corpusorder;
 }
 
-/**
- * Prepares and executes a curl request to the central CoBRA system
- *
- * @param string $url target url
- * @return mixed|bool response of the curl request or false on error
- */
-function cobra_curl_request($url) {
-    $handle = curl_init();
-
-    $options = array(
-        CURLOPT_URL => $url,
-        CURLOPT_HEADER => false,
-        CURLOPT_RETURNTRANSFER => true
-    );
-    curl_setopt_array($handle, $options);
-
-    if (!$content = curl_exec($handle)) {
-        return false;
-    }
-    curl_close($handle);
-    return $content;
-}
-
 // Functions dedicated to student personal glossary.
 
 /**
@@ -136,7 +117,7 @@ function cobra_is_in_glossary($lingentity, $courseid, $userid = 0) {
     } else {
         $user = $USER->id;
     }
-    $inglossary = $DB->record_exists('cobra_clic', array(
+    $inglossary = $DB->record_exists('cobra_click', array(
             'course' => $courseid,
             'lingentity' => (int)$lingentity,
             'userid' => $user,
@@ -195,7 +176,7 @@ function cobra_get_texts_options_list($collection) {
 function cobra_record_clic($textid, $lingentityid, $courseid, $userid, $cobraid) {
     global $DB;
 
-    $info = $DB->get_record_select('cobra_clic',
+    $info = $DB->get_record_select('cobra_click',
         "course='$courseid' AND userid='$userid' AND textid='$textid' AND lingentity='$lingentityid'");
     if (!$info) {
         // Insert record.
@@ -205,19 +186,17 @@ function cobra_record_clic($textid, $lingentityid, $courseid, $userid, $cobraid)
         $dataobject->userid = $userid;
         $dataobject->textid = $textid;
         $dataobject->lingentity = $lingentityid;
-        $dataobject->nbclicsstats = 1;
-        $dataobject->nbclicsglossary = 1;
+        $dataobject->nbclicks = 1;
         $dataobject->timecreated = time();
         $dataobject->timemodified = time();
-        $result = $DB->insert_record('cobra_clic', $dataobject);
+        $result = $DB->insert_record('cobra_click', $dataobject);
     } else {
         // Update record.
         $dataobject = new  stdClass();
         $dataobject->id = $info->id;
-        $dataobject->nbclicsstats = ($info->nbclicsstats + 1);
-        $dataobject->nbclicsglossary = ($info->nbclicsglossary + 1);
+        $dataobject->nbclicks = ($info->nbclicks + 1);
         $dataobject->timemodified = time();
-        $result = $DB->update_record('cobra_clic', $dataobject);
+        $result = $DB->update_record('cobra_click', $dataobject);
     }
 
     return $result;
@@ -299,14 +278,10 @@ function cobra_fill_cache_tables() {
  * @param int $userid
  * @param int $courseid
  * @param int $textid
- * @param int $page
- * @param int $perpage
- * @param bool $export
  * @param string $initial
  * @return array
  */
-function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $page = 0,
-                                    $perpage = 0, $export = false, $initial = '') {
+function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $initial = '') {
     global $DB;
 
     if ($initial !== 'all') {
@@ -314,8 +289,9 @@ function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $pa
     } else {
         $initialfilter = '';
     }
+
     $dataquery = "SELECT DISTINCT(ug.lingentity) AS lingentity, textid, entry, type, translations, category, extrainfo
-                    FROM {cobra_clic} ug
+                    FROM {cobra_click} ug
                     JOIN {cobra_glossary_cache} gc
                       ON ug.lingentity = gc.lingentity
                    WHERE course = :courseid
@@ -323,15 +299,8 @@ function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $pa
                      AND inglossary = 1 " . $initialfilter . "
                 ORDER BY entry";
 
-    if ($export) {
-        $fullglossaryresult = $DB->get_records_sql($dataquery,
+    $fullglossaryresult = $DB->get_records_sql($dataquery,
             array('courseid' => $courseid, 'userid' => $userid, 'initial' => $initial . '%'));
-
-    } else {
-        $fullglossaryresult = $DB->get_records_sql($dataquery,
-            array('courseid' => $courseid, 'userid' => $userid, 'initial' => $initial . '%'),
-            $page * $perpage, $perpage);
-    }
 
     if (empty($textid)) {
         $result = $DB->get_records_sql($dataquery,
@@ -350,11 +319,11 @@ function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $pa
             $entitiesintext = array();
         }
         $textquery = "SELECT DISTINCT(lingentity)
-                        FROM {cobra_clic}
+                        FROM {cobra_click}
                        WHERE course = :courseid
-                             AND userid = :userid
-                             AND inglossary = 1
-                             AND textid = :textid";
+                         AND userid = :userid
+                         AND inglossary = 1
+                         AND textid = :textid";
 
         $textresult = $DB->get_records_sql($textquery, array('courseid' => $courseid, 'userid' => $userid, 'textid' => $textid));
         $textglossarylist = array_keys($textresult);
@@ -415,7 +384,7 @@ function cobra_get_glossary_entry($lingentity) {
  */
 function cobra_empty_glossary($course, $user) {
     global $DB;
-    return $DB->set_field('cobra_clic',
+    return $DB->set_field('cobra_click',
         'inglossary',
         '0',
         array(
@@ -471,105 +440,17 @@ function cobra_get_valid_entry_types() {
  * @throws moodle_exception
  */
 function cobra_get_apikey() {
-    global $USER;
+    global $CFG;
 
     $site = get_site();
-    $email = get_config('moodle', 'supportemail');
     $params = array(
         'caller' => $site->shortname,
-        'email' => $email,
-        'contact' => utf8_decode($USER->firstname . ' ' . $USER->lastname),
+        'url' => $CFG->wwwroot,
+        'email' => $CFG->supportemail,
+        'contact' => '',
         'platformid' => get_config('moodle', 'siteidentifier')
     );
 
     $data = cobra_remote_service::call('upgrade_credentials', $params);
     return json_decode($data);
-}
-
-
-/**
- * Class cobra_remote_service. This class handle calls to remote CoBRA system
- *
- * @package    mod_cobra
- * @author     Jean-Roch Meurisse
- * @copyright  2016 onwards - Cellule TICE - Universite de Namur
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class cobra_remote_service {
-
-    /**
-     * Send request to remote CoBRA system and return response
-     *
-     * @param string $servicename the request name
-     * @param array $params arguments for the call
-     * @return mixed
-     * @throws cobra_remote_access_exception
-     * @throws dml_exception
-     * @throws moodle_exception
-     */
-    public static function call($servicename, $params = array()) {
-        global $CFG, $COURSE;
-        $validreturntypes = array(
-            'object',
-            'objectList',
-            'error'
-        );
-        $response = new stdClass();
-        $site = get_site();
-        $params['caller'] = $site->shortname;
-        $params['platformid'] = get_config('moodle', 'siteidentifier');
-        $params['apikey'] = get_config('mod_cobra', 'apikey');
-        $url = get_config('mod_cobra', 'serviceurl');
-
-        $params['from'] = 'moodle';
-        if (count($params)) {
-            $querystring = http_build_query($params, '', '&');
-        }
-
-        $data = cobra_curl_request($url . '?verb=' . $servicename . '&' . $querystring);
-
-        if ($data === false) {
-            throw new cobra_remote_access_exception('serviceunavailable');
-        } else {
-            $response = json_decode($data);
-        }
-
-        if (!in_array($response->responsetype, $validreturntypes)) {
-            print_error($response);
-            print_error('unhandledreturntype', 'cobra', '', $response->responsetype);
-        }
-        if ('error' == $response->responsetype) {
-            if ($response->errortype == COBRA_ERROR_PLATFORM_NOT_ALLOWED) {
-                throw new cobra_remote_access_exception('platformnotallowed');
-            }
-            if ($response->errortype == COBRA_ERROR_MISSING_PARAM) {
-                print_error('missingparam', '', '', $response->content);
-            }
-            if ($response->errortype == COBRA_ERROR_UNHANDLED_CALL) {
-                print_error('unhandledcall', '', '', $response->content);
-            }
-        } else {
-            return $response->content;
-        }
-    }
-}
-
-/**
- * Exception handling errors when trying to send requests to the remote CoBRA system (service unavailable or unauthorized access
- *
- * @package    mod_cobra
- * @author     Jean-Roch Meurisse
- * @copyright  2016 onwards - Cellule TICE - Universite de Namur
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class cobra_remote_access_exception extends moodle_exception {
-
-    /**
-     * Constructor
-     *
-     * @param string $debuginfo the debug info
-     */
-    public function __construct($debuginfo) {
-        parent::__construct('platformnotallowed', 'cobra', '', null, $debuginfo);
-    }
 }

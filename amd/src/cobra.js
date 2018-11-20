@@ -122,7 +122,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                     args: {
                         lingentity: lingEntity,
                         textid: objparams.text,
-                        courseid: objparams.course,
+                        course: objparams.course,
                         userid: objparams.user
                     }
                 }]);
@@ -146,9 +146,8 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                         datafortpl.lingentity = lingEntity;
                         datafortpl.iconclass = 'inglossary';
                         datafortpl.add = false;
-
                         templates.render('mod_cobra/glossaryiconcell', datafortpl).done(function(html) {
-                            $('#displayOnClic').find('tr:first th:first').replaceWith(html);
+                            $('#displayOnClic').find('tr:first th:first img').replaceWith(html);
                         }).fail(notification.exception);
                         updateglossarydisplay();
                     }).fail(notification.exception);
@@ -161,7 +160,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                     methodname: 'mod_cobra_remove_from_glossary',
                     args: {
                         lingentity: lingEntity,
-                        courseid: objparams.course,
+                        course: objparams.course,
                         userid: objparams.user
                     }
                 }]);
@@ -183,7 +182,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                             datafortpl.add = true;
 
                             templates.render('mod_cobra/glossaryiconcell', datafortpl).done(function(html) {
-                                $('#displayOnClic').find('tr:first th:first').replaceWith(html);
+                                $('#displayOnClic').find('tr:first th:first img').replaceWith(html);
                             }).fail(notification.exception);
                         }
                         updateglossarydisplay();
