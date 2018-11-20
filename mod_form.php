@@ -125,7 +125,6 @@ class mod_cobra_mod_form extends moodleform_mod {
         if ($lastinstance) {
             $langselect->setSelected($lastinstance->language);
         }
-        $mform->addRule('language', null, 'required', null, 'client');
         $mform->disabledIf('language', 'registered', 'eq', 0);
 
         // Button to update collection fieldset on language change (will be hidden by JavaScript).
