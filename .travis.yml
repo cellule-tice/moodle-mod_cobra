@@ -1,14 +1,14 @@
 language: php
 
 sudo: true
+dist: trusty
 
 addons:
   firefox: "47.0.1"
   postgresql: "9.4"
   apt:
     packages:
-      - oracle-java8-installer
-      - oracle-java8-set-default
+      - openjdk-8-jre-headless
 
 cache:
   directories:
@@ -16,13 +16,14 @@ cache:
     - $HOME/.npm
 
 php:
- - 7.0
  - 7.1
+ - 7.2
 
 env:
  global:
   - MOODLE_BRANCH=MOODLE_35_STABLE
-  - MOODLE_BRANCH=master
+  - MOODLE_BRANCH=MOODLE_36_STABLE
+  - MOODLE_BRANCH=MOODLE_37_STABLE
  matrix:
   - DB=pgsql
   - DB=mysqli

@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
     require_once(__DIR__ . '/locallib.php');
-    $PAGE->requires->js_call_amd('mod_cobra/cobra', 'demo_api_key');
+    $PAGE->requires->js_call_amd('mod_cobra/cobra', 'demoapikey');
     $settings->add(new admin_setting_heading('cobra_settings_general', get_string('generalconfig', 'cobra'), ''));
 
     $settings->add(new admin_setting_configtext('mod_cobra/serviceurl', get_string('cobraserviceurl', 'cobra'),

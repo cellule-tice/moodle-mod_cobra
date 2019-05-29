@@ -27,7 +27,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 $plugin->component = 'mod_cobra';
-$plugin->version = 2018111700;
+$plugin->version = 2019052001;
 $plugin->release = 'v3.5';
 $plugin->requires = 2018051700; // Moodle 3.5 (Build: 20180517).
 $plugin->maturity = MATURITY_STABLE;

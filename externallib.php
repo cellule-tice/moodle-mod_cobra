@@ -48,8 +48,8 @@ class mod_cobra_external extends external_api {
     public static function get_entry_parameters() {
         return new external_function_parameters(
             array(
-                'concept_id' => new external_value(PARAM_INT, 'Id of concept to display'),
-                'is_expr' => new external_value(PARAM_BOOL, 'Whether entry is expression or lemma'),
+                'conceptid' => new external_value(PARAM_INT, 'Id of concept to display'),
+                'isexpr' => new external_value(PARAM_BOOL, 'Whether entry is expression or lemma'),
                 'params' => new external_value(PARAM_RAW, 'Display parameters')
             )
         );
@@ -122,8 +122,8 @@ class mod_cobra_external extends external_api {
     public static function get_entry($concept, $isexpression, $json) {
         $args = self::validate_parameters(self::get_entry_parameters(),
                 array(
-                    'concept_id' => $concept,
-                    'is_expr' => $isexpression,
+                    'conceptid' => $concept,
+                    'isexpr' => $isexpression,
                     'params' => $json
                 )
         );
@@ -155,7 +155,7 @@ class mod_cobra_external extends external_api {
     public static function get_full_concordance_parameters() {
         return new external_function_parameters(
             array(
-                'id_concordance' => new external_value(PARAM_INT, 'Id of concordance to display')
+                'idconcordance' => new external_value(PARAM_INT, 'Id of concordance to display')
             )
         );
     }
@@ -186,7 +186,7 @@ class mod_cobra_external extends external_api {
     public static function get_full_concordance($ccid) {
         $args = self::validate_parameters(self::get_full_concordance_parameters(),
                 array(
-                    'id_concordance' => $ccid
+                    'idconcordance' => $ccid
                 )
         );
         $cc = cobra_remote_service::call('get_full_concordance', $args);

@@ -213,7 +213,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                     }).fail(notification.exception);
             });
         },
-        demo_api_key: function() {
+        demoapikey: function() {
             $('#requestapikey').on('click', function() {
                 var promises = ajax.call([{
                     methodname: 'mod_cobra_get_demo_api_key',
@@ -242,8 +242,8 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
         var promises = ajax.call([{
             methodname: 'mod_cobra_get_entry',
             args: {
-                concept_id: conceptId,
-                is_expr: isExpression,
+                conceptid: conceptId,
+                isexpr: isExpression,
                 params: jsonparams
             }
         }]);
@@ -272,7 +272,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
         var promises = ajax.call([{
             methodname: 'mod_cobra_get_full_concordance',
             args: {
-                id_concordance: idConcordance
+                idconcordance: idConcordance
             }
         }]);
 
