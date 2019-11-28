@@ -61,14 +61,17 @@ function cobra_supports($feature) {
  * @param object $moduleinstance An object from the form.
  * @return int The id of the newly inserted record.
  */
-function cobra_add_instance($moduleinstance) {
+function cobra_add_instance($cobra) {
     global $DB;
 
-    $moduleinstance->timecreated = time();
+    $cobra->timecreated = time();
 
-    $id = $DB->insert_record('cobra', $moduleinstance);
+    $cobra->id = $DB->insert_record('cobra', $cobra);
 
-    return $id;
+    $completiontimeexpected = !empty($cobra->completionexpected) ? $cobra->completionexpected : null;
+    \core_completion\api::update_completion_date_event($cobra->coursemodule, 'cobra', $cobra->id, $completiontimeexpected);
+
+    return $cobra->id;
 }
 
 /**
@@ -80,13 +83,16 @@ function cobra_add_instance($moduleinstance) {
  * @param object $moduleinstance An object from the form in mod_form.php.
  * @return bool True if successful, false otherwise.
  */
-function cobra_update_instance($moduleinstance) {
+function cobra_update_instance($cobra) {
     global $DB;
 
-    $moduleinstance->timemodified = time();
-    $moduleinstance->id = $moduleinstance->instance;
+    $cobra->timemodified = time();
+    $cobra->id = $cobra->instance;
 
-    return $DB->update_record('cobra', $moduleinstance);
+    $completiontimeexpected = !empty($cobra->completionexpected) ? $cobra->completionexpected : null;
+    \core_completion\api::update_completion_date_event($cobra->coursemodule, 'cobra', $cobra->id, $completiontimeexpected);
+
+    return $DB->update_record('cobra', $cobra);
 }
 
 /**
