@@ -272,3 +272,8 @@
 .path-mod-cobra #glossary table td {
     border-top: none;
 }
+
+.path-mod-cobra table td.glossaryIcon {
+    vertical-align: middle;
+    padding: 0 1px 1px 4px;
+}
