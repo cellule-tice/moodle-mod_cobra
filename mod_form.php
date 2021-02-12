@@ -76,7 +76,7 @@ class mod_cobra_mod_form extends moodleform_mod {
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
         // Language select box.
-        $recordset = $DB->get_records('cobra', array('course' => $COURSE->id, 'language' => 'EN'), 'id DESC', '*', 0, 1);
+        $recordset = $DB->get_records('cobra', array('course' => $COURSE->id), 'id DESC', '*', 0, 1);
         $lastinstance = null;
 
         if (count($recordset)) {
