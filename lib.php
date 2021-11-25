@@ -125,16 +125,16 @@ function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $
     global $DB;
 
     if ($DB->record_exists('cobra', array('course' => $course->id))) {
-
         global $CFG;
-
-        $cobranode = $parentnode->add(get_string('cobra', 'mod_cobra'));
-        $params = array('id' => $context->instanceid, 'cmd' => 'rqexport');
-        $cobranode->add(get_string('exportglossary', 'mod_cobra'), new moodle_url(
-            $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_export_glossary');
-        $params = array('id' => $context->instanceid, 'cmd' => 'rqcompare');
-        $cobranode->add(get_string('comparetextwithglossary', 'mod_cobra'), new moodle_url(
-            $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_compare_glossary');
+        if (has_capability('mod/cobra:addinstance', $context)) {
+            $cobranode = $parentnode->add(get_string('cobra', 'mod_cobra'));
+            $params = array('id' => $context->instanceid, 'cmd' => 'rqexport');
+            $cobranode->add(get_string('exportglossary', 'mod_cobra'), new moodle_url(
+                $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_export_glossary');
+            $params = array('id' => $context->instanceid, 'cmd' => 'rqcompare');
+            $cobranode->add(get_string('comparetextwithglossary', 'mod_cobra'), new moodle_url(
+                $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_compare_glossary');
+        }
     }
 }
 
