@@ -20,6 +20,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
         initData: function(args) {
             jsonparams = args;
             objparams = JSON.parse(jsonparams);
+            log.debug(objparams);
         },
 
         modFormTriggers: function() {
@@ -198,7 +199,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                     methodname: 'mod_cobra_remove_from_glossary',
                     args: {
                         lingentity: lingEntity,
-                        courseid: objparams.course,
+                        course: objparams.course,
                         userid: objparams.user
                     }
                 }]);
