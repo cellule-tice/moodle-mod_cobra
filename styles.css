@@ -154,6 +154,7 @@
 .path-mod-cobra .cc_source {
     font-weight: bold;
     cursor: pointer;
+    color: inherit;
 }
 
 .path-mod-cobra .usuel_FUNDP {
