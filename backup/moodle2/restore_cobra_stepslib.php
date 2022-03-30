@@ -23,8 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Define all the restore steps that will be used by the restore_choice_activity_task
  *
@@ -79,7 +77,7 @@ class restore_cobra_activity_structure_step extends restore_activity_structure_s
      * @return void
      */
     protected function process_clic($data) {
-        global $DB, $COURSE;
+        global $DB;
 
         $data = (object)$data;
         $data->course = $this->get_courseid();

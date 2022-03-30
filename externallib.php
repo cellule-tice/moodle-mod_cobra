@@ -555,7 +555,6 @@ class mod_cobra_external extends external_api {
     public static function get_demo_api_key() {
         global $CFG;
         $site = get_site();
-        $email = get_config('moodle', 'supportemail');
         $params = array(
             'caller' => $site->shortname,
             'url' => $CFG->wwwroot,

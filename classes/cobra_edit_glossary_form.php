@@ -28,8 +28,6 @@ namespace mod_cobra;
 
 use moodleform;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class cobra_edit_glossary_form
  *
