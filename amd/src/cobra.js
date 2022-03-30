@@ -13,14 +13,11 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                 $('#nav-drawer').addClass('closed');
                 $('button[aria-controls="nav-drawer"]').trigger('click');
             }
-
-            log.debug('CoBRA module init');
         },
 
         initData: function(args) {
             jsonparams = args;
             objparams = JSON.parse(jsonparams);
-            log.debug(objparams);
         },
 
         modFormTriggers: function() {
