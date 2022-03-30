@@ -46,7 +46,7 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
     /**
      * Set up for every test
      */
-    public function setUp() {
+    public function setUp(): void {
         global $CFG, $DB;
 
         require_once($CFG->dirroot . '/mod/cobra/externallib.php');
