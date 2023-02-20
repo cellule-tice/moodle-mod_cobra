@@ -62,10 +62,6 @@ jobs:
             moodle-branch: MOODLE_38_STABLE
             database: pgsql
 
-          - php: 7.3
-            moodle-branch: MOODLE_37_STABLE
-            database: pgsql
-
           # Lowest php versions supported by each branch (with master always being tested twice).
           - php: 8.0
             moodle-branch: master
