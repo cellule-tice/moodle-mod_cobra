@@ -54,13 +54,13 @@ $table = new html_table();
 $table->attributes['class'] = 'generaltable mod_index';
 
 if ($course->format == 'weeks') {
-    $table->head  = array(get_string('week'), get_string('name'));
+    $table->head = array(get_string('week'), get_string('name'));
     $table->align = array('center', 'left');
 } else if ($course->format == 'topics') {
-    $table->head  = array(get_string('topic'), get_string('name'));
+    $table->head = array(get_string('topic'), get_string('name'));
     $table->align = array('center', 'left', 'left', 'left');
 } else {
-    $table->head  = array(get_string('name'));
+    $table->head = array(get_string('name'));
     $table->align = array('left', 'left', 'left');
 }
 
@@ -76,7 +76,7 @@ foreach ($cobras as $cobra) {
             format_string($cobra->name, true));
     }
 
-    if ($course->format == 'weeks' or $course->format == 'topics') {
+    if ($course->format == 'weeks' || $course->format == 'topics') {
         $table->data[] = array($cobra->section, $link);
     } else {
         $table->data[] = array($link);
