@@ -108,7 +108,7 @@ class mod_cobra_lib_testcase extends advanced_testcase {
     private function create_action_event($courseid, $instanceid, $eventtype) {
         $event = new stdClass();
         $event->name = 'Calendar event';
-        $event->modulename  = 'cobra';
+        $event->modulename = 'cobra';
         $event->courseid = $courseid;
         $event->instance = $instanceid;
         $event->type = CALENDAR_EVENT_TYPE_ACTION;

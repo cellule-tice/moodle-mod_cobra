@@ -95,10 +95,10 @@ class cobra_remote_service {
                 throw new cobra_remote_access_exception('platformnotallowed');
             }
             if ($response->errortype == COBRA_ERROR_MISSING_PARAM) {
-                print_error('missingparam', '', '', $response->content);
+                throw new \moodle_exception('missingparam', 'cobra', '', null);
             }
             if ($response->errortype == COBRA_ERROR_UNHANDLED_CALL) {
-                print_error('unhandledcall', '', '', $response->content);
+                throw new \moodle_exception('unhandledcall', 'cobra', '', null);
             }
         } else {
             return $response->content;
