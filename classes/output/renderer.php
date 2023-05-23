@@ -59,4 +59,16 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('mod_cobra/myglossary', $data);
     }
+
+    /**
+     * Defer to template.
+     *
+     * @param index_page $page
+     *
+     * @return string html for the page
+     */
+    public function render_glossary_action_menu($page) {
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('mod_cobra/glossary_action_menu', $data);
+    }
 }

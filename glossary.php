@@ -32,6 +32,7 @@ require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/lib/glossarylib.php');
 require_once($CFG->dirroot . '/lib/dataformatlib.php');
 require_once($CFG->libdir . '/csvlib.class.php');
+require_once(__DIR__ . '/classes/output/glossary_action_menu.php');
 
 // Course id.
 $id = optional_param('id', 0, PARAM_INT);
@@ -84,7 +85,7 @@ if ($cmd == 'exexport') {
         'sourcetexttitle' => get_string('sourcetext', 'cobra')
     );
     $iterator = $downloadentries->getIterator();
-    download_as_dataformat($course->shortname . '-' . get_string('myglossary', 'cobra'),
+    \core\dataformat::download_data($course->shortname . '-' . get_string('myglossary', 'cobra'),
         'excel',
         $downloadfields,
         $iterator
@@ -108,6 +109,13 @@ switch ($cmd) {
         break;
 }
 echo $OUTPUT->heading($heading);
+
+// Print tertiary navigation.
+$renderer = $PAGE->get_renderer('mod_cobra');
+
+// Render the selection action.
+$glossaryactionmenu = new \cobra\output\glossary_action_menu(new moodle_url('/mod/cobra/glossary.php', array('id' => $course->id)));
+echo $renderer->render($glossaryactionmenu);
 
 echo $OUTPUT->box_start();
 
