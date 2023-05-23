@@ -23,8 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Defines PHPUnit cobra_events testcase.
  *
@@ -37,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 class mod_cobra_event_testcase extends advanced_testcase {
 
-    public function setUp() {
+    public function setUp(): void {
         $this->resetAfterTest();
     }
 

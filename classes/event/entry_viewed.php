@@ -25,8 +25,6 @@
 
 namespace mod_cobra\event;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class entry_viewed
  *

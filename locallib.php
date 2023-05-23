@@ -441,12 +441,16 @@ function cobra_get_valid_entry_types() {
  */
 function cobra_get_apikey() {
     global $CFG;
-
+    if (!isset($CFG->supportemail)) {
+        $supportemail = 'noreply@mymoodle.com';
+    } else {
+        $supportemail = $CFG->supportemail;
+    }
     $site = get_site();
     $params = array(
         'caller' => $site->shortname,
         'url' => $CFG->wwwroot,
-        'email' => $CFG->supportemail,
+        'email' => $supportemail,
         'contact' => '',
         'platformid' => get_config('moodle', 'siteidentifier')
     );

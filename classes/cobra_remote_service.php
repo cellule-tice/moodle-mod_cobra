@@ -27,8 +27,6 @@ namespace mod_cobra;
 
 use curl;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class cobra_remote_service. This class handle calls to remote CoBRA system
  *
@@ -90,17 +88,17 @@ class cobra_remote_service {
             $response = json_decode($data);
         }
         if (!in_array($response->responsetype, $validreturntypes)) {
-            print_error('unhandledreturntype', 'cobra', '', $response->responsetype);
+            throw new \moodle_exception('unhandledreturntype', 'cobra', '', null, $response->responsetype);
         }
         if ('error' == $response->responsetype) {
             if ($response->errortype == COBRA_ERROR_PLATFORM_NOT_ALLOWED) {
                 throw new cobra_remote_access_exception('platformnotallowed');
             }
             if ($response->errortype == COBRA_ERROR_MISSING_PARAM) {
-                print_error('missingparam', '', '', $response->content);
+                throw new \moodle_exception('missingparam', 'cobra', '', null);
             }
             if ($response->errortype == COBRA_ERROR_UNHANDLED_CALL) {
-                print_error('unhandledcall', '', '', $response->content);
+                throw new \moodle_exception('unhandledcall', 'cobra', '', null);
             }
         } else {
             return $response->content;

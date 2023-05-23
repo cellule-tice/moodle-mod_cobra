@@ -13,8 +13,6 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                 $('#nav-drawer').addClass('closed');
                 $('button[aria-controls="nav-drawer"]').trigger('click');
             }
-
-            log.debug('CoBRA module init');
         },
 
         initData: function(args) {
@@ -198,7 +196,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                     methodname: 'mod_cobra_remove_from_glossary',
                     args: {
                         lingentity: lingEntity,
-                        courseid: objparams.course,
+                        course: objparams.course,
                         userid: objparams.user
                     }
                 }]);

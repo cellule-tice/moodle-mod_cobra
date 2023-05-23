@@ -129,7 +129,7 @@ if ($export) {
         'sourcetexttitle' => get_string('sourcetext', 'cobra')
     );
     $iterator = $downloadentries->getIterator();
-    download_as_dataformat($course->shortname . '-' . get_string('myglossary', 'cobra'),
+    \core\dataformat::download_data($course->shortname . '-' . get_string('myglossary', 'cobra'),
         $format,
         $downloadfields,
         $iterator

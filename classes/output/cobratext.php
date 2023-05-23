@@ -26,8 +26,6 @@
 use mod_cobra\cobra_remote_service;
 use mod_cobra\cobra_remote_access_exception;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class cobratext
  *

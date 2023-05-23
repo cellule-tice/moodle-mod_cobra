@@ -27,8 +27,6 @@
 use core_privacy\local\metadata\collection;
 use mod_cobra\privacy\provider;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Unit tests for mod/cobra/classes/privacy/
  *

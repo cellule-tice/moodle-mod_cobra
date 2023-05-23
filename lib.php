@@ -22,8 +22,6 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Return if the plugin supports $feature.
  *
@@ -58,7 +56,7 @@ function cobra_supports($feature) {
  * in mod_form.php) this function will create a new instance and return the id
  * number of the instance.
  *
- * @param object $moduleinstance An object from the form.
+ * @param object $cobra An object from the form.
  * @return int The id of the newly inserted record.
  */
 function cobra_add_instance($cobra) {
@@ -80,7 +78,7 @@ function cobra_add_instance($cobra) {
  * Given an object containing all the necessary data (defined in mod_form.php),
  * this function will update an existing instance with new data.
  *
- * @param object $moduleinstance An object from the form in mod_form.php.
+ * @param object $cobra An object from the form in mod_form.php.
  * @return bool True if successful, false otherwise.
  */
 function cobra_update_instance($cobra) {
@@ -125,16 +123,18 @@ function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $
     global $DB;
 
     if ($DB->record_exists('cobra', array('course' => $course->id))) {
-
         global $CFG;
-
-        $cobranode = $parentnode->add(get_string('cobra', 'mod_cobra'));
-        $params = array('id' => $context->instanceid, 'cmd' => 'rqexport');
-        $cobranode->add(get_string('exportglossary', 'mod_cobra'), new moodle_url(
-            $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_export_glossary');
-        $params = array('id' => $context->instanceid, 'cmd' => 'rqcompare');
-        $cobranode->add(get_string('comparetextwithglossary', 'mod_cobra'), new moodle_url(
-            $CFG->wwwroot .'/mod/cobra/glossary.php', $params),  navigation_node::TYPE_SETTING, null, 'mod_cobra_compare_glossary');
+        if (has_capability('mod/cobra:addinstance', $context)) {
+            $cobranode = $parentnode->add(get_string('cobra', 'mod_cobra'));
+            $params = array('id' => $context->instanceid, 'cmd' => 'rqexport');
+            $cobranode->add(get_string('exportglossary', 'mod_cobra'),
+                new moodle_url($CFG->wwwroot .'/mod/cobra/glossary.php', $params),
+                navigation_node::TYPE_SETTING, null, 'mod_cobra_export_glossary');
+            $params = array('id' => $context->instanceid, 'cmd' => 'rqcompare');
+            $cobranode->add(get_string('comparetextwithglossary', 'mod_cobra'),
+                new moodle_url($CFG->wwwroot .'/mod/cobra/glossary.php', $params),
+                navigation_node::TYPE_SETTING, null, 'mod_cobra_compare_glossary');
+        }
     }
 }
 
