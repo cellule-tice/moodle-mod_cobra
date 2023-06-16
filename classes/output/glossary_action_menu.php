@@ -66,8 +66,8 @@ class glossary_action_menu implements templatable, renderable {
             $comparelink->out(false) => get_string('comparetextwithglossary', 'mod_cobra')
         ];
 
-        $urlselect = new url_select($menu, $this->currenturl->out(false), null, 'questionbankaction');
-        $urlselect->set_label(get_string('questionbanknavigation', 'question'), ['class' => 'accesshide']);
+        $urlselect = new url_select($menu, $this->currenturl->out(false), null, 'cobraaction');
+        $urlselect->set_label(get_string('cobranavigation', 'mod_cobra'), ['class' => 'accesshide']);
 
         return [
             'glossaryactionselect' => $urlselect->export_for_template($output),

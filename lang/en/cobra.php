@@ -158,3 +158,4 @@ $string['registrationrequired'] = 'Registration is mandatory';
 $string['registrationwarning'] = '<div class="box errorbox alert alert-danger py-3">Your platform is currently not registered with CoBRA. In order to add CoBRA texts to your courses, you must ask your platform administrator to request an api key and add it to the plugin configuration.</div>';
 $string['requestdemokey'] = 'Request demo key';
 $string['requestdemokey_desc'] = 'Clicking this button will send information about your platform (shortname, IP address, URL and siteid) in order to register it with CoBRA and get a demo access key. No user related information is sent to CoBRA remote server.';
+$string['cobranavigation'] = 'Tertiary navigation for CoBRA';
