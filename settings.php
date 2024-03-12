@@ -46,6 +46,9 @@ if ($ADMIN->fulltree) {
     $setting->set_updatedcallback('cobra_fill_cache_tables');
     $settings->add($setting);
 
+    $settings->add(new admin_setting_configtext('mod_cobra/timeout', get_string('timeout', 'cobra'),
+        get_string('timeout_desc', 'cobra'), '3'));
+
     $settings->add(new admin_setting_heading('cobra_settings_display', get_string('displaysettings', 'cobra'), ''));
 
     $name = 'mod_cobra/userglossary';

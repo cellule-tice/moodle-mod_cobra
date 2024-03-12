@@ -74,7 +74,7 @@ class cobra_remote_service {
             'RETURNTRANSFER' => true,
             'FORBID_REUSE' => true,
             'HEADER' => 0,
-            'CONNECTTIMEOUT' => 3,
+            'CONNECTTIMEOUT' => get_config('mod_cobra', 'timeout'),
             // Follow redirects with the same type of request when sent 301, or 302 redirects.
             'CURLOPT_POSTREDIR' => 3
         );
