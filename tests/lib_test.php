@@ -46,7 +46,7 @@ class mod_cobra_lib_testcase extends advanced_testcase {
     public function test_cobra_core_calendar_provide_event_action() {
         // Create the activity.
         $course = $this->getDataGenerator()->create_course();
-        $cobra = $this->getDataGenerator()->create_module('cobra', array('course' => $course->id));
+        $cobra = $this->getDataGenerator()->create_module('cobra', ['course' => $course->id]);
 
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $cobra->id,
@@ -72,9 +72,9 @@ class mod_cobra_lib_testcase extends advanced_testcase {
         $CFG->enablecompletion = 1;
 
         // Create the activity.
-        $course = $this->getDataGenerator()->create_course(array('enablecompletion' => 1));
-        $cobra = $this->getDataGenerator()->create_module('cobra', array('course' => $course->id),
-            array('completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS));
+        $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
+        $cobra = $this->getDataGenerator()->create_module('cobra', ['course' => $course->id],
+            ['completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS]);
 
         // Get some additional data.
         $cm = get_coursemodule_from_instance('cobra', $cobra->id);

@@ -45,16 +45,16 @@ class mod_cobra_event_testcase extends advanced_testcase {
         // doing here is simply making sure that the events returns the right information.
 
         $course = $this->getDataGenerator()->create_course();
-        $cobra = $this->getDataGenerator()->create_module('cobra', array('course' => $course->id));
+        $cobra = $this->getDataGenerator()->create_module('cobra', ['course' => $course->id]);
 
-        $dbcourse = $DB->get_record('course', array('id' => $course->id));
-        $dbcobra = $DB->get_record('cobra', array('id' => $cobra->id));
+        $dbcourse = $DB->get_record('course', ['id' => $course->id]);
+        $dbcobra = $DB->get_record('cobra', ['id' => $cobra->id]);
         $context = context_module::instance($cobra->cmid);
 
-        $event = \mod_cobra\event\course_module_viewed::create(array(
+        $event = \mod_cobra\event\course_module_viewed::create([
             'objectid' => $dbcobra->id,
-            'context' => $context
-        ));
+            'context' => $context,
+        ]);
 
         $event->add_record_snapshot('course', $dbcourse);
         $event->add_record_snapshot('cobra', $dbcobra);
@@ -71,10 +71,10 @@ class mod_cobra_event_testcase extends advanced_testcase {
         $this->assertEquals(CONTEXT_MODULE, $event->contextlevel);
         $this->assertEquals($cobra->cmid, $event->contextinstanceid);
         $this->assertEquals($cobra->id, $event->objectid);
-        $expected = array($course->id, 'cobra', 'view', 'view.php?id=' . $cobra->cmid,
-            $cobra->id, $cobra->cmid);
+        $expected = [$course->id, 'cobra', 'view', 'view.php?id=' . $cobra->cmid,
+            $cobra->id, $cobra->cmid];
         $this->assertEventLegacyLogData($expected, $event);
-        $this->assertEquals(new moodle_url('/mod/cobra/view.php', array('id' => $cobra->cmid)), $event->get_url());
+        $this->assertEquals(new moodle_url('/mod/cobra/view.php', ['id' => $cobra->cmid]), $event->get_url());
         $this->assertEventContextNotUsed($event);
     }
 }

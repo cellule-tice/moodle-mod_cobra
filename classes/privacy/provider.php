@@ -60,7 +60,7 @@ class provider implements
                   'userid' => 'privacy:metadata:cobra_click:userid',
                   'nbclicks' => 'privacy:metadata:cobra_click:nbclicks',
                   'timecreated' => 'privacy:metadata:cobra_click:timecreated',
-                  'inglossary' => 'privacy:metadata:cobra_click:inglossary'
+                  'inglossary' => 'privacy:metadata:cobra_click:inglossary',
             ],
             'privacy:metadata:cobra_click'
         );
@@ -87,7 +87,7 @@ class provider implements
         $params = [
             'contextlevel' => CONTEXT_MODULE,
             'modname' => 'cobra',
-            'userid' => $userid
+            'userid' => $userid,
         ];
         $contextlist->add_from_sql($sql, $params);
 
@@ -184,7 +184,7 @@ class provider implements
                     'textid' => 'textid',
                     'nbclicks' => 'nbclicks',
                     'timecreated' => 'timecreated',
-                    'inglossary' => 'inglossary'
+                    'inglossary' => 'inglossary',
                 ],
                 get_string('privacy:metadata:cobra_click', 'mod_cobra')
         );

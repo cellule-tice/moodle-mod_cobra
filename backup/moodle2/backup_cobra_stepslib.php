@@ -42,27 +42,27 @@ class backup_cobra_activity_structure_step extends backup_activity_structure_ste
         $userinfo = $this->get_setting_value('userinfo');
 
         // Define each element separated.
-        $cobra = new backup_nested_element('cobra', array('id'), array(
+        $cobra = new backup_nested_element('cobra', ['id'], [
             'collection', 'text', 'name', 'intro', 'introformat', 'timecreated', 'timemodified',
             'language', 'userglossary', 'audioplayer', 'examples', 'translations', 'annotations',
-            'corpusorder', 'isdefaultcorpusorder', 'isdefaultdisplayprefs'));
+            'corpusorder', 'isdefaultcorpusorder', 'isdefaultdisplayprefs']);
 
         $clics = new backup_nested_element('clics');
 
-        $clic = new backup_nested_element('clic', array('id'), array(
+        $clic = new backup_nested_element('clic', ['id'], [
             'lingentity', 'textid', 'userid', 'nbclicks',
-            'timecreated', 'timemodified', 'inglossary'));
+            'timecreated', 'timemodified', 'inglossary']);
 
         // Build the tree.
         $cobra->add_child($clics);
         $clics->add_child($clic);
 
         // Define sources.
-        $cobra->set_source_table('cobra', array('id' => backup::VAR_ACTIVITYID));
+        $cobra->set_source_table('cobra', ['id' => backup::VAR_ACTIVITYID]);
 
         // Clicks included only if we are including user info.
         if ($userinfo) {
-            $clic->set_source_table('cobra_click', array('cobra' => backup::VAR_PARENTID), 'id ASC');
+            $clic->set_source_table('cobra_click', ['cobra' => backup::VAR_PARENTID], 'id ASC');
         }
 
         // Define id annotations.

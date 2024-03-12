@@ -25,83 +25,83 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$functions = array(
-    'mod_cobra_get_entry' => array(
+$functions = [
+    'mod_cobra_get_entry' => [
         'classname' => 'mod_cobra_external',
         'methodname' => 'get_entry',
         'classpath' => 'mod/cobra/externallib.php',
         'description' => 'Display entry details and concordances',
         'type' => 'write',
-        'ajax' => true
-    ),
-    'mod_cobra_get_full_concordance' => array(
+        'ajax' => true,
+    ],
+    'mod_cobra_get_full_concordance' => [
         'classname' => 'mod_cobra_external',
         'methodname' => 'get_full_concordance',
         'classpath' => 'mod/cobra/externallib.php',
         'description' => 'Get full text of clicked concordance',
         'type' => 'read',
-        'ajax' => true
-    ),
-    'mod_cobra_add_to_glossary' => array(
+        'ajax' => true,
+    ],
+    'mod_cobra_add_to_glossary' => [
         'classname' => 'mod_cobra_external',
         'methodname' => 'add_to_glossary',
         'classpath' => 'mod/cobra/externallib.php',
         'description' => 'Add entry to personal glossary',
         'type' => 'write',
-        'ajax' => true
-    ),
-    'mod_cobra_remove_from_glossary' => array(
+        'ajax' => true,
+    ],
+    'mod_cobra_remove_from_glossary' => [
         'classname' => 'mod_cobra_external',
         'methodname' => 'remove_from_glossary',
         'classpath' => 'mod/cobra/externallib.php',
         'description' => 'Remove entry from personal glossary',
         'type' => 'write',
-        'ajax' => true
-    ),
-    'mod_cobra_load_glossary' => array(
+        'ajax' => true,
+    ],
+    'mod_cobra_load_glossary' => [
         'classname' => 'mod_cobra_external',
         'methodname' => 'load_glossary',
         'classpath' => 'mod/cobra/externallib.php',
         'description' => 'Load glossary entries for current text',
         'type' => 'read',
-        'ajax' => true
-    ),
-    'mod_cobra_get_text' => array(
+        'ajax' => true,
+    ],
+    'mod_cobra_get_text' => [
         'classname' => 'mod_cobra_external',
         'methodname' => 'get_text',
         'classpath' => 'mod/cobra/externallib.php',
         'description' => 'Loads formatted title and text content',
         'type' => 'read',
-        'ajax' => true
-    ),
-    'mod_cobra_get_collection_list' => array(
+        'ajax' => true,
+    ],
+    'mod_cobra_get_collection_list' => [
         'classname' => 'mod_cobra_external',
         'methodname' => 'get_collection_list',
         'classpath' => 'mod/cobra/externallib.php',
         'description' => 'Collects the list of collections for set language',
-        'type' => 'read'
-    ),
-    'mod_cobra_get_text_list' => array(
+        'type' => 'read',
+    ],
+    'mod_cobra_get_text_list' => [
         'classname' => 'mod_cobra_external',
         'methodname' => 'get_text_list',
         'classpath' => 'mod/cobra/externallib.php',
         'description' => 'Collects the list of texts for given collection',
-        'type' => 'read'
-    ),
-    'mod_cobra_get_demo_api_key' => array(
+        'type' => 'read',
+    ],
+    'mod_cobra_get_demo_api_key' => [
         'classname' => 'mod_cobra_external',
         'methodname' => 'get_demo_api_key',
         'classpath' => 'mod/cobra/externallib.php',
         'description' => 'Request a demo API key from Cobra server',
         'type' => 'write',
-        'ajax' => true
-    )
-);
+        'ajax' => true,
+    ],
+];
 
-$services = array(
-    'cobraservices' => array(
+$services = [
+    'cobraservices' => [
         'shortname' => 'cobra',
-        'functions' => array(
+        'functions' => [
             'mod_cobra_get_entry',
             'mod_cobra_get_full_concordance',
             'mod_cobra_get_text',
@@ -109,10 +109,10 @@ $services = array(
             'mod_cobra_remove_from_glossary',
             'mod_cobra_load_glossary',
             'mod_cobra_get_text_list',
-            'mod_cobra_get_collection_list'
-        ),
+            'mod_cobra_get_collection_list',
+        ],
         'requiredcapability' => '',
         'restrictedusers' => 0,
         'enabled' => 1,
-    )
-);
+    ],
+];

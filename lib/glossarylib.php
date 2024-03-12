@@ -38,16 +38,16 @@ require_once($CFG->libdir . '/formslib.php');
  */
 function cobra_get_exportable_glossary_entries($textid) {
     global $DB;
-    $entries = array();
-    $texttitle = $DB->get_field('cobra_text_info_cache', 'title', array('id' => $textid));
-    $entitylist = json_decode($DB->get_field('cobra_text_info_cache', 'entities', array('id' => $textid)));
+    $entries = [];
+    $texttitle = $DB->get_field('cobra_text_info_cache', 'title', ['id' => $textid]);
+    $entitylist = json_decode($DB->get_field('cobra_text_info_cache', 'entities', ['id' => $textid]));
 
     $dataquery = "SELECT DISTINCT(lingentity) AS lingentity, entry, translations, category, extrainfo
                     FROM {cobra_glossary_cache}
                    WHERE lingentity IN (" . implode(',', $entitylist) . ")
                 ORDER BY entry";
 
-    $data = $DB->get_records_sql($dataquery, array());
+    $data = $DB->get_records_sql($dataquery, []);
     foreach ($data as $entry) {
         $entry->sourcetexttitle = $texttitle;
         unset($entry->lingentity);
@@ -64,14 +64,14 @@ function cobra_get_exportable_glossary_entries($textid) {
  */
 function cobra_get_glossary_entries($textid) {
     global $DB;
-    $entitylist = json_decode($DB->get_field('cobra_text_info_cache', 'entities', array('id' => $textid)));
+    $entitylist = json_decode($DB->get_field('cobra_text_info_cache', 'entities', ['id' => $textid]));
 
     $dataquery = "SELECT id, entry, type, translations, category, extrainfo
                     FROM {cobra_glossary_cache}
                    WHERE lingentity IN (" . implode(',', $entitylist) . ")
                 ORDER BY entry";
 
-    $entries = $DB->get_records_sql($dataquery, array());
+    $entries = $DB->get_records_sql($dataquery, []);
 
     return $entries;
 }
@@ -85,7 +85,7 @@ function cobra_get_glossary_entries($textid) {
  * @throws cobra_remote_access_exception
  */
 function cobra_word_exists_as_flexion($word, $language) {
-    $params = array('word' => $word, 'language' => $language);
+    $params = ['word' => $word, 'language' => $language];
 
     $list = cobra_remote_service::call('wordExistsAsFlexion', $params);
     return $list;
@@ -99,9 +99,9 @@ function cobra_word_exists_as_flexion($word, $language) {
  * @throws cobra_remote_access_exception
  */
 function cobra_get_entity_list_from_ff($flexionids) {
-    $params = array('flexionids' => implode(',', $flexionids));
+    $params = ['flexionids' => implode(',', $flexionids)];
     $list = cobra_remote_service::call('getEntityListFromFlexion', $params);
-    $entitylist = array();
+    $entitylist = [];
     foreach ($list as $listobject) {
         $entitylist[] = $listobject;
     }
@@ -119,9 +119,9 @@ function cobra_get_entity_list_from_ff($flexionids) {
 function cobra_get_list_of_words_in_text($mytext, $language) {
     cobra_increase_script_time();
     $paragraphs = explode ("\n", $mytext);
-    $words = array();
+    $words = [];
     foreach ($paragraphs as $para) {
-        $params = array('text' => $para, 'language' => $language);
+        $params = ['text' => $para, 'language' => $language];
         $wordlist = cobra_remote_service::call('getListOfWordsInText', $params);
         foreach ($wordlist as $word) {
             if (!in_array(utf8_decode($word->value), $words)) {
@@ -139,29 +139,29 @@ function cobra_get_list_of_words_in_text($mytext, $language) {
  * @return array
  */
 function cobra_explode_glossary_into_lemmas_and_expression($glossary) {
-    $lemmalist = array();
-    $explist = array();
+    $lemmalist = [];
+    $explist = [];
 
     foreach ($glossary as $element) {
         if ($element->type == 'lemma') {
-            $lemmalist[$element->id] = array(
+            $lemmalist[$element->id] = [
                 'id' => $element->id,
                 'entry' => $element->entry,
                 'category' => $element->category,
                 'ss_cat' => $element->extrainfo,
-                'traduction' => utf8_decode($element->translations)
-            );
+                'traduction' => utf8_decode($element->translations),
+            ];
         } else if ($element->type == 'expression') {
-            $explist[$element->id] = array(
+            $explist[$element->id] = [
                 'id' => $element->id,
                 'entry' => $element->entry,
                 'category' => $element->category,
                 'ss_cat' => $element->extrainfo,
-                'traduction' => utf8_decode($element->translations)
-            );
+                'traduction' => utf8_decode($element->translations),
+            ];
         }
     }
-    return array($lemmalist, $explist);
+    return [$lemmalist, $explist];
 }
 
 

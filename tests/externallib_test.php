@@ -54,7 +54,7 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
 
         // Setup test data.
         $this->course = $this->getDataGenerator()->create_course();
-        $this->cobra = $this->getDataGenerator()->create_module('cobra', array('course' => $this->course->id));
+        $this->cobra = $this->getDataGenerator()->create_module('cobra', ['course' => $this->course->id]);
         $this->context = context_module::instance($this->cobra->cmid);
         $this->cm = get_coursemodule_from_instance('cobra', $this->cobra->id);
 
@@ -62,7 +62,7 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
         $this->student = self::getDataGenerator()->create_user();
 
         // Users enrolments.
-        $this->studentrole = $DB->get_record('role', array('shortname' => 'student'));
+        $this->studentrole = $DB->get_record('role', ['shortname' => 'student']);
         $this->getDataGenerator()->enrol_user($this->student->id, $this->course->id, $this->studentrole->id, 'manual');
     }
 
@@ -74,7 +74,7 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
         $this->cobra->encodeclic = true;
         $this->cobra->user = $this->student->id;
 
-        $errors = array();
+        $errors = [];
         try {
             $textdescription = mod_cobra_external::get_text_returns();
             $result1 = mod_cobra_external::get_text($this->cobra->text);
@@ -116,14 +116,14 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
         $generator->init_local_data();
         $generator->init_user_data($this->student->id, $this->cobra);
         $glossarycount = $DB->count_records('cobra_click',
-                array(
+                [
                     'userid' => $this->student->id,
                     'textid' => $this->cobra->text,
-                    'inglossary' => 1
-                )
+                    'inglossary' => 1,
+                ]
         );
 
-        $errors = array();
+        $errors = [];
         try {
             $addtoglossarydesc = mod_cobra_external::add_to_glossary_returns();
 
@@ -131,11 +131,11 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
 
             $result = external_api::clean_returnvalue($addtoglossarydesc, $result);
             $newglossarycount = $DB->count_records('cobra_click',
-                    array(
+                    [
                         'userid' => $this->student->id,
                         'textid' => $this->cobra->text,
-                        'inglossary' => 1
-                    )
+                        'inglossary' => 1,
+                    ]
             );
             $this->assertEquals($glossarycount + 1, $newglossarycount);
         } catch (invalid_response_exception $e) {
@@ -156,16 +156,16 @@ class mod_cobra_external_testcase extends externallib_advanced_testcase {
         $generator->init_local_data();
         $generator->init_user_data($this->student->id, $this->cobra);
         $glossarycount = $DB->count_records('cobra_click',
-                array('userid' => $this->student->id, 'textid' => $this->cobra->text, 'inglossary' => 1));
+                ['userid' => $this->student->id, 'textid' => $this->cobra->text, 'inglossary' => 1]);
 
-        $errors = array();
+        $errors = [];
         try {
             $removefromglossdesc = mod_cobra_external::remove_from_glossary_returns();
             $result = mod_cobra_external::remove_from_glossary(36515, $this->cobra->course, $this->student->id);
 
             $result = external_api::clean_returnvalue($removefromglossdesc, $result);
             $newglossarycount = $DB->count_records('cobra_click',
-                    array('userid' => $this->student->id, 'textid' => $this->cobra->text, 'inglossary' => 1));
+                    ['userid' => $this->student->id, 'textid' => $this->cobra->text, 'inglossary' => 1]);
             $this->assertEquals($glossarycount - 1, $newglossarycount);
         } catch (invalid_response_exception $e) {
             $errors[] = $e->debuginfo;

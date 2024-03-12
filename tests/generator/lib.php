@@ -51,7 +51,7 @@ class mod_cobra_generator extends testing_module_generator {
         $config = get_config('mod_cobra');
 
         // Add default values for cobra.
-        $defaultsettings = array(
+        $defaultsettings = [
             'collection' => 21,
             'text' => 2139,
             'name' => get_string('cobraname', 'cobra'),
@@ -63,8 +63,8 @@ class mod_cobra_generator extends testing_module_generator {
             'annotations' => $config->annotations,
             'corpusorder' => $config->defaultcorpusorderen,
             'isdefaultcorpusorder' => 1,
-            'isdefaultdisplayprefs' => 1
-        );
+            'isdefaultdisplayprefs' => 1,
+        ];
         foreach ($defaultsettings as $name => $value) {
             if (!isset($record->{$name})) {
                 $record->{$name} = $value;

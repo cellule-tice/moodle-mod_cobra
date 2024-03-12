@@ -35,7 +35,7 @@ $export = optional_param('download', '', PARAM_TEXT);
 $format = optional_param('exportformat', null, PARAM_ALPHA);
 $empty = optional_param('empty', null, PARAM_TEXT);
 
-$course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
 
 // Keep user id and cmid for ajax calls.
 global $USER, $OUTPUT;
@@ -46,20 +46,20 @@ require_login($course);
 require_capability('mod/cobra:view', $context);
 
 // Print the page header.
-$PAGE->set_url('/mod/cobra/myglossary.php', array('id' => $course->id));
+$PAGE->set_url('/mod/cobra/myglossary.php', ['id' => $course->id]);
 
 $PAGE->set_title(format_string($course->fullname));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->navbar->ignore_active();
 $PAGE->navbar->add(get_string('mycourses'));
-$PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', array('id' => $course->id)));
-$PAGE->navbar->add(get_string('myglossary', 'cobra'), new moodle_url('/mod/cobra/myglossary.php', array('id' => $id)));
+$PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', ['id' => $course->id]));
+$PAGE->navbar->add(get_string('myglossary', 'cobra'), new moodle_url('/mod/cobra/myglossary.php', ['id' => $id]));
 
 // Add the ajaxcommand for the form.
 $params = new stdClass();
 $params->course = $course->id;
 $params->user = $USER->id;
-$PAGE->requires->js_call_amd('mod_cobra/cobra', 'initData', array(json_encode($params)));
+$PAGE->requires->js_call_amd('mod_cobra/cobra', 'initData', [json_encode($params)]);
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'myGlossaryActions');
 
 // Handle empty action.
@@ -82,7 +82,7 @@ if ($empty) {
 
 list($totalcount, $data) = cobra_get_student_glossary($USER->id, $course->id, 0, $initial);
 
-$entries = array();
+$entries = [];
 if (!empty($data)) {
 
     foreach ($data as $entry) {
@@ -90,17 +90,17 @@ if (!empty($data)) {
         $entry->sourcetexttitle = $sourcetexttitle;
 
         $where = 'userid = :userid AND lingentity = :lingentity AND course = :course';
-        $sqlparams = array(
+        $sqlparams = [
             'userid' => $USER->id,
             'lingentity' => $entry->lingentity,
-            'course' => $course->id
-        );
+            'course' => $course->id,
+        ];
 
         $textidlist = $DB->get_fieldset_select('cobra_click', 'textid', $where, $sqlparams);
 
         asort($textidlist);
 
-        $texttitles = array();
+        $texttitles = [];
         foreach ($textidlist as $textid) {
             $texttitles[] = cobra_get_cached_text_title($textid);
         }
@@ -121,13 +121,13 @@ if (!empty($data)) {
 
 if ($export) {
     $downloadentries = new ArrayObject($entries);
-    $downloadfields = array(
+    $downloadfields = [
         'entry' => get_string('entry', 'cobra'),
         'translations' => get_string('translations', 'cobra'),
         'category' => get_string('category', 'cobra'),
         'extrainfo' => get_string('otherforms', 'cobra'),
-        'sourcetexttitle' => get_string('sourcetext', 'cobra')
-    );
+        'sourcetexttitle' => get_string('sourcetext', 'cobra'),
+    ];
     $iterator = $downloadentries->getIterator();
     \core\dataformat::download_data($course->shortname . '-' . get_string('myglossary', 'cobra'),
         $format,
@@ -147,8 +147,9 @@ echo $OUTPUT->heading(
         ')'
 );
 
-$baseurl = new moodle_url('/mod/cobra/myglossary.php', array('id' => $course->id));
-$records = array();$entities = array();
+$baseurl = new moodle_url('/mod/cobra/myglossary.php', ['id' => $course->id]);
+$records = [];
+$entities = [];
 
 $initialsbar = $OUTPUT->initials_bar($initial, 'initials', '', 'initial', $baseurl);
 

@@ -47,11 +47,11 @@ class mod_cobra_external extends external_api {
      */
     public static function get_entry_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'conceptid' => new external_value(PARAM_INT, 'Id of concept to display'),
                 'isexpr' => new external_value(PARAM_BOOL, 'Whether entry is expression or lemma'),
-                'params' => new external_value(PARAM_RAW, 'Display parameters')
-            )
+                'params' => new external_value(PARAM_RAW, 'Display parameters'),
+            ]
         );
     }
 
@@ -61,21 +61,21 @@ class mod_cobra_external extends external_api {
      */
     public static function get_entry_returns() {
         return new external_single_structure(
-            array(
+            [
                 'data' => new external_single_structure(
-                    array(
+                    [
                         'entry' => new external_value(PARAM_RAW, 'Non inflected entry'),
                         'category' => new external_value(PARAM_RAW, 'Entry syntactic nature'),
                         'article' => new external_value(PARAM_RAW, 'Article for Dutch nouns', VALUE_OPTIONAL),
                         'abbreviations' => new external_value(PARAM_RAW, 'Entry abbreviation', VALUE_OPTIONAL),
                         'forms' => new external_multiple_structure(
                             new external_single_structure(
-                                array(
+                                [
                                     'type' => new external_value(PARAM_RAW, 'Inflected form(s) type'),
                                     'form' => new external_value(PARAM_RAW, 'Inflected form(s)'),
                                     'first' => new external_value(PARAM_RAW, 'Flag for display', VALUE_OPTIONAL),
-                                    'last' => new external_value(PARAM_RAW, 'Flag for display', VALUE_OPTIONAL)
-                                )
+                                    'last' => new external_value(PARAM_RAW, 'Flag for display', VALUE_OPTIONAL),
+                                ]
                             ), '', VALUE_OPTIONAL
                         ),
                         'translations' => new external_value(PARAM_RAW, 'Translations of entry', VALUE_OPTIONAL),
@@ -85,28 +85,28 @@ class mod_cobra_external extends external_api {
                         'trdefinition' => new external_value(PARAM_RAW, 'Definition in French', VALUE_OPTIONAL),
                         'concordances' => new external_multiple_structure(
                             new external_single_structure(
-                                array(
+                                [
                                     'source' => new external_value(PARAM_RAW, 'Concordance in source language'),
                                     'target' => new external_value(PARAM_RAW, 'Concordance in French'),
                                     'type' => new external_value(PARAM_RAW, 'Corpus type'),
                                     'first' => new external_value(PARAM_BOOL,
-                                            'Is this the first concordance in list?', VALUE_OPTIONAL)
-                                )
+                                            'Is this the first concordance in list?', VALUE_OPTIONAL),
+                                ]
                             ), '', VALUE_OPTIONAL
-                        )
-                    )
+                        ),
+                    ]
                 ),
                 'technicalinfo' => new external_single_structure(
-                    array(
+                    [
                         'concept' => new external_value(PARAM_INT, 'Identifier of linked concept'),
                         'entity' => new external_value(PARAM_INT, 'Identifier of linked linguistic entity'),
                         'inglossary' => new external_value(PARAM_BOOL, 'Is this entry into student\'s personal glossary'),
                         'concordancescount' => new external_value(PARAM_INT, 'Number of concordances to display', VALUE_OPTIONAL),
-                        'hasannotations' => new external_value(PARAM_BOOL, 'Is there any annotations', VALUE_OPTIONAL)
-                    )
+                        'hasannotations' => new external_value(PARAM_BOOL, 'Is there any annotations', VALUE_OPTIONAL),
+                    ]
                 ),
-                'warnings' => new external_warnings()
-            )
+                'warnings' => new external_warnings(),
+            ]
         );
     }
 
@@ -121,11 +121,11 @@ class mod_cobra_external extends external_api {
      */
     public static function get_entry($concept, $isexpression, $json) {
         $args = self::validate_parameters(self::get_entry_parameters(),
-                array(
+                [
                     'conceptid' => $concept,
                     'isexpr' => $isexpression,
-                    'params' => $json
-                )
+                    'params' => $json,
+                ]
         );
 
         $data = cobra_remote_service::call('get_entry', $args);
@@ -140,10 +140,10 @@ class mod_cobra_external extends external_api {
         $dataobj->technicalinfo->inglossary = cobra_is_in_glossary($dataobj->data->entity,
                 $jsonobj->course, $jsonobj->user);
 
-        $response = array(
+        $response = [
             'data' => $dataobj->data,
-            'technicalinfo' => $dataobj->technicalinfo
-        );
+            'technicalinfo' => $dataobj->technicalinfo,
+        ];
 
         return $response;
     }
@@ -154,9 +154,9 @@ class mod_cobra_external extends external_api {
      */
     public static function get_full_concordance_parameters() {
         return new external_function_parameters(
-            array(
-                'idconcordance' => new external_value(PARAM_INT, 'Id of concordance to display')
-            )
+            [
+                'idconcordance' => new external_value(PARAM_INT, 'Id of concordance to display'),
+            ]
         );
     }
 
@@ -166,13 +166,13 @@ class mod_cobra_external extends external_api {
      */
     public static function get_full_concordance_returns() {
         return new external_single_structure(
-            array(
+            [
                 'source' => new external_value(PARAM_RAW, 'Concordance in source language'),
                 'target' => new external_value(PARAM_RAW, 'Concordance in French'),
                 'reference' => new external_value(PARAM_RAW, 'Corpus'),
                 'type' => new external_value(PARAM_RAW, 'Corpus type'),
-                'warnings' => new external_warnings()
-            )
+                'warnings' => new external_warnings(),
+            ]
         );
     }
 
@@ -185,9 +185,9 @@ class mod_cobra_external extends external_api {
      */
     public static function get_full_concordance($ccid) {
         $args = self::validate_parameters(self::get_full_concordance_parameters(),
-                array(
-                    'idconcordance' => $ccid
-                )
+                [
+                    'idconcordance' => $ccid,
+                ]
         );
         $cc = cobra_remote_service::call('get_full_concordance', $args);
 
@@ -200,11 +200,11 @@ class mod_cobra_external extends external_api {
      */
     public static function load_glossary_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'textid' => new external_value(PARAM_INT, 'Id of current text'),
                 'courseid' => new external_value(PARAM_INT, 'Id of current course'),
                 'userid' => new external_value(PARAM_INT, 'Id of current user'),
-            )
+            ]
         );
     }
 
@@ -215,7 +215,7 @@ class mod_cobra_external extends external_api {
     public static function load_glossary_returns() {
         return new external_multiple_structure(
             new external_single_structure(
-                array(
+                [
                     'lingentity' => new external_value(PARAM_INT, 'lingentity id'),
                     'entry' => new external_value(PARAM_RAW, 'word/expression'),
                     'type' => new external_value(PARAM_RAW, 'lemma or expression'),
@@ -223,8 +223,8 @@ class mod_cobra_external extends external_api {
                     'category' => new external_value(PARAM_RAW, 'category'),
                     'extrainfo' => new external_value(PARAM_RAW, 'additional info'),
                     'new' => new external_value(PARAM_BOOL, 'added during this session or not', false),
-                    'fromThisText' => new external_value(PARAM_BOOL, 'clicked and added in this text', false)
-                )
+                    'fromThisText' => new external_value(PARAM_BOOL, 'clicked and added in this text', false),
+                ]
             )
         );
     }
@@ -239,11 +239,11 @@ class mod_cobra_external extends external_api {
      */
     public static function load_glossary($textid, $courseid, $userid) {
         $params = self::validate_parameters(self::load_glossary_parameters(),
-                array(
+                [
                     'textid' => $textid,
                     'courseid' => $courseid,
-                    'userid' => $userid
-                )
+                    'userid' => $userid,
+                ]
         );
 
         $data = cobra_get_student_glossary($params['userid'], $params['courseid'], $params['textid']);
@@ -257,12 +257,12 @@ class mod_cobra_external extends external_api {
      */
     public static function add_to_glossary_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'lingentity' => new external_value(PARAM_INT, 'Id of lingentity'),
                 'textid' => new external_value(PARAM_INT, 'Id of current text'),
                 'course' => new external_value(PARAM_INT, 'Id of current course'),
-                'userid' => new external_value(PARAM_INT, 'Id of current user')
-            )
+                'userid' => new external_value(PARAM_INT, 'Id of current user'),
+            ]
         );
     }
 
@@ -273,7 +273,7 @@ class mod_cobra_external extends external_api {
     public static function add_to_glossary_returns() {
 
         return new external_single_structure(
-            array(
+            [
                 'lingentity' => new external_value(PARAM_INT, 'lingentity id'),
                 'entry' => new external_value(PARAM_RAW, 'word/expression'),
                 'type' => new external_value(PARAM_RAW, 'lemma or expression'),
@@ -281,8 +281,8 @@ class mod_cobra_external extends external_api {
                 'category' => new external_value(PARAM_RAW, 'category'),
                 'extrainfo' => new external_value(PARAM_RAW, 'additional info'),
                 'new' => new external_value(PARAM_BOOL, 'added during this session or not'),
-                'fromThisText' => new external_value(PARAM_BOOL, 'clicked and added in this text')
-            )
+                'fromThisText' => new external_value(PARAM_BOOL, 'clicked and added in this text'),
+            ]
         );
     }
 
@@ -300,12 +300,12 @@ class mod_cobra_external extends external_api {
         global $DB;
 
         $params = self::validate_parameters(self::add_to_glossary_parameters(),
-                array(
+                [
                     'lingentity' => $lingentity,
                     'textid' => $textid,
                     'course' => $courseid,
-                    'userid' => $userid
-                )
+                    'userid' => $userid,
+                ]
         );
         $result = (int)$DB->set_field('cobra_click',
             'inglossary',
@@ -319,7 +319,7 @@ class mod_cobra_external extends external_api {
             $entry->fromThisText = true;
             return $entry;
         } else {
-            throw Exception('error');
+            throw new Exception('error');
         }
     }
 
@@ -329,11 +329,11 @@ class mod_cobra_external extends external_api {
      */
     public static function remove_from_glossary_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'lingentity' => new external_value(PARAM_INT, 'Id of lingentity'),
                 'course' => new external_value(PARAM_INT, 'Id of current course'),
                 'userid' => new external_value(PARAM_INT, 'Id of current user'),
-            )
+            ]
         );
     }
 
@@ -349,11 +349,11 @@ class mod_cobra_external extends external_api {
         global $DB;
 
         $params = self::validate_parameters(self::remove_from_glossary_parameters(),
-                array(
+                [
                     'lingentity' => $lingentity,
                     'course' => $courseid,
-                    'userid' => $userid
-                )
+                    'userid' => $userid,
+                ]
         );
         $result = (int)$DB->set_field('cobra_click',
             'inglossary',
@@ -361,7 +361,7 @@ class mod_cobra_external extends external_api {
             $params
         );
         if ($result) {
-            return array('lingentity' => $lingentity);
+            return ['lingentity' => $lingentity];
         }
         return false;
     }
@@ -373,9 +373,7 @@ class mod_cobra_external extends external_api {
     public static function remove_from_glossary_returns() {
 
         return new external_single_structure(
-            array(
-                'lingentity' => new external_value(PARAM_INT, 'lingentity id'),
-            )
+            ['lingentity' => new external_value(PARAM_INT, 'lingentity id')]
         );
     }
 
@@ -385,9 +383,7 @@ class mod_cobra_external extends external_api {
      */
     public static function get_text_parameters() {
         return new external_function_parameters(
-            array(
-                'id_text' => new external_value(PARAM_RAW, 'Text remote identifier'),
-            )
+            ['id_text' => new external_value(PARAM_RAW, 'Text remote identifier')]
         );
     }
 
@@ -400,9 +396,7 @@ class mod_cobra_external extends external_api {
      */
     public static function get_text($idtext) {
         $params = self::validate_parameters(self::get_text_parameters(),
-            array(
-                'id_text' => $idtext
-            )
+            ['id_text' => $idtext]
         );
 
         $data = cobra_remote_service::call('get_text', $params);
@@ -417,21 +411,21 @@ class mod_cobra_external extends external_api {
      */
     public static function get_text_returns() {
         return new external_single_structure(
-            array(
+            [
                 'title' => new external_value(PARAM_RAW, 'Text title in CoBRA format'),
                 'source' => new external_value(PARAM_RAW, 'Source of this text (website, editor, ...)', VALUE_OPTIONAL),
                 'audiofile' => new external_value(PARAM_RAW, 'Url of audio version of the text', VALUE_OPTIONAL),
                 'textpart' => new external_multiple_structure(
-            new external_single_structure(
-                array(
-                    'issubtitle' => new external_value(PARAM_BOOL, 'Is this text part a subtitle?', VALUE_OPTIONAL),
-                    'isparagraph' => new external_value(PARAM_BOOL, 'Is this text part a paragraph?', VALUE_OPTIONAL),
-                    'content' => new external_value(PARAM_RAW, 'Content in CoBRA format')
-                        )
+                    new external_single_structure(
+                        [
+                            'issubtitle' => new external_value(PARAM_BOOL, 'Is this text part a subtitle?', VALUE_OPTIONAL),
+                            'isparagraph' => new external_value(PARAM_BOOL, 'Is this text part a paragraph?', VALUE_OPTIONAL),
+                            'content' => new external_value(PARAM_RAW, 'Content in CoBRA format'),
+                        ]
                     )
                 ),
-                'warnings' => new external_warnings()
-            )
+                'warnings' => new external_warnings(),
+            ]
         );
     }
 
@@ -441,9 +435,7 @@ class mod_cobra_external extends external_api {
      */
     public static function get_text_list_parameters() {
         return new external_function_parameters(
-            array(
-                'collection' => new external_value(PARAM_RAW, 'Collection remote identifier'),
-            )
+            ['collection' => new external_value(PARAM_RAW, 'Collection remote identifier')]
         );
     }
 
@@ -456,9 +448,7 @@ class mod_cobra_external extends external_api {
      */
     public static function get_text_list($collection) {
         $params = self::validate_parameters(self::get_text_list_parameters(),
-            array(
-                'collection' => $collection
-            )
+            ['collection' => $collection]
         );
 
         $data = cobra_remote_service::call('get_text_list', $params);
@@ -471,17 +461,17 @@ class mod_cobra_external extends external_api {
      */
     public static function get_text_list_returns() {
         return new external_single_structure(
-            array(
+            [
                 'texts' => new external_multiple_structure(
                     new external_single_structure(
-                        array(
+                        [
                             'id' => new external_value(PARAM_INT, 'Text remote identifier'),
                             'title' => new external_value(PARAM_RAW, 'Collection name'),
-                        )
+                        ]
                     )
                 ),
-                'warnings' => new external_warnings()
-            )
+                'warnings' => new external_warnings(),
+            ]
         );
     }
 
@@ -491,9 +481,7 @@ class mod_cobra_external extends external_api {
      */
     public static function get_collection_list_parameters() {
         return new external_function_parameters(
-            array(
-                'language' => new external_value(PARAM_RAW, 'Current language, either "EN" or "NL"'),
-            )
+            ['language' => new external_value(PARAM_RAW, 'Current language, either "EN" or "NL"')]
         );
     }
 
@@ -506,9 +494,7 @@ class mod_cobra_external extends external_api {
      */
     public static function get_collection_list($language) {
         $params = self::validate_parameters(self::get_collection_list_parameters(),
-            array(
-                'language' => $language
-            )
+            ['language' => $language]
         );
 
         $data = cobra_remote_service::call('get_collection_list', $params);
@@ -521,17 +507,17 @@ class mod_cobra_external extends external_api {
      */
     public static function get_collection_list_returns() {
         return new external_single_structure(
-            array(
+            [
                 'collections' => new external_multiple_structure(
                     new external_single_structure(
-                        array(
+                        [
                             'id' => new external_value(PARAM_INT, 'Collection remote identifier'),
                             'name' => new external_value(PARAM_RAW, 'Collection name'),
-                        )
+                        ]
                     )
                 ),
-                'warnings' => new external_warnings()
-            )
+                'warnings' => new external_warnings(),
+            ]
         );
     }
 
@@ -541,8 +527,7 @@ class mod_cobra_external extends external_api {
      */
     public static function get_demo_api_key_parameters() {
         return new external_function_parameters(
-            array(
-            )
+            []
         );
     }
 
@@ -555,11 +540,11 @@ class mod_cobra_external extends external_api {
     public static function get_demo_api_key() {
         global $CFG;
         $site = get_site();
-        $params = array(
+        $params = [
             'caller' => $site->shortname,
             'url' => $CFG->wwwroot,
-            'platformid' => get_config('moodle', 'siteidentifier')
-        );
+            'platformid' => get_config('moodle', 'siteidentifier'),
+        ];
         $data = cobra_remote_service::call('get_demo_api_key', $params);
         return json_decode($data);
     }
@@ -570,10 +555,10 @@ class mod_cobra_external extends external_api {
      */
     public static function get_demo_api_key_returns() {
         return new external_single_structure(
-            array(
+            [
                 'apikey' => new external_value(PARAM_RAW, 'Demo API key'),
-                'warnings' => new external_warnings()
-            )
+                'warnings' => new external_warnings(),
+            ]
         );
     }
 }

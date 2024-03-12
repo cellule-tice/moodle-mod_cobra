@@ -28,12 +28,12 @@ require_once(__DIR__.'/lib.php');
 
 $id = required_param('id', PARAM_INT);
 
-$course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
 require_course_login($course);
 
 $coursecontext = context_course::instance($course->id);
 
-$PAGE->set_url('/mod/cobra/index.php', array('id' => $id));
+$PAGE->set_url('/mod/cobra/index.php', ['id' => $id]);
 $PAGE->set_title(format_string($course->fullname));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($coursecontext);
@@ -47,39 +47,39 @@ $cobras = get_all_instances_in_course('cobra', $course);
 
 if (empty($cobras)) {
     notice(get_string('thereareno', 'moodle', get_string('modulename', 'cobra')),
-            new moodle_url('/course/view.php', array('id' => $course->id)));
+            new moodle_url('/course/view.php', ['id' => $course->id]));
 }
 
 $table = new html_table();
 $table->attributes['class'] = 'generaltable mod_index';
 
 if ($course->format == 'weeks') {
-    $table->head = array(get_string('week'), get_string('name'));
-    $table->align = array('center', 'left');
+    $table->head = [get_string('week'), get_string('name')];
+    $table->align = ['center', 'left'];
 } else if ($course->format == 'topics') {
-    $table->head = array(get_string('topic'), get_string('name'));
-    $table->align = array('center', 'left', 'left', 'left');
+    $table->head = [get_string('topic'), get_string('name')];
+    $table->align = ['center', 'left', 'left', 'left'];
 } else {
-    $table->head = array(get_string('name'));
-    $table->align = array('left', 'left', 'left');
+    $table->head = [get_string('name')];
+    $table->align = ['left', 'left', 'left'];
 }
 
 foreach ($cobras as $cobra) {
     if (!$cobra->visible) {
         $link = html_writer::link(
-            new moodle_url('/mod/cobra/view.php', array('id' => $cobra->coursemodule)),
+            new moodle_url('/mod/cobra/view.php', ['id' => $cobra->coursemodule]),
             format_string($cobra->name, true),
-            array('class' => 'dimmed'));
+            ['class' => 'dimmed']);
     } else {
         $link = html_writer::link(
-            new moodle_url('/mod/cobra/view.php', array('id' => $cobra->coursemodule)),
+            new moodle_url('/mod/cobra/view.php', ['id' => $cobra->coursemodule]),
             format_string($cobra->name, true));
     }
 
     if ($course->format == 'weeks' || $course->format == 'topics') {
-        $table->data[] = array($cobra->section, $link);
+        $table->data[] = [$cobra->section, $link];
     } else {
-        $table->data[] = array($link);
+        $table->data[] = [$link];
     }
 }
 

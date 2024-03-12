@@ -57,9 +57,9 @@ class restore_cobra_activity_task extends restore_activity_task {
      * processed by the link decoder
      */
     public static function define_decode_contents() {
-        $contents = array();
+        $contents = [];
 
-        $contents[] = new restore_decode_content('cobra', array('intro'), 'cobra');
+        $contents[] = new restore_decode_content('cobra', ['intro'], 'cobra');
 
         return $contents;
     }
@@ -69,7 +69,7 @@ class restore_cobra_activity_task extends restore_activity_task {
      * to the activity to be executed by the link decoder
      */
     public static function define_decode_rules() {
-        $rules = array();
+        $rules = [];
 
         $rules[] = new restore_decode_rule('COBRAVIEWBYID', '/mod/cobra/view.php?id=$1', 'course_module');
         $rules[] = new restore_decode_rule('COBRAINDEX', '/mod/cobra/index.php?id=$1', 'course');

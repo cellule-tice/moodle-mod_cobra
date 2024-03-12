@@ -38,7 +38,7 @@ require_once(__DIR__ . '/classes/output/glossary_action_menu.php');
 $id = optional_param('id', 0, PARAM_INT);
 
 if ($id) {
-    $course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
+    $course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
     if (!cobra_is_used()) {
         // Redirect to course page.
         redirect('../course/view.php?id=' . $id);
@@ -58,7 +58,7 @@ if (!has_capability('mod/cobra:addinstance', $context)) {
  * Init request vars.
  */
 $cmd = optional_param('cmd', '', PARAM_ALPHANUM);
-$acceptedcmdlist = array('rqexport', 'exexport', 'rqcompare', 'excompare');
+$acceptedcmdlist = ['rqexport', 'exexport', 'rqcompare', 'excompare'];
 if (!in_array($cmd, $acceptedcmdlist)) {
     $cmd = 'rqexport';
 }
@@ -68,7 +68,7 @@ $out = '';
 $textlist = cobra_get_text_list();
 
 if ($cmd == 'exexport') {
-    $glossary = array();
+    $glossary = [];
     foreach ($textlist as $text) {
         $mustexport = optional_param('text_' . $text->id, 0, PARAM_INT);
         if ($mustexport) {
@@ -77,13 +77,13 @@ if ($cmd == 'exexport') {
     }
 
     $downloadentries = new ArrayObject($glossary);
-    $downloadfields = array(
+    $downloadfields = [
         'entry' => get_string('entry', 'cobra'),
         'translations' => get_string('translations', 'cobra'),
         'category' => get_string('category', 'cobra'),
         'extrainfo' => get_string('otherforms', 'cobra'),
-        'sourcetexttitle' => get_string('sourcetext', 'cobra')
-    );
+        'sourcetexttitle' => get_string('sourcetext', 'cobra'),
+    ];
     $iterator = $downloadentries->getIterator();
     \core\dataformat::download_data($course->shortname . '-' . get_string('myglossary', 'cobra'),
         'excel',
@@ -94,7 +94,7 @@ if ($cmd == 'exexport') {
 }
 
 // Print the page header.
-$PAGE->set_url('/mod/cobra/glossary.php', array('id' => $context->id));
+$PAGE->set_url('/mod/cobra/glossary.php', ['id' => $context->id]);
 $PAGE->set_title(format_string(get_string('pluginname', 'mod_cobra')));
 $PAGE->set_heading(format_string($course->fullname));
 
@@ -114,34 +114,34 @@ echo $OUTPUT->heading($heading);
 $renderer = $PAGE->get_renderer('mod_cobra');
 
 // Render the selection action.
-$glossaryactionmenu = new \cobra\output\glossary_action_menu(new moodle_url('/mod/cobra/glossary.php', array('id' => $course->id)));
+$glossaryactionmenu = new \cobra\output\glossary_action_menu(new moodle_url('/mod/cobra/glossary.php', ['id' => $course->id]));
 echo $renderer->render($glossaryactionmenu);
 
 echo $OUTPUT->box_start();
 
 if ($cmd == 'rqexport') {
     $url = new moodle_url('/mod/cobra/glossary.php',
-        array(
+        [
             'id' => $id,
-            'cmd' => 'exexport'
-        )
+            'cmd' => 'exexport',
+        ]
     );
-    $thisform = new cobra_edit_glossary_form ($url, array('textlist' => $textlist, 'compare' => false));
+    $thisform = new cobra_edit_glossary_form ($url, ['textlist' => $textlist, 'compare' => false]);
 } else if ($cmd == 'rqcompare') {
     $url = new moodle_url('/mod/cobra/glossary.php',
-        array(
+        [
             'id' => $id,
-            'cmd' => 'excompare'
-        )
+            'cmd' => 'excompare',
+        ]
     );
-    $thisform = new cobra_edit_glossary_form ($url, array('textlist' => $textlist, 'compare' => true));
+    $thisform = new cobra_edit_glossary_form ($url, ['textlist' => $textlist, 'compare' => true]);
 } else if ( $cmd == 'excompare') {
     cobra_increase_script_time();
-    $glossary = array();
+    $glossary = [];
 
     $textlist = array_values($textlist);
     $language = $textlist[0]->language;
-    $glossary = array();
+    $glossary = [];
     foreach ($textlist as $text) {
         $mustexport = optional_param('text_' . $text->id, 0, PARAM_INT);
         if ($mustexport) {
@@ -156,7 +156,7 @@ if ($cmd == 'rqexport') {
     $newwords = '';
     $otherwords = '';
     $words = cobra_get_list_of_words_in_text ( $mytext, $language );
-    $newwords = array();
+    $newwords = [];
 
     foreach ($words as $word) {
 

@@ -29,7 +29,7 @@ require_once(__DIR__ . '/classes/output/cobratext.php');
 // Course_module ID.
 $id = required_param('id', PARAM_INT);
 list($course, $cm) = get_course_and_cm_from_cmid($id, 'cobra');
-$cobra = $DB->get_record('cobra', array('id' => $cm->instance), '*', MUST_EXIST);
+$cobra = $DB->get_record('cobra', ['id' => $cm->instance], '*', MUST_EXIST);
 
 $context = context_module::instance($cm->id);
 
@@ -37,10 +37,10 @@ require_login($course, true, $cm);
 require_capability('mod/cobra:view', $context);
 
 // Add event management here.
-$event = \mod_cobra\event\course_module_viewed::create(array(
+$event = \mod_cobra\event\course_module_viewed::create([
     'objectid' => $cobra->id,
     'context' => $context,
-));
+]);
 $event->add_record_snapshot('course', $PAGE->course);
 $event->add_record_snapshot($cm->modname, $cobra);
 $event->trigger();
@@ -55,7 +55,7 @@ $cobra->user = $USER->id;
 $cobra->cmid = $id;
 $cobra->encodeclic = user_has_role_assignment($USER->id, 5, $context->id);
 
-$PAGE->set_url('/mod/cobra/view.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/cobra/view.php', ['id' => $cm->id]);
 $PAGE->set_title(format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->force_settings_menu();
@@ -64,7 +64,7 @@ $PAGE->set_context($context);
 
 // Add css and js requires.
 
-$PAGE->requires->js_call_amd('mod_cobra/cobra', 'initData', array(json_encode($cobra)));
+$PAGE->requires->js_call_amd('mod_cobra/cobra', 'initData', [json_encode($cobra)]);
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'entryOnClick');
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'concordanceOnClick');
 $PAGE->requires->js_call_amd('mod_cobra/cobra', 'textGlossaryActions');

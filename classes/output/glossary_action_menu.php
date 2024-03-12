@@ -63,7 +63,7 @@ class glossary_action_menu implements templatable, renderable {
 
         $menu = [
             $exportlink->out(false) => get_string('exportglossary', 'mod_cobra'),
-            $comparelink->out(false) => get_string('comparetextwithglossary', 'mod_cobra')
+            $comparelink->out(false) => get_string('comparetextwithglossary', 'mod_cobra'),
         ];
 
         $urlselect = new url_select($menu, $this->currenturl->out(false), null, 'cobraaction');

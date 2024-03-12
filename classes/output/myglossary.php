@@ -50,6 +50,16 @@ class myglossary implements renderable, templatable {
     private $course;
 
     /**
+     * @var $initialsbar - the current course id
+     */
+    private $initialsbar;
+
+    /**
+     * @var $initial - the current course id
+     */
+    private $initial;
+
+    /**
      * myglossary constructor.
      *
      * @param array $entries
@@ -72,7 +82,7 @@ class myglossary implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output) {
 
-        $data = array();
+        $data = [];
         $data['entries'] = $this->entries;
         $data['course'] = $this->course;
         $data['initialsbar'] = $this->initialsbar;

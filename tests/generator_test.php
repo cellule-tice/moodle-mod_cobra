@@ -50,9 +50,9 @@ class mod_cobra_generator_testcase extends advanced_testcase {
         $this->assertInstanceOf('mod_cobra_generator', $generator);
         $this->assertEquals('cobra', $generator->get_modulename());
 
-        $generator->create_instance(array('course' => $course->id));
-        $generator->create_instance(array('course' => $course->id));
-        $cobra = $generator->create_instance(array('course' => $course->id));
+        $generator->create_instance(['course' => $course->id]);
+        $generator->create_instance(['course' => $course->id]);
+        $cobra = $generator->create_instance(['course' => $course->id]);
         $this->assertEquals(3, $DB->count_records('cobra'));
         $this->assertEquals($config->userglossary, $cobra->userglossary);
         $this->assertEquals($config->translations, $cobra->translations);

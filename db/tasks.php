@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$tasks = array(
-    array(
+$tasks = [
+    [
         'classname' => 'mod_cobra\task\update_glossary_cache_task',
         'blocking' => 0,
         'minute' => 'R',
@@ -34,8 +34,8 @@ $tasks = array(
         'day' => '*',
         'dayofweek' => '2',
         'month' => '*',
-    ),
-    array(
+    ],
+    [
         'classname' => 'mod_cobra\task\update_text_info_cache_task',
         'blocking' => 0,
         'minute' => 'R',
@@ -43,5 +43,5 @@ $tasks = array(
         'day' => '*',
         'dayofweek' => '2',
         'month' => '*',
-    ),
-);
+    ],
+];

@@ -62,8 +62,8 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $this->resetAfterTest();
 
         $this->course = $this->getDataGenerator()->create_course();
-        $this->cobra1 = $this->getDataGenerator()->create_module('cobra', array('course' => $this->course->id));
-        $this->cobra2 = $this->getDataGenerator()->create_module('cobra', array('course' => $this->course->id));
+        $this->cobra1 = $this->getDataGenerator()->create_module('cobra', ['course' => $this->course->id]);
+        $this->cobra2 = $this->getDataGenerator()->create_module('cobra', ['course' => $this->course->id]);
 
         // Create a student who will add entries to their personal glossary.
         $this->student1 = $this->getDataGenerator()->create_user();
@@ -160,7 +160,7 @@ class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_t
 
         $cms = [
             get_coursemodule_from_instance('cobra', $this->cobra1->id),
-            get_coursemodule_from_instance('cobra', $this->cobra2->id)
+            get_coursemodule_from_instance('cobra', $this->cobra2->id),
         ];
         $ctxs = [];
         foreach ($cms as $cm) {

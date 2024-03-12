@@ -104,12 +104,12 @@ function cobra_update_instance($cobra) {
 function cobra_delete_instance($id) {
     global $DB;
 
-    $exists = $DB->get_record('cobra', array('id' => $id));
+    $exists = $DB->get_record('cobra', ['id' => $id]);
     if (!$exists) {
         return false;
     }
 
-    $DB->delete_records('cobra', array('id' => $id));
+    $DB->delete_records('cobra', ['id' => $id]);
 
     return true;
 }
@@ -124,16 +124,16 @@ function cobra_delete_instance($id) {
 function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
     global $DB;
 
-    if ($DB->record_exists('cobra', array('course' => $course->id))) {
+    if ($DB->record_exists('cobra', ['course' => $course->id])) {
         global $CFG;
         if (has_capability('mod/cobra:addinstance', $context)) {
             $cobranode = $parentnode->add(get_string('glossary', 'mod_cobra') . ' ' . get_string('cobra', 'mod_cobra'));
-            $params = array('id' => $context->instanceid, 'cmd' => 'rqexport');
+            $params = ['id' => $context->instanceid, 'cmd' => 'rqexport'];
             $cobranode->add(get_string('glossary', 'mod_cobra') . ' ' . get_string('cobra', 'mod_cobra'),
                 new moodle_url($CFG->wwwroot .'/mod/cobra/glossary.php', $params),
                 navigation_node::TYPE_SETTING, null, 'mod_cobra_export_glossary');
 
-            $params = array('id' => $context->instanceid, 'cmd' => 'rqcompare');
+            $params = ['id' => $context->instanceid, 'cmd' => 'rqcompare'];
             $cobranode->add(get_string('comparetextwithglossary', 'mod_cobra'),
                 new moodle_url($CFG->wwwroot .'/mod/cobra/glossary.php', $params),
                 navigation_node::TYPE_SETTING, null, 'mod_cobra_compare_glossary');
@@ -158,7 +158,7 @@ function cobra_coursemodule_edit_post_actions($moduleinfo, $course) {
     }
     if (!PHPUNIT_TEST) {
         if (empty($moduleinfo->id)) {
-            $cobraid = $DB->get_field_sql('SELECT MAX(id) FROM {cobra} WHERE course = :course', array('course' => $course->id));
+            $cobraid = $DB->get_field_sql('SELECT MAX(id) FROM {cobra} WHERE course = :course', ['course' => $course->id]);
         } else {
             $cobraid = $moduleinfo->id;
         }
@@ -168,14 +168,14 @@ function cobra_coursemodule_edit_post_actions($moduleinfo, $course) {
                              SET isdefaultdisplayprefs = 0
                            WHERE course = :course
                              AND id != :newid";
-            $DB->execute($statement, array('newid' => $cobraid, 'course' => $course->id));
+            $DB->execute($statement, ['newid' => $cobraid, 'course' => $course->id]);
         }
         if ($moduleinfo->isdefaultcorpusorder) {
             $statement = "UPDATE {cobra}
                              SET isdefaultcorpusorder = 0
                            WHERE course = :course
                              AND id != :newid";
-            $DB->execute($statement, array('newid' => $cobraid, 'course' => $course->id));
+            $DB->execute($statement, ['newid' => $cobraid, 'course' => $course->id]);
         }
     }
     return $moduleinfo;
@@ -223,7 +223,7 @@ function cobra_reset_userdata($data) {
     global $DB;
 
     $componentstr = get_string('modulename', 'cobra');
-    $status = array();
+    $status = [];
 
     if (!empty($data->reset_cobra_defaults)) {
         $sql = "UPDATE {cobra}
@@ -231,44 +231,44 @@ function cobra_reset_userdata($data) {
                        isdefaultcorpusorder = 0
                  WHERE course=:course";
 
-        $params = array('course' => $data->courseid);
+        $params = ['course' => $data->courseid];
         $success = $DB->execute($sql, $params);
 
-        $status[] = array(
+        $status[] = [
             'component' => $componentstr,
             'item' => get_string('resetdefaults', 'cobra'),
-            'error' => !$success
-        );
+            'error' => !$success,
+        ];
     }
 
     if (!empty($data->reset_cobra_click_history) && !empty($data->reset_cobra_personal_glossaries)) {
 
-        $params = array('course' => $data->courseid);
+        $params = ['course' => $data->courseid];
         $success = $DB->delete_records('cobra_click', $params);
 
-        $status[] = array(
+        $status[] = [
             'component' => $componentstr,
             'item' => get_string('resetglossaries', 'cobra'),
-            'error' => !$success
-        );
-        $status[] = array(
+            'error' => !$success,
+        ];
+        $status[] = [
             'component' => $componentstr,
             'item' => get_string('resetclichistory', 'cobra'),
-            'error' => !$success
-        );
+            'error' => !$success,
+        ];
     } else if (!empty($data->reset_cobra_personal_glossaries)) {
         $sql = "UPDATE {cobra_click}
                    SET inglossary = 0
-                 WHERE course=:course";
+                 WHERE course = :course";
 
-        $params = array('course' => $data->courseid);
+        $params = ['course' => $data->courseid];
         $success = $DB->execute($sql, $params);
 
-        $status[] = array(
+        $status[] = [
             'component' => $componentstr,
             'item' => get_string('resetglossaries', 'cobra'),
-            'error' => !$success
-        );
+            'error' => !$success,
+        ];
     }
 
     return $status;
@@ -296,9 +296,9 @@ function cobra_reset_course_form_definition(&$mform) {
  * @return array
  */
 function cobra_reset_course_form_defaults($course) {
-    return array(
+    return [
         'reset_cobra_defaults' => 0,
         'reset_cobra_personal_glossaries' => 1,
-        'reset_cobra_click_history' => 0
-    );
+        'reset_cobra_click_history' => 0,
+    ];
 }

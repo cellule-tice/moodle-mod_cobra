@@ -65,13 +65,13 @@ class cobratext implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output) {
 
-        $params = array('id_text' => $this->cobra->text);
+        $params = ['id_text' => $this->cobra->text];
 
         try {
             $textdata = json_decode(cobra_remote_service::call('get_text', $params));
         } catch (cobra_remote_access_exception $e) {
             global $COURSE;
-            redirect(new moodle_url('/course/view.php', array('id' => $COURSE->id)),
+            redirect(new moodle_url('/course/view.php', ['id' => $COURSE->id]),
                     'CoBRA' . ': ' . get_string($e->debuginfo, 'cobra') . '<br/>' . get_string('pageshouldredirect'),
                     5, \core\output\notification::NOTIFY_ERROR);
         }

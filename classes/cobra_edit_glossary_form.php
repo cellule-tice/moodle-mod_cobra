@@ -50,12 +50,12 @@ class cobra_edit_glossary_form extends moodleform {
         $compare = $this->_customdata['compare'];
         foreach ($textlist as $text) {
             $mform->addElement('advcheckbox', 'text_' . $text->id, '',
-                htmlspecialchars(strip_tags($text->name)), array('group' => 1));
+                htmlspecialchars(strip_tags($text->name)), ['group' => 1]);
             $mform->setDefault('text_' . $text->id, 1);
 
         }
         if ($compare) {
-            $mform->addElement('textarea', 'mytext', get_string('mytext', 'cobra'), array('rows' => 30, 'cols' => 80));
+            $mform->addElement('textarea', 'mytext', get_string('mytext', 'cobra'), ['rows' => 30, 'cols' => 80]);
         }
         $this->add_action_buttons(true, get_string('OK', 'cobra'));
     }

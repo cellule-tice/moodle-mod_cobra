@@ -47,12 +47,12 @@ class cobra_remote_service {
      * @throws dml_exception
      * @throws moodle_exception
      */
-    public static function call($servicename, $params = array()) {
-        $validreturntypes = array(
+    public static function call($servicename, $params = []) {
+        $validreturntypes = [
             'object',
             'objectList',
-            'error'
-        );
+            'error',
+        ];
         $response = new \stdClass();
         $site = get_site();
         $params['caller'] = $site->shortname;
@@ -67,17 +67,17 @@ class cobra_remote_service {
         $params['verb'] = $servicename;
         $curl = new curl();
 
-        $curl->setHeader(array('Accept: application/json', 'Expect:'));
+        $curl->setHeader(['Accept: application/json', 'Expect:']);
 
-        $options = array(
+        $options = [
             'FRESH_CONNECT' => true,
             'RETURNTRANSFER' => true,
             'FORBID_REUSE' => true,
             'HEADER' => 0,
             'CONNECTTIMEOUT' => get_config('mod_cobra', 'timeout'),
             // Follow redirects with the same type of request when sent 301, or 302 redirects.
-            'CURLOPT_POSTREDIR' => 3
-        );
+            'CURLOPT_POSTREDIR' => 3,
+        ];
 
         $data = $curl->post($url . '?verb=' . $servicename . '&' . $querystring, json_encode($params), $options);
 
