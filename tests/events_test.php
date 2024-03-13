@@ -33,12 +33,31 @@
  *
  * @group mod_cobra
  */
-class mod_cobra_event_testcase extends advanced_testcase {
+
+namespace mod_cobra;
+
+use context_module;
+
+/**
+ * Defines PHPUnit events testcase.
+ *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @group mod_cobra
+ * @covers \mod_cobra\event\course_module_viewed
+ */
+class events_test extends \advanced_testcase {
 
     public function setUp(): void {
         $this->resetAfterTest();
     }
 
+    /**
+     * Test course_module_viewed event.
+     */
     public function test_course_module_viewed() {
         global $DB;
         // There is no proper API to call to trigger this event, so what we are

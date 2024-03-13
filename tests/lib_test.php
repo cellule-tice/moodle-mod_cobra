@@ -33,7 +33,20 @@
  *
  * @group mod_cobra
  */
-class mod_cobra_lib_testcase extends advanced_testcase {
+
+namespace mod_cobra;
+
+/**
+ * Defines PHPUnit lib testcase.
+ *
+ * @package    mod_cobra
+ * @author     Jean-Roch Meurisse
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @group mod_cobra
+ */
+class lib_test extends \advanced_testcase {
 
     /**
      * Set up.
@@ -43,6 +56,10 @@ class mod_cobra_lib_testcase extends advanced_testcase {
         $this->setAdminUser();
     }
 
+    /**
+     * Test for mod_cobra_core_calendar_provide_event_action #1.
+     * @covers ::mod_cobra_core_calendar_provide_event_action
+     */
     public function test_cobra_core_calendar_provide_event_action() {
         // Create the activity.
         $course = $this->getDataGenerator()->create_course();
@@ -66,6 +83,10 @@ class mod_cobra_lib_testcase extends advanced_testcase {
         $this->assertTrue($actionevent->is_actionable());
     }
 
+    /**
+     * Test for mod_cobra_core_calendar_provide_event_action #2.
+     * @covers ::mod_cobra_core_calendar_provide_event_action
+     */
     public function test_cobra_core_calendar_provide_event_action_already_completed() {
         global $CFG;
 
@@ -84,7 +105,7 @@ class mod_cobra_lib_testcase extends advanced_testcase {
             \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
 
         // Mark the activity as completed.
-        $completion = new completion_info($course);
+        $completion = new \completion_info($course);
         $completion->set_module_viewed($cm);
 
         // Create an action factory.
@@ -106,7 +127,7 @@ class mod_cobra_lib_testcase extends advanced_testcase {
      * @return bool|calendar_event
      */
     private function create_action_event($courseid, $instanceid, $eventtype) {
-        $event = new stdClass();
+        $event = new \stdClass();
         $event->name = 'Calendar event';
         $event->modulename = 'cobra';
         $event->courseid = $courseid;
@@ -115,6 +136,6 @@ class mod_cobra_lib_testcase extends advanced_testcase {
         $event->eventtype = $eventtype;
         $event->timestart = time();
 
-        return calendar_event::create($event);
+        return \calendar_event::create($event);
     }
 }

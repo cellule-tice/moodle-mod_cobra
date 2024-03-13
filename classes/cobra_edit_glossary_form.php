@@ -49,8 +49,7 @@ class cobra_edit_glossary_form extends moodleform {
         $textlist = $this->_customdata['textlist'];
         $compare = $this->_customdata['compare'];
         foreach ($textlist as $text) {
-            $mform->addElement('advcheckbox', 'text_' . $text->id, '',
-                htmlspecialchars(strip_tags($text->name)), ['group' => 1]);
+            $mform->addElement('advcheckbox', 'text_' . $text->id, '', $text->name, ['group' => 1]);
             $mform->setDefault('text_' . $text->id, 1);
 
         }
