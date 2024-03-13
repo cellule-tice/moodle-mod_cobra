@@ -24,6 +24,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_cobra;
+
+use context_module;
+
 /**
  * Defines PHPUnit cobra_generator testcase.
  *
@@ -33,8 +37,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @group mod_cobra
+ * @covers \mod_cobra\mod_cobra_generator
  */
-class mod_cobra_generator_testcase extends advanced_testcase {
+class generator_test extends \advanced_testcase {
     public function test_generator() {
         global $DB;
 

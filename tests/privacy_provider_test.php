@@ -24,8 +24,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_cobra;
+
 use core_privacy\local\metadata\collection;
 use mod_cobra\privacy\provider;
+use context_module;
 
 /**
  * Unit tests for mod/cobra/classes/privacy/
@@ -36,8 +39,9 @@ use mod_cobra\privacy\provider;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @group mod_cobra
+ * @covers \mod_cobra\privacy\provider
  */
-class mod_cobra_privacy_provider_testcase extends \core_privacy\tests\provider_testcase {
+class privacy_provider_test extends \core_privacy\tests\provider_testcase {
     /** @var stdClass The first student object. */
     protected $student1;
 
