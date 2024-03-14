@@ -27,10 +27,11 @@
 
 use mod_cobra\cobra_edit_glossary_form;
 use mod_cobra\output\glossary_action_menu;
+use mod_cobra\local\glossary_helper;
 
 require(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
-require_once($CFG->dirroot . '/mod/cobra/lib/glossarylib.php');
+//require_once($CFG->dirroot . '/mod/cobra/lib/glossarylib.php');
 require_once($CFG->dirroot . '/lib/dataformatlib.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
@@ -72,7 +73,7 @@ if ($cmd == 'exexport') {
     foreach ($textlist as $text) {
         $mustexport = optional_param('text_' . $text->id, 0, PARAM_INT);
         if ($mustexport) {
-            $glossary = array_merge($glossary, cobra_get_exportable_glossary_entries($text->text));
+            $glossary = array_merge($glossary, glossary_helper::get_exportable_glossary_entries($text->text));
         }
     }
 
@@ -145,26 +146,26 @@ if ($cmd == 'rqexport') {
     foreach ($textlist as $text) {
         $mustexport = optional_param('text_' . $text->id, 0, PARAM_INT);
         if ($mustexport) {
-            $glossary = array_merge($glossary, cobra_get_glossary_entries($text->text));
+            $glossary = array_merge($glossary, glossary_helper::get_glossary_entries($text->text));
         }
     }
 
-    list( $lemmaentities, $expentities ) = cobra_explode_glossary_into_lemmas_and_expression( $glossary );
+    list($lemmaentities, $expentities) = glossary_helper::explode_glossary_into_lemmas_and_expression( $glossary );
 
     $mytext = optional_param('mytext', '', PARAM_RAW);
 
     $newwords = '';
     $otherwords = '';
-    $words = cobra_get_list_of_words_in_text ( $mytext, $language );
+    $words = glossary_helper::get_list_of_words_in_text ($mytext, $language);
     $newwords = [];
 
     foreach ($words as $word) {
 
-        $listflexions = cobra_word_exists_as_flexion ( $word, $language );
+        $listflexions = glossary_helper::word_exists_as_flexion ($word, $language);
         $found = false;
         if (count( $listflexions) != 0) {
             $found = false;
-            $listpossibleentities = cobra_get_entity_list_from_ff($listflexions );
+            $listpossibleentities = glossary_helper::get_entity_list_from_ff($listflexions );
 
             foreach ($listpossibleentities as $entityid) {
                 if (array_key_exists($entityid, $lemmaentities)) {
@@ -179,7 +180,7 @@ if ($cmd == 'rqexport') {
         }
         if (!$found) {
             $newwords[] = $word;
-            $mytext = cobra_mark_unknown_word($word, $mytext);
+            $mytext = glossary_helper::mark_unknown_word($word, $mytext);
         }
     }
 
