@@ -155,7 +155,7 @@ class glossary_helper {
                     'entry' => $element->entry,
                     'category' => $element->category,
                     'ss_cat' => $element->extrainfo,
-                    'traduction' => utf8_decode($element->translations),
+                    'traduction' => mb_convert_encoding($element->translations, 'ISO-8859-1', 'UTF-8'),
                 ];
             } else if ($element->type == 'expression') {
                 $explist[$element->id] = [
@@ -163,7 +163,7 @@ class glossary_helper {
                     'entry' => $element->entry,
                     'category' => $element->category,
                     'ss_cat' => $element->extrainfo,
-                    'traduction' => utf8_decode($element->translations),
+                    'traduction' => mb_convert_encoding($element->translations, 'ISO-8859-1', 'UTF-8'),
                 ];
             }
         }
