@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace cobra\output;
+namespace mod_cobra\output;
 
 use moodle_url;
 use renderer_base;
@@ -23,16 +23,10 @@ use renderable;
 use url_select;
 
 /**
- * Rendered HTML elements for tertiary nav for Question bank.
- *
- * Provides the links for question bank tertiary navigation, below
- * are the links provided for the urlselector:
- * Questions, Categories, Import and Export
- * Also "Add category" button is added to tertiary nav for the categories.
- * The "Add category" would take the user to separate page, add category page.
+ * Rendered HTML elements for tertiary nav for glossary actions.
  *
  * @package   mod_cobra
- * @copyright 2021 Sujith Haridasan <sujith@moodle.com>
+ * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class glossary_action_menu implements templatable, renderable {

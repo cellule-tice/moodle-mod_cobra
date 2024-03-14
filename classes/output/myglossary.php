@@ -23,6 +23,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+ namespace mod_cobra\output;
+
+ use renderable;
+ use templatable;
+ use renderer_base;
+
 /**
  * Class myglossary
  *

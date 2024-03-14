@@ -23,6 +23,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_cobra\output;
+
+use renderable;
+use templatable;
+use stdClass;
+use renderer_base;
+use moodle_url;
 use mod_cobra\cobra_remote_service;
 use mod_cobra\cobra_remote_access_exception;
 

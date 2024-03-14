@@ -23,8 +23,9 @@
  */
 
 require(__DIR__ . '/../../config.php');
-require_once(__DIR__ . '/locallib.php');
-require_once(__DIR__ . '/classes/output/cobratext.php');
+require_once($CFG->dirroot . '/mod/cobra/locallib.php');
+
+use mod_cobra\output\cobratext;
 
 // Course_module ID.
 $id = required_param('id', PARAM_INT);

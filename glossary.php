@@ -26,13 +26,13 @@
  */
 
 use mod_cobra\cobra_edit_glossary_form;
+use mod_cobra\output\glossary_action_menu;
 
 require(__DIR__ . '/../../config.php');
-require_once(__DIR__ . '/locallib.php');
-require_once(__DIR__ . '/lib/glossarylib.php');
+require_once($CFG->dirroot . '/mod/cobra/locallib.php');
+require_once($CFG->dirroot . '/mod/cobra/lib/glossarylib.php');
 require_once($CFG->dirroot . '/lib/dataformatlib.php');
 require_once($CFG->libdir . '/csvlib.class.php');
-require_once(__DIR__ . '/classes/output/glossary_action_menu.php');
 
 // Course id.
 $id = optional_param('id', 0, PARAM_INT);
@@ -114,7 +114,7 @@ echo $OUTPUT->heading($heading);
 $renderer = $PAGE->get_renderer('mod_cobra');
 
 // Render the selection action.
-$glossaryactionmenu = new \cobra\output\glossary_action_menu(new moodle_url('/mod/cobra/glossary.php', ['id' => $course->id]));
+$glossaryactionmenu = new glossary_action_menu(new moodle_url('/mod/cobra/glossary.php', ['id' => $course->id]));
 echo $renderer->render($glossaryactionmenu);
 
 echo $OUTPUT->box_start();
