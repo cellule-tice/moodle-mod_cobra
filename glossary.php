@@ -31,7 +31,6 @@ use mod_cobra\local\glossary_helper;
 
 require(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
-//require_once($CFG->dirroot . '/mod/cobra/lib/glossarylib.php');
 require_once($CFG->dirroot . '/lib/dataformatlib.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
@@ -174,7 +173,7 @@ if ($cmd == 'rqexport') {
                     $info = $lemmaentities[$entityid]['entry'] . ' ('.$lemmaentities[$entityid]['category'].') - '
                         . $lemmaentities[$entityid]['traduction'];
                     $otherwords .= '<li> ' . get_string('possibletranslations', 'cobra') . ' : '. $word . ' : '
-                        . utf8_encode($info) . '</li>';
+                        . mb_convert_encoding($info, 'UTF-8', 'ISO-8859-1') . '</li>';
                 }
             }
         }
