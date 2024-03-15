@@ -22,6 +22,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_cobra\local\helper;
+
 /**
  * Return if the plugin supports $feature.
  *
@@ -301,4 +303,11 @@ function cobra_reset_course_form_defaults($course) {
         'reset_cobra_personal_glossaries' => 1,
         'reset_cobra_click_history' => 0,
     ];
+}
+
+/**
+ * Fill in cached text info and glossary entries.
+ */
+function cobra_fill_cache_tables() {
+    helper::fill_cache_tables();
 }

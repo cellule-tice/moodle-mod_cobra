@@ -25,6 +25,8 @@
 
 namespace mod_cobra\task;
 
+use mod_cobra\local\helper;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
@@ -44,8 +46,8 @@ class fill_cache_tables_task extends \core\task\adhoc_task {
      * @throws \dml_exception
      */
     public function execute() {
-        cobra_update_glossary_cache((int)get_config('mod_cobra', 'lastglossaryupdate'));
-        cobra_update_text_info_cache((int)get_config('mod_cobra', 'lasttextinfoupdate'));
+        helper::update_glossary_cache((int)get_config('mod_cobra', 'lastglossaryupdate'));
+        helper::update_text_info_cache((int)get_config('mod_cobra', 'lasttextinfoupdate'));
         set_config('lastglossaryupdate', time(), 'mod_cobra');
         set_config('lasttextinfoupdate', time(), 'mod_cobra');
     }

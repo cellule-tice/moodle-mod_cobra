@@ -124,8 +124,11 @@ function cobra_get_list_of_words_in_text($mytext, $language) {
         $params = ['text' => $para, 'language' => $language];
         $wordlist = cobra_remote_service::call('getListOfWordsInText', $params);
         foreach ($wordlist as $word) {
-            if (!in_array(utf8_decode($word->value), $words)) {
+            /*if (!in_array(utf8_decode($word->value), $words)) {
                 $words[] = utf8_decode($word->value);
+            }*/
+            if (!in_array($word->value, $words)) {
+                $words[] = $word->value;
             }
         }
     }
@@ -149,7 +152,7 @@ function cobra_explode_glossary_into_lemmas_and_expression($glossary) {
                 'entry' => $element->entry,
                 'category' => $element->category,
                 'ss_cat' => $element->extrainfo,
-                'traduction' => utf8_decode($element->translations),
+                'traduction' => /*utf8_decode*/($element->translations),
             ];
         } else if ($element->type == 'expression') {
             $explist[$element->id] = [
@@ -157,7 +160,7 @@ function cobra_explode_glossary_into_lemmas_and_expression($glossary) {
                 'entry' => $element->entry,
                 'category' => $element->category,
                 'ss_cat' => $element->extrainfo,
-                'traduction' => utf8_decode($element->translations),
+                'traduction' => /*utf8_decode*/($element->translations),
             ];
         }
     }

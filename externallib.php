@@ -25,6 +25,8 @@
  */
 
 use mod_cobra\cobra_remote_service;
+use mod_cobra\local\helper;
+use mod_cobra\local\student_glossary_helper;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -133,11 +135,11 @@ class mod_cobra_external extends external_api {
         $jsonobj = json_decode($json);
 
         if ($jsonobj->encodeclic) {
-            cobra_record_clic($jsonobj->text, $dataobj->technicalinfo->entity,
+            helper::record_clic($jsonobj->text, $dataobj->technicalinfo->entity,
                     $jsonobj->course, $jsonobj->user, $jsonobj->id);
         }
 
-        $dataobj->technicalinfo->inglossary = cobra_is_in_glossary($dataobj->data->entity,
+        $dataobj->technicalinfo->inglossary = student_glossary_helper::is_in_user_glossary($dataobj->data->entity,
                 $jsonobj->course, $jsonobj->user);
 
         $response = [
@@ -246,7 +248,7 @@ class mod_cobra_external extends external_api {
                 ]
         );
 
-        $data = cobra_get_student_glossary($params['userid'], $params['courseid'], $params['textid']);
+        $data = student_glossary_helper::get_student_glossary($params['userid'], $params['courseid'], $params['textid']);
         return $data;
     }
 
@@ -314,7 +316,7 @@ class mod_cobra_external extends external_api {
         );
 
         if ($result) {
-            $entry = cobra_get_glossary_entry($lingentity);
+            $entry = student_glossary_helper::get_cached_glossary_entry($lingentity);
             $entry->new = true;
             $entry->fromThisText = true;
             return $entry;

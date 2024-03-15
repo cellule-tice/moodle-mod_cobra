@@ -27,6 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
 
+use mod_cobra\local\helper;
+
 /**
  * Module instance settings form.
  *
@@ -57,8 +59,8 @@ class mod_cobra_mod_form extends moodleform_mod {
 
         // Prepare params for js calls.
         $jsparams = [];
-        $jsparams['en'] = cobra_get_default_corpus_order($COURSE->id, 'EN');
-        $jsparams['nl'] = cobra_get_default_corpus_order($COURSE->id, 'NL');
+        $jsparams['en'] = helper::get_default_corpus_order($COURSE->id, 'EN');
+        $jsparams['nl'] = helper::get_default_corpus_order($COURSE->id, 'NL');
 
         // Load js calls.
         $PAGE->requires->js_call_amd('mod_cobra/cobra', 'initData', [json_encode($jsparams)]);
@@ -85,7 +87,7 @@ class mod_cobra_mod_form extends moodleform_mod {
             $options[$lastinstance->language] = $lastinstance->language;
             $firstinstance = 0;
         } else {
-            $options = cobra_get_available_languages();
+            $options = helper::get_available_languages();
             array_unshift($options, '-');
             $firstinstance = 1;
         }
@@ -226,7 +228,7 @@ class mod_cobra_mod_form extends moodleform_mod {
         $mform->addElement('header', 'corpusselection', get_string('corpusselection', 'cobra'));
         $mform->addElement('text', 'corpusorder', get_string('corpusselection', 'cobra'));
         $mform->setType('corpusorder', PARAM_TEXT);
-        $mform->setDefault('corpusorder', cobra_get_default_corpus_order($COURSE->id, $mform->getElementValue('language')));
+        $mform->setDefault('corpusorder', helper::get_default_corpus_order($COURSE->id, $mform->getElementValue('language')));
         $mform->addHelpButton('corpusorder', 'corpusselection', 'cobra');
 
         // Add checkbox to flag corpus selection as default for future instances.
@@ -238,7 +240,7 @@ class mod_cobra_mod_form extends moodleform_mod {
             [0, 1]
         );
         $mform->setDefault('isdefaultcorpusorder', 0);
-        $mform->addHelpButton('isdefaultcorpusorder', 'defaultflag', 'cobra');
+        $mform->addHelpButton('isdefaultcorpusorder', 'defaultflag2', 'cobra');
 
         // Add standard elements.
         $this->standard_coursemodule_elements();
@@ -262,7 +264,7 @@ class mod_cobra_mod_form extends moodleform_mod {
         // Add collection select box and default corpus selection and order box when language is set.
         if (is_array($languageset) && !empty($languageset[0])) {
 
-            $collections = cobra_get_collections_options_list($languageset[0]);
+            $collections = helper::get_collections_options_list($languageset[0]);
             $collections = ['0' => '-'] + $collections;
             $colselect = $mform->addElement('select', 'collection', get_string('collection', 'cobra'), $collections);
 
@@ -276,7 +278,7 @@ class mod_cobra_mod_form extends moodleform_mod {
         if ($mform->elementExists('collection')) {
             $collectionset = $mform->getElementValue('collection');
             if (is_array($collectionset) && !empty($collectionset[0])) {
-                $texts = cobra_get_texts_options_list($collectionset[0]);
+                $texts = helper::get_texts_options_list($collectionset[0]);
                 $texts = ['0' => '-'] + $texts;
                 $mform->addElement('select', 'text', get_string('text', 'cobra'), $texts);
                 $mform->addRule('text', 'You must select a text', 'nonzero');

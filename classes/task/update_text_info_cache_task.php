@@ -25,6 +25,8 @@
 
 namespace mod_cobra\task;
 
+use mod_cobra\local\helper;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
@@ -56,7 +58,7 @@ class update_text_info_cache_task extends \core\task\scheduled_task {
      */
     public function execute() {
         mtrace('Update basic information for texts (title, cecrl)');
-        list($new, $updated) = cobra_update_text_info_cache(get_config('mod_cobra', 'lasttextinfoupdate'));
+        list($new, $updated) = helper::update_text_info_cache(get_config('mod_cobra', 'lasttextinfoupdate'));
         mtrace($new . ' entries inserted');
         mtrace($updated . ' entries updated');
         set_config('lasttextinfoupdate', time(), 'mod_cobra');
