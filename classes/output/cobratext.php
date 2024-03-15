@@ -89,7 +89,8 @@ class cobratext implements renderable, templatable {
             unset($textdata->audiofile);
         }
 
-        $textdata->entries = student_glossary_helper::get_student_glossary($this->cobra->user, $this->cobra->course, $this->cobra->text);
+        $textdata->entries = student_glossary_helper::get_student_glossary(
+                $this->cobra->user, $this->cobra->course, $this->cobra->text);
 
         return $textdata;
     }

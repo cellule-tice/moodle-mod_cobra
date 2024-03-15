@@ -33,7 +33,7 @@ use mod_cobra\cobra_remote_service;
  * Glossary helper class for cobra activity
  */
 class student_glossary_helper {
-/**
+    /**
      * States whether a dictionary entry is in the student's personal glossary
      *
      * @param int $lingentity the entry to search for

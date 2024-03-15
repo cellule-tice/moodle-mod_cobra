@@ -124,9 +124,6 @@ function cobra_get_list_of_words_in_text($mytext, $language) {
         $params = ['text' => $para, 'language' => $language];
         $wordlist = cobra_remote_service::call('getListOfWordsInText', $params);
         foreach ($wordlist as $word) {
-            /*if (!in_array(utf8_decode($word->value), $words)) {
-                $words[] = utf8_decode($word->value);
-            }*/
             if (!in_array($word->value, $words)) {
                 $words[] = $word->value;
             }

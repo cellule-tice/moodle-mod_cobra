@@ -31,30 +31,30 @@ use mod_cobra\cobra_remote_service;
  */
 class teacher_glossary_helper {
     /**
-    * Get all entries of a text in exportable format.
-    *
-    * @param int $textid id of current text.
-    * @return array of entries to export.
-    */
+     * Get all entries of a text in exportable format.
+     *
+     * @param int $textid id of current text.
+     * @return array of entries to export.
+     */
     public static function get_exportable_glossary_entries($textid) {
-       global $DB;
-       $entries = [];
-       $texttitle = $DB->get_field('cobra_text_info_cache', 'title', ['id' => $textid]);
-       $entitylist = json_decode($DB->get_field('cobra_text_info_cache', 'entities', ['id' => $textid]));
-   
-       $dataquery = "SELECT DISTINCT(lingentity) AS lingentity, entry, translations, category, extrainfo
-                       FROM {cobra_glossary_cache}
-                      WHERE lingentity IN (" . implode(',', $entitylist) . ")
-                   ORDER BY entry";
-   
-       $data = $DB->get_records_sql($dataquery, []);
-       foreach ($data as $entry) {
-           $entry->sourcetexttitle = $texttitle;
-           unset($entry->lingentity);
-           $entries[] = $entry;
-       }
-       return $entries;
-   }
+        global $DB;
+        $entries = [];
+        $texttitle = $DB->get_field('cobra_text_info_cache', 'title', ['id' => $textid]);
+        $entitylist = json_decode($DB->get_field('cobra_text_info_cache', 'entities', ['id' => $textid]));
+
+        $dataquery = "SELECT DISTINCT(lingentity) AS lingentity, entry, translations, category, extrainfo
+                        FROM {cobra_glossary_cache}
+                        WHERE lingentity IN (" . implode(',', $entitylist) . ")
+                    ORDER BY entry";
+
+        $data = $DB->get_records_sql($dataquery, []);
+        foreach ($data as $entry) {
+            $entry->sourcetexttitle = $texttitle;
+            unset($entry->lingentity);
+            $entries[] = $entry;
+        }
+        return $entries;
+    }
 
     /**
      * Get all entries of a text.
