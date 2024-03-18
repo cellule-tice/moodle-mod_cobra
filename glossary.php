@@ -27,10 +27,11 @@
 
 use mod_cobra\cobra_edit_glossary_form;
 use mod_cobra\output\glossary_action_menu;
+use mod_cobra\local\teacher_glossary_helper;
+use mod_cobra\local\helper;
 
 require(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
-require_once($CFG->dirroot . '/mod/cobra/lib/glossarylib.php');
 require_once($CFG->dirroot . '/lib/dataformatlib.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
@@ -39,7 +40,7 @@ $id = optional_param('id', 0, PARAM_INT);
 
 if ($id) {
     $course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
-    if (!cobra_is_used()) {
+    if (!helper::is_cobra_used()) {
         // Redirect to course page.
         redirect('../course/view.php?id=' . $id);
     }
@@ -65,14 +66,14 @@ if (!in_array($cmd, $acceptedcmdlist)) {
 
 $out = '';
 
-$textlist = cobra_get_text_list();
+$textlist = helper::get_text_list();
 
 if ($cmd == 'exexport') {
     $glossary = [];
     foreach ($textlist as $text) {
         $mustexport = optional_param('text_' . $text->id, 0, PARAM_INT);
         if ($mustexport) {
-            $glossary = array_merge($glossary, cobra_get_exportable_glossary_entries($text->text));
+            $glossary = array_merge($glossary, teacher_glossary_helper::get_exportable_glossary_entries($text->text));
         }
     }
 
@@ -136,7 +137,7 @@ if ($cmd == 'rqexport') {
     );
     $thisform = new cobra_edit_glossary_form ($url, ['textlist' => $textlist, 'compare' => true]);
 } else if ( $cmd == 'excompare') {
-    cobra_increase_script_time();
+    helper::increase_script_time();
     $glossary = [];
 
     $textlist = array_values($textlist);
@@ -145,26 +146,26 @@ if ($cmd == 'rqexport') {
     foreach ($textlist as $text) {
         $mustexport = optional_param('text_' . $text->id, 0, PARAM_INT);
         if ($mustexport) {
-            $glossary = array_merge($glossary, cobra_get_glossary_entries($text->text));
+            $glossary = array_merge($glossary, teacher_glossary_helper::get_glossary_entries($text->text));
         }
     }
 
-    list( $lemmaentities, $expentities ) = cobra_explode_glossary_into_lemmas_and_expression( $glossary );
+    list($lemmaentities, $expentities) = teacher_glossary_helper::explode_glossary_into_lemmas_and_expression( $glossary );
 
     $mytext = optional_param('mytext', '', PARAM_RAW);
 
     $newwords = '';
     $otherwords = '';
-    $words = cobra_get_list_of_words_in_text ( $mytext, $language );
+    $words = teacher_glossary_helper::get_list_of_words_in_text ($mytext, $language);
     $newwords = [];
 
     foreach ($words as $word) {
 
-        $listflexions = cobra_word_exists_as_flexion ( $word, $language );
+        $listflexions = teacher_glossary_helper::word_exists_as_flexion ($word, $language);
         $found = false;
         if (count( $listflexions) != 0) {
             $found = false;
-            $listpossibleentities = cobra_get_entity_list_from_ff($listflexions );
+            $listpossibleentities = teacher_glossary_helper::get_entity_list_from_ff($listflexions );
 
             foreach ($listpossibleentities as $entityid) {
                 if (array_key_exists($entityid, $lemmaentities)) {
@@ -173,13 +174,13 @@ if ($cmd == 'rqexport') {
                     $info = $lemmaentities[$entityid]['entry'] . ' ('.$lemmaentities[$entityid]['category'].') - '
                         . $lemmaentities[$entityid]['traduction'];
                     $otherwords .= '<li> ' . get_string('possibletranslations', 'cobra') . ' : '. $word . ' : '
-                        . utf8_encode($info) . '</li>';
+                        . mb_convert_encoding($info, 'UTF-8', 'ISO-8859-1') . '</li>';
                 }
             }
         }
         if (!$found) {
             $newwords[] = $word;
-            $mytext = cobra_mark_unknown_word($word, $mytext);
+            $mytext = teacher_glossary_helper::mark_unknown_word($word, $mytext);
         }
     }
 

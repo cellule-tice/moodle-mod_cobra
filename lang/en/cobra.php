@@ -125,6 +125,8 @@ $string['fordutch_desc'] = 'Default selection and order of corpus types you want
 </ul>';
 $string['defaultflag'] = 'Keep as default';
 $string['defaultflag_help'] = 'Keep these settings as default for future texts';
+$string['defaultflag2'] = 'Keep as default';
+$string['defaultflag2_help'] = 'Keep these settings as default for future texts';
 $string['corpusselection_help'] = 'Default selection and order of corpus types you want to collect examples from (comma separated list). <br/>Available types are :<br/>
 <ul>
 <li class="usuel_FUNDP">1 : everyday speech edited by UNamur</li>

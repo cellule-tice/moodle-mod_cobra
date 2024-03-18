@@ -25,6 +25,8 @@
 
 namespace mod_cobra\task;
 
+use mod_cobra\local\helper;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
@@ -55,7 +57,7 @@ class update_glossary_cache_task extends \core\task\scheduled_task {
      */
     public function execute() {
         mtrace('Load dirty entries from remote CoBRA server');
-        list($new, $updated) = cobra_update_glossary_cache(get_config('mod_cobra', 'lastglossaryupdate'));
+        list($new, $updated) = helper::update_glossary_cache(get_config('mod_cobra', 'lastglossaryupdate'));
         mtrace($new . ' entries inserted');
         mtrace($updated . ' entries updated');
         set_config('lastglossaryupdate', time(), 'mod_cobra');

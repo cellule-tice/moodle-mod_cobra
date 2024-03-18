@@ -28,6 +28,7 @@ require_once($CFG->dirroot . '/mod/cobra/locallib.php');
 require_once($CFG->dirroot . '/lib/dataformatlib.php');
 
 use mod_cobra\output\myglossary;
+use mod_cobra\local\student_glossary_helper;
 
 $id = required_param('id', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_INT);
@@ -66,7 +67,7 @@ $PAGE->requires->js_call_amd('mod_cobra/cobra', 'myGlossaryActions');
 // Handle empty action.
 if ($empty) {
     if (!empty($confirm) && confirm_sesskey()) {
-        cobra_empty_glossary($course->id, $USER->id);
+        student_glossary_helper::empty_glossary($course->id, $USER->id);
     } else {
         $PAGE->navbar->add(get_string('delete'));
         $PAGE->set_title($course->shortname);
@@ -81,13 +82,13 @@ if ($empty) {
     }
 }
 
-list($totalcount, $data) = cobra_get_student_glossary($USER->id, $course->id, 0, $initial);
+list($totalcount, $data) = student_glossary_helper::get_student_glossary($USER->id, $course->id, 0, $initial);
 
 $entries = [];
 if (!empty($data)) {
 
     foreach ($data as $entry) {
-        $sourcetexttitle = cobra_get_cached_text_title($entry->textid);
+        $sourcetexttitle = student_glossary_helper::get_cached_text_title($entry->textid);
         $entry->sourcetexttitle = $sourcetexttitle;
 
         $where = 'userid = :userid AND lingentity = :lingentity AND course = :course';
@@ -103,7 +104,7 @@ if (!empty($data)) {
 
         $texttitles = [];
         foreach ($textidlist as $textid) {
-            $texttitles[] = cobra_get_cached_text_title($textid);
+            $texttitles[] = student_glossary_helper::get_cached_text_title($textid);
         }
 
         $entry->textcount = count($texttitles);

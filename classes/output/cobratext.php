@@ -32,6 +32,7 @@ use renderer_base;
 use moodle_url;
 use mod_cobra\cobra_remote_service;
 use mod_cobra\cobra_remote_access_exception;
+use mod_cobra\local\student_glossary_helper;
 
 /**
  * Class cobratext
@@ -88,7 +89,8 @@ class cobratext implements renderable, templatable {
             unset($textdata->audiofile);
         }
 
-        $textdata->entries = cobra_get_student_glossary($this->cobra->user, $this->cobra->course, $this->cobra->text);
+        $textdata->entries = student_glossary_helper::get_student_glossary(
+                $this->cobra->user, $this->cobra->course, $this->cobra->text);
 
         return $textdata;
     }

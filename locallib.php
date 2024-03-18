@@ -263,16 +263,6 @@ function cobra_update_text_info_cache($timestamp) {
 }
 
 /**
- * Fill in cached text info and glossary entries.
- */
-function cobra_fill_cache_tables() {
-    if (!empty(get_config('mod_cobra', 'apikey'))) {
-        cobra_update_glossary_cache(0);
-        cobra_update_text_info_cache(0);
-    }
-}
-
-/**
  * Loads personal glossary entries for current user in current course for current text or all texts
  *
  * @param int $userid

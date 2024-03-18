@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use mod_cobra\local\helper;
+
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
 
 /**
@@ -34,11 +36,11 @@ function xmldb_cobra_install() {
 
     set_config('serviceurl', 'https://webapps.unamur.be/elv/nederlex/services/api.php', 'mod_cobra');
 
-    $key = cobra_get_apikey();
+    $key = helper::get_apikey();
     if (!empty($key->apikey)) {
         set_config('apikey', $key->apikey, 'mod_cobra');
-        cobra_update_glossary_cache(0);
-        cobra_update_text_info_cache(0);
+        helper::update_glossary_cache(0);
+        helper::update_text_info_cache(0);
         set_config('lastglossaryupdate', time(), 'mod_cobra');
         set_config('lasttextinfoupdate', time(), 'mod_cobra');
     }
