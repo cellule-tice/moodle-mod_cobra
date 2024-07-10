@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Privacy Subsystem implementation for mod_cobra.
  *
@@ -49,7 +50,7 @@ class provider implements
      * @param collection $items collection The initialised item collection to add items to.
      * @return collection A listing of user data stored through this system.
      */
-    public static function get_metadata(collection $items) : collection {
+    public static function get_metadata(collection $items): collection {
 
         $items->add_database_table(
             'cobra_click',
@@ -74,7 +75,7 @@ class provider implements
      * @param  int $userid The user ID.
      * @return contextlist an object with the contexts related to a userid.
      */
-    public static function get_contexts_for_userid(int $userid) : contextlist {
+    public static function get_contexts_for_userid(int $userid): contextlist {
         $contextlist = new \core_privacy\local\request\contextlist();
         $sql = "SELECT c.id
                   FROM {context} c
