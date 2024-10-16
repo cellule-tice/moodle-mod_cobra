@@ -87,6 +87,10 @@
     width: 20px;
 }
 
+.path-mod-cobra td.glossaryIcon {
+    text-align: center;
+}
+
 .path-mod-cobra .righty {
     float: right;
     padding: .5rem;
@@ -282,4 +286,12 @@
 .modicon_cobra.activityiconcontainer {
     background-color: transparent;
     padding: 0;
+}
+
+.path-mod-cobra .initialbarlabel {
+    margin-right: 0 !important;
+}
+
+.path-mod-cobra #exportglossaryform {
+    margin-bottom: 1rem;
 }

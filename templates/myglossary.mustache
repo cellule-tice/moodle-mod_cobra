@@ -55,6 +55,7 @@
 
 <form id="exportglossaryform" autocomplete="off" action="myglossary.php" method="post" accept-charset="utf-8" class="mform myglossaryform m-y-1">
     <input type="hidden" name="id" value="{{course}}">
+    <label for="id_exportformat">{{#cleanstr}}downloadas, table{{/cleanstr}}</label>
     <select class="custom-select" name="exportformat" id="id_exportformat">
         <option value="csv">Séparé par des virgules (.csv)</option>
         <option value="excel" selected>Microsoft Excel (.xlsx)</option>
@@ -74,7 +75,7 @@
         <th class="header c3" style="" scope="col">{{#str}}otherforms, cobra{{/str}}</th>
         <th class="header c4" style="" scope="col">{{#str}}sourcetext, cobra{{/str}}</th>
         <th class="header c5" style="" scope="col">{{#str}}clickedin, cobra{{/str}}</th>
-        <th class="header c6 lastcol" style="" scope="col"></th>
+        <th class="header c6 lastcol" style="" scope="col">{{#str}}delete{{/str}}</th>
     </tr>
     </thead>
     <tbody>

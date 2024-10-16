@@ -57,7 +57,7 @@ $cobra->cmid = $id;
 $cobra->encodeclic = user_has_role_assignment($USER->id, 5, $context->id);
 
 $PAGE->set_url('/mod/cobra/view.php', ['id' => $cm->id]);
-$PAGE->set_title(format_string($cobra->name));
+$PAGE->set_title($course->shortname . ': ' . format_string($cobra->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->force_settings_menu();
 $PAGE->add_body_class('noblocks');
