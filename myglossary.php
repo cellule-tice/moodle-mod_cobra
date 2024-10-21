@@ -50,7 +50,6 @@ require_capability('mod/cobra:view', $context);
 // Print the page header.
 $PAGE->set_url('/mod/cobra/myglossary.php', ['id' => $course->id]);
 
-//$PAGE->set_title(format_string($course->fullname));
 $PAGE->set_title($course->shortname . ': ' . format_string(get_string('myglossary', 'cobra')));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->navbar->ignore_active();
