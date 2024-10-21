@@ -59,20 +59,20 @@
 
     <thead>
     <tr class="digestRow">
-        <th class="glossaryIcon">
+        <th class="glossaryIcon" tabindex="0">
             <span class="hidden">{{technicalinfo.entity}}</span>
             {{#technicalinfo.inglossary}}
-            <img class="glossaryremove" src="pix/inglossary.png" title="Enlever de mon glossaire">
+            <img class="inglossary" src="pix/inglossary.png" alt="Présent dans mon glossaire"  tabindex="0">
             {{/technicalinfo.inglossary}}
             {{^technicalinfo.inglossary}}
-            <img class="glossaryadd" src="pix/glossaryadd.png" title="Ajouter à mon glossaire">
+            <img class="glossaryadd" src="pix/glossaryadd.png" alt="Ajouter à mon glossaire" tabindex="0">
             {{/technicalinfo.inglossary}}
         </th>
         <th class="superHeader" colspan="2">
             <span id="currentConstruction" class="hidden lemma">{{technicalinfo.concept}}</span>
             <span class="entryDisplay">{{data.entry}}{{#data.abbreviations}} ({{data.abbreviations}}){{/data.abbreviations}}</span>{{#data.article}}<span> ({{data.article}})</span>{{/data.article}}
             <strong>:&nbsp;</strong>
-            <span class="category">{{data.category}}</span>
+            <span class="category">{{data.category}}</span>q
 
             {{#data.forms}}
                 {{#first}}({{/first}}{{^first}}{{!
