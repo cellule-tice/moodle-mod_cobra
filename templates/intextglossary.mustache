@@ -44,20 +44,21 @@
     }
 
 }}
-<div id="glossary" >
+<div id="glossary" tabindex="0">
     <a class="righty" title="{{#str}}showfullglossary, mod_cobra{{/str}}" href="myglossary.php?id={{course}}">{{#str}}myglossary, mod_cobra{{/str}}</a>
-    <table class="table table-condensed">
+    <table class="table table-condensed" tabindex="0">
+    <caption class="sr-only">Entrées de mon glossaire présentes dans ce texte</caption>
         <thead>
 
         <tr class="headerX">
-            <th><span class="sr-only">Eléments ajoutés lors de cette session</span></th>
-            <th>{{#str}}entry, mod_cobra{{/str}}</th>
+            <th><span class="sr-only" scope="col">Eléments ajoutés lors de cette session</span></th>
+            <th scope="col">{{#str}}entry, mod_cobra{{/str}}</th>
 
-            <th>{{#str}}categoryshrinked, mod_cobra{{/str}}</th>
+            <th scope="col">{{#str}}categoryshrinked, mod_cobra{{/str}}</th>
 
-            <th>{{#str}}translation, mod_cobra{{/str}}</th>
+            <th scope="col">{{#str}}translation, mod_cobra{{/str}}</th>
 
-            <th class="text-center">{{#str}}delete{{/str}}</th>
+            <th scope="col" class="text-center">{{#str}}delete{{/str}}</th>
         </tr>
         </thead>
 
@@ -65,14 +66,14 @@
         {{#entries}}
             <tr {{^fromThisText}}class="discreet"{{/fromThisText}}>
                 <td class="{{#new}}hotentry{{/new}}">
-                    &nbsp;
+                    <span class="sr-only">Cette entrée a été ajoutée pendant cette session</span>
                 </td>
                 <td>{{entry}}</td>
                 <td>{{category}}</td>
                 <td style="max-width:180px;">{{translations}}</td>
                 <td class="glossaryIcon inTextGlossary">
                     <span class="hidden">{{lingentity}}</span>
-                    <img class="glossaryremove" src="pix/glossaryremove.png" title="{{#str}}removefrommyglossary, cobra{{/str}}"></td>
+                    <button class="glossaryremove"><img class="glossaryremove" src="pix/glossaryremove.png" alt="Supprimer {{entry}} de mon glossaire" title="{{#str}}removefrommyglossary, cobra{{/str}}"></button></td>
             </tr>
         {{/entries}}
         {{^entries}}
