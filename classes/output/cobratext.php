@@ -83,6 +83,7 @@ class cobratext implements renderable, templatable {
                     'CoBRA' . ': ' . get_string($e->debuginfo, 'cobra') . '<br/>' . get_string('pageshouldredirect'),
                     5, \core\output\notification::NOTIFY_ERROR);
         }
+        $textdata->language = strtolower($this->cobra->language);
 
         $textdata->userglossary = (int)$this->cobra->userglossary;
         if (!(int)$this->cobra->audioplayer) {
