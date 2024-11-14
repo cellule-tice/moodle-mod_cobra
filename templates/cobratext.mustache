@@ -72,38 +72,35 @@
     </div>
     <div class="clearfix"></div>
 {{/audiofile}}
-
-<div id="cobratext" class="cobra-content">
-    <h2 id="texttitle" class="text-title">{{{title}}}</h2>
-    <div id="text" class="text" tabindex="0">
-        {{#textpart}}
-            {{#issubtitle}}
-                <p><span class="cobra-subtitle">{{{content}}}</span> </p>
-            {{/issubtitle}}
-            {{#isparagraph}}
-                <p class="cobra-paragraph">{{{content}}}</p>
-            {{/isparagraph}}
-        {{/textpart}}
-        {{#source}}
-            <p class="text-source">{{{source}}}</p>
-        {{/source}}
+<div class="cobra-container">
+    <div class="cobra-column1">
+        <div id="cobratext" class="cobra-content" lang="{{language}}">
+            <h2 id="texttitle" class="text-title">{{{title}}}</h2>
+            <div id="text" class="text" tabindex="0">
+                {{#textpart}}
+                    {{#issubtitle}}
+                        <p><span class="cobra-subtitle">{{{content}}}</span> </p>
+                    {{/issubtitle}}
+                    {{#isparagraph}}
+                        <p class="cobra-paragraph">{{{content}}}</p>
+                    {{/isparagraph}}
+                {{/textpart}}
+                {{#source}}
+                    <p class="text-source">{{{source}}}</p>
+                {{/source}}
+            </div>
+        </div>
+        <div id="details" class="box"></div>
+        
     </div>
-</div>
-{{#userglossary}}
-    <div id="myglossary">
-    {{> mod_cobra/intextglossary }}
+    
+    <div id="bottom" class="cobra-column2">   
+        <div id="full_concordance"></div>
+        {{#userglossary}}
+            <div id="myglossary" class="myglossary">
+            {{> mod_cobra/intextglossary }}
+            </div>
+        {{/userglossary}}
     </div>
-{{/userglossary}}
-<div class="clearfix">
-    &nbsp;
-</div>
-
-<div id="bottom" class="bottom">
-    <div id="details" class="box"></div>
-    <div id="full_concordance"></div>
-</div>
-
-<div class="clearfix">
-    &nbsp;
 </div>
 {{/warnings}}
