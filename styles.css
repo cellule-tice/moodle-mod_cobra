@@ -26,10 +26,11 @@
 }
 
 .path-mod-cobra .cobra-content {
-    float: left;
+    /*float: left;*/
+    flex-basis: 66%;
     padding-left: 0;
     padding-right: 0;
-    width: 65%;
+    /*width: 65%;*/
     background-color: #eceeef;
     filter: sepia(15%);
 }
@@ -69,16 +70,16 @@
 .path-mod-cobra #glossary {
     background-color: #eceeef;
     filter: sepia(15%);
-    font-size: 0.9em;
+    /*font-size: 0.9em;*/
     color: #373a3c;
     padding: 5px;
-    float: left;
-    width: 33%;
+    /*float: left;
+    width: 33%;*/
     margin: 0 0 10px 20px;
     overflow: auto;
 }
 
-.path-mod-cobra .glossaryadd,
+.path-mod-cobra .glossaryaddbutton img,
 .path-mod-cobra .glossaryremove,
 .path-mod-cobra .inglossary,
 .path-mod-cobra .glossaryremove img.icon {
@@ -98,8 +99,9 @@
 
 .path-mod-cobra #details {
     margin-top: 10px;
-    width: 65%;
-    float: left;
+    /*width: 65%;
+    float: left;*/
+    flex-basis: 66%;
     overflow: auto;
     padding: 0;
     background-color: #eceeef;
@@ -111,10 +113,11 @@
     color: #373a3c;
     padding: 5px;
     display: none;
-    float: left;
-    width: 32%;
-    min-width: 290px;
-    margin-top: 10px;
+    /*float: left;
+    width: 32%;*/
+    flex-basis: 33%;
+    /*min-width: 290px;*/
+    /*margin-top: 10px;*/
     margin-left: 20px;
 }
 
@@ -125,6 +128,7 @@
 
 .path-mod-cobra .entryDisplay {
     font-weight: bold;
+    margin-left: .25rem;
 }
 
 .path-mod-cobra .category,
@@ -252,7 +256,7 @@
     margin-right: 5px;
     float: left;
     background: url([[pix:mod_cobra|hot]]) no-repeat center;
-    margin-top: 3px;
+    margin-top: .625rem;
 }
 
 .path-mod-cobra .text-center {
@@ -294,4 +298,48 @@
 
 .path-mod-cobra #exportglossaryform {
     margin-bottom: 1rem;
+}
+
+.cobra-container {
+    display:flex; 
+    flex-direction: row;
+}
+
+.cobra-row1 {
+    display: flex; 
+    flex-direction: row;
+}
+
+.cobra-row2 {
+    display:flex;
+    flex-direction: row;
+}
+
+.myglossary {
+    flex-basis: 33%;
+}
+
+.cobra-column1 {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 66%
+}
+
+.cobra-column2 {
+    display: flex;
+    flex-direction: column-reverse;
+    flex-basis: 33%;
+    justify-content: flex-end;
+}
+
+.digest-row {
+    padding: 1rem;
+}
+
+.no-concordances {
+    margin-top: 1rem;
+}
+
+button.glossaryaddbutton, button.glossaryremovebutton {
+    border: none;
 }
