@@ -105,7 +105,7 @@
         </div>
         {{/data.translations}}
     {{/technicalinfo.hasannotations}}
-    {{#data.concordances}}
+    {{#concordancescount}}
     <table id="displayOnClic" class="entryTable">
         <caption  class="sr-only">Exemples dans le contexte de lecture</caption>
         <thead class="sr-only">
@@ -115,16 +115,19 @@
             <tr>
         </thead>
         <tbody>
-            <tr>
-                <td class="concordance {{type}}" {{^bilingual}}style="width:100%;" colspan="2" {{/bilingual}}>{{{source}}}</td>
-                {{#bilingual}}
-                <td class="concordance {{type}}">{{{target}}}</td>
-                {{/bilingual}}
-            </tr>
-        </tbody>
-    </table>
+    {{/concordancescount}}
+    {{#data.concordances}}
+        <tr>
+            <td class="concordance {{type}}" {{^bilingual}}style="width:100%;" colspan="2" {{/bilingual}}>{{{source}}}</td>
+            {{#bilingual}}
+            <td class="concordance {{type}}">{{{target}}}</td>
+            {{/bilingual}}
+        </tr>   
     {{/data.concordances}}
-
+    {{#concordancescount}}
+        </tbody>
+        </table>
+    {{/concordancescount}}
     {{^data.concordances}}
     <div class="no-concordances">
         <img src="pix/concordances_no.png" style="padding-bottom:3px; padding-left: 1rem;" alt=""title="Pas de traductions en contexte">
