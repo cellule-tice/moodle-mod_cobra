@@ -54,39 +54,90 @@
         }
     }
 }}
+<div class="digest-row text-center" aria-describedby="digest-descr">
+    <div id="digest-descr" class="sr-only">Informations sur le mot ou expression cliqué</div>
+    <span class="hidden">{{technicalinfo.entity}}</span>
+    {{#technicalinfo.inglossary}}
+    <img class="inglossary" src="pix/inglossary.png" alt="Présent dans mon glossaire"  tabindex="0">
+    {{/technicalinfo.inglossary}}
+    {{^technicalinfo.inglossary}}
+    <button class="glossaryaddbutton"><img class="glossaryadd" src="pix/glossaryadd.png" alt="Ajouter à mon glossaire" tabindex="0"></button>
+    {{/technicalinfo.inglossary}}
+    <span id="currentConstruction" class="hidden lemma">{{technicalinfo.concept}}</span>
+    <span class="entryDisplay">{{data.entry}}{{#data.abbreviations}} ({{data.abbreviations}}){{/data.abbreviations}}</span>{{#data.article}}<span> ({{data.article}})</span>{{/data.article}}
+    <strong>:&nbsp;</strong>
+    <span class="category">{{data.category}}</span>
+
+    {{#data.forms}}
+        {{#first}}({{/first}}{{^first}}{{!
+    }}, {{/first}}<span class="cobralabel">{{type}}:</span>
+    <span class="inflectedForms">{{form}}</span>{{!
+    }}{{#last}}){{/last}}
+    {{/data.forms}}
+</div>
+{{#technicalinfo.hasannotations}}
+    <div class="annotations">
+        <ul class="descList">
+            {{#data.translations}}
+            <li><strong>{{#str}}translation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.translations}}</em></li>
+            {{/data.translations}}
+            {{#data.annotation}}
+            <li><strong>{{#str}}annotation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.annotation}}</em></li>
+            {{/data.annotation}}
+            {{#data.trannotation}}
+            <li><strong>{{#str}}annotation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.trannotation}}</em></li>
+            {{/data.trannotation}}
+            {{#data.definition}}
+            <li><strong>{{#str}}definition, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.definition}}</em></li>
+            {{/data.definition}}
+            {{#data.trdefinition}}
+            <li><strong>{{#str}}definition, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.trdefinition}}</em></li>
+            {{/data.trdefinition}}
+        </ul>
+    </div>
+    {{/technicalinfo.hasannotations}}
+    {{^technicalinfo.hasannotations}}
+        {{#data.translations}}
+        <div>
+            <ul class="singletonList">
+                <li><strong>{{#str}}translation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.translations}}</em></li>
+            </ul>
+        </div>
+        {{/data.translations}}
+    {{/technicalinfo.hasannotations}}
 
 <table id="displayOnClic" class="entryTable">
-
+    <caption  class="sr-only">Informations sur le mot ou expression cliqué</caption>
     <thead>
-    <tr class="digestRow">
-        <th class="glossaryIcon" tabindex="0">
-            <span class="hidden">{{technicalinfo.entity}}</span>
-            {{#technicalinfo.inglossary}}
-            <img class="inglossary" src="pix/inglossary.png" alt="Présent dans mon glossaire"  tabindex="0">
-            {{/technicalinfo.inglossary}}
-            {{^technicalinfo.inglossary}}
-            <img class="glossaryadd" src="pix/glossaryadd.png" alt="Ajouter à mon glossaire" tabindex="0">
-            {{/technicalinfo.inglossary}}
-        </th>
-        <th class="superHeader" colspan="2">
-            <span id="currentConstruction" class="hidden lemma">{{technicalinfo.concept}}</span>
-            <span class="entryDisplay">{{data.entry}}{{#data.abbreviations}} ({{data.abbreviations}}){{/data.abbreviations}}</span>{{#data.article}}<span> ({{data.article}})</span>{{/data.article}}
-            <strong>:&nbsp;</strong>
-            <span class="category">{{data.category}}</span>q
+        <tr class="digestRow" style="display: none;">
+            <th class="glossaryIcon" tabindex="0">
+                <span class="hidden">{{technicalinfo.entity}}</span>
+                {{#technicalinfo.inglossary}}
+                <img class="inglossary" src="pix/inglossary.png" alt="Présent dans mon glossaire"  tabindex="0">
+                {{/technicalinfo.inglossary}}
+                {{^technicalinfo.inglossary}}
+                <img class="glossaryadd" src="pix/glossaryadd.png" alt="Ajouter à mon glossaire" tabindex="0">
+                {{/technicalinfo.inglossary}}
+            </th>
+            <th class="superHeader" colspan="2">
+                <span id="currentConstruction" class="hidden lemma">{{technicalinfo.concept}}</span>
+                <span class="entryDisplay">{{data.entry}}{{#data.abbreviations}} ({{data.abbreviations}}){{/data.abbreviations}}</span>{{#data.article}}<span> ({{data.article}})</span>{{/data.article}}
+                <strong>:&nbsp;</strong>
+                <span class="category">{{data.category}}</span>
 
-            {{#data.forms}}
-                {{#first}}({{/first}}{{^first}}{{!
-            }}, {{/first}}<span class="cobralabel">{{type}}:</span>
-            <span class="inflectedForms">{{form}}</span>{{!
-            }}{{#last}}){{/last}}
-            {{/data.forms}}
-        </th>
-    </tr>
+                {{#data.forms}}
+                    {{#first}}({{/first}}{{^first}}{{!
+                }}, {{/first}}<span class="cobralabel">{{type}}:</span>
+                <span class="inflectedForms">{{form}}</span>{{!
+                }}{{#last}}){{/last}}
+                {{/data.forms}}
+            </th>
+        </tr>
     </thead>
     <tbody>
 
     {{#technicalinfo.hasannotations}}
-    <tr>
+    <tr style="display: none;">
         <td>&nbsp;</td>
         <td colspan="2" class="description">
             <ul class="descList">
@@ -111,7 +162,7 @@
     {{/technicalinfo.hasannotations}}
     {{^technicalinfo.hasannotations}}
         {{#data.translations}}
-        <tr>
+        <tr style="display: none;">
             <td>&nbsp;</td>
             <td colspan="2" class="description">
                 <ul class="singletonList">
@@ -140,7 +191,7 @@
     {{/data.concordances}}
 
     {{^data.concordances}}
-    <tr>
+    <tr style="display: none;">
         <td style="padding-left:3px; width:2rem;">
             <img src="pix/concordances_no.png" style="padding-bottom:3px;" title="Pas de traductions en contexte">
         </td>
@@ -150,6 +201,12 @@
             </ul>
         </td>
     </tr>
+    <div class="no-concordances">
+        <img src="pix/concordances_no.png" style="padding-bottom:3px; padding-left: 1rem;" alt=""title="Pas de traductions en contexte">
+        <span>
+            {{#str}}noconcordances, mod_cobra{{/str}}
+        </span>
+    <div>
     {{/data.concordances}}
     {{#unillustratedtranslations}}
     <tr>
