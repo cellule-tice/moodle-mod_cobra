@@ -115,19 +115,18 @@
             <tr>
         </thead>
         <tbody>
-    {{/technicalinfo.concordancescount}}
-    {{#data.concordances}}
+        {{#data.concordances}}
         <tr>
             <td class="concordance {{type}}" {{^bilingual}}style="width:100%;" colspan="2" {{/bilingual}}>{{{source}}}</td>
             {{#bilingual}}
             <td class="concordance {{type}}">{{{target}}}</td>
             {{/bilingual}}
         </tr>   
-    {{/data.concordances}}
-    {{#technicalinfo.concordancescount}}
+        {{/data.concordances}}
         </tbody>
         </table>
     {{/technicalinfo.concordancescount}}
+    
     {{^data.concordances}}
     <div class="no-concordances">
         <img src="pix/concordances_no.png" style="padding-bottom:3px; padding-left: 1rem;" alt=""title="Pas de traductions en contexte">
