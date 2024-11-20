@@ -342,4 +342,5 @@
 
 button.glossaryaddbutton, button.glossaryremovebutton {
     border: none;
+    background: none;
 }
