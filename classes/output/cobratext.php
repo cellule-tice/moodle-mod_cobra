@@ -84,6 +84,12 @@ class cobratext implements renderable, templatable {
                     5, \core\output\notification::NOTIFY_ERROR);
         }
         $textdata->language = strtolower($this->cobra->language);
+        $textdata->rawtitle = strip_tags($textdata->title);
+        $textdata->rawtext = [];
+        foreach($textdata->textpart as $part) {
+            $part->rawtext = strip_tags($part->content, ["strong", "em"]);
+        }
+        //print_object($textdata->rawtext);
 
         $textdata->userglossary = (int)$this->cobra->userglossary;
         if (!(int)$this->cobra->audioplayer) {
@@ -92,7 +98,6 @@ class cobratext implements renderable, templatable {
 
         $textdata->entries = student_glossary_helper::get_student_glossary(
                 $this->cobra->user, $this->cobra->course, $this->cobra->text);
-
         return $textdata;
     }
 }

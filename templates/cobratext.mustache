@@ -75,6 +75,15 @@
 <div class="cobra-container">
     <div class="cobra-column1">
         <div id="cobratext" class="cobra-content" lang="{{language}}">
+            <h2 id="texttitle" class="text-title sr-only">{{{rawtitle}}}</h2>
+            {{#textpart}}
+                    {{#issubtitle}}
+                        <p class="sr-only">{{{rawtext}}} </p>
+                    {{/issubtitle}}
+                    {{#isparagraph}}
+                        <p class="sr-only">{{{rawtext}}}</p>
+                    {{/isparagraph}}
+                {{/textpart}}           
             <h2 id="texttitle" class="text-title">{{{title}}}</h2>
             <div id="text" class="text" tabindex="0">
                 {{#textpart}}
