@@ -49,16 +49,17 @@ use context_module;
  * @group mod_cobra
  * @covers \mod_cobra\event\course_module_viewed
  */
-class events_test extends \advanced_testcase {
+final class events_test extends \advanced_testcase {
 
     public function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest();
     }
 
     /**
      * Test course_module_viewed event.
      */
-    public function test_course_module_viewed() {
+    public function test_course_module_viewed(): void {
         global $DB;
         // There is no proper API to call to trigger this event, so what we are
         // doing here is simply making sure that the events returns the right information.

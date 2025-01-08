@@ -37,13 +37,13 @@ class mod_cobra_generator extends testing_module_generator {
     /**
      * Create a cobra instance for testing purpose
      *
-     * @param stdClass $record
-     * @param array $options
+     * @param stdClass|null $record
+     * @param array|null $options
      * @return stdClass
      * @throws coding_exception
      * @throws dml_exception
      */
-    public function create_instance($record = null, array $options = null) {
+    public function create_instance($record = null, ?array $options = null) {
         global $CFG;
         require_once($CFG->dirroot .'/mod/cobra/locallib.php');
 

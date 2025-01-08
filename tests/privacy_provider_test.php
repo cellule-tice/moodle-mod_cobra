@@ -41,7 +41,7 @@ use context_module;
  * @group mod_cobra
  * @covers \mod_cobra\privacy\provider
  */
-class privacy_provider_test extends \core_privacy\tests\provider_testcase {
+final class privacy_provider_test extends \core_privacy\tests\provider_testcase {
     /** @var stdClass The first student object. */
     protected $student1;
 
@@ -62,7 +62,7 @@ class privacy_provider_test extends \core_privacy\tests\provider_testcase {
      */
     protected function setUp() {
         global $DB;
-
+        parent::setUp();
         $this->resetAfterTest();
 
         $this->course = $this->getDataGenerator()->create_course();
@@ -92,7 +92,7 @@ class privacy_provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test for provider::get_metadata().
      */
-    public function test_get_metadata() {
+    public function test_get_metadata(): void {
         $collection = new collection('mod_cobra');
         $newcollection = provider::get_metadata($collection);
         $itemcollection = $newcollection->get_collection();
@@ -114,7 +114,7 @@ class privacy_provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test for provider::get_contexts_for_userid().
      */
-    public function test_get_contexts_for_userid() {
+    public function test_get_contexts_for_userid(): void {
         $cms = [
             get_coursemodule_from_instance('cobra', $this->cobra1->id),
             get_coursemodule_from_instance('cobra', $this->cobra2->id),
@@ -142,7 +142,7 @@ class privacy_provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test for provider::export_user_data().
      */
-    public function test_export_for_context() {
+    public function test_export_for_context(): void {
         $cms = [
             get_coursemodule_from_instance('cobra', $this->cobra1->id),
         ];
@@ -159,7 +159,7 @@ class privacy_provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test for provider::delete_data_for_user().
      */
-    public function test_delete_data_for_user() {
+    public function test_delete_data_for_user(): void {
         global $DB;
 
         $cms = [
@@ -188,7 +188,7 @@ class privacy_provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test for provider::delete_data_for_all_users_in_context().
      */
-    public function test_delete_data_for_all_users_in_context() {
+    public function test_delete_data_for_all_users_in_context(): void {
         global $DB;
 
         // Before deletion, we should have 12 entries in cobra_click table,

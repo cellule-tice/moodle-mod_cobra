@@ -46,12 +46,13 @@ namespace mod_cobra;
  *
  * @group mod_cobra
  */
-class lib_test extends \advanced_testcase {
+final class lib_test extends \advanced_testcase {
 
     /**
      * Set up.
      */
     public function setUp() {
+        parent::setUp();
         $this->resetAfterTest();
         $this->setAdminUser();
     }
@@ -60,7 +61,7 @@ class lib_test extends \advanced_testcase {
      * Test for mod_cobra_core_calendar_provide_event_action #1.
      * @covers ::mod_cobra_core_calendar_provide_event_action
      */
-    public function test_cobra_core_calendar_provide_event_action() {
+    public function test_cobra_core_calendar_provide_event_action(): void {
         // Create the activity.
         $course = $this->getDataGenerator()->create_course();
         $cobra = $this->getDataGenerator()->create_module('cobra', ['course' => $course->id]);
@@ -87,7 +88,7 @@ class lib_test extends \advanced_testcase {
      * Test for mod_cobra_core_calendar_provide_event_action #2.
      * @covers ::mod_cobra_core_calendar_provide_event_action
      */
-    public function test_cobra_core_calendar_provide_event_action_already_completed() {
+    public function test_cobra_core_calendar_provide_event_action_already_completed(): void {
         global $CFG;
 
         $CFG->enablecompletion = 1;
