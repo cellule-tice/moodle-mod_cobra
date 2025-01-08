@@ -23,7 +23,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+
 
 $string['addtomyglossary'] = 'Add to my glossary';
 $string['annotation'] = 'Annotation';
@@ -59,6 +59,11 @@ $string['corpusselection_help'] = 'Default selection and order of corpus types y
 <li class="sciences">52 : science</li>
 <li class="eco">62 : economics</li>
 </ul>';
+$string['defaultcorpusselection'] = 'Default corpus selection';
+$string['defaultflag'] = 'Keep as default';
+$string['defaultflag2'] = 'Keep as default';
+$string['defaultflag2_help'] = 'Keep these settings as default for future texts';
+$string['defaultflag_help'] = 'Keep these settings as default for future texts';
 $string['definition'] = 'Definition';
 $string['deletesure'] = 'Do you really want to empty your personal glossary for this course?';
 $string['displaysettings'] = 'Display settings';
@@ -66,6 +71,7 @@ $string['emptymyglossary'] = 'Empty my glossary';
 $string['entries'] = 'Entries';
 $string['entriesfromothertext'] = '* Greyed entries were added from another text';
 $string['entry'] = 'Entry';
+$string['entry_viewed'] = 'Entry clicked';
 $string['examplesdisplaymode'] = 'Display mode for examples';
 $string['examplesdisplaymode_help'] = 'Display examples in source language only (monolingual) or in source language and French (bilingual)';
 $string['exportglossary'] = 'Export Glossary';
