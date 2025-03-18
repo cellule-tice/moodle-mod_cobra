@@ -44,7 +44,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @group mod_cobra
  * @covers \mod_cobra\mod_cobra_external
  */
-class externallib_test extends \externallib_advanced_testcase {
+final class externallib_test extends \externallib_advanced_testcase {
 
     /**
      * Set up for every test
@@ -53,6 +53,7 @@ class externallib_test extends \externallib_advanced_testcase {
         global $CFG, $DB;
 
         require_once($CFG->dirroot . '/mod/cobra/externallib.php');
+        parent::setUp();
         $this->resetAfterTest();
 
         // Setup test data.
@@ -69,7 +70,7 @@ class externallib_test extends \externallib_advanced_testcase {
         $this->getDataGenerator()->enrol_user($this->student->id, $this->course->id, $this->studentrole->id, 'manual');
     }
 
-    public function test_remote_services() {
+    public function test_remote_services(): void {
 
         $this->resetAfterTest(true);
 
@@ -106,7 +107,7 @@ class externallib_test extends \externallib_advanced_testcase {
         $this->assertEmpty($errors, implode('\n', $errors));
     }
 
-    public function test_add_to_glossary() {
+    public function test_add_to_glossary(): void {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -147,7 +148,7 @@ class externallib_test extends \externallib_advanced_testcase {
         $this->assertEmpty($errors, implode('\n', $errors));
     }
 
-    public function test_remove_from_glossary() {
+    public function test_remove_from_glossary(): void {
         global $DB;
         $this->resetAfterTest(true);
 

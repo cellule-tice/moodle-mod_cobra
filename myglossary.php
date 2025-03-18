@@ -25,7 +25,6 @@
 
 require(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
-require_once($CFG->dirroot . '/lib/dataformatlib.php');
 
 use mod_cobra\output\myglossary;
 use mod_cobra\local\student_glossary_helper;

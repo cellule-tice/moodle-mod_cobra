@@ -54,113 +54,89 @@
         }
     }
 }}
+<div class="digest-row text-center" aria-describedby="digest-descr">
+    <div id="digest-descr" class="sr-only">Informations sur le mot ou expression cliqué</div>
+    <span class="hidden">{{technicalinfo.entity}}</span>
+    {{#technicalinfo.inglossary}}
+    <img class="inglossary" src="pix/inglossary.png" alt="Présent dans mon glossaire"  tabindex="0">
+    {{/technicalinfo.inglossary}}
+    {{^technicalinfo.inglossary}}
+    <button class="glossaryaddbutton"><img class="glossaryadd" src="pix/glossaryadd.png" alt="Ajouter à mon glossaire" tabindex="0"></button>
+    {{/technicalinfo.inglossary}}
+    <span id="currentConstruction" class="hidden lemma">{{technicalinfo.concept}}</span>
+    <span class="entryDisplay">{{data.entry}}{{#data.abbreviations}} ({{data.abbreviations}}){{/data.abbreviations}}</span>{{#data.article}}<span> ({{data.article}})</span>{{/data.article}}
+    <strong>:&nbsp;</strong>
+    <span class="category">{{data.category}}</span>
 
-<table id="displayOnClic" class="entryTable">
-
-    <thead>
-    <tr class="digestRow">
-        <th class="glossaryIcon" tabindex="0">
-            <span class="hidden">{{technicalinfo.entity}}</span>
-            {{#technicalinfo.inglossary}}
-            <img class="inglossary" src="pix/inglossary.png" alt="Présent dans mon glossaire"  tabindex="0">
-            {{/technicalinfo.inglossary}}
-            {{^technicalinfo.inglossary}}
-            <img class="glossaryadd" src="pix/glossaryadd.png" alt="Ajouter à mon glossaire" tabindex="0">
-            {{/technicalinfo.inglossary}}
-        </th>
-        <th class="superHeader" colspan="2">
-            <span id="currentConstruction" class="hidden lemma">{{technicalinfo.concept}}</span>
-            <span class="entryDisplay">{{data.entry}}{{#data.abbreviations}} ({{data.abbreviations}}){{/data.abbreviations}}</span>{{#data.article}}<span> ({{data.article}})</span>{{/data.article}}
-            <strong>:&nbsp;</strong>
-            <span class="category">{{data.category}}</span>q
-
-            {{#data.forms}}
-                {{#first}}({{/first}}{{^first}}{{!
-            }}, {{/first}}<span class="cobralabel">{{type}}:</span>
-            <span class="inflectedForms">{{form}}</span>{{!
-            }}{{#last}}){{/last}}
-            {{/data.forms}}
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-
-    {{#technicalinfo.hasannotations}}
-    <tr>
-        <td>&nbsp;</td>
-        <td colspan="2" class="description">
-            <ul class="descList">
-                {{#data.translations}}
-                <li><strong>{{#str}}translation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.translations}}</em></li>
-                {{/data.translations}}
-                {{#data.annotation}}
-                <li><strong>{{#str}}annotation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.annotation}}</em></li>
-                {{/data.annotation}}
-                {{#data.trannotation}}
-                <li><strong>{{#str}}annotation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.trannotation}}</em></li>
-                {{/data.trannotation}}
-                {{#data.definition}}
-                <li><strong>{{#str}}definition, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.definition}}</em></li>
-                {{/data.definition}}
-                {{#data.trdefinition}}
-                <li><strong>{{#str}}definition, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.trdefinition}}</em></li>
-                {{/data.trdefinition}}
-            </ul>
-        </td>
-    </tr>
+    {{#data.forms}}
+        {{#first}}({{/first}}{{^first}}{{!
+    }}, {{/first}}<span class="cobralabel">{{type}}:</span>
+    <span class="inflectedForms">{{form}}</span>{{!
+    }}{{#last}}){{/last}}
+    {{/data.forms}}
+</div>
+{{#technicalinfo.hasannotations}}
+    <div class="annotations">
+        <ul class="descList">
+            {{#data.translations}}
+            <li><strong>{{#str}}translation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.translations}}</em></li>
+            {{/data.translations}}
+            {{#data.annotation}}
+            <li><strong>{{#str}}annotation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.annotation}}</em></li>
+            {{/data.annotation}}
+            {{#data.trannotation}}
+            <li><strong>{{#str}}annotation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.trannotation}}</em></li>
+            {{/data.trannotation}}
+            {{#data.definition}}
+            <li><strong>{{#str}}definition, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.definition}}</em></li>
+            {{/data.definition}}
+            {{#data.trdefinition}}
+            <li><strong>{{#str}}definition, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.trdefinition}}</em></li>
+            {{/data.trdefinition}}
+        </ul>
+    </div>
     {{/technicalinfo.hasannotations}}
     {{^technicalinfo.hasannotations}}
         {{#data.translations}}
-        <tr>
-            <td>&nbsp;</td>
-            <td colspan="2" class="description">
-                <ul class="singletonList">
-                    <li><strong>{{#str}}translation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.translations}}</em></li>
-                </ul>
-            </td>
-        </tr>
+        <div>
+            <ul class="singletonList">
+                <li><strong>{{#str}}translation, mod_cobra{{/str}}:</strong>&nbsp;<em>{{data.translations}}</em></li>
+            </ul>
+        </div>
         {{/data.translations}}
     {{/technicalinfo.hasannotations}}
-    {{#data.concordances}}
-    <tr>
-        {{#first}}
-            <td style="vertical-align:top;  padding-left:3px;">
-                <img src="pix/corpus.jpg" style="padding-bottom:3px;" title="Traduction(s) en contexte">
-            </td>
-        {{/first}}
-        {{^first}}
-        <td>&nbsp;</td>
-        {{/first}}
-
-        <td class="concordance {{type}}" {{^bilingual}}style="width:100%;" colspan="2" {{/bilingual}}>{{{source}}}</td>
-        {{#bilingual}}
-        <td class="concordance {{type}}">{{{target}}}</td>
-        {{/bilingual}}
-    </tr>
-    {{/data.concordances}}
-
+    {{#technicalinfo.concordancescount}}
+    <table id="displayOnClic" class="entryTable">
+        <caption  class="sr-only">Exemples dans le contexte de lecture</caption>
+        <thead class="sr-only">
+            <tr>
+                <th>Langue source</th>
+                <th>Traduction en français</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#data.concordances}}
+        <tr>
+            <td class="concordance {{type}}" {{^bilingual}}style="width:100%;" colspan="2" {{/bilingual}}>{{{source}}}</td>
+            {{#bilingual}}
+            <td class="concordance {{type}}">{{{target}}}</td>
+            {{/bilingual}}
+        </tr>   
+        {{/data.concordances}}
+        </tbody>
+        </table>
+    {{/technicalinfo.concordancescount}}
+    
     {{^data.concordances}}
-    <tr>
-        <td style="padding-left:3px; width:2rem;">
-            <img src="pix/concordances_no.png" style="padding-bottom:3px;" title="Pas de traductions en contexte">
-        </td>
-        <td colspan="2">
-            <ul class="singletonList">
-                <li class="no-concordances">{{#str}}noconcordances, mod_cobra{{/str}}</li>
-            </ul>
-        </td>
-    </tr>
+    <div class="no-concordances">
+        <img src="pix/concordances_no.png" style="padding-bottom:3px; padding-left: 1rem;" alt=""title="Pas de traductions en contexte">
+        <span>
+            {{#str}}noconcordances, mod_cobra{{/str}}
+        </span>
+    <div>
     {{/data.concordances}}
     {{#unillustratedtranslations}}
-    <tr>
-        <td>&nbsp;</td>
-        <td colspan="2" class="description">
-            <ul class="singletonList">
-                <li><strong>{{#str}}othertranslations, mod_cobra{{/str}}&nbsp;:</strong>&nbsp;<em>{{unillustratedtranslations}}</em></li>
-            </ul>
-        </td>
-    </tr>
+    <ul class="singletonList">
+        <li><strong>{{#str}}othertranslations, mod_cobra{{/str}}&nbsp;:</strong>&nbsp;<em>{{unillustratedtranslations}}</em></li>
+    </ul>
     {{/unillustratedtranslations}}
-
-    </tbody>
-</table>

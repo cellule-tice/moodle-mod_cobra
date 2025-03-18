@@ -31,6 +31,18 @@ jobs:
           # Highest php versions supported by each branch (with master always being tested twice).
           # TODO: Enable when master (4.2dev) supports php81
           - php: 8.2
+            moodle-branch: MOODLE_405_STABLE
+            database: pgsql
+          - php: 8.2
+            moodle-branch: MOODLE_405_STABLE
+            database: mariadb
+          - php: 8.2
+            moodle-branch: MOODLE_404_STABLE
+            database: pgsql
+          - php: 8.2
+            moodle-branch: MOODLE_404_STABLE
+            database: mariadb
+          - php: 8.2
             moodle-branch: MOODLE_403_STABLE
             database: pgsql
           - php: 8.2

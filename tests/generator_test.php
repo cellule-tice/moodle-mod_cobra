@@ -39,8 +39,8 @@ use context_module;
  * @group mod_cobra
  * @covers \mod_cobra\mod_cobra_generator
  */
-class generator_test extends \advanced_testcase {
-    public function test_generator() {
+final class generator_test extends \advanced_testcase {
+    public function test_generator(): void {
         global $DB;
 
         $this->resetAfterTest(true);

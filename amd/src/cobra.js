@@ -112,9 +112,8 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                     updateglossarydisplay();
                 }).fail(notification.exception);
 
-            $('#details').on('click', '.glossaryadd', function() {
+            $('#details').on('click', '.glossaryaddbutton', function() {
                 var lingEntity = $(this).prev().text();
-
                 var promises = ajax.call([{
                     methodname: 'mod_cobra_add_to_glossary',
                     args: {
@@ -145,15 +144,14 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                         datafortpl.iconclass = 'inglossary';
                         datafortpl.add = false;
                         templates.render('mod_cobra/glossaryiconcell', datafortpl).done(function(html) {
-                            $('#displayOnClic').find('tr:first th:first img').replaceWith(html);
+                            $('.digest-row').find('button.glossaryaddbutton').replaceWith(html);
                         }).fail(notification.exception);
                         updateglossarydisplay();
                     }).fail(notification.exception);
             });
 
-            $('#myglossary').on('click', '.glossaryremove', function() {
+            $('#myglossary').on('click', '.glossaryremovebutton', function() {
                 var lingEntity = $(this).prev().text();
-
                 var promises = ajax.call([{
                     methodname: 'mod_cobra_remove_from_glossary',
                     args: {
@@ -173,14 +171,16 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/notification'
                         });
 
                         // Change icon in digest row if deleted entry is displayed in entry details div.
-                        if ($('#displayOnClic').find('tr:first th:first span').text() == lingEntity) {
+                        // if ($('#displayOnClic').find('tr:first th:first span').text() == lingEntity) {
+                        if ($('.digest-row').find('span:first').text() == lingEntity) {
                             var datafortpl = new Array();
                             datafortpl.lingentity = lingEntity;
                             datafortpl.iconclass = 'glossaryadd';
                             datafortpl.add = true;
 
                             templates.render('mod_cobra/glossaryiconcell', datafortpl).done(function(html) {
-                                $('#displayOnClic').find('tr:first th:first img').replaceWith(html);
+                                $('.digest-row').find('img:first').replaceWith(
+                                    `<button class="glossaryaddbutton">${html}</button>`);
                             }).fail(notification.exception);
                         }
                         updateglossarydisplay();
