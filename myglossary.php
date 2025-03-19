@@ -53,8 +53,8 @@ $PAGE->set_title($course->shortname . ': ' . format_string(get_string('myglossar
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->navbar->ignore_active();
 $PAGE->navbar->add(get_string('mycourses'));
-$PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', ['id' => $course->id]));
-$PAGE->navbar->add(get_string('myglossary', 'cobra'), new moodle_url('/mod/cobra/myglossary.php', ['id' => $id]));
+$PAGE->navbar->add($course->shortname, new \core\url('/course/view.php', ['id' => $course->id]));
+$PAGE->navbar->add(get_string('myglossary', 'cobra'), new \core\url('/mod/cobra/myglossary.php', ['id' => $id]));
 
 // Add the ajaxcommand for the form.
 $params = new stdClass();
@@ -148,7 +148,7 @@ echo $OUTPUT->heading(
         ')'
 );
 
-$baseurl = new moodle_url('/mod/cobra/myglossary.php', ['id' => $course->id]);
+$baseurl = new \core\url('/mod/cobra/myglossary.php', ['id' => $course->id]);
 $records = [];
 $entities = [];
 

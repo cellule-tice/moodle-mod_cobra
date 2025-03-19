@@ -29,6 +29,7 @@ use mod_cobra\cobra_edit_glossary_form;
 use mod_cobra\output\glossary_action_menu;
 use mod_cobra\local\teacher_glossary_helper;
 use mod_cobra\local\helper;
+use core\url;
 
 require(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
@@ -115,13 +116,13 @@ echo $OUTPUT->heading($heading);
 $renderer = $PAGE->get_renderer('mod_cobra');
 
 // Render the selection action.
-$glossaryactionmenu = new glossary_action_menu(new moodle_url('/mod/cobra/glossary.php', ['id' => $course->id]));
+$glossaryactionmenu = new glossary_action_menu(new url('/mod/cobra/glossary.php', ['id' => $course->id]));
 echo $renderer->render($glossaryactionmenu);
 
 echo $OUTPUT->box_start();
 
 if ($cmd == 'rqexport') {
-    $url = new moodle_url('/mod/cobra/glossary.php',
+    $url = new url('/mod/cobra/glossary.php',
         [
             'id' => $id,
             'cmd' => 'exexport',
@@ -129,7 +130,7 @@ if ($cmd == 'rqexport') {
     );
     $thisform = new cobra_edit_glossary_form ($url, ['textlist' => $textlist, 'compare' => false]);
 } else if ($cmd == 'rqcompare') {
-    $url = new moodle_url('/mod/cobra/glossary.php',
+    $url = new url('/mod/cobra/glossary.php',
         [
             'id' => $id,
             'cmd' => 'excompare',

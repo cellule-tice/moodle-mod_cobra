@@ -63,9 +63,9 @@ class entry_viewed extends \core\event\base {
 
     /**
      * Get the url of the related cobra activity.
-     * @return \moodle_url
+     * @return \core\url
      */
     public function get_url() {
-        return new \moodle_url('/mod/cobra/view.php', ['id' => $this->contextinstanceid]);
+        return new \core\url('/mod/cobra/view.php', ['id' => $this->contextinstanceid]);
     }
 }

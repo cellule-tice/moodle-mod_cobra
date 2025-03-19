@@ -16,7 +16,7 @@
 
 namespace mod_cobra\output;
 
-use moodle_url;
+use core\url;
 use core\output\renderer_base;
 use core\output\templatable;
 use core\output\renderable;
@@ -30,15 +30,15 @@ use core\output\url_select;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class glossary_action_menu implements templatable, renderable {
-    /** @var moodle_url */
+    /** @var url */
     private $currenturl;
 
     /**
      * qbank_actionbar constructor.
      *
-     * @param moodle_url $currenturl The current URL.
+     * @param url $currenturl The current URL.
      */
-    public function __construct(moodle_url $currenturl) {
+    public function __construct(url $currenturl) {
         $this->currenturl = $currenturl;
     }
 
@@ -51,9 +51,9 @@ class glossary_action_menu implements templatable, renderable {
     public function export_for_template(renderer_base $output): array {
         $params = $this->currenturl->params();
         $params['cmd'] = 'rqexport';
-        $exportlink = new moodle_url('/mod/cobra/glossary.php', $params);
+        $exportlink = new url('/mod/cobra/glossary.php', $params);
         $params['cmd'] = 'rqcompare';
-        $comparelink = new moodle_url('/mod/cobra/glossary.php', $params);
+        $comparelink = new url('/mod/cobra/glossary.php', $params);
 
         $menu = [
             $exportlink->out(false) => get_string('exportglossary', 'mod_cobra'),

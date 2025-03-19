@@ -29,7 +29,7 @@ use core\output\renderable;
 use core\output\templatable;
 use stdClass;
 use core\output\renderer_base;
-use moodle_url;
+use core\url;
 use mod_cobra\cobra_remote_service;
 use mod_cobra\cobra_remote_access_exception;
 use mod_cobra\local\student_glossary_helper;
@@ -79,7 +79,7 @@ class cobratext implements renderable, templatable {
             $textdata = json_decode(cobra_remote_service::call('get_text', $params));
         } catch (cobra_remote_access_exception $e) {
             global $COURSE;
-            redirect(new moodle_url('/course/view.php', ['id' => $COURSE->id]),
+            redirect(new url('/course/view.php', ['id' => $COURSE->id]),
                     'CoBRA' . ': ' . get_string($e->debuginfo, 'cobra') . '<br/>' . get_string('pageshouldredirect'),
                     5, \core\output\notification::NOTIFY_ERROR);
         }

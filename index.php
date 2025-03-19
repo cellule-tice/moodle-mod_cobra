@@ -47,7 +47,7 @@ $cobras = get_all_instances_in_course('cobra', $course);
 
 if (empty($cobras)) {
     notice(get_string('thereareno', 'moodle', get_string('modulename', 'cobra')),
-            new moodle_url('/course/view.php', ['id' => $course->id]));
+            new \core\url('/course/view.php', ['id' => $course->id]));
 }
 
 $table = new \core_table\output\html_table();
@@ -67,12 +67,12 @@ if ($course->format == 'weeks') {
 foreach ($cobras as $cobra) {
     if (!$cobra->visible) {
         $link = \core\output\html_writer::link(
-            new moodle_url('/mod/cobra/view.php', ['id' => $cobra->coursemodule]),
+            new \core\url('/mod/cobra/view.php', ['id' => $cobra->coursemodule]),
             format_string($cobra->name, true),
             ['class' => 'dimmed']);
     } else {
         $link = \core\output\html_writer::link(
-            new moodle_url('/mod/cobra/view.php', ['id' => $cobra->coursemodule]),
+            new \core\url('/mod/cobra/view.php', ['id' => $cobra->coursemodule]),
             format_string($cobra->name, true));
     }
 

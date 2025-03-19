@@ -94,7 +94,7 @@ final class events_test extends \advanced_testcase {
         $expected = [$course->id, 'cobra', 'view', 'view.php?id=' . $cobra->cmid,
             $cobra->id, $cobra->cmid];
         $this->assertEventLegacyLogData($expected, $event);
-        $this->assertEquals(new moodle_url('/mod/cobra/view.php', ['id' => $cobra->cmid]), $event->get_url());
+        $this->assertEquals(new \core\url('/mod/cobra/view.php', ['id' => $cobra->cmid]), $event->get_url());
         $this->assertEventContextNotUsed($event);
     }
 }

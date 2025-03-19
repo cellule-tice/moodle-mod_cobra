@@ -132,12 +132,12 @@ function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $
             $cobranode = $parentnode->add(get_string('glossary', 'mod_cobra') . ' ' . get_string('cobra', 'mod_cobra'));
             $params = ['id' => $context->instanceid, 'cmd' => 'rqexport'];
             $cobranode->add(get_string('glossary', 'mod_cobra') . ' ' . get_string('cobra', 'mod_cobra'),
-                new moodle_url($CFG->wwwroot .'/mod/cobra/glossary.php', $params),
+                new \core\url($CFG->wwwroot .'/mod/cobra/glossary.php', $params),
                 navigation_node::TYPE_SETTING, null, 'mod_cobra_export_glossary');
 
             $params = ['id' => $context->instanceid, 'cmd' => 'rqcompare'];
             $cobranode->add(get_string('comparetextwithglossary', 'mod_cobra'),
-                new moodle_url($CFG->wwwroot .'/mod/cobra/glossary.php', $params),
+                new \core\url($CFG->wwwroot .'/mod/cobra/glossary.php', $params),
                 navigation_node::TYPE_SETTING, null, 'mod_cobra_compare_glossary');
         }
     }
@@ -207,7 +207,7 @@ function mod_cobra_core_calendar_provide_event_action(calendar_event $event,
 
     return $factory->create_instance(
         get_string('view'),
-        new \moodle_url('/mod/cobra/view.php', ['id' => $cm->id]),
+        new \core\url('/mod/cobra/view.php', ['id' => $cm->id]),
         1,
         true
     );

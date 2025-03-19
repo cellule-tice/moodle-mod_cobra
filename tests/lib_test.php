@@ -79,7 +79,7 @@ final class lib_test extends \advanced_testcase {
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
         $this->assertEquals(get_string('view'), $actionevent->get_name());
-        $this->assertInstanceOf('moodle_url', $actionevent->get_url());
+        $this->assertInstanceOf('\core\url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
     }
