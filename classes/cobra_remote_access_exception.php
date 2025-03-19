@@ -33,7 +33,7 @@ namespace mod_cobra;
  * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class cobra_remote_access_exception extends \moodle_exception {
+class cobra_remote_access_exception extends \core\exception\moodle_exception {
 
     /**
      * Constructor

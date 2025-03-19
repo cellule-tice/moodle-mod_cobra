@@ -47,7 +47,7 @@ class entry_viewed extends \core\event\base {
      * Get the event name.
      *
      * @return string
-     * @throws \coding_exception
+     * @throws \core\exception\coding_exception
      */
     public static function get_name() {
         return get_string('entry_viewed', 'mod_cobra');

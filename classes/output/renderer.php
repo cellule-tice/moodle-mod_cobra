@@ -53,7 +53,7 @@ class renderer extends plugin_renderer_base {
      *
      * @param page $page
      * @return bool|string
-     * @throws \moodle_exception
+     * @throws \core\exception\moodle_exception
      */
     public function render_myglossary($page) {
         $data = $page->export_for_template($this);

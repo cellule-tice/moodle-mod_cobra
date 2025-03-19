@@ -26,6 +26,7 @@
 namespace mod_cobra;
 
 use context_module;
+use mod_cobra\cobra_remote_access_exception;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -97,7 +98,7 @@ final class externallib_test extends \externallib_advanced_testcase {
             $textlistdesc = \mod_cobra_external::get_text_list_returns();
             $result6 = \mod_cobra_external::get_text_list($this->cobra->collection);
             $result6 = \external_api::clean_returnvalue($textlistdesc, $result6);
-        } catch (\invalid_response_exception $e) {
+        } catch (\core\exception\invalid_response_exception $e) {
             $errors[] = $e->debuginfo;
         } catch (cobra_remote_access_exception $e) {
             mtrace("Unable to test remote services! Your platform is not registered with CoBRA");
@@ -142,7 +143,7 @@ final class externallib_test extends \externallib_advanced_testcase {
                     ]
             );
             $this->assertEquals($glossarycount + 1, $newglossarycount);
-        } catch (\invalid_response_exception $e) {
+        } catch (\core\exception\invalid_response_exception $e) {
             $errors[] = $e->debuginfo;
         }
         $this->assertEmpty($errors, implode('\n', $errors));
@@ -171,7 +172,7 @@ final class externallib_test extends \externallib_advanced_testcase {
             $newglossarycount = $DB->count_records('cobra_click',
                     ['userid' => $this->student->id, 'textid' => $this->cobra->text, 'inglossary' => 1]);
             $this->assertEquals($glossarycount - 1, $newglossarycount);
-        } catch (\invalid_response_exception $e) {
+        } catch (\core\exception\invalid_response_exception $e) {
             $errors[] = $e->debuginfo;
         }
         $this->assertEmpty($errors, implode('\n', $errors));

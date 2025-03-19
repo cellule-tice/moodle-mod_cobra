@@ -26,6 +26,7 @@
 namespace mod_cobra;
 
 use curl;
+use mod_cobra\cobra_remote_access_exception;
 
 /**
  * Class cobra_remote_service. This class handle calls to remote CoBRA system
@@ -44,8 +45,8 @@ class cobra_remote_service {
      * @param array $params arguments for the call
      * @return mixed
      * @throws cobra_remote_access_exception
-     * @throws dml_exception
-     * @throws moodle_exception
+     * @throws \dml_exception
+     * @throws \core\exception\moodle_exception
      */
     public static function call($servicename, $params = []) {
         $validreturntypes = [
@@ -88,17 +89,17 @@ class cobra_remote_service {
             $response = json_decode($data);
         }
         if (!in_array($response->responsetype, $validreturntypes)) {
-            throw new \moodle_exception('unhandledreturntype', 'cobra', '', null, $response->responsetype);
+            throw new \core\exception\moodle_exception('unhandledreturntype', 'cobra', '', null, $response->responsetype);
         }
         if ('error' == $response->responsetype) {
             if ($response->errortype == COBRA_ERROR_PLATFORM_NOT_ALLOWED) {
                 throw new cobra_remote_access_exception('platformnotallowed');
             }
             if ($response->errortype == COBRA_ERROR_MISSING_PARAM) {
-                throw new \moodle_exception('missingparam', 'cobra', '', null);
+                throw new \core\exception\moodle_exception('missingparam', 'cobra', '', null);
             }
             if ($response->errortype == COBRA_ERROR_UNHANDLED_CALL) {
-                throw new \moodle_exception('unhandledcall', 'cobra', '', null);
+                throw new \core\exception\moodle_exception('unhandledcall', 'cobra', '', null);
             }
         } else {
             return $response->content;

@@ -45,7 +45,7 @@ class update_text_info_cache_task extends \core\task\scheduled_task {
      * Get task name.
      *
      * @return string
-     * @throws \coding_exception
+     * @throws \core\exception\coding_exception
      */
     public function get_name() {
         return get_string('updatetextinfocache', 'mod_cobra');

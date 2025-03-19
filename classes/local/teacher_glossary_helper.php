@@ -25,6 +25,7 @@
 namespace mod_cobra\local;
 
 use mod_cobra\cobra_remote_service;
+use mod_cobra\cobra_remote_access_exception;
 
 /**
  * Glossary helper class for cobra activity

@@ -68,8 +68,8 @@ class cobratext implements renderable, templatable {
      *
      * @param renderer_base $output
      * @return mixed
-     * @throws coding_exception
-     * @throws moodle_exception
+     * @throws \core\exception\coding_exception
+     * @throws \core\exception\moodle_exception
      */
     public function export_for_template(renderer_base $output) {
 

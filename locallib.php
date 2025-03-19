@@ -28,6 +28,7 @@
  */
 
 use mod_cobra\cobra_remote_service;
+use mod_cobra\cobra_remote_access_exception;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -170,7 +171,7 @@ function cobra_get_texts_options_list($collection) {
  * @param int $userid current user id
  * @param int $cobraid module instance id
  * @return bool|int
- * @throws coding_exception
+ * @throws \core\exception\coding_exception
  * @throws dml_missing_record_exception
  */
 function cobra_record_clic($textid, $lingentityid, $courseid, $userid, $cobraid) {
@@ -427,7 +428,7 @@ function cobra_get_valid_entry_types() {
  * @return stdClass
  * @throws cobra_remote_access_exception
  * @throws dml_exception
- * @throws moodle_exception
+ * @throws \core\exception\moodle_exception
  */
 function cobra_get_apikey() {
     global $CFG;

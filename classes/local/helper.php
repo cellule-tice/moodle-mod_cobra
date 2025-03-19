@@ -25,6 +25,7 @@
 namespace mod_cobra\local;
 
 use mod_cobra\cobra_remote_service;
+use mod_cobra\cobra_remote_access_exception;
 
 /**
  * Helper class for cobra activity
@@ -45,7 +46,7 @@ class helper {
      * @param int $course the current course id
      * @param string $language language to get corpus order for
      * @return string
-     * @throws dml_exception
+     * @throws \dml_exception
      */
     public static function get_default_corpus_order($course, $language) {
         global $DB;
@@ -112,8 +113,8 @@ class helper {
      * @param int $userid current user id
      * @param int $cobraid module instance id
      * @return bool|int
-     * @throws coding_exception
-     * @throws dml_missing_record_exception
+     * @throws \core\exception\coding_exception
+     * @throws \dml_missing_record_exception
      */
     public static function record_clic($textid, $lingentityid, $courseid, $userid, $cobraid) {
         global $DB;
@@ -148,7 +149,7 @@ class helper {
      * Update local glossary view with new/updated entries collected from remote server
      *
      * @param int $timestamp
-     * @return array|dml_write_exception|Exception
+     * @return array|\dml_write_exception|\Exception
      * @throws cobra_remote_access_exception
      */
     public static function update_glossary_cache($timestamp) {
@@ -178,7 +179,7 @@ class helper {
      * Update local text info new/updated texts collected from remote server
      *
      * @param int $timestamp
-     * @return array|dml_write_exception|Exception
+     * @return array|\dml_write_exception|\Exception
      * @throws cobra_remote_access_exception
      */
     public static function update_text_info_cache($timestamp) {
@@ -247,8 +248,8 @@ class helper {
      *
      * @return stdClass
      * @throws cobra_remote_access_exception
-     * @throws dml_exception
-     * @throws moodle_exception
+     * @throws \dml_exception
+     * @throws \core\exception\moodle_exception
      */
     public static function get_apikey() {
         global $CFG;

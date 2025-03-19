@@ -251,7 +251,7 @@ class mod_cobra_mod_form extends moodleform_mod {
 
     /**
      * Load collection list when language set; load text list on collection change
-     * @throws coding_exception
+     * @throws \core\exception\coding_exception
      */
     public function definition_after_data() {
 

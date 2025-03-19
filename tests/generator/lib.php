@@ -40,8 +40,8 @@ class mod_cobra_generator extends testing_module_generator {
      * @param stdClass|null $record
      * @param array|null $options
      * @return stdClass
-     * @throws coding_exception
-     * @throws dml_exception
+     * @throws \core\exception\coding_exception
+     * @throws \dml_exception
      */
     public function create_instance($record = null, ?array $options = null) {
         global $CFG;

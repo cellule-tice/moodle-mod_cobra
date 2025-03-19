@@ -27,6 +27,7 @@
 use mod_cobra\cobra_remote_service;
 use mod_cobra\local\helper;
 use mod_cobra\local\student_glossary_helper;
+use mod_cobra\cobra_remote_access_exception;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -119,7 +120,7 @@ class mod_cobra_external extends external_api {
      * @param string $json
      * @return array
      * @throws cobra_remote_access_exception
-     * @throws invalid_parameter_exception
+     * @throws \core\exception\invalid_parameter_exception
      */
     public static function get_entry($concept, $isexpression, $json) {
         $args = self::validate_parameters(self::get_entry_parameters(),
@@ -183,7 +184,7 @@ class mod_cobra_external extends external_api {
      * @param int $ccid
      * @return mixed
      * @throws cobra_remote_access_exception
-     * @throws invalid_parameter_exception
+     * @throws \core\exception\invalid_parameter_exception
      */
     public static function get_full_concordance($ccid) {
         $args = self::validate_parameters(self::get_full_concordance_parameters(),
@@ -237,7 +238,7 @@ class mod_cobra_external extends external_api {
      * @param int $courseid
      * @param int $userid
      * @return array
-     * @throws invalid_parameter_exception
+     * @throws \core\exception\invalid_parameter_exception
      */
     public static function load_glossary($textid, $courseid, $userid) {
         $params = self::validate_parameters(self::load_glossary_parameters(),
@@ -295,7 +296,7 @@ class mod_cobra_external extends external_api {
      * @param int $courseid
      * @param int $userid
      * @return mixed
-     * @throws invalid_parameter_exception
+     * @throws \core\exception\invalid_parameter_exception
      */
     public static function add_to_glossary($lingentity, $textid, $courseid, $userid) {
 
@@ -345,7 +346,7 @@ class mod_cobra_external extends external_api {
      * @param int $courseid
      * @param int $userid
      * @return array|bool
-     * @throws invalid_parameter_exception
+     * @throws \core\exception\invalid_parameter_exception
      */
     public static function remove_from_glossary($lingentity, $courseid, $userid) {
         global $DB;
@@ -394,7 +395,7 @@ class mod_cobra_external extends external_api {
      * @param int $idtext
      * @return mixed
      * @throws cobra_remote_access_exception
-     * @throws invalid_parameter_exception
+     * @throws \core\exception\invalid_parameter_exception
      */
     public static function get_text($idtext) {
         $params = self::validate_parameters(self::get_text_parameters(),
@@ -446,7 +447,7 @@ class mod_cobra_external extends external_api {
      * @param int $collection
      * @return mixed
      * @throws cobra_remote_access_exception
-     * @throws invalid_parameter_exception
+     * @throws \core\exception\invalid_parameter_exception
      */
     public static function get_text_list($collection) {
         $params = self::validate_parameters(self::get_text_list_parameters(),
@@ -492,7 +493,7 @@ class mod_cobra_external extends external_api {
      * @param string $language
      * @return mixed
      * @throws cobra_remote_access_exception
-     * @throws invalid_parameter_exception
+     * @throws \core\exception\invalid_parameter_exception
      */
     public static function get_collection_list($language) {
         $params = self::validate_parameters(self::get_collection_list_parameters(),
@@ -537,7 +538,7 @@ class mod_cobra_external extends external_api {
      * Gets a demo api key for testing purpose.
      * @return stdClass
      * @throws cobra_remote_access_exception
-     * @throws invalid_parameter_exception
+     * @throws \core\exception\invalid_parameter_exception
      */
     public static function get_demo_api_key() {
         global $CFG;

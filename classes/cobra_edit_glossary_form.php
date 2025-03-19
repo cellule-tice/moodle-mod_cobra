@@ -40,7 +40,7 @@ class cobra_edit_glossary_form extends moodleform {
     /**
      * Form definition.
      *
-     * @throws coding_exception
+     * @throws \core\exception\coding_exception
      */
     public function definition() {
         $mform = $this->_form;
