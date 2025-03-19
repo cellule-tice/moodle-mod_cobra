@@ -184,8 +184,8 @@ if ($cmd == 'rqexport') {
         }
     }
 
-    $out .= html_writer::tag('div', get_string('text', 'mod_cobra') . ' : ' . $mytext);
-    $out .= html_writer::tag('span', '&nbsp; ');
+    $out .= \core\output\html_writer::tag('div', get_string('text', 'mod_cobra') . ' : ' . $mytext);
+    $out .= \core\output\html_writer::tag('span', '&nbsp; ');
     $out .= '<ul>';
     $out .= '<li>' . get_string('newwords', 'cobra')  . ' : ' . implode(', ', $newwords) . '</li>';
     $out .= $otherwords;

@@ -50,7 +50,7 @@ if (empty($cobras)) {
             new moodle_url('/course/view.php', ['id' => $course->id]));
 }
 
-$table = new html_table();
+$table = new \core_table\output\html_table();
 $table->attributes['class'] = 'generaltable mod_index';
 
 if ($course->format == 'weeks') {
@@ -66,12 +66,12 @@ if ($course->format == 'weeks') {
 
 foreach ($cobras as $cobra) {
     if (!$cobra->visible) {
-        $link = html_writer::link(
+        $link = \core\output\html_writer::link(
             new moodle_url('/mod/cobra/view.php', ['id' => $cobra->coursemodule]),
             format_string($cobra->name, true),
             ['class' => 'dimmed']);
     } else {
-        $link = html_writer::link(
+        $link = \core\output\html_writer::link(
             new moodle_url('/mod/cobra/view.php', ['id' => $cobra->coursemodule]),
             format_string($cobra->name, true));
     }
@@ -83,5 +83,5 @@ foreach ($cobras as $cobra) {
     }
 }
 
-echo html_writer::table($table);
+echo \core\output\html_writer::table($table);
 echo $OUTPUT->footer();

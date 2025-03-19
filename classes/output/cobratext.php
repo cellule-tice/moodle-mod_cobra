@@ -25,10 +25,10 @@
 
 namespace mod_cobra\output;
 
-use renderable;
-use templatable;
+use core\output\renderable;
+use core\output\templatable;
 use stdClass;
-use renderer_base;
+use core\output\renderer_base;
 use moodle_url;
 use mod_cobra\cobra_remote_service;
 use mod_cobra\cobra_remote_access_exception;

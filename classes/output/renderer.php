@@ -24,7 +24,7 @@
  */
 namespace mod_cobra\output;
 
-use plugin_renderer_base;
+use core\output\plugin_renderer_base;
 
 /**
  * Renderer class definition.

@@ -17,10 +17,10 @@
 namespace mod_cobra\output;
 
 use moodle_url;
-use renderer_base;
-use templatable;
-use renderable;
-use url_select;
+use core\output\renderer_base;
+use core\output\templatable;
+use core\output\renderable;
+use core\output\url_select;
 
 /**
  * Rendered HTML elements for tertiary nav for glossary actions.

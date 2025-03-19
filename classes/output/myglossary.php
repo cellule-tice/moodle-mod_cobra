@@ -25,9 +25,9 @@
 
  namespace mod_cobra\output;
 
- use renderable;
- use templatable;
- use renderer_base;
+ use core\output\renderable;
+ use core\output\templatable;
+ use core\output\renderer_base;
 
 /**
  * Class myglossary
@@ -70,7 +70,7 @@ class myglossary implements renderable, templatable {
      *
      * @param array $entries
      * @param int $course
-     * @param initials_bar $initialsbar
+     * @param \core\output\initials_bar $initialsbar
      * @param string $initial
      */
     public function __construct($entries, $course, $initialsbar, $initial) {
