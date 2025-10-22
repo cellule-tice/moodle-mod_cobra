@@ -33,7 +33,7 @@ use core\url;
 
 require(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
-require_once($CFG->dirroot . '/lib/dataformatlib.php');
+//require_once($CFG->dirroot . '/lib/dataformatlib.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
 // Course id.
@@ -185,12 +185,11 @@ if ($cmd == 'rqexport') {
         }
     }
 
-    $out .= \core\output\html_writer::tag('div', get_string('text', 'mod_cobra') . ' : ' . $mytext);
-    $out .= \core\output\html_writer::tag('span', '&nbsp; ');
-    $out .= '<ul>';
-    $out .= '<li>' . get_string('newwords', 'cobra')  . ' : ' . implode(', ', $newwords) . '</li>';
-    $out .= $otherwords;
-    $out .= '</ul>';
+    $data = new stdClass();
+    $data->mytext = format_text($mytext, FORMAT_HTML);
+    $data->newwords = implode(', ', $newwords);
+    $data->otherwords = $otherwords;
+    $out .= $OUTPUT->render_from_template('mod_cobra/glossary_compare', $data);
 }
 
 if (!empty($thisform)) {
