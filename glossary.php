@@ -30,10 +30,10 @@ use mod_cobra\output\glossary_action_menu;
 use mod_cobra\local\teacher_glossary_helper;
 use mod_cobra\local\helper;
 use core\url;
+use core\context;
 
 require(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
-//require_once($CFG->dirroot . '/lib/dataformatlib.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 
 // Course id.
@@ -50,7 +50,7 @@ if ($id) {
 // Security check.
 require_login($course, true);
 
-$context = context_course::instance($course->id, MUST_EXIST);
+$context = context\course::instance($course->id, MUST_EXIST);
 
 if (!has_capability('mod/cobra:addinstance', $context)) {
     redirect('../course/view.php?id=' . $id);
