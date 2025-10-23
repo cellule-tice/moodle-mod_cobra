@@ -155,8 +155,8 @@ if ($cmd == 'rqexport') {
 
     $mytext = optional_param('mytext', '', PARAM_RAW);
 
-    $newwords = '';
-    $otherwords = '';
+    $newwords = [];
+    $otherwords = [];
     $words = teacher_glossary_helper::get_list_of_words_in_text ($mytext, $language);
     $newwords = [];
 
@@ -174,20 +174,19 @@ if ($cmd == 'rqexport') {
 
                     $info = $lemmaentities[$entityid]['entry'] . ' ('.$lemmaentities[$entityid]['category'].') - '
                         . $lemmaentities[$entityid]['traduction'];
-                    $otherwords .= '<li> ' . get_string('possibletranslations', 'cobra') . ' : '. $word . ' : '
-                        . mb_convert_encoding($info, 'UTF-8', 'ISO-8859-1') . '</li>';
+                    $otherwords[] = ['word' => $word, 'info' => mb_convert_encoding($info, 'UTF-8', 'ISO-8859-1')];
                 }
             }
         }
         if (!$found) {
-            $newwords[] = $word;
+            $newwords[] = ['word' => $word];
             $mytext = teacher_glossary_helper::mark_unknown_word($word, $mytext);
         }
     }
 
     $data = new stdClass();
     $data->mytext = format_text($mytext, FORMAT_HTML);
-    $data->newwords = implode(', ', $newwords);
+    $data->newwords = $newwords;
     $data->otherwords = $otherwords;
     $out .= $OUTPUT->render_from_template('mod_cobra/glossary_compare', $data);
 }

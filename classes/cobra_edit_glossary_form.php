@@ -56,6 +56,6 @@ class cobra_edit_glossary_form extends moodleform {
         if ($compare) {
             $mform->addElement('textarea', 'mytext', get_string('mytext', 'cobra'), ['rows' => 30, 'cols' => 80]);
         }
-        $this->add_action_buttons(true, get_string('ok', 'cobra'));
+        $this->add_action_buttons(true, get_string('ok'));
     }
 }

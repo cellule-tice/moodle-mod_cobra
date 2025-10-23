@@ -25,9 +25,18 @@
     }
 }}
 <div>
-    {{#str}}text, mod_cobra{{/str}} : {{{mytext}}}
+    <h3 class="h5">{{#str}}text, mod_cobra{{/str}}</h3>
+    {{{mytext}}}
+    <h3 class="h5 mt-5">{{#str}}newwords, mod_cobra{{/str}}</h3>
     <ul>
-        <li>{{#str}}newwords, mod_cobra{{/str}} : {{{newwords}}}</li>
-        {{{otherwords}}}
+        {{#newwords}}
+        <li>{{{word}}}</li>
+        {{/newwords}}
+    </ul>
+    <h3 class="h5 mt-5">{{#str}}alreadyinglossary, mod_cobra{{/str}}</h3>
+    <ul>
+        {{#otherwords}}
+        <li>{{{word}}} : {{{info}}}</li>
+        {{/otherwords}}
     </ul>
 </div>

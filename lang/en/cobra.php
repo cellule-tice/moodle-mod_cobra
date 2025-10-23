@@ -26,6 +26,7 @@
 
 
 $string['addtomyglossary'] = 'Add to my glossary';
+$string['alreadyinglossary'] = 'Already in glossary';
 $string['annotation'] = 'Annotation';
 $string['annotationsdisplaymode'] = 'Display annotations';
 $string['audioplayer'] = 'Audio player';
@@ -120,7 +121,6 @@ $string['mytext'] = 'My text';
 $string['newwords'] = 'New words';
 $string['noconcordances'] = 'No concordances';
 $string['noentriesforletter'] = 'No entries starting with {$a}';
-$string['ok'] = 'OK';
 $string['otherforms'] = 'Other forms';
 $string['othertranslations'] = 'Other translation(s)';
 $string['platformnotallowed'] = 'Your platform is not allowed to access CoBRA service !';
