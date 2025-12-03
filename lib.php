@@ -121,9 +121,9 @@ function cobra_delete_instance($id) {
  *
  * @param navigation_node $parentnode main course navigation node
  * @param stdClass $course
- * @param context_course $context
+ * @param \core\context\course $context
  */
-function cobra_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
+function cobra_extend_navigation_course(navigation_node $parentnode, stdClass $course, \core\context\course $context) {
     global $DB;
 
     if ($DB->record_exists('cobra', ['course' => $course->id])) {

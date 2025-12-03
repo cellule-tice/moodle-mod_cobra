@@ -32,7 +32,7 @@ $id = required_param('id', PARAM_INT);
 [$course, $cm] = get_course_and_cm_from_cmid($id, 'cobra');
 $cobra = $DB->get_record('cobra', ['id' => $cm->instance], '*', MUST_EXIST);
 
-$context = context_module::instance($cm->id);
+$context = \core\context\module::instance($cm->id);
 
 require_login($course, true, $cm);
 require_capability('mod/cobra:view', $context);

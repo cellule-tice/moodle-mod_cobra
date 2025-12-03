@@ -26,8 +26,6 @@
 
 namespace mod_cobra;
 
-use context_module;
-
 /**
  * Defines PHPUnit cobra_generator testcase.
  *
@@ -71,7 +69,7 @@ final class generator_test extends \advanced_testcase {
         $this->assertEquals('cobra', $cm->modname);
         $this->assertEquals($course->id, $cm->course);
 
-        $context = context_module::instance($cm->id);
+        $context = \core\context\module::instance($cm->id);
         $this->assertEquals($cobra->cmid, $context->instanceid);
     }
 }

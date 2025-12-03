@@ -31,7 +31,7 @@ $id = required_param('id', PARAM_INT);
 $course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
 require_course_login($course);
 
-$coursecontext = context_course::instance($course->id);
+$coursecontext = \core\context\course::instance($course->id);
 
 $PAGE->set_url('/mod/cobra/index.php', ['id' => $id]);
 $PAGE->set_title(format_string($course->fullname));

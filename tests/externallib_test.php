@@ -59,7 +59,7 @@ final class externallib_test extends \externallib_advanced_testcase {
         // Setup test data.
         $this->course = $this->getDataGenerator()->create_course();
         $this->cobra = $this->getDataGenerator()->create_module('cobra', ['course' => $this->course->id]);
-        $this->context = context_module::instance($this->cobra->cmid);
+        $this->context = \core\context\module::instance($this->cobra->cmid);
         $this->cm = get_coursemodule_from_instance('cobra', $this->cobra->id);
 
         // Create users.

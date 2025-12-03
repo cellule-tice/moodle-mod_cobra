@@ -36,8 +36,6 @@
 
 namespace mod_cobra;
 
-use context_module;
-
 /**
  * Defines PHPUnit events testcase.
  *
@@ -68,7 +66,7 @@ final class events_test extends \advanced_testcase {
 
         $dbcourse = $DB->get_record('course', ['id' => $course->id]);
         $dbcobra = $DB->get_record('cobra', ['id' => $cobra->id]);
-        $context = context_module::instance($cobra->cmid);
+        $context = \core\context\module::instance($cobra->cmid);
 
         $event = \mod_cobra\event\course_module_viewed::create([
             'objectid' => $dbcobra->id,

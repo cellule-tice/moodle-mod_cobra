@@ -41,7 +41,7 @@ $course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
 // Keep user id and cmid for ajax calls.
 global $USER, $OUTPUT;
 
-$context = context_course::instance($course->id);
+$context = core\context\course::instance($course->id);
 
 require_login($course);
 require_capability('mod/cobra:view', $context);

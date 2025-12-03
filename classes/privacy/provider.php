@@ -171,7 +171,7 @@ class provider implements
      */
     protected static function export_cobra_data_for_user(array $items, int $cmid, \stdClass $user) {
         // Fetch the generic module data.
-        $context = \context_module::instance($cmid);
+        $context = \core\context\module::instance($cmid);
         $contextdata = helper::get_context_data($context, $user);
 
         // Merge with cobra data and write it.

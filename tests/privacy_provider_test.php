@@ -28,7 +28,6 @@ namespace mod_cobra;
 
 use core_privacy\local\metadata\collection;
 use mod_cobra\privacy\provider;
-use context_module;
 
 /**
  * Unit tests for mod/cobra/classes/privacy/
@@ -120,8 +119,8 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
             get_coursemodule_from_instance('cobra', $this->cobra2->id),
         ];
         $expectedctxs = [
-            context_module::instance($cms[0]->id),
-            context_module::instance($cms[1]->id),
+            \core\context\module::instance($cms[0]->id),
+            \core\context\module::instance($cms[1]->id),
         ];
 
         $expectedctxids = [];
@@ -147,7 +146,7 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
             get_coursemodule_from_instance('cobra', $this->cobra1->id),
         ];
         $ctxs = [
-            context_module::instance($cms[0]->id),
+            \core\context\module::instance($cms[0]->id),
         ];
         // Export all of the data for the context.
         $this->export_context_data_for_user($this->student1->id, $ctxs[0], 'mod_cobra');
@@ -168,7 +167,7 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         ];
         $ctxs = [];
         foreach ($cms as $cm) {
-            $ctxs[] = context_module::instance($cm->id);
+            $ctxs[] = \core\context\module::instance($cm->id);
         }
 
         // Before deletion, we should have 6 items for both student1 and student2.
@@ -206,7 +205,7 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
 
         // Delete data from the first checklist.
         $cm = get_coursemodule_from_instance('cobra', $this->cobra1->id);
-        $cmcontext = context_module::instance($cm->id);
+        $cmcontext = \core\context\module::instance($cm->id);
         provider::delete_data_for_all_users_in_context($cmcontext);
         // After deletion, there should be no items for cobra1
         // but still 3 items for student1 in cobra2 and 3 items for student2 in cobra2.
