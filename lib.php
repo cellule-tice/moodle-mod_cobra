@@ -31,10 +31,10 @@ use mod_cobra\local\helper;
  * @return true | null True if the feature is supported, null otherwise.
  */
 function cobra_supports($feature) {
-    switch($feature) {
-        case FEATURE_MOD_ARCHETYPE :
+    switch ($feature) {
+        case FEATURE_MOD_ARCHETYPE:
             return MOD_ARCHETYPE_RESOURCE;
-        case FEATURE_MOD_INTRO :
+        case FEATURE_MOD_INTRO:
             return true;
         case FEATURE_GROUPS:
             return false;
@@ -123,7 +123,7 @@ function cobra_delete_instance($id) {
  * @param stdClass $course
  * @param context_course $context
  */
-function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
+function cobra_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
     global $DB;
 
     if ($DB->record_exists('cobra', ['course' => $course->id])) {
@@ -131,14 +131,22 @@ function  cobra_extend_navigation_course(navigation_node $parentnode, stdClass $
         if (has_capability('mod/cobra:addinstance', $context)) {
             $cobranode = $parentnode->add(get_string('glossary', 'mod_cobra') . ' ' . get_string('cobra', 'mod_cobra'));
             $params = ['id' => $context->instanceid, 'cmd' => 'rqexport'];
-            $cobranode->add(get_string('glossary', 'mod_cobra') . ' ' . get_string('cobra', 'mod_cobra'),
-                new \core\url($CFG->wwwroot .'/mod/cobra/glossary.php', $params),
-                navigation_node::TYPE_SETTING, null, 'mod_cobra_export_glossary');
+            $cobranode->add(
+                get_string('glossary', 'mod_cobra') . ' ' . get_string('cobra', 'mod_cobra'),
+                new \core\url($CFG->wwwroot . '/mod/cobra/glossary.php', $params),
+                navigation_node::TYPE_SETTING,
+                null,
+                'mod_cobra_export_glossary'
+            );
 
             $params = ['id' => $context->instanceid, 'cmd' => 'rqcompare'];
-            $cobranode->add(get_string('comparetextwithglossary', 'mod_cobra'),
-                new \core\url($CFG->wwwroot .'/mod/cobra/glossary.php', $params),
-                navigation_node::TYPE_SETTING, null, 'mod_cobra_compare_glossary');
+            $cobranode->add(
+                get_string('comparetextwithglossary', 'mod_cobra'),
+                new \core\url($CFG->wwwroot . '/mod/cobra/glossary.php', $params),
+                navigation_node::TYPE_SETTING,
+                null,
+                'mod_cobra_compare_glossary'
+            );
         }
     }
 }
@@ -193,8 +201,7 @@ function cobra_coursemodule_edit_post_actions($moduleinfo, $course) {
  * @param \core_calendar\action_factory $factory
  * @return \core_calendar\local\event\entities\action_interface|null
  */
-function mod_cobra_core_calendar_provide_event_action(calendar_event $event,
-                                                      \core_calendar\action_factory $factory) {
+function mod_cobra_core_calendar_provide_event_action(calendar_event $event, \core_calendar\action_factory $factory) {
     $cm = get_fast_modinfo($event->courseid)->instances['cobra'][$event->instance];
 
     $completion = new \completion_info($cm->get_course());
@@ -244,7 +251,6 @@ function cobra_reset_userdata($data) {
     }
 
     if (!empty($data->reset_cobra_click_history) && !empty($data->reset_cobra_personal_glossaries)) {
-
         $params = ['course' => $data->courseid];
         $success = $DB->delete_records('cobra_click', $params);
 
@@ -279,7 +285,7 @@ function cobra_reset_userdata($data) {
 /**
  * Called by course/reset.php
  * Module reset form elements.
- * @param moodleform $mform form passed by reference
+ * @param MoodleQuickF $mform form passed by reference
  */
 function cobra_reset_course_form_definition(&$mform) {
     $mform->addElement('header', 'cobraheader', get_string('modulename', 'cobra'));

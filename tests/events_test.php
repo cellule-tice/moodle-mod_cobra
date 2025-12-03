@@ -50,7 +50,6 @@ use context_module;
  * @covers \mod_cobra\event\course_module_viewed
  */
 final class events_test extends \advanced_testcase {
-
     public function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();

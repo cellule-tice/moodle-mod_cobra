@@ -87,8 +87,7 @@ function cobra_get_default_corpus_order($course, $language) {
             'course' => $course,
             'language' => $language,
             'isdefaultcorpusorder' => 1,
-        ]
-    );
+        ]);
     if (empty($corpusorder)) {
         if ($language == 'EN') {
             $corpusorder = get_config('mod_cobra', 'defaultcorpusorderen');
@@ -123,8 +122,7 @@ function cobra_is_in_glossary($lingentity, $courseid, $userid = 0) {
             'lingentity' => (int)$lingentity,
             'userid' => $user,
             'inglossary' => 1,
-        ]
-    );
+        ]);
     return $inglossary === true;
 }
 
@@ -177,8 +175,10 @@ function cobra_get_texts_options_list($collection) {
 function cobra_record_clic($textid, $lingentityid, $courseid, $userid, $cobraid) {
     global $DB;
 
-    $info = $DB->get_record_select('cobra_click',
-        "course='$courseid' AND userid='$userid' AND textid='$textid' AND lingentity='$lingentityid'");
+    $info = $DB->get_record_select(
+        'cobra_click',
+        "course='$courseid' AND userid='$userid' AND textid='$textid' AND lingentity='$lingentityid'"
+    );
     if (!$info) {
         // Insert record.
         $dataobject = new stdClass();
@@ -290,12 +290,16 @@ function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $in
                      AND inglossary = 1 " . $initialfilter . "
                 ORDER BY entry";
 
-    $fullglossaryresult = $DB->get_records_sql($dataquery,
-            ['courseid' => $courseid, 'userid' => $userid, 'initial' => $initial . '%']);
+    $fullglossaryresult = $DB->get_records_sql(
+        $dataquery,
+        ['courseid' => $courseid, 'userid' => $userid, 'initial' => $initial . '%']
+    );
 
     if (empty($textid)) {
-        $result = $DB->get_records_sql($dataquery,
-                ['courseid' => $courseid, 'userid' => $userid, 'initial' => $initial . '%']);
+        $result = $DB->get_records_sql(
+            $dataquery,
+            ['courseid' => $courseid, 'userid' => $userid, 'initial' => $initial . '%']
+        );
         return [count($result), $fullglossaryresult];
     }
 
@@ -304,7 +308,6 @@ function cobra_get_student_glossary($userid = 0, $courseid = 0, $textid = 0, $in
     $entitiesintext = [];
     $listtoload = [];
     if ($textid) {
-
         $entitiesintext = json_decode($DB->get_field('cobra_text_info_cache', 'entities', ['id' => $textid]));
         if (empty($entitiesintext)) {
             $entitiesintext = [];
@@ -375,7 +378,8 @@ function cobra_get_glossary_entry($lingentity) {
  */
 function cobra_empty_glossary($course, $user) {
     global $DB;
-    return $DB->set_field('cobra_click',
+    return $DB->set_field(
+        'cobra_click',
         'inglossary',
         '0',
         [

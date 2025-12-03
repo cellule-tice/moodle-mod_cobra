@@ -29,7 +29,7 @@ use mod_cobra\output\cobratext;
 
 // Course_module ID.
 $id = required_param('id', PARAM_INT);
-list($course, $cm) = get_course_and_cm_from_cmid($id, 'cobra');
+[$course, $cm] = get_course_and_cm_from_cmid($id, 'cobra');
 $cobra = $DB->get_record('cobra', ['id' => $cm->instance], '*', MUST_EXIST);
 
 $context = context_module::instance($cm->id);

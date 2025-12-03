@@ -43,7 +43,6 @@ class provider implements
     // This plugin has data.
     \core_privacy\local\metadata\provider,
     \core_privacy\local\request\plugin\provider {
-
     /**
      * Returns meta data about this system.
      *
@@ -111,7 +110,7 @@ class provider implements
 
         $user = $contextlist->get_user();
 
-        list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
+        [$contextsql, $contextparams] = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
 
         $sql = "SELECT cm.id AS cmid,
                        cc.course,
@@ -178,16 +177,17 @@ class provider implements
         // Merge with cobra data and write it.
         $contextdata = (object)array_merge((array)$contextdata, ['items' => $items]);
         writer::with_context($context)->export_data([], $contextdata)->export_metadata(
-                [],
-                'cobra_click', (object) [
-                    'course' => 'course',
-                    'lingentity' => 'lingentity',
-                    'textid' => 'textid',
-                    'nbclicks' => 'nbclicks',
-                    'timecreated' => 'timecreated',
-                    'inglossary' => 'inglossary',
-                ],
-                get_string('privacy:metadata:cobra_click', 'mod_cobra')
+            [],
+            'cobra_click',
+            (object) [
+                'course' => 'course',
+                'lingentity' => 'lingentity',
+                'textid' => 'textid',
+                'nbclicks' => 'nbclicks',
+                'timecreated' => 'timecreated',
+                'inglossary' => 'inglossary',
+            ],
+            get_string('privacy:metadata:cobra_click', 'mod_cobra')
         );
 
         // Write generic module intro files.

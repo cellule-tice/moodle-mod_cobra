@@ -37,7 +37,6 @@ use mod_cobra\cobra_remote_access_exception;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cobra_remote_service {
-
     /**
      * Send request to remote CoBRA system and return response
      *
@@ -83,7 +82,6 @@ class cobra_remote_service {
         $data = $curl->post($url . '?verb=' . $servicename . '&' . $querystring, json_encode($params), $options);
 
         if ($data === false) {
-
             throw new cobra_remote_access_exception('serviceunavailable');
         } else {
             $response = json_decode($data);

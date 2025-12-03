@@ -40,7 +40,6 @@ require_once($CFG->dirroot . '/mod/cobra/locallib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class fill_cache_tables_task extends \core\task\adhoc_task {
-
     /**
      * Execute ad-hoc task.
      * @throws \dml_exception

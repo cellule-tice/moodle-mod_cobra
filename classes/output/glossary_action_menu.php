@@ -29,7 +29,7 @@ use core\output\url_select;
  * @copyright  2016 onwards - Cellule TICE - Universite de Namur
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class glossary_action_menu implements templatable, renderable {
+class glossary_action_menu implements renderable, templatable {
     /** @var url */
     private $currenturl;
 

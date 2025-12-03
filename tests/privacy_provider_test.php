@@ -176,8 +176,11 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         $this->assertEquals(6, $DB->count_records('cobra_click', ['userid' => $this->student2->id]));
 
         // Delete the data for student.
-        $contextlist = new \core_privacy\local\request\approved_contextlist($this->student1, 'cobra',
-                                                                            [$ctxs[0]->id, $ctxs[1]->id]);
+        $contextlist = new \core_privacy\local\request\approved_contextlist(
+            $this->student1,
+            'cobra',
+            [$ctxs[0]->id, $ctxs[1]->id]
+        );
         provider::delete_data_for_user($contextlist);
 
         // After deletion, we should have no items for student1 but still 6 for student2.

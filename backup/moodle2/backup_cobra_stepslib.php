@@ -32,7 +32,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_cobra_activity_structure_step extends backup_activity_structure_step {
-
     /**
      * Define the complete cobra structure for backup, with file and id annotations
      */

@@ -40,7 +40,6 @@ require_once($CFG->dirroot . '/mod/cobra/locallib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class update_glossary_cache_task extends \core\task\scheduled_task {
-
     /**
      * Get task name.
      *
@@ -57,7 +56,7 @@ class update_glossary_cache_task extends \core\task\scheduled_task {
      */
     public function execute() {
         mtrace('Load dirty entries from remote CoBRA server');
-        list($new, $updated) = helper::update_glossary_cache(get_config('mod_cobra', 'lastglossaryupdate'));
+        [$new, $updated] = helper::update_glossary_cache(get_config('mod_cobra', 'lastglossaryupdate'));
         mtrace($new . ' entries inserted');
         mtrace($updated . ' entries updated');
         set_config('lastglossaryupdate', time(), 'mod_cobra');

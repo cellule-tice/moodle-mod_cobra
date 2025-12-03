@@ -43,7 +43,6 @@ require_once(__DIR__ . '/locallib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_cobra_external extends external_api {
-
     /**
      * Describes the parameters for get_entry.
      * @return external_function_parameters
@@ -79,7 +78,9 @@ class mod_cobra_external extends external_api {
                                     'first' => new external_value(PARAM_RAW, 'Flag for display', VALUE_OPTIONAL),
                                     'last' => new external_value(PARAM_RAW, 'Flag for display', VALUE_OPTIONAL),
                                 ]
-                            ), '', VALUE_OPTIONAL
+                            ),
+                            '',
+                            VALUE_OPTIONAL
                         ),
                         'translations' => new external_value(PARAM_RAW, 'Translations of entry', VALUE_OPTIONAL),
                         'annotation' => new external_value(PARAM_RAW, 'Annotation in source language', VALUE_OPTIONAL),
@@ -92,10 +93,15 @@ class mod_cobra_external extends external_api {
                                     'source' => new external_value(PARAM_RAW, 'Concordance in source language'),
                                     'target' => new external_value(PARAM_RAW, 'Concordance in French'),
                                     'type' => new external_value(PARAM_RAW, 'Corpus type'),
-                                    'first' => new external_value(PARAM_BOOL,
-                                            'Is this the first concordance in list?', VALUE_OPTIONAL),
+                                    'first' => new external_value(
+                                        PARAM_BOOL,
+                                        'Is this the first concordance in list?',
+                                        VALUE_OPTIONAL
+                                    ),
                                 ]
-                            ), '', VALUE_OPTIONAL
+                            ),
+                            '',
+                            VALUE_OPTIONAL
                         ),
                     ]
                 ),
@@ -123,12 +129,13 @@ class mod_cobra_external extends external_api {
      * @throws \core\exception\invalid_parameter_exception
      */
     public static function get_entry($concept, $isexpression, $json) {
-        $args = self::validate_parameters(self::get_entry_parameters(),
-                [
-                    'conceptid' => $concept,
-                    'isexpr' => $isexpression,
-                    'params' => $json,
-                ]
+        $args = self::validate_parameters(
+            self::get_entry_parameters(),
+            [
+                'conceptid' => $concept,
+                'isexpr' => $isexpression,
+                'params' => $json,
+            ]
         );
 
         $data = cobra_remote_service::call('get_entry', $args);
@@ -136,12 +143,20 @@ class mod_cobra_external extends external_api {
         $jsonobj = json_decode($json);
 
         if ($jsonobj->encodeclic) {
-            helper::record_clic($jsonobj->text, $dataobj->technicalinfo->entity,
-                    $jsonobj->course, $jsonobj->user, $jsonobj->id);
+            helper::record_clic(
+                $jsonobj->text,
+                $dataobj->technicalinfo->entity,
+                $jsonobj->course,
+                $jsonobj->user,
+                $jsonobj->id
+            );
         }
 
-        $dataobj->technicalinfo->inglossary = student_glossary_helper::is_in_user_glossary($dataobj->data->entity,
-                $jsonobj->course, $jsonobj->user);
+        $dataobj->technicalinfo->inglossary = student_glossary_helper::is_in_user_glossary(
+            $dataobj->data->entity,
+            $jsonobj->course,
+            $jsonobj->user
+        );
 
         $response = [
             'data' => $dataobj->data,
@@ -187,11 +202,7 @@ class mod_cobra_external extends external_api {
      * @throws \core\exception\invalid_parameter_exception
      */
     public static function get_full_concordance($ccid) {
-        $args = self::validate_parameters(self::get_full_concordance_parameters(),
-                [
-                    'idconcordance' => $ccid,
-                ]
-        );
+        $args = self::validate_parameters(self::get_full_concordance_parameters(), ['idconcordance' => $ccid]);
         $cc = cobra_remote_service::call('get_full_concordance', $args);
 
         return json_decode($cc);
@@ -241,12 +252,13 @@ class mod_cobra_external extends external_api {
      * @throws \core\exception\invalid_parameter_exception
      */
     public static function load_glossary($textid, $courseid, $userid) {
-        $params = self::validate_parameters(self::load_glossary_parameters(),
-                [
-                    'textid' => $textid,
-                    'courseid' => $courseid,
-                    'userid' => $userid,
-                ]
+        $params = self::validate_parameters(
+            self::load_glossary_parameters(),
+            [
+                'textid' => $textid,
+                'courseid' => $courseid,
+                'userid' => $userid,
+            ]
         );
 
         $data = student_glossary_helper::get_student_glossary($params['userid'], $params['courseid'], $params['textid']);
@@ -302,15 +314,17 @@ class mod_cobra_external extends external_api {
 
         global $DB;
 
-        $params = self::validate_parameters(self::add_to_glossary_parameters(),
-                [
-                    'lingentity' => $lingentity,
-                    'textid' => $textid,
-                    'course' => $courseid,
-                    'userid' => $userid,
-                ]
+        $params = self::validate_parameters(
+            self::add_to_glossary_parameters(),
+            [
+                'lingentity' => $lingentity,
+                'textid' => $textid,
+                'course' => $courseid,
+                'userid' => $userid,
+            ]
         );
-        $result = (int)$DB->set_field('cobra_click',
+        $result = (int)$DB->set_field(
+            'cobra_click',
             'inglossary',
             '1',
             $params
@@ -351,14 +365,16 @@ class mod_cobra_external extends external_api {
     public static function remove_from_glossary($lingentity, $courseid, $userid) {
         global $DB;
 
-        $params = self::validate_parameters(self::remove_from_glossary_parameters(),
-                [
-                    'lingentity' => $lingentity,
-                    'course' => $courseid,
-                    'userid' => $userid,
-                ]
+        $params = self::validate_parameters(
+            self::remove_from_glossary_parameters(),
+            [
+                'lingentity' => $lingentity,
+                'course' => $courseid,
+                'userid' => $userid,
+            ]
         );
-        $result = (int)$DB->set_field('cobra_click',
+        $result = (int)$DB->set_field(
+            'cobra_click',
             'inglossary',
             '0',
             $params
@@ -398,9 +414,7 @@ class mod_cobra_external extends external_api {
      * @throws \core\exception\invalid_parameter_exception
      */
     public static function get_text($idtext) {
-        $params = self::validate_parameters(self::get_text_parameters(),
-            ['id_text' => $idtext]
-        );
+        $params = self::validate_parameters(self::get_text_parameters(), ['id_text' => $idtext]);
 
         $data = cobra_remote_service::call('get_text', $params);
         $text = json_decode($data);
@@ -450,9 +464,7 @@ class mod_cobra_external extends external_api {
      * @throws \core\exception\invalid_parameter_exception
      */
     public static function get_text_list($collection) {
-        $params = self::validate_parameters(self::get_text_list_parameters(),
-            ['collection' => $collection]
-        );
+        $params = self::validate_parameters(self::get_text_list_parameters(), ['collection' => $collection]);
 
         $data = cobra_remote_service::call('get_text_list', $params);
         return $data;
@@ -496,9 +508,7 @@ class mod_cobra_external extends external_api {
      * @throws \core\exception\invalid_parameter_exception
      */
     public static function get_collection_list($language) {
-        $params = self::validate_parameters(self::get_collection_list_parameters(),
-            ['language' => $language]
-        );
+        $params = self::validate_parameters(self::get_collection_list_parameters(), ['language' => $language]);
 
         $data = cobra_remote_service::call('get_collection_list', $params);
         return $data;

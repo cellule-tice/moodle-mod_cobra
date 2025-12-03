@@ -73,19 +73,20 @@ if ($empty) {
         $PAGE->set_heading($course->fullname);
         echo $OUTPUT->header();
         echo $OUTPUT->heading(get_string('myglossary', 'cobra'));
-        echo $OUTPUT->confirm(get_string('deletesure', 'mod_cobra'),
+        echo $OUTPUT->confirm(
+            get_string('deletesure', 'mod_cobra'),
             "myglossary.php?empty=true&confirm=1&id=$course->id",
-            $CFG->wwwroot.'/mod/cobra/myglossary.php?id='.$course->id);
+            $CFG->wwwroot . '/mod/cobra/myglossary.php?id=' . $course->id
+        );
         echo $OUTPUT->footer();
         die;
     }
 }
 
-list($totalcount, $data) = student_glossary_helper::get_student_glossary($USER->id, $course->id, 0, $initial);
+[$totalcount, $data] = student_glossary_helper::get_student_glossary($USER->id, $course->id, 0, $initial);
 
 $entries = [];
 if (!empty($data)) {
-
     foreach ($data as $entry) {
         $sourcetexttitle = student_glossary_helper::get_cached_text_title($entry->textid);
         $entry->sourcetexttitle = $sourcetexttitle;
@@ -130,7 +131,8 @@ if ($export) {
         'sourcetexttitle' => get_string('sourcetext', 'cobra'),
     ];
     $iterator = $downloadentries->getIterator();
-    \core\dataformat::download_data($course->shortname . '-' . get_string('myglossary', 'cobra'),
+    \core\dataformat::download_data(
+        $course->shortname . '-' . get_string('myglossary', 'cobra'),
         $format,
         $downloadfields,
         $iterator
@@ -142,10 +144,10 @@ echo $OUTPUT->header();
 // Add buttons for export and trash.
 
 echo $OUTPUT->heading(
-        get_string('myglossary', 'cobra') .
-        ' (' . $totalcount . ' ' .
-        strtolower(get_string('entries', 'cobra')) .
-        ')'
+    get_string('myglossary', 'cobra') .
+    ' (' . $totalcount . ' ' .
+    strtolower(get_string('entries', 'cobra')) .
+    ')'
 );
 
 $baseurl = new \core\url('/mod/cobra/myglossary.php', ['id' => $course->id]);

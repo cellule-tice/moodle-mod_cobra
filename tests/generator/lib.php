@@ -33,7 +33,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_cobra_generator extends testing_module_generator {
-
     /**
      * Create a cobra instance for testing purpose
      *
@@ -45,7 +44,7 @@ class mod_cobra_generator extends testing_module_generator {
      */
     public function create_instance($record = null, ?array $options = null) {
         global $CFG;
-        require_once($CFG->dirroot .'/mod/cobra/locallib.php');
+        require_once($CFG->dirroot . '/mod/cobra/locallib.php');
 
         $record = (object)(array)$record;
         $config = get_config('mod_cobra');

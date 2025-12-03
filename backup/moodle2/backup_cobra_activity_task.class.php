@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/cobra/backup/moodle2/backup_cobra_stepslib.ph
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_cobra_activity_task extends backup_activity_task {
-
     /**
      * Define (add) particular settings this activity can have
      */
@@ -64,11 +63,11 @@ class backup_cobra_activity_task extends backup_activity_task {
         $base = preg_quote($CFG->wwwroot, "/");
 
         // Link to the list of choices.
-        $search = "/(".$base."\/mod\/cobra\/index.php\?id\=)([0-9]+)/";
+        $search = "/(" . $base . "\/mod\/cobra\/index.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@COBRAINDEX*$2@$', $content);
 
         // Link to choice view by moduleid.
-        $search = "/(".$base."\/mod\/cobra\/view.php\?id\=)([0-9]+)/";
+        $search = "/(" . $base . "\/mod\/cobra\/view.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@COBRAVIEWBYID*$2@$', $content);
 
         return $content;

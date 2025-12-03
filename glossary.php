@@ -87,7 +87,8 @@ if ($cmd == 'exexport') {
         'sourcetexttitle' => get_string('sourcetext', 'cobra'),
     ];
     $iterator = $downloadentries->getIterator();
-    \core\dataformat::download_data($course->shortname . '-' . get_string('myglossary', 'cobra'),
+    \core\dataformat::download_data(
+        $course->shortname . '-' . get_string('myglossary', 'cobra'),
         'excel',
         $downloadfields,
         $iterator
@@ -103,11 +104,14 @@ $PAGE->set_heading(format_string($course->fullname));
 echo $OUTPUT->header();
 
 switch ($cmd) {
-    case 'rqexport' : $heading = get_string('modulename', 'cobra') . ' - ' . get_string('exportglossary', 'cobra');;
+    case 'rqexport':
+        $heading = get_string('modulename', 'cobra') . ' - ' . get_string('exportglossary', 'cobra');
         break;
-    case 'rqcompare' : $heading = get_string('modulename', 'cobra') . ' - ' . get_string('comparetextwithglossary', 'cobra');
+    case 'rqcompare':
+        $heading = get_string('modulename', 'cobra') . ' - ' . get_string('comparetextwithglossary', 'cobra');
         break;
-    case 'excompare' : $heading = get_string('modulename', 'cobra') . ' - ' . get_string('comparetextwithglossary', 'cobra');
+    case 'excompare':
+        $heading = get_string('modulename', 'cobra') . ' - ' . get_string('comparetextwithglossary', 'cobra');
         break;
 }
 echo $OUTPUT->heading($heading);
@@ -122,22 +126,12 @@ echo $renderer->render($glossaryactionmenu);
 echo $OUTPUT->box_start();
 
 if ($cmd == 'rqexport') {
-    $url = new url('/mod/cobra/glossary.php',
-        [
-            'id' => $id,
-            'cmd' => 'exexport',
-        ]
-    );
-    $thisform = new cobra_edit_glossary_form ($url, ['textlist' => $textlist, 'compare' => false]);
+    $url = new url('/mod/cobra/glossary.php', ['id' => $id, 'cmd' => 'exexport']);
+    $thisform = new cobra_edit_glossary_form($url, ['textlist' => $textlist, 'compare' => false]);
 } else if ($cmd == 'rqcompare') {
-    $url = new url('/mod/cobra/glossary.php',
-        [
-            'id' => $id,
-            'cmd' => 'excompare',
-        ]
-    );
-    $thisform = new cobra_edit_glossary_form ($url, ['textlist' => $textlist, 'compare' => true]);
-} else if ( $cmd == 'excompare') {
+    $url = new url('/mod/cobra/glossary.php', ['id' => $id, 'cmd' => 'excompare']);
+    $thisform = new cobra_edit_glossary_form($url, ['textlist' => $textlist, 'compare' => true]);
+} else if ($cmd == 'excompare') {
     helper::increase_script_time();
     $glossary = [];
 
@@ -151,28 +145,27 @@ if ($cmd == 'rqexport') {
         }
     }
 
-    list($lemmaentities, $expentities) = teacher_glossary_helper::explode_glossary_into_lemmas_and_expression( $glossary );
+    [$lemmaentities, $expentities] = teacher_glossary_helper::explode_glossary_into_lemmas_and_expression($glossary);
 
     $mytext = optional_param('mytext', '', PARAM_RAW);
 
     $newwords = [];
     $otherwords = [];
-    $words = teacher_glossary_helper::get_list_of_words_in_text ($mytext, $language);
+    $words = teacher_glossary_helper::get_list_of_words_in_text($mytext, $language);
     $newwords = [];
 
     foreach ($words as $word) {
-
-        $listflexions = teacher_glossary_helper::word_exists_as_flexion ($word, $language);
+        $listflexions = teacher_glossary_helper::word_exists_as_flexion($word, $language);
         $found = false;
-        if (count( $listflexions) != 0) {
+        if (count($listflexions) != 0) {
             $found = false;
-            $listpossibleentities = teacher_glossary_helper::get_entity_list_from_ff($listflexions );
+            $listpossibleentities = teacher_glossary_helper::get_entity_list_from_ff($listflexions);
 
             foreach ($listpossibleentities as $entityid) {
                 if (array_key_exists($entityid, $lemmaentities)) {
                     $found = true;
 
-                    $info = $lemmaentities[$entityid]['entry'] . ' ('.$lemmaentities[$entityid]['category'].') - '
+                    $info = $lemmaentities[$entityid]['entry'] . ' (' . $lemmaentities[$entityid]['category'] . ') - '
                         . $lemmaentities[$entityid]['traduction'];
                     $otherwords[] = ['word' => $word, 'info' => mb_convert_encoding($info, 'UTF-8', 'ISO-8859-1')];
                 }

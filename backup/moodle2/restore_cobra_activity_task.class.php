@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/cobra/backup/moodle2/restore_cobra_stepslib.p
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_cobra_activity_task extends restore_activity_task {
-
     /**
      * Define (add) particular settings this activity can have
      */
@@ -75,6 +74,5 @@ class restore_cobra_activity_task extends restore_activity_task {
         $rules[] = new restore_decode_rule('COBRAINDEX', '/mod/cobra/index.php?id=$1', 'course');
 
         return $rules;
-
     }
 }

@@ -22,7 +22,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require(__DIR__.'/../../config.php');
+require(__DIR__ . '/../../config.php');
 
 require_once($CFG->dirroot . '/mod/cobra/lib.php');
 
@@ -46,8 +46,10 @@ echo $OUTPUT->heading($modulenameplural);
 $cobras = get_all_instances_in_course('cobra', $course);
 
 if (empty($cobras)) {
-    notice(get_string('thereareno', 'moodle', get_string('modulename', 'cobra')),
-            new \core\url('/course/view.php', ['id' => $course->id]));
+    notice(
+        get_string('thereareno', 'moodle', get_string('modulename', 'cobra')),
+        new \core\url('/course/view.php', ['id' => $course->id])
+    );
 }
 
 $table = new \core_table\output\html_table();
@@ -69,11 +71,13 @@ foreach ($cobras as $cobra) {
         $link = \core\output\html_writer::link(
             new \core\url('/mod/cobra/view.php', ['id' => $cobra->coursemodule]),
             format_string($cobra->name, true),
-            ['class' => 'dimmed']);
+            ['class' => 'dimmed']
+        );
     } else {
         $link = \core\output\html_writer::link(
             new \core\url('/mod/cobra/view.php', ['id' => $cobra->coursemodule]),
-            format_string($cobra->name, true));
+            format_string($cobra->name, true)
+        );
     }
 
     if ($course->format == 'weeks' || $course->format == 'topics') {

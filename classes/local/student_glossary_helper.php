@@ -53,8 +53,7 @@ class student_glossary_helper {
                 'lingentity' => (int)$lingentity,
                 'userid' => $user,
                 'inglossary' => 1,
-            ]
-        );
+            ]);
         return $inglossary === true;
     }
 
@@ -85,12 +84,16 @@ class student_glossary_helper {
                         AND inglossary = 1 " . $initialfilter . "
                     ORDER BY entry";
 
-        $fullglossaryresult = $DB->get_records_sql($dataquery,
-                ['courseid' => $courseid, 'userid' => $userid, 'initial' => $initial . '%']);
+        $fullglossaryresult = $DB->get_records_sql(
+            $dataquery,
+            ['courseid' => $courseid, 'userid' => $userid, 'initial' => $initial . '%']
+        );
 
         if (empty($textid)) {
-            $result = $DB->get_records_sql($dataquery,
-                    ['courseid' => $courseid, 'userid' => $userid, 'initial' => $initial . '%']);
+            $result = $DB->get_records_sql(
+                $dataquery,
+                ['courseid' => $courseid, 'userid' => $userid, 'initial' => $initial . '%']
+            );
             return [count($result), $fullglossaryresult];
         }
 
@@ -99,7 +102,6 @@ class student_glossary_helper {
         $entitiesintext = [];
         $listtoload = [];
         if ($textid) {
-
             $entitiesintext = json_decode($DB->get_field('cobra_text_info_cache', 'entities', ['id' => $textid]));
             if (empty($entitiesintext)) {
                 $entitiesintext = [];
@@ -170,7 +172,8 @@ class student_glossary_helper {
      */
     public static function empty_glossary($course, $user) {
         global $DB;
-        return $DB->set_field('cobra_click',
+        return $DB->set_field(
+            'cobra_click',
             'inglossary',
             '0',
             [

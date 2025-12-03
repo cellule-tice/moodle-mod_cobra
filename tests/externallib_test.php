@@ -46,7 +46,6 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @covers \mod_cobra\mod_cobra_external
  */
 final class externallib_test extends \externallib_advanced_testcase {
-
     /**
      * Set up for every test
      */
@@ -72,7 +71,6 @@ final class externallib_test extends \externallib_advanced_testcase {
     }
 
     public function test_remote_services(): void {
-
         $this->resetAfterTest(true);
 
         self::setUser($this->student);
@@ -120,12 +118,13 @@ final class externallib_test extends \externallib_advanced_testcase {
 
         $generator->init_local_data();
         $generator->init_user_data($this->student->id, $this->cobra);
-        $glossarycount = $DB->count_records('cobra_click',
-                [
-                    'userid' => $this->student->id,
-                    'textid' => $this->cobra->text,
-                    'inglossary' => 1,
-                ]
+        $glossarycount = $DB->count_records(
+            'cobra_click',
+            [
+                'userid' => $this->student->id,
+                'textid' => $this->cobra->text,
+                'inglossary' => 1,
+            ]
         );
 
         $errors = [];
@@ -135,12 +134,13 @@ final class externallib_test extends \externallib_advanced_testcase {
             $result = \mod_cobra_external::add_to_glossary(36638, $this->cobra->text, $this->cobra->course, $this->student->id);
 
             $result = \external_api::clean_returnvalue($addtoglossarydesc, $result);
-            $newglossarycount = $DB->count_records('cobra_click',
-                    [
-                        'userid' => $this->student->id,
-                        'textid' => $this->cobra->text,
-                        'inglossary' => 1,
-                    ]
+            $newglossarycount = $DB->count_records(
+                'cobra_click',
+                [
+                    'userid' => $this->student->id,
+                    'textid' => $this->cobra->text,
+                    'inglossary' => 1,
+                ]
             );
             $this->assertEquals($glossarycount + 1, $newglossarycount);
         } catch (\core\exception\invalid_response_exception $e) {
@@ -160,8 +160,10 @@ final class externallib_test extends \externallib_advanced_testcase {
 
         $generator->init_local_data();
         $generator->init_user_data($this->student->id, $this->cobra);
-        $glossarycount = $DB->count_records('cobra_click',
-                ['userid' => $this->student->id, 'textid' => $this->cobra->text, 'inglossary' => 1]);
+        $glossarycount = $DB->count_records(
+            'cobra_click',
+            ['userid' => $this->student->id, 'textid' => $this->cobra->text, 'inglossary' => 1]
+        );
 
         $errors = [];
         try {
@@ -169,8 +171,10 @@ final class externallib_test extends \externallib_advanced_testcase {
             $result = \mod_cobra_external::remove_from_glossary(36515, $this->cobra->course, $this->student->id);
 
             $result = \external_api::clean_returnvalue($removefromglossdesc, $result);
-            $newglossarycount = $DB->count_records('cobra_click',
-                    ['userid' => $this->student->id, 'textid' => $this->cobra->text, 'inglossary' => 1]);
+            $newglossarycount = $DB->count_records(
+                'cobra_click',
+                ['userid' => $this->student->id, 'textid' => $this->cobra->text, 'inglossary' => 1]
+            );
             $this->assertEquals($glossarycount - 1, $newglossarycount);
         } catch (\core\exception\invalid_response_exception $e) {
             $errors[] = $e->debuginfo;

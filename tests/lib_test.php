@@ -47,7 +47,6 @@ namespace mod_cobra;
  * @group mod_cobra
  */
 final class lib_test extends \advanced_testcase {
-
     /**
      * Set up.
      */
@@ -67,8 +66,11 @@ final class lib_test extends \advanced_testcase {
         $cobra = $this->getDataGenerator()->create_module('cobra', ['course' => $course->id]);
 
         // Create a calendar event.
-        $event = $this->create_action_event($course->id, $cobra->id,
-            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
+        $event = $this->create_action_event(
+            $course->id,
+            $cobra->id,
+            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED
+        );
 
         // Create an action factory.
         $factory = new \core_calendar\action_factory();
@@ -95,15 +97,21 @@ final class lib_test extends \advanced_testcase {
 
         // Create the activity.
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
-        $cobra = $this->getDataGenerator()->create_module('cobra', ['course' => $course->id],
-            ['completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS]);
+        $cobra = $this->getDataGenerator()->create_module(
+            'cobra',
+            ['course' => $course->id],
+            ['completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS]
+        );
 
         // Get some additional data.
         $cm = get_coursemodule_from_instance('cobra', $cobra->id);
 
         // Create a calendar event.
-        $event = $this->create_action_event($course->id, $cobra->id,
-            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
+        $event = $this->create_action_event(
+            $course->id,
+            $cobra->id,
+            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED
+        );
 
         // Mark the activity as completed.
         $completion = new \completion_info($course);

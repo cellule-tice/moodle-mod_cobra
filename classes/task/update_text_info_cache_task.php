@@ -40,7 +40,6 @@ require_once($CFG->dirroot . '/mod/cobra/locallib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class update_text_info_cache_task extends \core\task\scheduled_task {
-
     /**
      * Get task name.
      *
@@ -58,7 +57,7 @@ class update_text_info_cache_task extends \core\task\scheduled_task {
      */
     public function execute() {
         mtrace('Update basic information for texts (title, cecrl)');
-        list($new, $updated) = helper::update_text_info_cache(get_config('mod_cobra', 'lasttextinfoupdate'));
+        [$new, $updated] = helper::update_text_info_cache(get_config('mod_cobra', 'lasttextinfoupdate'));
         mtrace($new . ' entries inserted');
         mtrace($updated . ' entries updated');
         set_config('lasttextinfoupdate', time(), 'mod_cobra');

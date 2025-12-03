@@ -30,8 +30,14 @@ if ($ADMIN->fulltree) {
     $PAGE->requires->js_call_amd('mod_cobra/cobra', 'demoapikey');
     $settings->add(new admin_setting_heading('cobra_settings_general', get_string('generalconfig', 'cobra'), ''));
 
-    $settings->add(new admin_setting_configtext('mod_cobra/serviceurl', get_string('cobraserviceurl', 'cobra'),
-        '', 'https://webapps.unamur.be/elv/nederlex/services/api.php', PARAM_URL, 40));
+    $settings->add(new admin_setting_configtext(
+        'mod_cobra/serviceurl',
+        get_string('cobraserviceurl', 'cobra'),
+        '',
+        'https://webapps.unamur.be/elv/nederlex/services/api.php',
+        PARAM_URL,
+        40
+    ));
 
     if (empty(get_config('mod_cobra', 'apikey'))) {
         $apikeymessage = '<button type="button" class="btn btn-primary" id="requestapikey">' .
@@ -41,13 +47,23 @@ if ($ADMIN->fulltree) {
     } else {
         $apikeymessage = '';
     }
-    $setting = new admin_setting_configtext('mod_cobra/apikey', 'apikey',
-        $apikeymessage, '', PARAM_RAW, 60);
+    $setting = new admin_setting_configtext(
+        'mod_cobra/apikey',
+        'apikey',
+        $apikeymessage,
+        '',
+        PARAM_RAW,
+        60
+    );
     $setting->set_updatedcallback('cobra_fill_cache_tables');
     $settings->add($setting);
 
-    $settings->add(new admin_setting_configtext('mod_cobra/timeout', get_string('timeout', 'cobra'),
-        get_string('timeout_desc', 'cobra'), '3'));
+    $settings->add(new admin_setting_configtext(
+        'mod_cobra/timeout',
+        get_string('timeout', 'cobra'),
+        get_string('timeout_desc', 'cobra'),
+        '3'
+    ));
 
     $settings->add(new admin_setting_heading('cobra_settings_display', get_string('displaysettings', 'cobra'), ''));
 
@@ -91,9 +107,17 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('cobra_settings_corpus', get_string('defaultcorpusselection', 'cobra'), ''));
 
 
-    $settings->add(new admin_setting_configtext('mod_cobra/defaultcorpusorderen', get_string('forenglish', 'cobra'),
-        get_string('forenglish_desc', 'cobra'), '1,11,21'));
+    $settings->add(new admin_setting_configtext(
+        'mod_cobra/defaultcorpusorderen',
+        get_string('forenglish', 'cobra'),
+        get_string('forenglish_desc', 'cobra'),
+        '1,11,21'
+    ));
 
-    $settings->add(new admin_setting_configtext('mod_cobra/defaultcorpusordernl', get_string('fordutch', 'cobra'),
-        get_string('fordutch_desc', 'cobra'), '1,11,21'));
+    $settings->add(new admin_setting_configtext(
+        'mod_cobra/defaultcorpusordernl',
+        get_string('fordutch', 'cobra'),
+        get_string('fordutch_desc', 'cobra'),
+        '1,11,21'
+    ));
 }

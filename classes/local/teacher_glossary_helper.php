@@ -45,7 +45,7 @@ class teacher_glossary_helper {
 
         $dataquery = "SELECT DISTINCT(lingentity) AS lingentity, entry, translations, category, extrainfo
                         FROM {cobra_glossary_cache}
-                        WHERE lingentity IN (" . implode(',', $entitylist) . ")
+                       WHERE lingentity IN (" . implode(',', $entitylist) . ")
                     ORDER BY entry";
 
         $data = $DB->get_records_sql($dataquery, []);
@@ -69,7 +69,7 @@ class teacher_glossary_helper {
 
         $dataquery = "SELECT id, entry, type, translations, category, extrainfo
                         FROM {cobra_glossary_cache}
-                    WHERE lingentity IN (" . implode(',', $entitylist) . ")
+                       WHERE lingentity IN (" . implode(',', $entitylist) . ")
                     ORDER BY entry";
 
         $entries = $DB->get_records_sql($dataquery, []);
@@ -119,7 +119,7 @@ class teacher_glossary_helper {
      */
     public static function get_list_of_words_in_text($mytext, $language) {
         helper::increase_script_time();
-        $paragraphs = explode ("\n", $mytext);
+        $paragraphs = explode("\n", $mytext);
         $words = [];
         foreach ($paragraphs as $para) {
             $params = ['text' => $para, 'language' => $language];
@@ -173,8 +173,8 @@ class teacher_glossary_helper {
      * @return string
      */
     public static function mark_unknown_word($word, $text) {
-        $text = str_replace(' ' . $word, ' <span style="color:red">'. $word . '</span>', $text);
-        $text = str_replace($word. ' ', '<span style="color:red">'. $word . '</span> ', $text);
+        $text = str_replace(' ' . $word, ' <span style="color:red">' . $word . '</span>', $text);
+        $text = str_replace($word . ' ', '<span style="color:red">' . $word . '</span> ', $text);
         $text = str_replace(' ' . $word . ' ', ' <span style="color:red">' . $word . '</span> ', $text);
         $text = str_replace(' ' . $word . ',', ' <span style="color:red">' . $word . '</span>,', $text);
         $text = str_replace(' ' . $word . '.', ' <span style="color:red">' . $word . '</span>.', $text);

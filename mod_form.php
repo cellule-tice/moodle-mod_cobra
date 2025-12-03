@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/course/moodleform_mod.php');
+require_once($CFG->dirroot . '/course/moodleform_mod.php');
 require_once($CFG->dirroot . '/mod/cobra/locallib.php');
 
 use mod_cobra\local\helper;
@@ -37,7 +37,6 @@ use mod_cobra\local\helper;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_cobra_mod_form extends moodleform_mod {
-
     /**
      * Defines forms elements
      */
@@ -51,7 +50,6 @@ class mod_cobra_mod_form extends moodleform_mod {
             $mform->addElement('static', 'registrationwarning', '', get_string('registrationwarning', 'cobra'));
             $mform->addElement('hidden', 'registered', 0);
             $mform->setType('registered', PARAM_INT);
-
         } else {
             $mform->addElement('hidden', 'registered', 1);
             $mform->setType('registered', PARAM_INT);
@@ -165,7 +163,8 @@ class mod_cobra_mod_form extends moodleform_mod {
         $mform->addElement('header', 'displaysettings', get_string('displaysettings', 'cobra'));
 
         // Add checkbox to enable/disable user glossary.
-        $mform->addElement('advcheckbox',
+        $mform->addElement(
+            'advcheckbox',
             'userglossary',
             get_string('userglossary', 'cobra'),
             null,
@@ -176,7 +175,8 @@ class mod_cobra_mod_form extends moodleform_mod {
         $mform->setDefault('userglossary', $defaultsettings->userglossary);
 
         // Add checkbox to enable/disable audio player display.
-        $mform->addElement('advcheckbox',
+        $mform->addElement(
+            'advcheckbox',
             'audioplayer',
             get_string('audioplayer', 'cobra'),
             null,
@@ -214,7 +214,8 @@ class mod_cobra_mod_form extends moodleform_mod {
         $mform->setDefault('annotations', $defaultsettings->annotations);
 
         // Add checkbox to flag display settings as default for future instances.
-        $mform->addElement('advcheckbox',
+        $mform->addElement(
+            'advcheckbox',
             'isdefaultdisplayprefs',
             get_string('defaultflag', 'cobra'),
             null,
@@ -232,7 +233,8 @@ class mod_cobra_mod_form extends moodleform_mod {
         $mform->addHelpButton('corpusorder', 'corpusselection', 'cobra');
 
         // Add checkbox to flag corpus selection as default for future instances.
-        $mform->addElement('advcheckbox',
+        $mform->addElement(
+            'advcheckbox',
             'isdefaultcorpusorder',
             get_string('defaultflag', 'cobra'),
             null,
@@ -263,7 +265,6 @@ class mod_cobra_mod_form extends moodleform_mod {
 
         // Add collection select box and default corpus selection and order box when language is set.
         if (is_array($languageset) && !empty($languageset[0])) {
-
             $collections = helper::get_collections_options_list($languageset[0]);
             $collections = ['0' => '-'] + $collections;
             $colselect = $mform->addElement('select', 'collection', get_string('collection', 'cobra'), $collections);
@@ -282,8 +283,7 @@ class mod_cobra_mod_form extends moodleform_mod {
                 $texts = ['0' => '-'] + $texts;
                 $mform->addElement('select', 'text', get_string('text', 'cobra'), $texts);
                 $mform->addRule('text', 'You must select a text', 'nonzero');
-                $mform->insertElementBefore($mform->removeElement('text', false),
-                    'addtextshere');
+                $mform->insertElementBefore($mform->removeElement('text', false), 'addtextshere');
             }
         }
     }

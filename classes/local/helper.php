@@ -57,8 +57,7 @@ class helper {
                 'course' => $course,
                 'language' => $language,
                 'isdefaultcorpusorder' => 1,
-            ]
-        );
+            ]);
         if (empty($corpusorder)) {
             if ($language == 'EN') {
                 $corpusorder = get_config('mod_cobra', 'defaultcorpusorderen');
@@ -119,8 +118,10 @@ class helper {
     public static function record_clic($textid, $lingentityid, $courseid, $userid, $cobraid) {
         global $DB;
 
-        $info = $DB->get_record_select('cobra_click',
-            "course='$courseid' AND userid='$userid' AND textid='$textid' AND lingentity='$lingentityid'");
+        $info = $DB->get_record_select(
+            'cobra_click',
+            "course='$courseid' AND userid='$userid' AND textid='$textid' AND lingentity='$lingentityid'"
+        );
         if (!$info) {
             // Insert record.
             $dataobject = new \stdClass();

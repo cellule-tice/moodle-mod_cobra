@@ -43,7 +43,6 @@ use mod_cobra\local\student_glossary_helper;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cobratext implements renderable, templatable {
-
     /**
      * Export this data so it can be used as the context for a mustache template.
      *
@@ -79,9 +78,12 @@ class cobratext implements renderable, templatable {
             $textdata = json_decode(cobra_remote_service::call('get_text', $params));
         } catch (cobra_remote_access_exception $e) {
             global $COURSE;
-            redirect(new url('/course/view.php', ['id' => $COURSE->id]),
-                    'CoBRA' . ': ' . get_string($e->debuginfo, 'cobra') . '<br/>' . get_string('pageshouldredirect'),
-                    5, \core\output\notification::NOTIFY_ERROR);
+            redirect(
+                new url('/course/view.php', ['id' => $COURSE->id]),
+                'CoBRA' . ': ' . get_string($e->debuginfo, 'cobra') . '<br/>' . get_string('pageshouldredirect'),
+                5,
+                \core\output\notification::NOTIFY_ERROR
+            );
         }
         $textdata->language = strtolower($this->cobra->language);
         $textdata->rawtitle = strip_tags($textdata->title);
@@ -96,7 +98,10 @@ class cobratext implements renderable, templatable {
         }
 
         $textdata->entries = student_glossary_helper::get_student_glossary(
-                $this->cobra->user, $this->cobra->course, $this->cobra->text);
+            $this->cobra->user,
+            $this->cobra->course,
+            $this->cobra->text
+        );
         return $textdata;
     }
 }
